@@ -32,7 +32,8 @@ export const useTable = (
     // 初始化默认的查询参数
     searchInitParam: {},
     // 总参数(包含分页和查询参数)
-    totalParam: {}
+    totalParam: {},
+    key: ""
   });
 
   /**
@@ -59,13 +60,13 @@ export const useTable = (
     try {
       // 先把初始化参数和分页参数放到总参数里面
       Object.assign(state.totalParam, initParam, isPageable ? pageParam.value : {});
-      let { data } = await api({ ...state.searchInitParam, ...state.totalParam });
+      let data = await api({ ...state.searchInitParam, ...state.totalParam });
       dataCallBack && (data = dataCallBack(data));
       state.tableData = isPageable ? data.list : data;
       // 解构后台返回的分页数据 (如果有分页更新分页信息)
       if (isPageable) {
-        const { pageNum, pageSize, total } = data;
-        updatePageable({ pageNum, pageSize, total });
+        const { total } = data;
+        updatePageable({ ...pageParam.value, total });
       }
     } catch (error) {
       requestError && requestError(error);

@@ -6,6 +6,8 @@
 import { inject, ref, useSlots } from "vue";
 import { ColumnProps, RenderScope, HeaderRenderScope } from "@/components/ProTable/interface";
 import { filterEnum, formatValue, handleProp, handleRowAccordingToProp } from "@/utils";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n(); // 解构出t方法
 
 defineProps<{ column: ColumnProps }>();
 
@@ -47,7 +49,7 @@ const RenderTableColumn = (item: ColumnProps) => {
             header: (scope: HeaderRenderScope<any>) => {
               if (item.headerRender) return item.headerRender(scope);
               if (slots[`${handleProp(item.prop!)}Header`]) return slots[`${handleProp(item.prop!)}Header`]!(scope);
-              return item.label;
+              return t(item.label as string);
             }
           }}
         </el-table-column>

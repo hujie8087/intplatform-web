@@ -1,24 +1,47 @@
 /* Menu */
-declare namespace Menu {
-  interface MenuOptions {
-    path: string;
-    name: string;
-    component?: string | (() => Promise<unknown>);
-    redirect?: string;
-    meta: MetaProps;
-    children?: MenuOptions[];
-  }
-  interface MetaProps {
-    icon: string;
-    title: string;
-    activeMenu?: string;
-    isLink?: string;
-    isHide: boolean;
-    isFull: boolean;
-    isAffix: boolean;
-    isKeepAlive: boolean;
-  }
-}
+// declare namespace Menu {
+//   interface MenuOptions {
+//     path: string;
+//     name: string;
+//     component?: string | (() => Promise<unknown>);
+//     redirect?: string;
+//     meta: MetaProps;
+//     children?: MenuOptions[];
+//   }
+//   interface MetaProps {
+//     icon: string;
+//     title: string;
+//     activeMenu?: string;
+//     isLink?: string;
+//     isHide: boolean;
+//     isFull: boolean;
+//     isAffix: boolean;
+//     isKeepAlive: boolean;
+//   }
+//   interface ResMenu {
+//     createBy: string | null;
+//     createTime: string;
+//     updateBy: string | null;
+//     updateTime: string | null;
+//     remark: string | null;
+//     menuId: number;
+//     menuName: string;
+//     parentName: string | null;
+//     parentId: number;
+//     orderNum: number;
+//     path: string;
+//     component: string;
+//     query: string;
+//     isFrame: string;
+//     isCache: string;
+//     menuType: string;
+//     visible: string;
+//     status: string;
+//     perms: string;
+//     icon: string;
+//     children?: ResMenu[];
+//   }
+// }
 
 /* FileType */
 declare namespace File {

@@ -1,0 +1,138 @@
+<template>
+  <el-dialog
+    v-model="drawerVisible"
+    :destroy-on-close="true"
+    width="680"
+    :title="`${drawerProps.title}${$t('system.user.user')}`"
+  >
+    <el-form
+      ref="ruleFormRef"
+      label-width="120px"
+      label-suffix=" :"
+      :rules="rules"
+      :disabled="drawerProps.isView"
+      :model="drawerProps.rowData"
+      :hide-required-asterisk="drawerProps.isView"
+    >
+      <el-row>
+        <el-col :span="24">
+          <el-form-item :label="`${$t('system.config.configName')}`" prop="configName">
+            <el-input
+              v-model="drawerProps.rowData.configName"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.config.configName') })}`"
+              clearable
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item :label="`${$t('system.config.configKey')}`" prop="configKey">
+            <el-input
+              v-model="drawerProps.rowData.configKey"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.config.configKey') })}`"
+              clearable
+            >
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item :label="`${$t('system.config.configValue')}`" prop="configValue">
+            <el-input
+              v-model="drawerProps.rowData.configValue"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.config.configValue') })}`"
+              clearable
+            >
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item :label="`${$t('system.config.configType')}`" prop="configType">
+            <el-radio-group
+              v-model="drawerProps.rowData!.configType"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.config.configType') })}`"
+            >
+              <el-radio v-for="item in yOrNOptions" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item :label="`${$t('system.config.remark')}`" prop="remark">
+            <el-input
+              v-model="drawerProps.rowData.remark"
+              type="textarea"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.config.remark') })}`"
+            >
+            </el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <template #footer>
+      <el-button @click="drawerVisible = false">{{ $t("main.cancel") }}</el-button>
+      <el-button type="primary" v-show="!drawerProps.isView" @click="handleSubmit">{{ $t("main.confirm") }}</el-button>
+    </template>
+  </el-dialog>
+</template>
+
+<script setup lang="ts" name="ConfigDrawer">
+import { ref, reactive } from "vue";
+import { ElMessage, FormInstance } from "element-plus";
+import { Config } from "@/api/interface/system";
+import { useI18n } from "vue-i18n";
+import { yOrNOptions } from "@/utils/serviceDict";
+const { t } = useI18n(); // 解构出t方法
+
+const rules = reactive({
+  configName: [{ required: true, message: t("main.inputError", { msg: t("system.config.configName") }) }],
+  configKey: [{ required: true, message: t("main.inputError", { msg: t("system.config.configKey") }) }],
+  configValue: [{ required: true, message: t("main.inputError", { msg: t("system.config.configValue") }) }]
+});
+
+interface DrawerProps {
+  title: string;
+  isView: boolean;
+  rowData: Partial<Config.ResConfig>;
+  api?: (params: any) => Promise<any>;
+  getTableList?: () => Promise<any>;
+}
+
+// drawer框状态
+const drawerVisible = ref(false);
+const drawerProps = ref<DrawerProps>({
+  isView: false,
+  title: "",
+  rowData: {
+    configName: "",
+    configKey: "",
+    configValue: "",
+    configType: "",
+    remark: ""
+  }
+});
+// 接收父组件传过来的参数
+const acceptParams = (params: DrawerProps): void => {
+  drawerProps.value = params;
+  drawerVisible.value = true;
+};
+
+// 提交数据（新增/编辑）
+const ruleFormRef = ref<FormInstance>();
+const handleSubmit = () => {
+  ruleFormRef.value!.validate(async valid => {
+    if (!valid) return;
+    try {
+      await drawerProps.value.api!(drawerProps.value.rowData);
+      ElMessage.success({
+        message: t("main.successMsg", { title: t("system.config.configName"), method: `${drawerProps.value.title}` })
+      });
+      drawerProps.value.getTableList!();
+      drawerVisible.value = false;
+    } catch (error) {
+      console.log(error);
+    }
+  });
+};
+
+defineExpose({
+  acceptParams
+});
+</script>

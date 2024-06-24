@@ -75,6 +75,8 @@ const clearIcon = () => {
 // 监听搜索框值
 const inputValue = ref("");
 const customIcons: { [key: string]: any } = Icons;
+console.log(customIcons);
+
 const iconsList = computed((): { [key: string]: any } => {
   if (!inputValue.value) return Icons;
   let result: { [key: string]: any } = {};

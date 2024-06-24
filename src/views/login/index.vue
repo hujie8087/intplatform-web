@@ -7,8 +7,8 @@
       </div>
       <div class="login-form">
         <div class="login-logo">
-          <img class="login-icon" src="@/assets/images/logo.svg" alt="" />
-          <h2 class="logo-text">Geeker-Admin</h2>
+          <img class="login-icon" src="@/assets/images/logo.png" alt="" />
+          <h2 class="logo-text">{{ title }}</h2>
         </div>
         <LoginForm />
       </div>
@@ -19,6 +19,7 @@
 <script setup lang="ts" name="login">
 import LoginForm from "./components/LoginForm.vue";
 import SwitchDark from "@/components/SwitchDark/index.vue";
+const title = import.meta.env.VITE_GLOB_APP_TITLE;
 </script>
 
 <style scoped lang="scss">

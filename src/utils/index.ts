@@ -1,5 +1,6 @@
 import { isArray } from "@/utils/is";
 import { FieldNamesProps } from "@/components/ProTable/interface";
+import { Menu } from "@/api/interface/system";
 
 const mode = import.meta.env.VITE_ROUTER_MODE;
 
@@ -308,4 +309,85 @@ export function findItemNested(enumData: any, callValue: any, value: string, chi
     if (current[value] === callValue) return current;
     if (current[children]) return findItemNested(current[children], callValue, value, children);
   }, null);
+}
+
+/**
+ * 判断path是否为外链
+ */
+export function isExternal(path: any) {
+  return /^(https?:|mailto:|tel:)/.test(path);
+}
+
+/**
+ * @description 递归查询当前路由所对应的路由
+ * @param {Array} menuList 所有菜单列表
+ * @param {String} path 当前访问地址
+ * @return array
+ */
+export function filterRoute(menuList: Menu.MenuOptions[], path: string = ""): any[] {
+  return menuList.map(item => {
+    item.path = path ? path + "/" + item.path : item.path;
+    item.meta = {
+      icon: item.meta.icon,
+      title: item.meta.title,
+      isLink: "",
+      isHide: item.hidden ? item.hidden : false,
+      isFull: false,
+      isAffix: false,
+      isKeepAlive: true
+    };
+    item.children?.length && filterRoute(item.children, item.path);
+    return item;
+  });
+}
+
+/**
+ * 构造树型结构数据
+ * @param {*} data 数据源
+ * @param {*} id id字段 默认 'id'
+ * @param {*} parentId 父节点字段 默认 'parentId'
+ * @param {*} children 孩子节点字段 默认 'children'
+ */
+export function handleTree(data: any, id: any, parentId?: any, children?: any) {
+  const config = {
+    id: id || "id",
+    parentId: parentId || "parentId",
+    childrenList: children || "children"
+  };
+
+  const childrenListMap: any = {};
+  const nodeIds: any = {};
+  const tree = [];
+
+  for (const d of data) {
+    const parentId = d[config.parentId];
+    if (childrenListMap[parentId] == null) {
+      childrenListMap[parentId] = [];
+    }
+    nodeIds[d[config.id]] = d;
+    childrenListMap[parentId].push(d);
+  }
+
+  for (const d of data) {
+    const parentId = d[config.parentId];
+    if (nodeIds[parentId] == null) {
+      tree.push(d as never);
+    }
+  }
+
+  for (const t of tree) {
+    adaptToChildrenList(t);
+  }
+
+  function adaptToChildrenList(o: any) {
+    if (childrenListMap[o[config.id]] !== null) {
+      o[config.childrenList] = childrenListMap[o[config.id]];
+    }
+    if (o[config.childrenList]) {
+      for (const c of o[config.childrenList]) {
+        adaptToChildrenList(c);
+      }
+    }
+  }
+  return tree;
 }

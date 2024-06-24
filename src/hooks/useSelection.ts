@@ -9,8 +9,8 @@ export const useSelection = (rowKey: string = "id") => {
   const selectedList = ref<{ [key: string]: any }[]>([]);
 
   // 当前选中的所有 ids 数组
-  const selectedListIds = computed((): string[] => {
-    let ids: string[] = [];
+  const selectedListIds = computed((): number[] => {
+    let ids: number[] = [];
     selectedList.value.forEach(item => ids.push(item[rowKey]));
     return ids;
   });

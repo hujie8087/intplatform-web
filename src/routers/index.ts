@@ -69,6 +69,12 @@ router.beforeEach(async (to, from, next) => {
     return next({ ...to, replace: true });
   }
 
+  // await userStore.getUserInfo();
+  if (!userStore.userInfo.user.nickName) {
+    await userStore.getUserInfo();
+    return next();
+  }
+
   // 7.存储 routerName 做按钮权限筛选
   authStore.setRouteName(to.name as string);
 

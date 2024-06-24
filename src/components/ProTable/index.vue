@@ -22,12 +22,12 @@
         <slot name="toolButton">
           <el-button v-if="showToolButton('refresh')" :icon="Refresh" circle @click="getTableList" />
           <el-button v-if="showToolButton('setting') && columns.length" :icon="Operation" circle @click="openColSetting" />
-          <el-button
+          <!-- <el-button
             v-if="showToolButton('search') && searchColumns?.length"
             :icon="Search"
             circle
             @click="isShowSearch = !isShowSearch"
-          />
+          /> -->
         </slot>
       </div>
     </div>
@@ -35,10 +35,11 @@
     <el-table
       ref="tableRef"
       v-bind="$attrs"
-      :data="processTableData"
+      :data="tableData"
       :border="border"
       :row-key="rowKey"
       @selection-change="selectionChange"
+      :key="key"
     >
       <!-- 默认插槽 -->
       <slot />
@@ -108,7 +109,7 @@ import { useTable } from "@/hooks/useTable";
 import { useSelection } from "@/hooks/useSelection";
 import { BreakPoint } from "@/components/Grid/interface";
 import { ColumnProps, TypeProps } from "@/components/ProTable/interface";
-import { Refresh, Operation, Search } from "@element-plus/icons-vue";
+import { Refresh, Operation } from "@element-plus/icons-vue";
 import { handleProp } from "@/utils";
 import SearchForm from "@/components/SearchForm/index.vue";
 import Pagination from "./components/Pagination.vue";
@@ -141,7 +142,7 @@ const props = withDefaults(defineProps<ProTableProps>(), {
   border: true,
   toolButton: true,
   rowKey: "id",
-  searchCol: () => ({ xs: 1, sm: 2, md: 2, lg: 3, xl: 4 })
+  searchCol: () => ({ xs: 1, sm: 2, md: 2, lg: 4, xl: 6 })
 });
 
 // table 实例
@@ -165,9 +166,18 @@ const radio = ref("");
 const { selectionChange, selectedList, selectedListIds, isSelected } = useSelection(props.rowKey);
 
 // 表格操作 Hooks
-const { tableData, pageable, searchParam, searchInitParam, getTableList, search, reset, handleSizeChange, handleCurrentChange } =
-  useTable(props.requestApi, props.initParam, props.pagination, props.dataCallback, props.requestError);
-
+const {
+  tableData,
+  pageable,
+  searchParam,
+  searchInitParam,
+  getTableList,
+  search,
+  reset,
+  handleSizeChange,
+  handleCurrentChange,
+  key
+} = useTable(props.requestApi, props.initParam, props.pagination, props.dataCallback, props.requestError);
 // 清空选中数据列表
 const clearSelection = () => tableRef.value!.clearSelection();
 

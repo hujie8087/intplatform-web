@@ -1,3 +1,6 @@
+import { DictOptions, Login } from "@/api/interface";
+import { Menu } from "@/api/interface/system";
+
 export type LayoutType = "vertical" | "classic" | "transverse" | "columns";
 
 export type AssemblySizeType = "large" | "default" | "small";
@@ -28,7 +31,7 @@ export interface GlobalState {
 /* UserState */
 export interface UserState {
   token: string;
-  userInfo: { name: string };
+  userInfo: Login.ResUserInfo;
 }
 
 /* tabsMenuProps */
@@ -49,13 +52,20 @@ export interface TabsState {
 /* AuthState */
 export interface AuthState {
   routeName: string;
-  authButtonList: {
-    [key: string]: string[];
-  };
+  authButtonList: string[];
   authMenuList: Menu.MenuOptions[];
 }
 
 /* KeepAliveState */
 export interface KeepAliveState {
   keepAliveName: string[];
+}
+
+export interface DictStateValue {
+  label: string;
+  value: DictOptions[];
+}
+
+export interface DictState {
+  dict: DictStateValue[];
 }

@@ -11,7 +11,7 @@ export interface ResultData<T = any> extends Result {
 
 // 分页响应参数
 export interface ResPage<T> {
-  list: T[];
+  rows: T[];
   pageNum: number;
   pageSize: number;
   total: number;
@@ -41,6 +41,36 @@ export namespace Login {
   }
   export interface ResAuthButtons {
     [key: string]: string[];
+  }
+  export interface ResUserInfo {
+    permissions: string[];
+    roles: string[];
+    user: {
+      createBy: string;
+      createTime: string;
+      updateBy: null;
+      updateTime: null;
+      remark: string;
+      userId: number;
+      deptId: number;
+      userName: string;
+      nickName: string;
+      userType: string;
+      email: string;
+      phonenumber: string;
+      sex: string;
+      avatar: string;
+      status: string;
+      delFlag: string;
+      loginIp: string;
+      loginDate: string;
+      dept: User.ResDepartment;
+      roles: User.ResRole[];
+      roleIds: string;
+      postIds: string;
+      roleId: string;
+      admin: boolean;
+    };
   }
 }
 
@@ -78,13 +108,50 @@ export namespace User {
     genderValue: number;
   }
   export interface ResDepartment {
-    id: string;
-    name: string;
+    createBy: string;
+    createTime: string;
+    updateBy: string | null;
+    updateTime: string | null;
+    remark: string | null;
+    deptId: number;
+    parentId: number;
+    ancestors: string;
+    deptName: string;
+    orderNum: number;
+    leader: string;
+    phone: string;
+    email: string;
+    status: string;
+    delFlag: string;
+    parentName: string | null;
     children?: ResDepartment[];
   }
   export interface ResRole {
-    id: string;
-    name: string;
+    createBy: string | null;
+    createTime: string | null;
+    updateBy: string | null;
+    updateTime: string | null;
+    remark: string | null;
+    roleId: number;
+    roleName: string;
+    roleKey: string;
+    roleSort: number;
+    dataScope: string;
+    menuCheckStrictly: boolean;
+    deptCheckStrictly: boolean;
+    status: string;
+    delFlag: string | null;
+    flag: boolean;
+    menuIds: number[] | null;
+    deptIds: number[] | null;
+    permissions: string[] | null;
+    admin: boolean;
     children?: ResDepartment[];
   }
+}
+
+export interface DictOptions {
+  label: string;
+  value: number | string;
+  tagType?: string;
 }
