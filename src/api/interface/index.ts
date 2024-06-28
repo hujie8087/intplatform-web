@@ -154,4 +154,5 @@ export interface DictOptions {
   label: string;
   value: number | string;
   tagType?: string;
+  cssClass?: string;
 }

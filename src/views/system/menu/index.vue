@@ -1,6 +1,14 @@
 <template>
   <div class="table-box">
-    <ProTable ref="proTable" title="菜单列表" row-key="path" :indent="20" :columns="columns" :data="tableData">
+    <ProTable
+      ref="proTable"
+      title="菜单列表"
+      row-key="path"
+      :indent="20"
+      :columns="columns"
+      :request-api="getMenuList"
+      :data-callback="dataCallback"
+    >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" :icon="CirclePlus" @click="openDrawer(1)">新增菜单 </el-button>
@@ -25,7 +33,7 @@
 
 <script setup lang="ts" name="menuMange">
 import { ref } from "vue";
-import { ColumnProps } from "@/components/ProTable/interface";
+import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
 import { Delete, EditPen, CirclePlus, Plus } from "@element-plus/icons-vue";
 import ProTable from "@/components/ProTable/index.vue";
 import MenuDrawer from "./components/MenuDrawer.vue";
@@ -39,11 +47,20 @@ import { useHandleData } from "@/hooks/useHandleData";
 import { Menu } from "@/api/interface/system";
 const { t } = useI18n(); // 解构出t方法
 
-const proTable = ref();
+const proTable = ref<ProTableInstance>();
 const tableData = ref();
-const getMenuListData = async () => {
-  const { data } = await getMenuList();
-  tableData.value = handleTree(data, "menuId");
+// const getMenuListData = async () => {
+//   const { data } = await getMenuList();
+//   tableData.value = handleTree(data, "menuId");
+// };
+const dataCallback = (data: any) => {
+  tableData.value = handleTree(data.data, "menuId");
+  return {
+    list: tableData.value,
+    total: tableData.value.length,
+    current: data.current,
+    size: data.size
+  };
 };
 // 表格配置项
 const columns = reactive<ColumnProps<Menu.MenuOptions>[]>([
@@ -90,7 +107,7 @@ const openDrawer = async (num: number, rowData: Partial<Menu.ResMenu> = {}) => {
     rowData: { ...menuInfo },
     isView: false,
     api: num === 3 ? editMenu : addMenu,
-    getTableList: getMenuListData,
+    getTableList: proTable.value!.getTableList,
     menuOptions: [{ menuId: 0, menuName: "主目录", children: tableData.value }]
   };
   drawerRef.value.acceptParams(params);
@@ -98,7 +115,7 @@ const openDrawer = async (num: number, rowData: Partial<Menu.ResMenu> = {}) => {
 // 删除菜单信息
 const deleteAccount = async (params: Menu.ResMenu) => {
   await useHandleData(deleteMenu, params.menuId, t("main.deleteMsg", { msg: params.menuName, title: t("system.menu.menu") }));
-  getMenuListData();
+  proTable.value?.getTableList();
 };
-getMenuListData();
+// getMenuListData();
 </script>

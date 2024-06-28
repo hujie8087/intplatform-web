@@ -24,6 +24,7 @@ export const useHandleData = (
     })
       .then(async () => {
         const res = await api(params);
+        console.log(res);
         if (!res) return reject(false);
         ElMessage({
           type: "success",

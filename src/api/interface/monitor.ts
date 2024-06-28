@@ -1,5 +1,5 @@
 import { ReqPage } from "./index";
-// * 用户管理模块
+// * 定时管理模块
 export namespace Task {
   export interface ReqTaskParams extends ReqPage {
     jobName?: string;
@@ -21,5 +21,21 @@ export namespace Task {
     concurrent: string;
     status: string;
     nextValidTime: string;
+  }
+  export interface ResTaskLogParams {
+    jobName?: string;
+    jobGroup?: string;
+    status?: string;
+    beginTime?: string;
+    endTime?: string;
+  }
+  export interface ResTaskLog {
+    jobLogId: number;
+    jobName: string;
+    jobGroup: string;
+    invokeTarget: string;
+    jobMessage: string;
+    status: string;
+    createTime: string;
   }
 }

@@ -11,7 +11,8 @@ const getDictData = async (dictLabel: string): Promise<DictOptions[]> => {
           return {
             label: item.dictLabel,
             value: item.dictValue,
-            tagType: item.listClass
+            tagType: item.listClass,
+            cssClass: item.cssClass
           };
         });
         resolve(list);
@@ -40,6 +41,5 @@ export async function useDict(...args: string[]) {
       }
     })
   );
-  console.log(res.value);
   return res.value;
 }

@@ -14,7 +14,7 @@ export const listJob = (params: Task.ReqTaskParams) => {
 
 // 查询表详细信息
 export const getJob = (jobId: number) => {
-  return http.get<Gen.GenDetail>(PORT1 + `/monitor/job/${jobId}`);
+  return http.get<Task.ResTask>(PORT1 + `/monitor/job/${jobId}`);
 };
 
 // 新增定时任务
@@ -28,13 +28,13 @@ export const updateJob = (params: any) => {
 };
 
 // 删除定时任务
-export const delJob = (jobId: number) => {
-  return http.delete(PORT1 + `/monitor/job/${jobId}`);
+export const delJob = (jobId: number[]) => {
+  return http.delete(PORT1 + `/monitor/job/${jobId.join(",")}`);
 };
 
-// 导入定时任务
-export const importTable = (params: any) => {
-  return http.post(PORT1 + `/monitor/job/importTable`, params);
+// 导出定时任务
+export const exportJob = (params: any) => {
+  return http.post(PORT1 + `/monitor/job/export`, params);
 };
 
 // 任务状态修改
@@ -46,8 +46,19 @@ export const changeJobStatus = (params: Task.ResTask) => {
 };
 // 定时任务立即执行一次
 export const runJob = (params: Task.ResTask) => {
-  return http.put(PORT1 + `/monitor/job`, {
-    jobId: params.jobId,
-    jobGroup: params.jobGroup
-  });
+  return http.put(PORT1 + `/monitor/job/run`, params);
 };
+
+// 查询调度日志列表
+export const listJobLog = (params: Task.ResTaskLogParams) => {
+  return http.get<ResPage<Task.ResTaskLog>>(PORT1 + `/monitor/job/log/list`, params);
+};
+// 删除调度日志
+export const delJobLog = (jobLogId: number[]) => {
+  return http.delete(PORT1 + `/monitor/jobLog/${jobLogId.join(",")}`);
+};
+
+// 清空调度日志
+export function cleanJobLog() {
+  return http.delete(PORT1 + `/monitor/jobLog/clean`);
+}
