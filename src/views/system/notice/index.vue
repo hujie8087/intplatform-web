@@ -8,7 +8,7 @@
         :request-api="getNoticeList"
         :data-callback="dataCallback"
         :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
-        row-key="configId"
+        row-key="noticeId"
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
@@ -104,7 +104,7 @@ const deleteNoticeHandle = async (params: Notice.ResNotice) => {
 
 // 批量删除
 const batchDelete = async (ids: number[]) => {
-  await useHandleData(deleteNotice, ids, t("main.deleteBatchMsg", { title: t("system.config.configName") }));
+  await useHandleData(deleteNotice, ids, t("main.deleteBatchMsg", { title: "通知新闻" }));
   proTable.value?.clearSelection();
   proTable.value?.getTableList();
 };

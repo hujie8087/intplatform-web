@@ -11,17 +11,8 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" :icon="CirclePlus" @click="openDrawer(1)" v-auth="'system:role:add'">{{
-            $t("system.role.add")
-          }}</el-button>
-          <el-button
-            type="danger"
-            :icon="Delete"
-            plain
-            @click="batchDelete(scope.selectedListIds)"
-            v-auth="'system:role:batchDelete'"
-            :disabled="!scope.isSelected"
-          >
+          <el-button type="primary" :icon="CirclePlus" @click="openDrawer(1)">{{ $t("system.role.add") }}</el-button>
+          <el-button type="danger" :icon="Delete" plain @click="batchDelete(scope.selectedListIds)" :disabled="!scope.isSelected">
             {{ $t("system.role.batchDelete") }}
           </el-button>
         </template>
