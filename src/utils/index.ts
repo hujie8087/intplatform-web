@@ -1,6 +1,7 @@
 import { isArray } from "@/utils/is";
 import { FieldNamesProps } from "@/components/ProTable/interface";
 import { Menu } from "@/api/interface/system";
+import { Building } from "@/api/interface/food/building";
 
 const mode = import.meta.env.VITE_ROUTER_MODE;
 
@@ -390,4 +391,37 @@ export function handleTree(data: any, id: any, parentId?: any, children?: any) {
     }
   }
   return tree;
+}
+
+export function findChildrenById(id: number, data: Building.ResBuilding[]): Building.ResBuilding[] | undefined {
+  const newData = JSON.parse(JSON.stringify(data));
+  if (id === 0) {
+    return newData.map((item: Building.ResBuilding) => {
+      item.hasChildren = item.children && item.children.length > 0;
+      delete item.children;
+      return item;
+    });
+  } else {
+    for (const item of newData) {
+      if (item.id === id) {
+        if (item.children && item.children.length > 0) {
+          item.children = item.children.map((child: Building.ResBuilding) => {
+            child.hasChildren = !(child.children && child.children.length > 0);
+            delete child.children;
+            return child;
+          });
+        }
+        return item.children || [];
+      }
+
+      if (item.children && item.children.length > 0) {
+        const childrenInChild = findChildrenById(id, item.children);
+        if (childrenInChild) {
+          return childrenInChild;
+        }
+      }
+    }
+
+    return undefined;
+  }
 }

@@ -7,7 +7,6 @@
     <el-scrollbar :style="{ height: title ? `calc(100% - 95px)` : `calc(100% - 56px)` }">
       <el-tree
         ref="treeRef"
-        default-expand-all
         :node-key="id"
         :data="multiple ? treeData : treeAllData"
         :show-checkbox="multiple"

@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, InternalAxiosRequ
 import { showFullScreenLoading, tryHideFullScreenLoading } from "@/components/Loading/fullScreen";
 import { LOGIN_URL } from "@/config";
 import { ElMessage } from "element-plus";
-import { Result, ResultData } from "@/api/interface";
+import { ResPage, Result, ResultData } from "@/api/interface";
 import { ResultEnum } from "@/enums/httpEnum";
 import { checkStatus } from "./helper/checkStatus";
 import { AxiosCanceler } from "./helper/axiosCancel";
@@ -100,6 +100,9 @@ class RequestHttp {
    * @description 常用请求方法封装
    */
   get<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+    return this.service.get(url, { params, ..._object });
+  }
+  getRow<T>(url: string, params?: object, _object = {}): Promise<ResPage<T>> {
     return this.service.get(url, { params, ..._object });
   }
   getNoData<T>(url: string, params?: object, _object = {}): Promise<T & Result> {

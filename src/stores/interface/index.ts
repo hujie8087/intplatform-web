@@ -1,4 +1,5 @@
 import { DictOptions, Login } from "@/api/interface";
+import { Building } from "@/api/interface/food/building";
 import { Menu } from "@/api/interface/system";
 
 export type LayoutType = "vertical" | "classic" | "transverse" | "columns";
@@ -68,4 +69,9 @@ export interface DictStateValue {
 
 export interface DictState {
   dict: DictStateValue[];
+}
+
+export interface BuildingState {
+  buildingList: Building.ResBuilding[];
+  allBuildingList: Building.ResBuilding[];
 }
