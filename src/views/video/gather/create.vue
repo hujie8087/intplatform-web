@@ -21,7 +21,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="视频描述" prop="description">
-              <el-input type="textarea" v-model="createGatherForm.description" placeholder=""></el-input>
+              <el-input type="textarea" :rows="10" v-model="createGatherForm.description" placeholder=""></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">

@@ -31,7 +31,7 @@
   </div>
 </template>
 
-<script setup lang="tsx" name="VideoType">
+<script setup lang="ts" name="VideoType">
 import { reactive, ref } from "vue";
 import { VideoType } from "@/api/interface/video";
 import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";

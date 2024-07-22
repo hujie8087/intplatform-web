@@ -23,7 +23,7 @@ export const addUser = (params: FormData) => {
 
 // 批量添加用户
 export const BatchAddUser = (params: FormData) => {
-  return http.post(PORT1 + `/system/user/import`, params);
+  return http.post(PORT1 + `/system/user/importData`, params);
 };
 
 // 编辑用户

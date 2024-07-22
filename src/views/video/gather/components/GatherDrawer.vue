@@ -6,14 +6,14 @@
       label-suffix=" :"
       :rules="rules"
       :disabled="drawerProps.isView"
-      :model="createGatherForm"
+      :model="drawerProps.rowData"
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-row>
         <el-col :span="12">
           <el-form-item label="视频名称" prop="videoName">
             <el-input
-              v-model="createGatherForm.videoName"
+              v-model="drawerProps.rowData.videoName"
               :placeholder="`${$t('main.inputError', { msg: '视频类型名称' })}`"
               clearable
             ></el-input>
@@ -21,7 +21,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="视频分类" prop="type">
-            <el-select v-model="createGatherForm.type" placeholder="请选择视频分类">
+            <el-select v-model="drawerProps.rowData.type" placeholder="请选择视频分类">
               <el-option
                 v-for="item in drawerProps.videoTypeList"
                 :key="item.value"
@@ -33,12 +33,12 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="视频描述" prop="description">
-            <el-input type="textarea" v-model="createGatherForm.description" placeholder=""></el-input>
+            <el-input type="textarea" rows="10" v-model="drawerProps.rowData.description" placeholder=""></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="视频封面" prop="coverPath">
-            <UploadImg v-model:image-url="createGatherForm.coverPath" :file-size="5" width="100px" height="100px">
+            <UploadImg v-model:image-url="drawerProps.rowData.coverPath" :file-size="5" width="100px" height="100px">
               <template #tip> 上传图片最大为 5M </template>
             </UploadImg>
           </el-form-item>
@@ -113,20 +113,6 @@ const drawerProps = ref<DrawerProps>({
   rowData: {}
 });
 
-const createGatherForm = ref<Gather.CreateGather>({
-  videoName: "",
-  type: 0,
-  description: "",
-  coverPath: "",
-  labelIds: "",
-  remark: "",
-  playVolume: 0,
-  score: 0,
-  scoreNum: 0,
-  releaseYear: "",
-  ranscode: 0,
-  videoGatherDetails: []
-});
 // 视频标签选择
 const changeSelectFilter = (value: typeof selectFilterValues.value) => {
   selectFilterValues.value = value;

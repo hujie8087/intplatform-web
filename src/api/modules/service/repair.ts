@@ -38,8 +38,8 @@ export const getRepairList = (params: Repair.ReqRepairParams) => {
 };
 
 // 获取报修类型列表
-export const getRepairTypeList = () => {
-  return http.getRow<Repair.ResRepairType>(PORT1 + `/commonality/repairType/list`);
+export const getRepairTypeList = (params: Repair.ReqRepairTypeParams) => {
+  return http.getRow<Repair.ResRepairType>(PORT1 + `/commonality/repairType/list`, params);
 };
 // * 获取报修类型
 export const getRepairTypeById = (id: number) => {

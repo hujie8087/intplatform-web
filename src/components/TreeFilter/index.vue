@@ -10,7 +10,7 @@
         :node-key="id"
         :data="multiple ? treeData : treeAllData"
         :show-checkbox="multiple"
-        :check-strictly="false"
+        :check-strictly="checkStrictly"
         :current-node-key="!multiple ? selected : ''"
         :highlight-current="!multiple"
         :expand-on-click-node="false"
@@ -46,11 +46,13 @@ interface TreeFilterProps {
   label?: string; // 显示的label ==> 非必传，默认为 “label”
   multiple?: boolean; // 是否为多选 ==> 非必传，默认为 false
   defaultValue?: any; // 默认选中的值 ==> 非必传
+  checkStrictly?: boolean;
 }
 const props = withDefaults(defineProps<TreeFilterProps>(), {
   id: "id",
   label: "label",
-  multiple: false
+  multiple: false,
+  checkStrictly: false
 });
 
 const defaultProps = {

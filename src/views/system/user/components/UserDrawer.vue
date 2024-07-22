@@ -15,13 +15,20 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-row>
-        <el-col :span="12">
-          <el-form-item :label="`${$t('system.user.name')}`" prop="nickName">
-            <el-input
-              v-model="drawerProps.rowData!.nickName"
-              :placeholder="`${$t('main.inputError', { msg: $t('system.user.name') })}`"
-              clearable
-            ></el-input>
+        <el-col :span="24">
+          <el-form-item label="用户头像" prop="avatar">
+            <UploadImg
+              v-model:image-url="drawerProps.rowData!.avatar"
+              height="100px"
+              width="100px"
+              :drag="false"
+              border-radius="50%"
+            >
+              <template #empty>
+                <el-icon><Avatar /></el-icon>
+                <span>请上传头像</span>
+              </template>
+            </UploadImg>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -33,14 +40,25 @@
             ></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12" v-if="drawerProps.rowData?.userId === undefined">
-          <el-form-item :label="`${$t('system.user.password')}`" prop="password">
+        <el-col :span="12">
+          <el-form-item :label="`${$t('system.user.name')}`" prop="nickName">
             <el-input
-              v-model="drawerProps.rowData!.password"
-              type="password"
-              :placeholder="`${$t('main.inputError', { msg: $t('system.user.password') })}`"
+              v-model="drawerProps.rowData!.nickName"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.user.name') })}`"
               clearable
             ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item :label="`${$t('system.user.userType')}`" prop="userType">
+            <el-select
+              v-model="drawerProps.rowData!.userType"
+              :placeholder="`${$t('main.selectError', { msg: $t('system.user.userType') })}`"
+              clearable
+              style="width: 100%"
+            >
+              <el-option v-for="item in userType" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -48,6 +66,15 @@
             <el-input
               v-model="drawerProps.rowData!.phonenumber"
               :placeholder="`${$t('main.inputError', { msg: $t('system.user.mobile') })}`"
+              clearable
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item :label="`${$t('system.user.card')}`" prop="card">
+            <el-input
+              v-model="drawerProps.rowData!.card"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.user.card') })}`"
               clearable
             ></el-input>
           </el-form-item>
@@ -85,7 +112,7 @@
               clearable
               style="width: 100%"
             >
-              <el-option v-for="item in genderType" :key="item.value" :label="item.label.value" :value="item.value" />
+              <el-option v-for="item in genderType" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -121,18 +148,18 @@
 
 <script setup lang="ts" name="UserDrawer">
 import { ref, reactive } from "vue";
-import { genderType } from "@/utils/serviceDict";
+import { genderType, userType } from "@/utils/serviceDict";
 import { ElMessage, FormInstance } from "element-plus";
 import { Account } from "@/api/interface/system";
 import { useI18n } from "vue-i18n";
+import UploadImg from "@/components/Upload/Img.vue";
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({
   userName: [{ required: true, message: t("main.inputError", { msg: t("system.user.username") }) }],
   nickName: [{ required: true, message: t("main.inputError", { msg: t("system.user.name") }) }],
-  password: [{ required: true, message: t("main.inputError", { msg: t("system.user.password") }) }],
-  phonenumber: [{ required: true, message: t("main.inputError", { msg: t("system.user.mobile") }) }],
-  email: [{ required: true, message: t("main.inputError", { msg: t("system.user.email") }) }],
+  userType: [{ required: true, message: t("main.selectError", { msg: t("system.user.userType") }) }],
+  sex: [{ required: true, message: t("main.selectError", { msg: t("system.user.sex") }) }],
   deptId: [{ required: true, message: t("main.selectError", { msg: t("system.user.dept") }) }]
 });
 

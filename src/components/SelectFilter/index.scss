@@ -10,14 +10,14 @@
     .select-filter-item-title {
       margin-top: -2px;
       span {
-        font-size: 14px;
+        font-size: 12px;
         color: var(--el-text-color-regular);
         white-space: nowrap;
       }
     }
     .select-filter-notData {
       margin: 8px 0;
-      font-size: 14px;
+      font-size: 12px;
       color: var(--el-text-color-regular);
     }
     .select-filter-list {
@@ -28,9 +28,9 @@
       li {
         display: flex;
         align-items: center;
-        padding: 2px 10px;
-        margin-right: 16px;
-        font-size: 13px;
+        padding: 0 10px;
+        margin-right: 12px;
+        font-size: 12px;
         color: var(--el-color-primary);
         list-style: none;
         cursor: pointer;

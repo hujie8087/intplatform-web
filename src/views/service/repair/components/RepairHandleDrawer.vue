@@ -25,6 +25,11 @@
             <el-input v-model="drawerProps.rowData!.repairMessage" type="textarea" clearable disabled />
           </el-form-item>
         </el-col>
+        <el-col :span="24" v-show="drawerProps.rowData!.ratingMessage">
+          <el-form-item label="维修反馈信息" prop="ratingMessage">
+            <el-input v-model="drawerProps.rowData!.ratingMessage" type="textarea" clearable disabled />
+          </el-form-item>
+        </el-col>
         <el-col :span="24">
           <el-form-item label="维修类型" prop="repairType">
             <!-- 选择维修类型 -->
@@ -57,7 +62,7 @@
           <el-form-item :label="`${$t('system.notice.status')}`" prop="status">
             <el-radio-group
               v-model="drawerProps.rowData!.repairState"
-              :placeholder="`${$t('main.inputError', { msg: $t('system.notice.status') })}`"
+              :placeholder="`${$t('main.selectError', { msg: '维修状态' })}`"
             >
               <el-radio v-for="item in drawerProps.repairStatusOptions" :key="item.value" :label="item.value">{{
                 item.label
@@ -115,6 +120,7 @@ const drawerProps = ref<DrawerProps>({
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
+  params.rowData.repairState = 1;
   repairArea.value = params.rowData.repairArea + "-" + params.rowData.roomNo;
 };
 
@@ -126,6 +132,7 @@ const handleSubmit = () => {
     const formData = { ...drawerProps.value.rowData };
     formData.repairMan = userInfo.user.nickName;
     formData.repairManId = userInfo.user.userId;
+    formData.readStatus = "1";
     try {
       await drawerProps.value.api!(formData);
       ElMessage.success({

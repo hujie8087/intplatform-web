@@ -44,7 +44,6 @@
           :max-scale="7"
           :min-scale="0.2"
           :preview-src-list="drawerProps.rowData.repairPhoto?.split(',')"
-          :initial-index="4"
           fit="cover"
         />
       </el-descriptions-item>
@@ -64,14 +63,14 @@
         <template #label>
           <div class="cell-item">维修类型</div>
         </template>
-        {{ drawerProps.rowData.repairType }}
+        {{ drawerProps.repairTypeOptions?.find(item => item.value == drawerProps.rowData.repairType)?.label }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label>
           <div class="cell-item">维修状态</div>
         </template>
-        <el-tag :type="drawerProps.rowData.repairState === 0 ? 'danger' : 'primary'">{{
-          drawerProps.rowData.repairState === 0 ? "待维修" : "已维修"
+        <el-tag :type="repairStateOptions.find(item => item.value === drawerProps.rowData.repairState)?.tagType">{{
+          repairStateOptions.find(item => item.value === drawerProps.rowData.repairState)?.label
         }}</el-tag>
       </el-descriptions-item>
       <el-descriptions-item>
@@ -109,9 +108,13 @@ interface DrawerProps {
   title: string;
   rowData: Partial<Repair.ResRepair>;
   repairTypeOptions?: DictOptions[];
-  repairStatusOptions?: DictOptions[];
 }
-
+const repairStateOptions = ref<DictOptions[]>([
+  { label: "待维修", value: 0, tagType: "danger" },
+  { label: "已维修", value: 1, tagType: "primary" },
+  { label: "待返修", value: 2, tagType: "warning" },
+  { label: "已完结", value: 3, tagType: "success" }
+]);
 // drawer框状态
 const drawerVisible = ref(false);
 const drawerProps = ref<DrawerProps>({

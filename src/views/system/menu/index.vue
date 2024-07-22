@@ -39,12 +39,12 @@ import ProTable from "@/components/ProTable/index.vue";
 import MenuDrawer from "./components/MenuDrawer.vue";
 import { deleteMenu, getMenuById, getMenuList } from "@/api/modules/user";
 import { handleTree } from "@/utils";
-import { userStatus } from "@/utils/dict";
 import { reactive } from "vue";
 import { useI18n } from "vue-i18n";
 import { editMenu, addMenu } from "@/api/modules/user";
 import { useHandleData } from "@/hooks/useHandleData";
 import { Menu } from "@/api/interface/system";
+import { visibleType } from "@/utils/serviceDict";
 const { t } = useI18n(); // 解构出t方法
 
 const proTable = ref<ProTableInstance>();
@@ -74,7 +74,7 @@ const columns = reactive<ColumnProps<Menu.MenuOptions>[]>([
   { prop: "path", label: "菜单路径", search: { el: "input" } },
   { prop: "component", label: "组件路径" },
   { prop: "perms", label: "权限标记" },
-  { prop: "status", label: "显示状态", width: 100, tag: true, enum: userStatus },
+  { prop: "status", label: "显示状态", width: 100, tag: true, enum: visibleType },
   { prop: "operation", label: "操作", width: 250, fixed: "right" }
 ]);
 

@@ -8,7 +8,7 @@
         :request-api="getRepairTypeList"
         :data-callback="dataCallback"
         :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
-        row-key="noticeId"
+        row-key="id"
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
@@ -79,14 +79,8 @@ const columns = reactive<ColumnProps<Repair.ResRepairType>[]>([
     enum: sys_normal_disable,
     sortable: true,
     tag: true,
+    search: { el: "select", props: { filterable: true } },
     width: 100
-  },
-  { prop: "createBy", label: "创建者", width: 180 },
-  {
-    prop: "createTime",
-    label: "创建时间",
-    width: 180,
-    sortable: true
   },
   { prop: "operation", label: "操作", width: 230, fixed: "right" }
 ]);

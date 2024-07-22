@@ -39,7 +39,7 @@ export const getBuildingTree = () => {
 
 // * 获取所有生活区列表
 export const getAllBuildingTree = () => {
-  return http.get<Building.ResBuilding[][]>(PORT1 + `/commonality/food/building/app/tree`);
+  return http.get<Building.ResBuilding[]>(PORT1 + `/commonality/food/building/app/tree`);
 };
 
 // 获取楼栋节点

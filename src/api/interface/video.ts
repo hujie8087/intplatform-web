@@ -99,6 +99,7 @@ export namespace Gather {
     def3?: string;
     def4?: string;
     def5?: string;
+    sort?: number;
     createBy?: string;
     createTime?: Date;
     updateBy?: string;

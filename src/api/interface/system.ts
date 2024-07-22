@@ -21,6 +21,7 @@ export namespace Account {
     userType: string | null;
     email: string;
     phonenumber: string;
+    card: string;
     sex: string;
     avatar: string;
     password: string | null;

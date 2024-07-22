@@ -36,8 +36,8 @@ import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, EditPen, Plus } from "@element-plus/icons-vue";
 import { getDeptList, deleteDept, editDept, addDept, getDeptById, listDeptExcludeChild } from "@/api/modules/system/dept";
 import { Dept } from "@/api/interface/system";
-import { userStatus } from "@/utils/dict";
 import { handleTree } from "@/utils";
+import { userStatus } from "@/utils/serviceDict";
 
 // ProTable 实例
 const proTable = ref<ProTableInstance>();

@@ -21,7 +21,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="视频描述" prop="description">
-              <el-input type="textarea" v-model="createGatherForm.description" placeholder=""></el-input>
+              <el-input type="textarea" :rows="10" v-model="createGatherForm.description" placeholder=""></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -43,6 +43,7 @@
               v-model:file-list="fileList"
               class="upload-demo"
               :action="baseUrl + '/file/uploadVideo'"
+              accept=".mp4,.mkv,.rmvb,.mov,.m4v,avi,.dat,.flv,.vob,.AVI,.WMV,.webm,.f4v,.rm,.asf,.mpg,.mpeg,.mpe"
               :headers="{
                 Authorization: 'Bearer ' + userStore.token
               }"
@@ -59,16 +60,23 @@
           <div v-if="progress > 0"><el-progress :stroke-width="8" :percentage="progress" /></div>
           <el-table :data="tableData" border>
             <el-table-column type="selection" width="55" align="center" />
-            <el-table-column prop="dTitle" label="标题" align="center" />
+            <el-table-column type="index" width="55" label="序号" align="center" />
+            <el-table-column prop="dTitle" label="标题" align="center">
+              <template #default="scope">
+                <el-input v-model="scope.row.dTitle"></el-input>
+              </template>
+            </el-table-column>
             <el-table-column prop="sourcePath" label="视频原路径" align="center" />
-            <el-table-column prop="h264" label="h264格式路径" align="center" />
-            <el-table-column prop="m3u8" label="m3u8格式路径" align="center" />
-            <el-table-column prop="remark" label="备注" align="center" />
+            <el-table-column prop="sort" label="排序" align="center">
+              <template #default="scope">
+                <el-input-number v-model="scope.row.sort"></el-input-number>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" align="center">
               <!-- 表格操作 -->
-              <template #default>
-                <el-button type="primary" link :icon="View">查看</el-button>
-                <el-button type="primary" link :icon="Delete">删除</el-button>
+              <template #default="scope">
+                <el-button type="success" link :icon="Edit" @click="editGatherHandle(scope.row, scope.$index)">编辑</el-button>
+                <el-button type="warning" link :icon="Delete">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -96,15 +104,14 @@ import { editGather, getGatherDetail, getVideoLabelList, getVideoTypeList } from
 import { useDict } from "@/hooks/useDict";
 import { useTabsStore } from "@/stores/modules/tabs";
 import { useRoute } from "vue-router";
-import { CirclePlus, Delete, View } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, Edit } from "@element-plus/icons-vue";
 import { useUserStore } from "@/stores/modules/user";
 import { onBeforeMount } from "vue";
+import { useHandleData } from "@/hooks/useHandleData";
 const { t } = useI18n(); // 解构出t方法
 
 const progress = ref(0);
 const handleProgress = event => {
-  console.log(event.loaded, event.total);
-
   progress.value = Math.round((event.loaded / event.total) * 100);
 };
 const userStore = useUserStore();
@@ -247,6 +254,16 @@ const handleSubmit = () => {
   });
 };
 
+const editGatherHandle = async (data: Gather.GatherDetail, index: number) => {
+  console.log(data.dTitle, tableData.value[index]);
+  await useHandleData(editGather, tableData, "编辑视频名称");
+
+  // await editGather(createGatherForm.value);
+  // ElMessage.success({
+  //   message: "编辑视频成功"
+  // });
+  getGatherDetailData();
+};
 const handleSuccess = (response: any, uploadFile: UploadFile) => {
   tableData.value.push({
     dTitle: uploadFile.name,

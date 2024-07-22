@@ -49,7 +49,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item :label="`${$t('transportation.busRoutes.lineDetails')}`" prop="lineDetails">
-            <WangEditor v-model:value="drawerProps.rowData!.lineDetails!" />
+            <WangEditor v-model:value="drawerProps.rowData.lineDetails" />
           </el-form-item>
         </el-col>
         <el-col :span="24">

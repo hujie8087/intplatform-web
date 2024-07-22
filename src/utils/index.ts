@@ -329,7 +329,7 @@ export function filterRoute(menuList: Menu.MenuOptions[], path: string = ""): an
   return menuList.map(item => {
     item.path = path ? path + "/" + item.path : item.path;
     item.meta = {
-      icon: item.meta.icon,
+      icon: item.meta?.icon || "",
       title: item.meta.title,
       isLink: "",
       isHide: item.hidden ? item.hidden : false,

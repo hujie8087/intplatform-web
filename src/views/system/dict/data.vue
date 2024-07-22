@@ -35,12 +35,11 @@ import {
   addDictData,
   deleteDictData,
   editDictData,
-  exportDictDataInfo,
   getDictDataById,
   getDictDataList,
   getDictSelect
 } from "@/api/modules/system/dict";
-import { userStatus } from "@/utils/dict";
+import { userStatus } from "@/utils/serviceDict";
 
 const route = useRoute();
 
@@ -132,7 +131,7 @@ const batchDelete = async (id: number[]) => {
 // 导出字典数据列表
 const downloadFile = async () => {
   ElMessageBox.confirm("确认导出字典数据数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload(exportDictDataInfo, "字典数据列表", proTable.value?.searchParam)
+    useDownload("/system/dict/data/export", "字典数据列表", true, ".xlsx", "get", proTable.value?.searchParam)
   );
 };
 

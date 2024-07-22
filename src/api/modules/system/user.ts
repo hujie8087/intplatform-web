@@ -64,6 +64,11 @@ export const updateRole = ({ userId, roleIds }) => {
   return http.put(PORT1 + `/system/user/authRole?userId=${userId}&roleIds=${roleIds}`);
 };
 
+// * 修改用户状态
+export const changeUserStatus = ({ userId, status }) => {
+  return http.put(PORT1 + `/system/user/changeStatus`, { userId, status });
+};
+
 // * 修改用户密码
 export const updatePassWord = (params: Account.ReqUpdatePassWord) => {
   return http.put(PORT1 + `/system/user/UpdatePwd`, params);

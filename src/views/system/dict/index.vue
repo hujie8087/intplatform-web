@@ -40,13 +40,13 @@ import DictDataDrawer from "./components/DictDataDrawer.vue";
 import ProTable from "@/components/ProTable/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, EditPen, Refresh } from "@element-plus/icons-vue";
-import { getDictList, deleteDict, editDict, addDict, getDictById, refreshCache, exportDictInfo } from "@/api/modules/system/dict";
+import { getDictList, deleteDict, editDict, addDict, getDictById, refreshCache } from "@/api/modules/system/dict";
 import { Dict } from "@/api/interface/system";
-import { userStatus } from "@/utils/dict";
 import { useI18n } from "vue-i18n";
 import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 import { useRouter } from "vue-router";
+import { userStatus } from "@/utils/serviceDict";
 const { t } = useI18n(); // 解构出t方法
 
 const router = useRouter();
@@ -132,7 +132,7 @@ const refreshCacheHandle = async () => {
 // 导出字典
 const downloadHandle = async () => {
   ElMessageBox.confirm("确认导出字典数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload(exportDictInfo, "字典列表", proTable.value?.searchParam)
+    useDownload("/system/dict/type/export", "字典列表", true, ".xlsx", "get", proTable.value?.searchParam)
   );
 };
 

@@ -32,7 +32,7 @@ export default {
       avatar: "头像",
       user: "用户",
       deptList: "部门列表",
-      name: "用户昵称",
+      name: "用户姓名",
       company: "公司",
       dept: "部门",
       email: "邮箱",
@@ -42,7 +42,9 @@ export default {
       mobile: "手机号",
       username: "用户账号",
       role: "角色",
+      userType: "用户类型",
       status: "状态",
+      card: "护照号/身份证",
       password: "密码",
       changePassword: "修改密码",
       restPassword: "重置密码",
@@ -250,7 +252,9 @@ export default {
     success: "成功",
     info: "信息",
     warning: "警告",
-    danger: "危险"
+    danger: "危险",
+    systemUser: "系统用户",
+    appUser: "APP用户"
   },
   transportation: {
     buses: {

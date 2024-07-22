@@ -18,6 +18,7 @@ export namespace Repair {
     repairRoomId: number;
     repairPerson: string | null;
     tel: string;
+    repairNo: string;
     repairPhoto: string;
     repairMan: string;
     repairManId: number;
@@ -43,10 +44,14 @@ export namespace Repair {
     deleteTime?: Date;
     sourceNo?: string;
     souceType?: string;
+    ancestors?: string;
+    appDelFlag?: string;
+    readStatus?: string;
   }
 
   export interface ReqRepairTypeParams extends ReqPage {
     name?: string;
+    status?: string;
   }
 
   export interface ResRepairType {

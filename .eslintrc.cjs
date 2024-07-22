@@ -7,6 +7,14 @@ module.exports = {
     node: true,
     es6: true
   },
+  settings: {
+    "import/resolver": {
+      alias: {
+        map: [["@", "./src"]],
+        extensions: [".ts", ".js", ".jsx", ".json", ".vue"]
+      }
+    }
+  },
   // 指定如何解析语法
   parser: "vue-eslint-parser",
   // 优先级低于 parse 的语法解析配置

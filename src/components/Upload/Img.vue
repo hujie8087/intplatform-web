@@ -72,7 +72,7 @@ const props = withDefaults(defineProps<UploadFileProps>(), {
   drag: true,
   disabled: false,
   fileSize: 5,
-  fileType: () => ["image/jpeg", "image/png", "image/gif"],
+  fileType: () => ["image/jpeg", "image/png", "image/gif", "image/webp"],
   height: "150px",
   width: "150px",
   borderRadius: "8px"
@@ -101,11 +101,11 @@ const emit = defineEmits<{
 }>();
 const handleHttpUpload = async (options: UploadRequestOptions) => {
   let formData = new FormData();
-  formData.append("file", options.file);
+  formData.append("files", options.file);
   try {
     const api = props.api ?? uploadImg;
     const { data } = await api(formData);
-    emit("update:imageUrl", data.url);
+    emit("update:imageUrl", data[0].url);
     // 调用 el-form 内部的校验方法（可自动校验）
     formItemContext?.prop && formContext?.validateField([formItemContext.prop as string]);
   } catch (error) {

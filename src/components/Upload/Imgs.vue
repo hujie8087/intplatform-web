@@ -124,7 +124,7 @@ const beforeUpload: UploadProps["beforeUpload"] = rawFile => {
  * */
 const handleHttpUpload = async (options: UploadRequestOptions) => {
   let formData = new FormData();
-  formData.append("file", options.file);
+  formData.append("files", options.file);
   try {
     const api = props.api ?? uploadImg;
     const { data } = await api(formData);
@@ -142,9 +142,9 @@ const handleHttpUpload = async (options: UploadRequestOptions) => {
 const emit = defineEmits<{
   "update:fileList": [value: UploadUserFile[]];
 }>();
-const uploadSuccess = (response: { url: string; name: string } | undefined, uploadFile: UploadFile) => {
+const uploadSuccess = (response: [{ url: string; name: string }] | undefined, uploadFile: UploadFile) => {
   if (!response) return;
-  uploadFile.url = response.url;
+  uploadFile.url = response[0].url;
   emit("update:fileList", _fileList.value);
   // 调用 el-form 内部的校验方法（可自动校验）
   formItemContext?.prop && formContext?.validateField([formItemContext.prop as string]);
