@@ -41,17 +41,9 @@ import ProTable from "@/components/ProTable/index.vue";
 import ConfigDrawer from "./components/ConfigDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, EditPen, Download, View, Refresh } from "@element-plus/icons-vue";
-import {
-  getConfigList,
-  deleteConfig,
-  editConfig,
-  addConfig,
-  exportConfig,
-  refreshCache,
-  getConfigById
-} from "@/api/modules/system/config";
+import { getConfigList, deleteConfig, editConfig, addConfig, refreshCache, getConfigById } from "@/api/modules/system/config";
 import { Config } from "@/api/interface/system";
-import { yOrNOptions } from "@/utils/serviceDict";
+import { yesOrNoOptions } from "@/utils/serviceDict";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n(); // 解构出t方法
 
@@ -72,7 +64,7 @@ const columns = reactive<ColumnProps<Config.ResConfig>[]>([
   { prop: "configName", label: "参数名称", search: { el: "input", tooltip: "请输入参数名称" } },
   { prop: "configKey", label: "参数键名", search: { el: "input", tooltip: "请输入参数键名" } },
   { prop: "configValue", label: "参数键值" },
-  { prop: "configType", label: "系统内置", search: { el: "select" }, sortable: true, tag: true, enum: yOrNOptions },
+  { prop: "configType", label: "系统内置", search: { el: "select" }, sortable: true, tag: true, enum: yesOrNoOptions },
   { prop: "remark", label: "备注" },
   {
     prop: "createTime",
@@ -100,7 +92,7 @@ const batchDelete = async (ids: number[]) => {
 // 导出系统参数列表
 const downloadFile = async () => {
   ElMessageBox.confirm("确认导出系统参数数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload(exportConfig, "系统参数列表", proTable.value?.searchParam)
+    useDownload("/system/config/export", "系统参数列表", true, ".xlsx", "post", proTable.value?.searchParam)
   );
 };
 

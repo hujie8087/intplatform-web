@@ -50,7 +50,7 @@
               v-model="drawerProps.rowData!.configType"
               :placeholder="`${$t('main.inputError', { msg: $t('system.config.configType') })}`"
             >
-              <el-radio v-for="item in yOrNOptions" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
+              <el-radio v-for="item in yesOrNoOptions" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -78,7 +78,7 @@ import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { Config } from "@/api/interface/system";
 import { useI18n } from "vue-i18n";
-import { yOrNOptions } from "@/utils/serviceDict";
+import { yesOrNoOptions } from "@/utils/serviceDict";
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({
