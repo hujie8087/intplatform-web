@@ -12,16 +12,26 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增</el-button>
-          <el-button type="danger" :disabled="!scope.isSelected" :icon="Delete" @click="batchDelete(scope.selectedListIds)">
+          <el-button type="primary" v-auth="['other:show:add']" :icon="CirclePlus" @click="openDrawer('新增')"> 新增 </el-button>
+          <el-button
+            type="danger"
+            v-auth="['other:show:delete']"
+            :disabled="!scope.isSelected"
+            :icon="Delete"
+            @click="batchDelete(scope.selectedListIds)"
+          >
             批量删除
           </el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button type="success" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button type="primary" link :icon="Edit" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-          <el-button type="danger" link :icon="Delete" @click="deleteOtherHandle(scope.row)">删除</el-button>
+          <el-button type="primary" link :icon="Edit" v-auth="['other:show:edit']" @click="openDrawer('编辑', scope.row)">
+            编辑
+          </el-button>
+          <el-button type="danger" link :icon="Delete" v-auth="['other:show:delete']" @click="deleteOtherHandle(scope.row)">
+            删除
+          </el-button>
         </template>
       </ProTable>
     </div>
@@ -44,7 +54,6 @@ import { getAllBuildingTree } from "@/api/modules/food/building";
 import { Building } from "@/api/interface/food/building";
 
 const { t } = useI18n(); // 解构出t方法
-
 // 字典数据
 const otherTypeOptions = ref<DictOptions[]>([]);
 useDict("public_common_type").then(res => {
@@ -71,20 +80,19 @@ const dataCallback = (data: any) => {
 const columns = reactive<ColumnProps<Other.ResOther>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { type: "index", label: "序号", width: 50 },
-  { prop: "showTitle", label: "标题", width: 140 },
-  { prop: "region", label: "区域地点", width: 100 },
-  { prop: "businessHours", label: "营业时间" },
-  { prop: "head", label: "负责人" },
   {
     prop: "souceType",
     label: "类型",
     enum: otherTypeOptions,
     search: { el: "tree-select", props: { filterable: true } }
   },
+  { prop: "businessHours", label: "营业时间" },
+  { prop: "head", label: "负责人" },
+  { prop: "region", label: "区域地点" },
+  { prop: "address", label: "详细地址" },
   {
     prop: "remark",
-    label: "备注",
-    width: 120
+    label: "备注"
   },
   { prop: "operation", label: "操作", width: 230, fixed: "right" }
 ]);

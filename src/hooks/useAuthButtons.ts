@@ -12,7 +12,6 @@ export const useAuthButtons = () => {
     authButtons.forEach(item => (currentPageAuthButton[item] = true));
     return currentPageAuthButton;
   });
-
   return {
     BUTTONS
   };

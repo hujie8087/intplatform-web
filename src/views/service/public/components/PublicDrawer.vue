@@ -51,7 +51,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="详细说明" prop="details">
-            <WangEditor v-model:value="drawerProps.rowData.details" height="300px" />
+            <WangEditor v-model:value="drawerProps.rowData.details" height="400px" />
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -78,9 +78,12 @@ import { DictOptions } from "@/api/interface";
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({
-  repairArea: [{ required: true, message: t("main.inputError", { msg: "报修区域" }) }],
-  repairPerson: [{ required: true, message: t("main.selectError", { msg: "报修说明" }) }],
-  tel: [{ required: true, message: t("main.selectError", { msg: "报修联系电话" }) }]
+  head: [{ required: true, message: t("main.inputError", { msg: "请填写负责人" }) }],
+  souceType: [{ required: true, message: t("main.selectError", { msg: "请选择服务类型" }) }],
+  businessHours: [{ required: true, message: t("main.inputError", { msg: "请填写营业时间" }) }],
+  regionId: [{ required: true, message: t("main.inputError", { msg: "请选择所属区域" }) }],
+  address: [{ required: true, message: t("main.inputError", { msg: "详细地址" }) }],
+  telephone: [{ required: true, message: t("main.inputError", { msg: "联系电话" }) }]
 });
 
 interface DrawerProps {
