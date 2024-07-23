@@ -38,7 +38,7 @@
     <PublicDrawer ref="drawerRef" />
   </div>
 </template>
-<script setup lang="ts" name="Other">
+<script setup lang="tsx" name="Other">
 import { ref, reactive } from "vue";
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";

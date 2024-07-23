@@ -30,7 +30,7 @@
     </div>
   </div>
 </template>
-<script setup lang="ts" name="RepairType">
+<script setup lang="tsx" name="RepairType">
 import { ref, reactive } from "vue";
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";

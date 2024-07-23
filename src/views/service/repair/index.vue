@@ -43,7 +43,7 @@
     </div>
   </div>
 </template>
-<script setup lang="ts" name="Repair">
+<script setup lang="tsx" name="Repair">
 import { ref, reactive } from "vue";
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";

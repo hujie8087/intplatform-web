@@ -28,7 +28,7 @@
     </div>
   </div>
 </template>
-<script setup lang="ts" name="OperaLog">
+<script setup lang="tsx" name="OperaLog">
 import { ref, reactive } from "vue";
 import { useDict } from "@/hooks/useDict";
 import { useHandleData } from "@/hooks/useHandleData";
