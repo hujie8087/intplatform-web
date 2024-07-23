@@ -67,7 +67,6 @@ import {
   addUser,
   changeUserStatus,
   resetUserPassWord,
-  exportUserInfo,
   BatchAddUser,
   getUserStatus,
   getUserGender
@@ -242,7 +241,7 @@ const changeStatus = async (row: User.ResUserList) => {
 // 导出用户列表
 const downloadFile = async () => {
   ElMessageBox.confirm("确认导出用户数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload(exportUserInfo, "用户列表", proTable.value?.searchParam)
+    useDownload(`/system/user/export`, "用户列表", true, ".xlsx", "post", proTable.value?.searchParam)
   );
 };
 
@@ -251,7 +250,7 @@ const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const batchAdd = () => {
   const params = {
     title: "用户",
-    tempApi: exportUserInfo,
+    tempApi: "api/system/user/importTemplate",
     importApi: BatchAddUser,
     getTableList: proTable.value?.getTableList
   };

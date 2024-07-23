@@ -159,7 +159,7 @@ const handleSubmit = () => {
     }
     try {
       if (isBatch.value && drawerProps.value.isAdd) {
-        const promises = [];
+        const promises: any = [];
         const match = data.title.match(/\d+/);
         if (match) {
           const strNum = match[0];

@@ -36,7 +36,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import OperaLogDrawer from "./components/OperLogDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { Delete, Download, View } from "@element-plus/icons-vue";
-import { getOperaLogList, deleteOperaLog, cleanOperaLog, exportOperaLog } from "@/api/modules/system/log";
+import { getOperaLogList, deleteOperaLog, cleanOperaLog } from "@/api/modules/system/log";
 import { OperaLog } from "@/api/interface/system";
 import { useI18n } from "vue-i18n";
 import { ElMessageBox } from "element-plus";
@@ -114,7 +114,7 @@ const cleanOperaLogHandle = async () => {
 // 导出系统日志
 const downloadFile = async () => {
   ElMessageBox.confirm("确认导出系统日志数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload(exportOperaLog, "系统日志列表", proTable.value?.searchParam)
+    useDownload("api/system/operlog/export", "系统日志列表", true, ".xlsx", "post", proTable.value?.searchParam)
   );
 };
 // 打开 drawer(新增、查看、编辑)

@@ -49,7 +49,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item :label="`${$t('transportation.busRoutes.lineDetails')}`" prop="lineDetails">
-            <WangEditor v-model:value="drawerProps.rowData.lineDetails" />
+            <WangEditor v-model:value="lineDetails" />
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -90,7 +90,7 @@ interface DrawerProps {
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
 }
-
+const lineDetails = ref("");
 // drawer框状态
 const drawerVisible = ref(false);
 const drawerProps = ref<DrawerProps>({
@@ -102,6 +102,7 @@ const drawerProps = ref<DrawerProps>({
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
+  lineDetails.value = params.rowData.lineDetails ?? "";
 };
 
 // 提交数据（新增/编辑）
@@ -110,7 +111,7 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     try {
-      await drawerProps.value.api!(drawerProps.value.rowData);
+      await drawerProps.value.api!({ ...drawerProps.value.rowData, lineDetails: lineDetails.value });
       ElMessage.success({
         message: t("main.successMsg", { title: t("transportation.busRoutes.name"), method: `${drawerProps.value.title}` })
       });

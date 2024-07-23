@@ -51,7 +51,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="详细说明" prop="details">
-            <WangEditor v-model:value="drawerProps.rowData.details" height="400px" />
+            <WangEditor v-model:value="details" height="400px" />
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -107,10 +107,12 @@ const drawerProps = ref<DrawerProps>({
   title: "",
   rowData: {}
 });
+const details = ref("");
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
+  details.value = params.rowData.details ?? "";
 };
 
 // 提交数据（新增/编辑）
@@ -118,7 +120,7 @@ const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
-    const formData = { ...drawerProps.value.rowData };
+    const formData = { ...drawerProps.value.rowData, details: details.value };
     try {
       await drawerProps.value.api!(formData);
       ElMessage.success({

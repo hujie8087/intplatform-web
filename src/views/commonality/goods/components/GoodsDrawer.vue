@@ -82,7 +82,7 @@
 
 <script setup lang="ts" name="GoodsDrawer">
 import { ref, reactive } from "vue";
-import { ElMessage, FormInstance, UploadUserFile } from "element-plus";
+import { ElMessage, FormInstance } from "element-plus";
 import { useI18n } from "vue-i18n";
 import { Goods } from "@/api/interface/commonality";
 import UploadImg from "@/components/Upload/Img.vue";
@@ -95,7 +95,7 @@ const rules = reactive({
   code: [{ required: true, message: t("main.inputError", { msg: "商品编码" }) }],
   price: [{ required: true, message: t("main.inputError", { msg: "商品价格" }) }]
 });
-const fileList1 = ref<UploadUserFile[]>([]);
+const fileList1 = ref<any[]>([]);
 interface DrawerProps {
   title: string;
   isView: boolean;

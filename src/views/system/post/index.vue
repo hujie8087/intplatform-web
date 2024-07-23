@@ -38,8 +38,8 @@ import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, EditPen } from "@element-plus/icons-vue";
 import { getPostList, deletePost, editPost, addPost, getPostById } from "@/api/modules/system/post";
 import { Post } from "@/api/interface/system";
-import { userStatus } from "@/utils/dict";
 import { useI18n } from "vue-i18n";
+import { userStatus } from "@/utils/serviceDict";
 const { t } = useI18n(); // 解构出t方法
 
 // ProTable 实例

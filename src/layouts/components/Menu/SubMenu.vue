@@ -21,6 +21,7 @@
 </template>
 
 <script setup lang="ts">
+import { Menu } from "@/api/interface/system";
 import { useRouter } from "vue-router";
 defineProps<{ menuList: Menu.MenuOptions[] }>();
 

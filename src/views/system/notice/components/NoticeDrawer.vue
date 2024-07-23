@@ -53,7 +53,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item :label="`${$t('system.notice.noticeContent')}`" prop="noticeContent">
-            <WangEditor v-model:value="drawerProps.rowData.noticeContent!" />
+            <WangEditor v-model:value="noticeContent" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -79,6 +79,8 @@ const rules = reactive({
   noticeKey: [{ required: true, message: t("main.inputError", { msg: t("system.notice.noticeKey") }) }],
   noticeValue: [{ required: true, message: t("main.inputError", { msg: t("system.notice.noticeValue") }) }]
 });
+
+const noticeContent = ref("");
 
 interface DrawerProps {
   title: string;
@@ -107,6 +109,7 @@ const drawerProps = ref<DrawerProps>({
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
+  noticeContent.value = params.rowData.noticeContent ?? "";
 };
 
 // 提交数据（新增/编辑）
@@ -115,7 +118,7 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     try {
-      await drawerProps.value.api!(drawerProps.value.rowData);
+      await drawerProps.value.api!({ ...drawerProps.value.rowData, noticeContent: noticeContent.value });
       ElMessage.success({
         message: t("main.successMsg", { title: t("system.notice.noticeName"), method: `${drawerProps.value.title}` })
       });

@@ -26,6 +26,7 @@ import { useRoute, useRouter } from "vue-router";
 import { ArrowRight } from "@element-plus/icons-vue";
 import { useAuthStore } from "@/stores/modules/auth";
 import { useGlobalStore } from "@/stores/modules/global";
+import { Menu } from "@/api/interface/system";
 
 const route = useRoute();
 const router = useRouter();
