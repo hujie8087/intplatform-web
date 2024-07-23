@@ -33,7 +33,7 @@ export const useTable = (
     searchInitParam: {},
     // 总参数(包含分页和查询参数)
     totalParam: {},
-    key: ""
+    key: new Date().getTime().toString()
   });
 
   /**

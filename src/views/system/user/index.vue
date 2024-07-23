@@ -80,7 +80,6 @@ import { getUserRole, updateRole, changeUserStatus } from "@/api/modules/system/
 import { genderType, userStatus, userType } from "@/utils/serviceDict";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 const { BUTTONS } = useAuthButtons();
-console.log(BUTTONS.value);
 
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
