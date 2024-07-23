@@ -43,7 +43,7 @@ import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, EditPen, Download, View, Refresh } from "@element-plus/icons-vue";
 import { getConfigList, deleteConfig, editConfig, addConfig, refreshCache, getConfigById } from "@/api/modules/system/config";
 import { Config } from "@/api/interface/system";
-import { yesOrNoOptions } from "@/utils/serviceDict";
+import { systemConfigOptions } from "@/utils/serviceDict";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n(); // 解构出t方法
 
@@ -64,7 +64,7 @@ const columns = reactive<ColumnProps<Config.ResConfig>[]>([
   { prop: "configName", label: "参数名称", search: { el: "input", tooltip: "请输入参数名称" } },
   { prop: "configKey", label: "参数键名", search: { el: "input", tooltip: "请输入参数键名" } },
   { prop: "configValue", label: "参数键值" },
-  { prop: "configType", label: "系统内置", search: { el: "select" }, sortable: true, tag: true, enum: yesOrNoOptions },
+  { prop: "configType", label: "系统内置", search: { el: "select" }, sortable: true, tag: true, enum: systemConfigOptions },
   { prop: "remark", label: "备注" },
   {
     prop: "createTime",

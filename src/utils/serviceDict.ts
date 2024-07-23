@@ -53,6 +53,13 @@ export const yesOrNoOptions = [
 ];
 
 /**
+ * @description：是否
+ */
+export const systemConfigOptions = [
+  { label: computed(() => I18n.global.t("dict.yes")).value, value: "Y", tagType: "success" },
+  { label: computed(() => I18n.global.t("dict.no")).value, value: "N", tagType: "danger" }
+];
+/**
  * @description：回显样式字典
  */
 export const listClassOptions = [

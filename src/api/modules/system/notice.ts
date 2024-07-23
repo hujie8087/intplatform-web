@@ -2,6 +2,7 @@
 import { Notice } from "@/api/interface/system";
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
+import { ResPage } from "@/api/interface";
 
 /**
  * @name 系统通知管理模块
@@ -28,7 +29,7 @@ export const getNoticeById = (id: number) => {
 
 // * 获取系统通知列表
 export const getNoticeList = (params: Notice.ReqNoticeParams) => {
-  return http.get<Notice.ResNotice>(PORT1 + `/system/notice/list`, params);
+  return http.get<ResPage<Notice.ResNotice>>(PORT1 + `/system/notice/list`, params);
 };
 
 // * 导出系统通知

@@ -335,7 +335,7 @@ export function filterRoute(menuList: Menu.MenuOptions[], path: string = ""): an
       isHide: item.hidden ? item.hidden : false,
       isFull: false,
       isAffix: false,
-      isKeepAlive: true
+      isKeepAlive: false
     };
     item.children?.length && filterRoute(item.children, item.path);
     return item;
