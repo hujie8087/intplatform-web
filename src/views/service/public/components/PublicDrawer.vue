@@ -12,19 +12,9 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="所属区域" prop="regionId">
-            <el-cascader
-              v-model="drawerProps.rowData.regionId"
-              :options="drawerProps.treeData"
-              style="width: 100%"
-              filterable
-              :props="{
-                label: 'title',
-                children: 'children',
-                checkStrictly: true,
-                value: 'id'
-              }"
-              @change="handleChange"
-            />
+            <el-select v-model="drawerProps.rowData.regionId" placeholder="请选择所属区域" clearable @change="handleChange">
+              <el-option v-for="item in drawerProps.treeData" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -47,6 +37,11 @@
         <el-col :span="24">
           <el-form-item label="详细地址" prop="address">
             <el-input v-model="drawerProps.rowData.address" clearable />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="图片" prop="coverPath">
+            <UploadImg v-model:image-url="drawerProps.rowData.image" width="100px" height="100px"> </UploadImg>
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -73,6 +68,7 @@ import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { Other } from "@/api/interface/service/other";
 import WangEditor from "@/components/WangEditor/index.vue";
+import UploadImg from "@/components/Upload/Img.vue";
 import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
 const { t } = useI18n(); // 解构出t方法
@@ -98,8 +94,8 @@ interface DrawerProps {
 }
 
 const handleChange = value => {
-  drawerProps.value.rowData.regionId = value[0];
-  drawerProps.value.rowData.region = drawerProps.value.treeData?.find(item => item.id === value[0])?.title;
+  console.log(value);
+  drawerProps.value.rowData.region = drawerProps.value.treeData?.find(item => item.id === value)?.title;
 };
 // drawer框状态
 const drawerVisible = ref(false);

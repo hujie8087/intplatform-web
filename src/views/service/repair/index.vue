@@ -32,7 +32,12 @@
         <template #operation="scope">
           <el-button type="success" link :icon="View" @click="openViewDrawer('查看', scope.row)">查看</el-button>
           <el-button type="danger" link :icon="Delete" @click="deleteRepairHandle(scope.row)">删除</el-button>
-          <el-button type="warning" v-if="scope.row.repairState !== 3" link @click="openHandleDrawer('办理', scope.row)">
+          <el-button
+            type="warning"
+            v-if="scope.row.repairState === 0 || scope.row.repairState === 2"
+            link
+            @click="openHandleDrawer('办理', scope.row)"
+          >
             办理
           </el-button>
         </template>

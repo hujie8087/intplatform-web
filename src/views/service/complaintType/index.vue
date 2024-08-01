@@ -5,7 +5,7 @@
         ref="proTable"
         highlight-current-row
         :columns="columns"
-        :request-api="getOtherList"
+        :request-api="getComplaintTypeList"
         :data-callback="dataCallback"
         :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
         row-key="id"
@@ -22,6 +22,7 @@
           >
             批量删除
           </el-button>
+          <el-button type="warning" :icon="Download" plain @click="downloadFile">导出用户数据</el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
@@ -29,49 +30,42 @@
           <el-button type="primary" link :icon="Edit" v-auth="['other:show:edit']" @click="openDrawer('编辑', scope.row)">
             编辑
           </el-button>
-          <el-button type="danger" link :icon="Delete" v-auth="['other:show:delete']" @click="deleteOtherHandle(scope.row)">
+          <el-button type="danger" link :icon="Delete" v-auth="['other:show:delete']" @click="deleteComplaintHandle(scope.row)">
             删除
           </el-button>
         </template>
       </ProTable>
     </div>
-    <PublicDrawer ref="drawerRef" />
+    <ComplaintTypeDrawer ref="drawerRef" />
   </div>
 </template>
-<script setup lang="tsx" name="Other">
+<script setup lang="tsx" name="ComplaintType">
 import { ref, reactive } from "vue";
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Edit, View } from "@element-plus/icons-vue";
-import { getOtherList, deleteOther, getOtherById, addOther, editOther } from "@/api/modules/service/other";
-import { Other } from "@/api/interface/service/other";
+import { CirclePlus, Delete, Download, Edit, View } from "@element-plus/icons-vue";
+import {
+  getComplaintTypeList,
+  deleteComplaintType,
+  getComplaintTypeById,
+  addComplaintType,
+  editComplaintType
+} from "@/api/modules/service/complaint";
+import { Complaint } from "@/api/interface/service/complaint";
 import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
 import { useDict } from "@/hooks/useDict";
-import PublicDrawer from "./components/PublicDrawer.vue";
-import { getAllBuildingTree } from "@/api/modules/food/building";
-import { omit } from "lodash";
+import ComplaintTypeDrawer from "./components/ComplaintTypeDrawer.vue";
+import { ElMessageBox } from "element-plus";
+import { useDownload } from "@/hooks/useDownload";
 
 const { t } = useI18n(); // 解构出t方法
 // 字典数据
-const otherTypeOptions = ref<DictOptions[]>([]);
-useDict("public_common_type").then(res => {
-  otherTypeOptions.value = res.public_common_type;
+const complaintTypeStatusOptions = ref<DictOptions[]>([]);
+useDict("sys_normal_disable").then(res => {
+  complaintTypeStatusOptions.value = res.sys_normal_disable;
 });
-const treeData = ref<DictOptions[]>([]);
-const getBuildingTree = async () => {
-  const res = await getAllBuildingTree();
-  treeData.value = res.data.map(node => {
-    const rest = omit(node, ["children"]);
-    return {
-      label: rest.title ?? "",
-      value: rest.id
-    };
-  });
-};
-
-getBuildingTree();
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
@@ -83,19 +77,23 @@ const dataCallback = (data: any) => {
   };
 };
 // 表格配置项
-const columns = reactive<ColumnProps<Other.ResOther>[]>([
+const columns = reactive<ColumnProps<Complaint.ResComplaint>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { type: "index", label: "序号", width: 50 },
   {
-    prop: "souceType",
-    label: "类型",
-    enum: otherTypeOptions,
-    search: { el: "tree-select", props: { filterable: true } }
+    prop: "name",
+    label: "类型名称",
+    search: { el: "input" }
   },
-  { prop: "businessHours", label: "营业时间" },
-  { prop: "head", label: "负责人", search: { el: "input" } },
-  { prop: "regionId", label: "区域地点", enum: treeData, search: { el: "tree-select", props: { filterable: true } } },
-  { prop: "address", label: "详细地址" },
+  {
+    prop: "status",
+    label: "状态",
+    enum: complaintTypeStatusOptions,
+    sortable: true,
+    tag: true,
+    search: { el: "select", props: { filterable: true } },
+    width: 100
+  },
   {
     prop: "remark",
     label: "备注"
@@ -104,34 +102,47 @@ const columns = reactive<ColumnProps<Other.ResOther>[]>([
 ]);
 
 // 删除报修记录
-const deleteOtherHandle = async (params: Other.ResOther) => {
-  await useHandleData(deleteOther, params.id, `删除内容`);
+const deleteComplaintHandle = async (params: Complaint.ResComplaint) => {
+  await useHandleData(deleteComplaintType, params.id, `删除内容`);
   proTable.value?.getTableList();
 };
 
 // 批量删除
 const batchDelete = async (ids: number[]) => {
-  await useHandleData(deleteOther, ids, t("main.deleteBatchMsg", { title: "内容" }));
+  await useHandleData(deleteComplaintType, ids, t("main.deleteBatchMsg", { title: "内容" }));
   proTable.value?.clearSelection();
   proTable.value?.getTableList();
 };
 
 // 打开 drawer(新增、查看、编辑)
-const drawerRef = ref<InstanceType<typeof PublicDrawer> | null>(null);
-const openDrawer = async (title: string, row: Partial<Other.ResOther> = {}) => {
+const drawerRef = ref<InstanceType<typeof ComplaintTypeDrawer> | null>(null);
+const openDrawer = async (title: string, row: Partial<Complaint.ResComplaint> = {}) => {
   if (row.id) {
-    const res = await getOtherById(row.id);
+    const res = await getComplaintTypeById(row.id);
     row = res.data;
   }
   const params = {
     title,
     isView: title === "查看",
     rowData: { ...row },
-    api: title === "新增" ? addOther : title === "编辑" ? editOther : undefined,
+    api: title === "新增" ? addComplaintType : title === "编辑" ? editComplaintType : undefined,
     getTableList: proTable.value?.getTableList,
-    otherTypeOptions: otherTypeOptions.value,
-    treeData: treeData.value
+    complaintTypeStatusOptions: complaintTypeStatusOptions.value
   };
   drawerRef.value?.acceptParams(params);
+};
+
+// 导出投诉与建议类型列表
+const downloadFile = async () => {
+  ElMessageBox.confirm("确认导出投诉与建议类型数据?", "温馨提示", { type: "warning" }).then(() =>
+    useDownload(
+      "intplatform-stage-api/other/ComplaintType/export",
+      "投诉与建议类型列表",
+      true,
+      ".xlsx",
+      "post",
+      proTable.value?.searchParam
+    )
+  );
 };
 </script>

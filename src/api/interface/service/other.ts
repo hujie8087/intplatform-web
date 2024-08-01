@@ -1,6 +1,6 @@
 import { ReqPage } from "..";
 
-// * 保修管理模块
+// * 公共便利模块
 export namespace Other {
   export interface ReqOtherParams extends ReqPage {
     showTitle?: string;
@@ -14,6 +14,7 @@ export namespace Other {
     businessHours: string;
     head: string;
     telephone: string;
+    image: string;
     details: string;
     delFlag: string;
     def1: string;

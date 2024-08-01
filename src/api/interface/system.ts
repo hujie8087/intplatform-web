@@ -359,3 +359,25 @@ export namespace OperaLog {
     costTime: number;
   }
 }
+
+// app版本管理模块
+export namespace AppVersion {
+  export interface ReqAppVersionParams extends ReqPage {
+    version?: string;
+    name?: string;
+    system?: string;
+    updateType: string;
+  }
+
+  export interface ResAppVersion {
+    id: number;
+    path: string;
+    name: string;
+    version: string;
+    updateType: string;
+    system: string;
+    content: string;
+    enableFlag: number;
+    remark: string;
+  }
+}

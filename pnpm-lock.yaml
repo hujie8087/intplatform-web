@@ -41,6 +41,9 @@ importers:
       element-plus:
         specifier: ^2.6.0
         version: 2.6.0(vue@3.4.21(typescript@5.3.3))
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       md5:
         specifier: ^2.3.0
         version: 2.3.0
@@ -9395,7 +9398,7 @@ snapshots:
       jest-worker: 26.6.2
       rollup: 2.79.1
       serialize-javascript: 4.0.0
-      terser: 5.19.2
+      terser: 5.31.3
 
   rollup-plugin-visualizer@5.12.0(rollup@2.79.1):
     dependencies:

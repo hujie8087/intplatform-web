@@ -57,3 +57,8 @@ export const editRepairType = (params: FormData) => {
 export const deleteRepairType = (id: number) => {
   return http.delete(PORT1 + `/commonality/repairType/${id}`);
 };
+
+// * 报修数据报表
+export const getRepairReport = (params: { beginTime: string; endTime: string }) => {
+  return http.get<Repair.RepairData>(PORT1 + `commonality/repair/forms`, params);
+};

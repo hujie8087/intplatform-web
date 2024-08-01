@@ -5,6 +5,7 @@
     v-model.trim="_searchParam[column.search?.key ?? handleProp(column.prop!)]"
     :data="column.search?.el === 'tree-select' ? columnEnum : []"
     :options="['cascader', 'select-v2'].includes(column.search?.el!) ? columnEnum : []"
+    @keydown.enter="props.onkeydown"
   >
     <template v-if="column.search?.el === 'cascader'" #default="{ data }">
       <span>{{ data[fieldNames.label] }}</span>
@@ -30,6 +31,7 @@ import { ColumnProps } from "@/components/ProTable/interface";
 interface SearchFormItem {
   column: ColumnProps;
   searchParam: { [key: string]: any };
+  onkeydown: (e: KeyboardEvent) => void;
 }
 const props = defineProps<SearchFormItem>();
 

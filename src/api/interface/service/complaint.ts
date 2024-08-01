@@ -1,15 +1,15 @@
 import { ReqPage } from "..";
 
-// * 保修管理模块
-export namespace Repair {
-  export interface ReqRepairParams extends ReqPage {
+// * 投诉与建议模块
+export namespace Complaint {
+  export interface ReqComplaintParams extends ReqPage {
     repairArea?: string;
     roomNo?: string;
     repairPerson?: string;
     repairMan?: string;
     repairState?: string;
   }
-  export interface ResRepair {
+  export interface ResComplaint {
     id: number;
     repairArea: string;
     repairAreaId: number;
@@ -49,12 +49,12 @@ export namespace Repair {
     readStatus?: string;
   }
 
-  export interface ReqRepairTypeParams extends ReqPage {
+  export interface ReqComplaintTypeParams extends ReqPage {
     name?: string;
     status?: string;
   }
 
-  export interface ResRepairType {
+  export interface ResComplaintType {
     id: number;
     name: string;
     delFlag?: string;
@@ -71,15 +71,5 @@ export namespace Repair {
     updateTime?: Date;
     deleteBy?: string;
     deleteTime?: Date;
-  }
-  export interface RepairRegion {
-    name: string;
-    repairArea: string;
-    num: number;
-  }
-
-  export interface RepairData {
-    region: RepairRegion[];
-    type: RepairRegion[];
   }
 }

@@ -175,7 +175,7 @@ const resetPass = async (params: Account.ResAccountList) => {
 // 导出用户列表
 const downloadFile = async () => {
   ElMessageBox.confirm("确认导出用户数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload("api/system/user/export", "用户列表", true, ".xlsx", "post", proTable.value?.searchParam)
+    useDownload("intplatform-stage-api/system/user/export", "用户列表", true, ".xlsx", "post", proTable.value?.searchParam)
   );
 };
 
@@ -184,7 +184,7 @@ const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const batchAdd = () => {
   const params = {
     title: "用户",
-    tempApi: "api/system/user/importTemplate",
+    tempApi: "intplatform-stage-api/system/user/importTemplate",
     importApi: BatchAddUser,
     getTableList: proTable.value?.getTableList
   };

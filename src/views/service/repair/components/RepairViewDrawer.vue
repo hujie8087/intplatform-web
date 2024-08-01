@@ -87,7 +87,7 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label>
-          <div class="cell-item">评分信息</div>
+          <div class="cell-item">用户反馈</div>
         </template>
         {{ drawerProps.rowData.ratingMessage }}
       </el-descriptions-item>

@@ -169,6 +169,15 @@ export default {
       noticeType: "通知类型",
       status: "状态",
       noticeContent: "通知内容"
+    },
+    app: {
+      app: "APP版本",
+      name: "版本名称",
+      version: "版本号",
+      system: "APP系统",
+      updateType: "更新方式",
+      path: "文件路径",
+      content: "更新内容"
     }
   },
   main: {
