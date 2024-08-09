@@ -319,7 +319,10 @@ export namespace Notice {
     noticeId: number;
     noticeTitle: string;
     noticeType: string;
+    noticeGrade: string;
     noticeContent: string;
+    createDept: string;
+    papeView: string;
     status: string;
   }
 }

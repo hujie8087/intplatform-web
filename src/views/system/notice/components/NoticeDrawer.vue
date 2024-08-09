@@ -3,7 +3,7 @@
     v-model="drawerVisible"
     :destroy-on-close="true"
     width="1080"
-    :title="`${drawerProps.title}${$t('system.user.user')}`"
+    :title="`${drawerProps.title}${$t('system.notice.notice')}`"
   >
     <el-form
       ref="ruleFormRef"
@@ -39,7 +39,16 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="24">
+        <el-col :span="12">
+          <el-form-item :label="`${$t('system.notice.noticeDept')}`" prop="createDept">
+            <el-input
+              v-model="drawerProps.rowData.createDept"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.notice.noticeDept') })}`"
+              clearable
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item :label="`${$t('system.notice.status')}`" prop="status">
             <el-radio-group
               v-model="drawerProps.rowData!.status"
@@ -120,7 +129,7 @@ const handleSubmit = () => {
     try {
       await drawerProps.value.api!({ ...drawerProps.value.rowData, noticeContent: noticeContent.value });
       ElMessage.success({
-        message: t("main.successMsg", { title: t("system.notice.noticeName"), method: `${drawerProps.value.title}` })
+        message: t("main.successMsg", { title: t("system.notice.notice"), method: `${drawerProps.value.title}` })
       });
       drawerProps.value.getTableList!();
       drawerVisible.value = false;

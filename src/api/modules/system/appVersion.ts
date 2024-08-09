@@ -9,26 +9,26 @@ import http from "@/api";
 
 // * 新增app版本
 export const addAppVersion = (params: FormData) => {
-  return http.post(PORT1 + `/commonality/app`, params);
+  return http.post(PORT1 + `/other/app`, params);
 };
 
 // * 编辑app版本
 export const editAppVersion = (params: FormData) => {
-  return http.put(PORT1 + `/commonality/app`, params);
+  return http.put(PORT1 + `/other/app`, params);
 };
 
 // * 删除app版本
 export const deleteAppVersion = (id: number) => {
-  return http.delete(PORT1 + `/commonality/app/${id}`);
+  return http.delete(PORT1 + `/other/app/${id}`);
 };
 // * 获取app版本详情
 export const getAppVersionById = (id: number) => {
-  return http.get<AppVersion.ResAppVersion>(PORT1 + `/commonality/app/${id}`);
+  return http.get<AppVersion.ResAppVersion>(PORT1 + `/other/app/${id}`);
 };
 
 // * 获取app版本列表数据
 export const getAppVersionList = (params: AppVersion.ReqAppVersionParams) => {
-  return http.get<AppVersion.ResAppVersion[]>(PORT1 + `/commonality/app/list`, params);
+  return http.get<AppVersion.ResAppVersion[]>(PORT1 + `/other/app/list`, params);
 };
 
 // * 上传APP安装包

@@ -168,7 +168,8 @@ export default {
       noticeTitle: "通知标题",
       noticeType: "通知类型",
       status: "状态",
-      noticeContent: "通知内容"
+      noticeContent: "通知内容",
+      noticeDept: "发布部门"
     },
     app: {
       app: "APP版本",
@@ -237,7 +238,8 @@ export default {
     endTime: "结束时间",
     searchTime: "查询时间",
     createTime: "创建时间",
-    updateTime: "更新时间"
+    updateTime: "更新时间",
+    releaseTime: "发布时间"
   },
   dict: {
     man: "男",
