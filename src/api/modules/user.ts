@@ -28,7 +28,7 @@ export const BatchAddUser = (params: FormData) => {
 
 // 编辑用户
 export const editUser = (params: { id: string }) => {
-  return http.put(PORT1 + `/system/user`, params);
+  return http.post(PORT1 + `/system/user/edit`, params);
 };
 
 // 删除用户

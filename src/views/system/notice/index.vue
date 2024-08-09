@@ -51,7 +51,6 @@ const sys_notice_type = ref<DictOptions[]>([]);
 useDict("sys_notice_status", "sys_notice_type").then(res => {
   sys_notice_status.value = res.sys_notice_status;
   sys_notice_type.value = res.sys_notice_type;
-  console.log(sys_notice_type.value, res);
 });
 
 // ProTable 实例
@@ -70,6 +69,7 @@ const columns = reactive<ColumnProps<Notice.ResNotice>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { prop: "noticeId", label: "序号", width: 80 },
   { prop: "noticeTitle", label: "公告标题", search: { el: "input", tooltip: "请输入公告标题" } },
+  { prop: "createDept", label: "发布部门", width: 180, search: { el: "input", tooltip: "请输入发布部门" } },
   {
     prop: "noticeType",
     label: "公告类型",
