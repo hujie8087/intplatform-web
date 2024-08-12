@@ -366,21 +366,22 @@ export namespace OperaLog {
 // app版本管理模块
 export namespace AppVersion {
   export interface ReqAppVersionParams extends ReqPage {
-    version?: string;
-    name?: string;
-    system?: string;
-    updateType: string;
+    versionCode?: number;
+    versionName?: string;
   }
 
   export interface ResAppVersion {
     id: number;
-    path: string;
-    name: string;
-    version: string;
-    updateType: string;
-    system: string;
-    content: string;
-    enableFlag: number;
+    apkSize: number;
+    apkUrl: string;
+    createTime: string;
+    hasUpdate: string;
+    isIgnorable: string;
     remark: string;
+    system: string;
+    updateLog: string;
+    updateType: string;
+    versionCode: number;
+    versionName: string;
   }
 }
