@@ -77,8 +77,8 @@ const columns = reactive<ColumnProps<AppVersion.ResAppVersion>[]>([
     enum: app_system_status,
     search: { el: "select" }
   },
-  { prop: "name", label: t("system.app.name") },
-  { prop: "version", label: t("system.app.version"), search: { el: "input" }, align: "center" },
+  { prop: "versionName", label: t("system.app.name") },
+  { prop: "versionCode", label: t("system.app.version"), search: { el: "input" }, align: "center" },
   {
     prop: "updateType",
     label: t("system.app.updateType"),
@@ -87,14 +87,15 @@ const columns = reactive<ColumnProps<AppVersion.ResAppVersion>[]>([
     enum: app_version_status,
     search: { el: "select" }
   },
-  { prop: "path", label: t("system.app.path") },
-  { prop: "content", label: t("system.app.content") },
+  { prop: "apkUrl", label: t("system.app.path") },
+  { prop: "apkSize", label: t("system.app.apkSize") + "(Kb)" },
+  { prop: "updateLog", label: t("system.app.content") },
   { prop: "createTime", label: t("main.createTime"), width: 180 },
   { prop: "operation", label: t("main.operation"), width: 330, fixed: "right" }
 ]);
 // 删除用户信息
 const deleteAppVersionHandle = async (params: AppVersion.ResAppVersion) => {
-  await useHandleData(deleteAppVersion, params.id, `删除【${params.version}】app版本`);
+  await useHandleData(deleteAppVersion, params.id, `删除【${params.versionName}】app版本`);
   proTable.value?.getTableList();
 };
 

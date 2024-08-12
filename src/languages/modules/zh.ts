@@ -178,7 +178,8 @@ export default {
       system: "APP系统",
       updateType: "更新方式",
       path: "文件路径",
-      content: "更新内容"
+      content: "更新内容",
+      apkSize: "apk大小"
     }
   },
   main: {

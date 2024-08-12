@@ -24,20 +24,24 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item :label="`${$t('system.app.name')}`" prop="name">
-            <el-input
-              v-model="drawerProps.rowData!.name"
-              :placeholder="`${$t('main.inputError', { msg: $t('system.app.name') })}`"
+          <el-form-item :label="`${$t('system.app.version')}`" prop="versionCode">
+            <el-input-number
+              controls-position="right"
+              :min="1"
+              :step="1"
+              v-model="drawerProps.rowData!.versionCode"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.app.version') })}`"
               clearable
+              style="width: 50%"
             >
-            </el-input>
+            </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item :label="`${$t('system.app.version')}`" prop="version">
+          <el-form-item :label="`${$t('system.app.name')}`" prop="versionName">
             <el-input
-              v-model="drawerProps.rowData!.version"
-              :placeholder="`${$t('main.inputError', { msg: $t('system.app.version') })}`"
+              v-model="drawerProps.rowData!.versionName"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.app.name') })}`"
               clearable
             >
             </el-input>
@@ -56,8 +60,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item :label="`${$t('system.app.path')}`" prop="path">
-            <el-input v-model="drawerProps.rowData!.path" placeholder="请上传APP文件" disabled class="input-with-select">
+          <el-form-item :label="`${$t('system.app.path')}`" prop="apkUrl">
+            <el-input v-model="drawerProps.rowData!.apkUrl" placeholder="请上传APP文件" disabled class="input-with-select">
               <template #append>
                 <el-upload
                   v-model:file-list="fileList"
@@ -80,12 +84,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item :label="`${$t('system.app.content')}`" prop="content">
+          <el-form-item :label="`${$t('system.app.content')}`" prop="updateLog">
             <el-input
               type="textarea"
               :rows="6"
-              v-model="drawerProps.rowData!.content"
-              :placeholder="`${$t('main.inputError', { msg: $t('system.app.version') })}`"
+              v-model="drawerProps.rowData!.updateLog"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.app.content') })}`"
               clearable
             >
             </el-input>
@@ -112,7 +116,7 @@
 
 <script setup lang="ts" name="AppVersionDrawer">
 import { ref, reactive } from "vue";
-import { ElMessage, FormInstance, UploadUserFile } from "element-plus";
+import { ElMessage, FormInstance, UploadFile, UploadUserFile } from "element-plus";
 import { useI18n } from "vue-i18n";
 import { AppVersion } from "@/api/interface/system";
 import { DictOptions } from "@/api/interface";
@@ -176,8 +180,9 @@ const handleSubmit = () => {
   });
 };
 
-const handleSuccess = (response: any) => {
-  drawerProps.value.rowData!.path = response.data[0].url;
+const handleSuccess = (response: any, uploadFile: UploadFile) => {
+  drawerProps.value.rowData!.apkUrl = response.data[0].url;
+  drawerProps.value.rowData!.apkSize = uploadFile?.size ? Math.floor(uploadFile?.size / 1000) : 0;
 };
 defineExpose({
   acceptParams
