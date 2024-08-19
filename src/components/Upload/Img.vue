@@ -15,7 +15,7 @@
       :accept="fileType.join(',')"
     >
       <template v-if="imageUrl">
-        <img :src="imageUrl" class="upload-image" />
+        <img :src="filePath + imageUrl" class="upload-image" />
         <div class="upload-handle" @click.stop>
           <div v-if="!self_disabled" class="handle-icon" @click="editImg">
             <el-icon><Edit /></el-icon>
@@ -53,6 +53,8 @@ import { generateUUID } from "@/utils";
 import { uploadImg } from "@/api/modules/upload";
 import { ElNotification, formContextKey, formItemContextKey } from "element-plus";
 import type { UploadProps, UploadRequestOptions } from "element-plus";
+
+const filePath = import.meta.env.VITE_APP_BASE_FILE;
 
 interface UploadFileProps {
   imageUrl: string; // 图片地址 ==> 必传

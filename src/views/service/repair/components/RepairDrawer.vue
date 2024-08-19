@@ -63,6 +63,7 @@ import UploadImgs from "@/components/Upload/Imgs.vue";
 const { t } = useI18n(); // 解构出t方法
 
 const fileList = ref<UploadUserFile[]>([]);
+
 const rules = reactive({
   repairArea: [{ required: true, message: t("main.inputError", { msg: "报修区域" }) }],
   repairPerson: [{ required: true, message: t("main.selectError", { msg: "报修说明" }) }],

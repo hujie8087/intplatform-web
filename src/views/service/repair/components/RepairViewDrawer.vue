@@ -35,17 +35,19 @@
         <template #label>
           <div class="cell-item">报修图片</div>
         </template>
-        <el-image
-          v-for="img in drawerProps.rowData.repairPhoto?.split(',')"
-          :key="img"
-          style="width: 100px; height: 100px"
-          :src="img"
-          :zoom-rate="1.2"
-          :max-scale="7"
-          :min-scale="0.2"
-          :preview-src-list="drawerProps.rowData.repairPhoto?.split(',')"
-          fit="cover"
-        />
+        <div v-if="drawerProps.rowData.repairPhoto">
+          <el-image
+            v-for="img in drawerProps.rowData.repairPhoto?.split(',')"
+            :key="img"
+            style="width: 100px; height: 100px"
+            :src="filePath + img"
+            :zoom-rate="1.2"
+            :max-scale="7"
+            :min-scale="0.2"
+            :preview-src-list="drawerProps.rowData.repairPhoto?.split(',').map(item => filePath + item)"
+            fit="cover"
+          />
+        </div>
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label>
@@ -103,6 +105,8 @@ import { ref } from "vue";
 import { Repair } from "@/api/interface/service/repair";
 import { DictOptions } from "@/api/interface";
 import { ElImage } from "element-plus";
+
+const filePath = import.meta.env.VITE_APP_BASE_FILE;
 
 interface DrawerProps {
   title: string;

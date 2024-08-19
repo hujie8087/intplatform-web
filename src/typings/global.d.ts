@@ -76,6 +76,7 @@ declare interface ViteEnv {
   VITE_PWA: boolean;
   VITE_PUBLIC_PATH: string;
   VITE_API_URL: string;
+  VITE_APP_BASE_FILE: string;
   VITE_PROXY: [string, string][];
 }
 
