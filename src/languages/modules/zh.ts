@@ -109,6 +109,7 @@ export default {
       status: "状态",
       add: "新增",
       menu: "菜单权限",
+      building: "区域权限",
       remark: "备注"
     },
     post: {

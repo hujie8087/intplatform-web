@@ -42,11 +42,20 @@ import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import RoleDrawer from "./components/RoleDrawer.vue";
 import { CirclePlus, Delete, EditPen, View } from "@element-plus/icons-vue";
-import { getRoleList, deleteRole, deleteMoreRole, editRole, addRole, getRoleInfo } from "@/api/modules/system/role";
+import {
+  getRoleList,
+  deleteRole,
+  deleteMoreRole,
+  editRole,
+  addRole,
+  getRoleInfo,
+  getBuildingFirstList
+} from "@/api/modules/system/role";
 import { getMenuSelect, getMenuTree } from "@/api/modules/system/menu";
 
 import { useI18n } from "vue-i18n";
 import { Menu } from "@/api/interface/system";
+import { Building } from "@/api/interface/food/building";
 const { t } = useI18n(); // 解构出t方法
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref();
@@ -76,6 +85,14 @@ const getTableList = (params: any) => {
   console.log(newParams);
   return getRoleList(newParams);
 };
+
+const buildingOptions = ref<Building.ResBuilding[]>([]);
+const getBuildingList = async () => {
+  const res = await getBuildingFirstList();
+  buildingOptions.value = res.data;
+};
+
+getBuildingList();
 
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // const { BUTTONS } = useAuthButtons();
@@ -164,7 +181,8 @@ const openDrawer = async (num: number, rowData: Partial<Role.ResRole> = {}) => {
     api: num === 1 ? addRole : num === 3 ? editRole : "",
     getTableList: proTable.value.getTableList,
     menuList: roleMenuTreeselect.value,
-    menuIds: menuIds.value
+    menuIds: menuIds.value,
+    buildingOptions: buildingOptions.value
   };
   drawerRef.value.acceptParams(params);
 };
