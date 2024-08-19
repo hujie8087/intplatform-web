@@ -3,6 +3,7 @@
     <div class="table-box">
       <ProTable
         ref="proTable"
+        title="报修类型管理"
         highlight-current-row
         :columns="columns"
         :request-api="getRepairTypeList"

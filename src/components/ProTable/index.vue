@@ -178,6 +178,8 @@ const {
   handleCurrentChange,
   key
 } = useTable(props.requestApi, props.initParam, props.pagination, props.dataCallback, props.requestError);
+console.log(tableData);
+
 // 清空选中数据列表
 const clearSelection = () => tableRef.value!.clearSelection();
 

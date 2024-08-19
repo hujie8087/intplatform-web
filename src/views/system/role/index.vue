@@ -6,8 +6,8 @@
         :title="roleList"
         :columns="columns"
         :request-api="getTableList"
-        :init-param="initParam"
         :data-callback="dataCallback"
+        :init-param="initParam"
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
