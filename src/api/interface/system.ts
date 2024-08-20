@@ -201,6 +201,7 @@ export namespace Role {
     deptIds?: number[];
     permissions?: string[];
     admin?: boolean;
+    repairAreaId?: string;
   }
   export interface ResMenu {
     id: number;

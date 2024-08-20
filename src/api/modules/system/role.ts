@@ -3,6 +3,7 @@ import { ResPage } from "@/api/interface/index";
 import { Account } from "@/api/interface/system";
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
+import { Building } from "@/api/interface/food/building";
 
 /**
  * @name 角色管理模块
@@ -39,4 +40,9 @@ export const deleteMoreRole = (params: number[]) => {
 // * 角色状态修改
 export const changeRoleStatus = (params: { roleId: number; status: number }) => {
   return http.post(PORT1 + `/system/role/changeStatus`, params);
+};
+
+// * 获取生活区域第一级列表
+export const getBuildingFirstList = () => {
+  return http.get<Building.ResBuilding[]>(PORT1 + `/maintenance/food/building/firstlist`);
 };

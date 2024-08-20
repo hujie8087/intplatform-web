@@ -43,6 +43,18 @@
           style="width: 100%; padding: 10px 0; border-radius: 4px; box-shadow: 0 0 0 1px #dcdfe6"
         />
       </el-form-item>
+      <el-form-item :label="`${$t('system.role.building')}`" prop="repairAreaId">
+        <el-select
+          v-model="repairAreaIds"
+          multiple
+          collapse-tags
+          collapse-tags-tooltip
+          :max-collapse-tags="5"
+          placeholder="请选择"
+        >
+          <el-option v-for="item in drawerProps.buildingOptions" :label="item.title" :value="item.id" :key="item.id"> </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item :label="`${$t('system.role.status')}`" prop="status">
         <el-switch
           v-model="drawerProps.rowData.status"
@@ -72,6 +84,7 @@ import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { useI18n } from "vue-i18n";
 import { Role } from "@/api/interface/system";
+import { Building } from "@/api/interface/food/building";
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({
@@ -79,7 +92,7 @@ const rules = reactive({
   roleName: [{ required: true, message: t("main.inputError", { msg: t("system.role.name") }) }],
   roleKey: [{ required: true, message: t("main.inputError", { msg: t("system.role.roleKey") }) }]
 });
-
+const repairAreaIds = ref<number[]>([]);
 interface DrawerProps {
   title: string;
   isView: boolean;
@@ -88,6 +101,7 @@ interface DrawerProps {
   getTableList?: () => Promise<any>;
   menuList?: Role.ResMenu[];
   menuIds: number[];
+  buildingOptions?: Building.ResBuilding[];
 }
 // drawer框状态
 const drawerVisible = ref(false);
@@ -127,7 +141,7 @@ const treeAll = (val: boolean) => {
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
-  console.log(params);
+  repairAreaIds.value = params.rowData.repairAreaId ? params.rowData.repairAreaId?.split("/").map(item => Number(item)) : [];
 };
 
 // 提交数据（新增/编辑）
@@ -137,7 +151,11 @@ const handleSubmit = () => {
     if (!valid) return;
     drawerProps.value.rowData.menuIds = treeRef.value?.getCheckedKeys(false);
     try {
-      await drawerProps.value.api!({ ...drawerProps.value.rowData, menuIds: drawerProps.value.rowData.menuIds });
+      await drawerProps.value.api!({
+        ...drawerProps.value.rowData,
+        menuIds: drawerProps.value.rowData.menuIds,
+        repairAreaId: repairAreaIds.value.join("/")
+      });
       ElMessage.success({
         message: t("main.successMsg", { title: t("system.role.role"), method: `${drawerProps.value.title}` })
       });

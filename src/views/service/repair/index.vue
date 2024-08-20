@@ -118,10 +118,11 @@ const columns = reactive<ColumnProps<Repair.ResRepair>[]>([
   { prop: "repairNo", label: "报修单编号", width: 140 },
   { prop: "repairArea", label: "报修区域", width: 100 },
   { prop: "roomNo", label: "房间号" },
-  { prop: "repairMessage", label: "报修信息", search: { el: "input", tooltip: "请输入报修信息" } },
+  { prop: "repairMessage", label: "报修信息", search: { el: "input", tooltip: "请输入报修信息" }, width: 120 },
   { prop: "repairPerson", label: "报修人", search: { el: "input", tooltip: "请输入报修人" } },
   { prop: "tel", label: "联系电话" },
   { prop: "repairMan", label: "派单人", search: { el: "input", tooltip: "请输入派单人" } },
+  { prop: "createTime", label: "报修时间", width: 160 },
   {
     prop: "repairType",
     label: "维修类型",
@@ -138,7 +139,8 @@ const columns = reactive<ColumnProps<Repair.ResRepair>[]>([
   },
   {
     prop: "repairTime",
-    label: "维修时间"
+    label: "维修时间",
+    width: 160
   },
   {
     prop: "repairNote",
