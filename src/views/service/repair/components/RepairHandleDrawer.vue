@@ -45,7 +45,14 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="维修时间" prop="repairTime">
-            <el-date-picker v-model="drawerProps.rowData.repairTime" type="datetime" placeholder="请选择维修时间" clearable />
+            <el-date-picker
+              v-model="drawerProps.rowData.repairTime"
+              type="datetime"
+              format="YYYY-MM-DD HH:mm:ss"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              placeholder="请选择维修时间"
+              clearable
+            />
           </el-form-item>
         </el-col>
         <el-col :span="24">
