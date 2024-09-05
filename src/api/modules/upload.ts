@@ -12,5 +12,5 @@ export const uploadImg = (params: FormData) => {
 
 // 视频上传
 export const uploadVideo = (params: FormData) => {
-  return http.post<Upload.ResFileUrl>(PORT1 + `/file/upload/video`, params, { cancel: false });
+  return http.post<Upload.ResFileUrl>(PORT1 + `/file/uploadVideo`, params, { cancel: false });
 };

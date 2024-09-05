@@ -17,10 +17,10 @@
 import { nextTick, computed, inject, shallowRef, onBeforeUnmount } from "vue";
 import { IToolbarConfig, IEditorConfig } from "@wangeditor/editor";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
-import { uploadImg, uploadVideo } from "@/api/modules/upload";
+import { uploadImg } from "@/api/modules/upload";
 import "@wangeditor/editor/dist/css/style.css";
 import { formContextKey, formItemContextKey } from "element-plus";
-
+const filePath = import.meta.env.VITE_APP_BASE_FILE;
 // 富文本 DOM 元素
 const editorRef = shallowRef();
 
@@ -95,10 +95,10 @@ props.editorConfig.MENU_CONF!["uploadImage"] = {
   async customUpload(file: File, insertFn: InsertFnTypeImg) {
     if (!uploadImgValidate(file)) return;
     let formData = new FormData();
-    formData.append("file", file);
+    formData.append("files", file);
     try {
       const { data } = await uploadImg(formData);
-      insertFn(data.fileUrl);
+      insertFn(filePath + data[0].url);
     } catch (error) {
       console.log(error);
     }
@@ -121,10 +121,10 @@ props.editorConfig.MENU_CONF!["uploadVideo"] = {
   async customUpload(file: File, insertFn: InsertFnTypeVideo) {
     if (!uploadVideoValidate(file)) return;
     let formData = new FormData();
-    formData.append("file", file);
+    formData.append("files", file);
     try {
-      const { data } = await uploadVideo(formData);
-      insertFn(data.fileUrl);
+      const { data } = await uploadImg(formData);
+      insertFn(filePath + data[0].url);
     } catch (error) {
       console.log(error);
     }
