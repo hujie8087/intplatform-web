@@ -117,7 +117,7 @@ const columns = reactive<ColumnProps<Repair.ResRepair>[]>([
   { type: "index", label: "序号", width: 50 },
   { prop: "repairNo", label: "报修单编号", width: 140 },
   { prop: "repairArea", label: "报修区域", width: 100 },
-  { prop: "roomNo", label: "房间号" },
+  { prop: "roomNo", label: "房间号", search: { el: "input", tooltip: "请输入房间号" } },
   { prop: "repairMessage", label: "报修信息", search: { el: "input", tooltip: "请输入报修信息" }, width: 120 },
   { prop: "repairPerson", label: "报修人", search: { el: "input", tooltip: "请输入报修人" } },
   { prop: "tel", label: "联系电话" },
