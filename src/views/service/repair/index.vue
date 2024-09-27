@@ -23,19 +23,35 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增报修记录</el-button>
-          <el-button type="danger" :disabled="!scope.isSelected" :icon="Delete" @click="batchDelete(scope.selectedListIds)">
+          <el-button type="primary" :icon="CirclePlus" v-auth="['commonality:repair:add']" @click="openDrawer('新增')"
+            >新增报修记录</el-button
+          >
+          <el-button
+            type="danger"
+            :disabled="!scope.isSelected"
+            :icon="Delete"
+            v-auth="['commonality:repair:remove']"
+            @click="batchDelete(scope.selectedListIds)"
+          >
             批量删除报修记录
           </el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button type="success" link :icon="View" @click="openViewDrawer('查看', scope.row)">查看</el-button>
-          <el-button type="danger" link :icon="Delete" @click="deleteRepairHandle(scope.row)">删除</el-button>
+          <el-button
+            type="danger"
+            link
+            :icon="Delete"
+            v-auth="['commonality:repair:remove']"
+            @click="deleteRepairHandle(scope.row)"
+            >删除</el-button
+          >
           <el-button
             type="warning"
             v-if="scope.row.repairState === 0 || scope.row.repairState === 2"
             link
+            v-auth="['commonality:repair:edit']"
             @click="openHandleDrawer('办理', scope.row)"
           >
             办理
@@ -171,6 +187,18 @@ const batchDelete = async (ids: number[]) => {
 // 打开 drawer(新增、查看、编辑)
 const repairHandleDrawerRef = ref<InstanceType<typeof RepairHandleDrawer> | null>(null);
 const openHandleDrawer = async (title: string, row: Partial<Repair.ResRepair> = {}) => {
+  // const res = await sendMessage({
+  //   title: row.repairPerson ?? "",
+  //   body: row.repairMessage ?? "",
+  //   type: "1",
+  //   payload: ``,
+  //   equipmentToken:
+  //     // "fVBG03eXQ9W_9wwMxPHZ1P:APA91bEgFAsaqkAQvf3AtJ09pypkYyHDqyDRJvO5pxugTGM1S4jDGci-kOAeNU8Jkb8AzdJtsMd1iGclvyLCGltdG8fOMuje5VIrwDus50FAnNFU2Q4rfDoieb5Cr8UZ20mvprATEcF0"
+  //     // "fde8S0D4L01mvX5D1PvF7k:APA91bGBWe_mSeFlGfawuCuEwmhH8Qg7nLBIxcbba7NworJOHR-6jooTr0AGf9fUsLQUBg_DApWU1xJj4ZY8uKeJQuClAUtf4E6gHkvtnVe8U_xiih-gJZxUXnY-7IumCx4bQ33nCwum"
+  //     "dJm7J1juQdSEUdZu5q8yjy:APA91bG76bUU5AGYZ1DyBhtfX09IuMEZh_ahtovSOP-QnfDlFyHscKMB-f8OhQbXm1KcDXNoWyiMsSWRY_PacoJwfFJ0BxAXI73in7jMwVDBhzfTm3de_0DXTGBXUizlyEZb3gv6CGTg"
+  // });
+  // console.log(res);
+
   if (row.id) {
     const res = await getRepairById(row.id);
     row = res.data;

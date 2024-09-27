@@ -12,17 +12,34 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增字典</el-button>
-          <el-button type="danger" :disabled="!scope.isSelected" :icon="Delete" @click="batchDelete(scope.selectedListIds)">
+          <el-button type="primary" v-auth="['system:dict:add']" :icon="CirclePlus" @click="openDrawer('新增')"
+            >新增字典</el-button
+          >
+          <el-button
+            type="danger"
+            v-auth="['system:dict:remove']"
+            :disabled="!scope.isSelected"
+            :icon="Delete"
+            @click="batchDelete(scope.selectedListIds)"
+          >
             批量删除字典
           </el-button>
-          <el-button type="success" :icon="Download" @click="downloadHandle">导出</el-button>
-          <el-button type="warning" :icon="Refresh" @click="refreshCacheHandle">刷新缓存</el-button>
+          <el-button type="success" v-auth="['system:dict:export']" :icon="Download" @click="downloadHandle">导出</el-button>
+          <el-button type="warning" v-auth="['system:dict:edit']" :icon="Refresh" @click="refreshCacheHandle">刷新缓存</el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="success" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-          <el-button type="danger" v-if="scope.row.dictId !== 100" link :icon="Delete" @click="deleteDictHandle(scope.row)">
+          <el-button type="success" v-auth="['system:dict:edit']" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"
+            >编辑</el-button
+          >
+          <el-button
+            type="danger"
+            v-auth="['system:dict:remove']"
+            v-if="scope.row.dictId !== 100"
+            link
+            :icon="Delete"
+            @click="deleteDictHandle(scope.row)"
+          >
             删除
           </el-button>
         </template>

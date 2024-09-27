@@ -117,6 +117,22 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
+          <el-form-item :label="`${$t('system.user.role')}`" prop="roleIds">
+            <el-select
+              v-model="drawerProps.rowData!.roleIds"
+              :placeholder="`${$t('main.selectError', { msg: $t('system.user.role') })}`"
+              multiple
+              collapse-tags
+              collapse-tags-tooltip
+              :max-collapse-tags="3"
+              clearable
+              style="width: 100%"
+            >
+              <el-option v-for="item in drawerProps.roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item :label="`${$t('main.remark')}`" prop="remark">
             <el-input
               v-model="drawerProps.rowData!.remark"
@@ -150,9 +166,10 @@
 import { ref, reactive } from "vue";
 import { genderType, userType } from "@/utils/serviceDict";
 import { ElMessage, FormInstance } from "element-plus";
-import { Account } from "@/api/interface/system";
+import { Account, Role } from "@/api/interface/system";
 import { useI18n } from "vue-i18n";
 import UploadImg from "@/components/Upload/Img.vue";
+import { updateRole } from "@/api/modules/system/user";
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({
@@ -172,6 +189,7 @@ interface DrawerProps {
   deptList?: {
     [key: string]: any;
   }[];
+  roleList?: Role.ResRole[];
 }
 
 // drawer框状态
@@ -186,6 +204,9 @@ const deptListOptions = ref<{ label: string; value: string }[]>([]);
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
+  if (drawerProps.value.rowData?.roles) {
+    drawerProps.value.rowData.roleIds = drawerProps.value.rowData.roles.map(item => item.roleId);
+  }
   deptListOptions.value = drawerProps.value.deptList!.map(item => {
     return {
       label: item.deptName,
@@ -204,6 +225,10 @@ const handleSubmit = () => {
       ElMessage.success({
         message: t("main.successMsg", { title: t("system.user.user"), method: `${drawerProps.value.title}` })
       });
+      // 如果用户有角色，更新用户角色
+      if (drawerProps.value.rowData?.roles && drawerProps.value.rowData.roleIds && drawerProps.value.rowData.roleIds.length > 0) {
+        await updateRole({ userId: drawerProps.value.rowData.userId, roleIds: drawerProps.value.rowData.roleIds });
+      }
       drawerProps.value.getTableList!();
       drawerVisible.value = false;
     } catch (error) {

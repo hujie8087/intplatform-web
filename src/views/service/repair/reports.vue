@@ -24,11 +24,11 @@
         <el-row type="flex" justify="space-evenly">
           <el-col :span="10">
             <div class="report-type">
-              <ReportsChart v-if="reportTypeData.length > 0" :data="reportTypeData" />
+              <ReportsChart ref="reportsChart" v-if="reportTypeData.length > 0" :data="reportTypeData" />
             </div>
           </el-col>
           <el-col :span="10">
-            <ReportsColumnChart v-if="reportRegionData.length > 0" :data="reportRegionData" />
+            <ReportsColumnChart ref="reportsColumnChartRef" v-if="reportRegionData.length > 0" :data="reportRegionData" />
           </el-col>
         </el-row>
       </div>
@@ -90,6 +90,8 @@ const getReportData = async () => {
       })
     : [];
 };
+const reportsChart = ref();
+const reportsColumnChartRef = ref();
 const changeDate = val => {
   initParam.beginTime = val[0];
   initParam.endTime = val[1];

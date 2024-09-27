@@ -41,6 +41,7 @@ const draw = () => {
 };
 
 watch(props, () => {
+  console.log(props);
   draw();
 });
 

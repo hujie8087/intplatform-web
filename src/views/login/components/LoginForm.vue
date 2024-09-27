@@ -1,7 +1,7 @@
 <template>
   <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" size="large">
     <el-form-item prop="username">
-      <el-input v-model="loginForm.username" placeholder="请输入用户名">
+      <el-input v-model="loginForm.username" placeholder="请输入用户名" @keyup.enter="handleEnter">
         <template #prefix>
           <el-icon class="el-input__icon">
             <user />
@@ -10,7 +10,14 @@
       </el-input>
     </el-form-item>
     <el-form-item prop="password">
-      <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" show-password autocomplete="new-password">
+      <el-input
+        v-model="loginForm.password"
+        type="password"
+        placeholder="请输入密码"
+        show-password
+        autocomplete="new-password"
+        @keyup.enter="handleEnter"
+      >
         <template #prefix>
           <el-icon class="el-input__icon">
             <lock />
@@ -28,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { HOME_URL } from "@/config";
 import { getTimeState } from "@/utils";
@@ -98,16 +105,11 @@ const resetForm = (formEl: FormInstance | undefined) => {
   formEl.resetFields();
 };
 
-onMounted(() => {
-  // 监听 enter 事件（调用登录）
-  document.onkeydown = (e: KeyboardEvent) => {
-    e = (window.event as KeyboardEvent) || e;
-    if (e.code === "Enter" || e.code === "enter" || e.code === "NumpadEnter") {
-      if (loading.value) return;
-      login(loginFormRef.value);
-    }
-  };
-});
+const handleEnter = event => {
+  // 使输入框失去焦点
+  event.target.blur();
+  login(loginFormRef.value);
+};
 </script>
 
 <style scoped lang="scss">

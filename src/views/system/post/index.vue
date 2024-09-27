@@ -12,15 +12,32 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增岗位</el-button>
-          <el-button type="danger" :disabled="!scope.isSelected" :icon="Delete" @click="batchDelete(scope.selectedListIds)">
+          <el-button type="primary" v-auth="['system:post:add']" :icon="CirclePlus" @click="openDrawer('新增')"
+            >新增岗位</el-button
+          >
+          <el-button
+            type="danger"
+            v-auth="['system:post:remove']"
+            :disabled="!scope.isSelected"
+            :icon="Delete"
+            @click="batchDelete(scope.selectedListIds)"
+          >
             批量删除岗位
           </el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="success" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-          <el-button type="danger" v-if="scope.row.postId !== 100" link :icon="Delete" @click="deletePostHandle(scope.row)">
+          <el-button type="success" v-auth="['system:post:edit']" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"
+            >编辑</el-button
+          >
+          <el-button
+            type="danger"
+            v-auth="['system:post:remove']"
+            v-if="scope.row.postId !== 100"
+            link
+            :icon="Delete"
+            @click="deletePostHandle(scope.row)"
+          >
             删除
           </el-button>
         </template>

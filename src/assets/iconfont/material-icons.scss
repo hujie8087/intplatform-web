@@ -1,0 +1,91 @@
+/* 引入 Material Icons 字体 */
+@font-face {
+  font-family: "Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./MaterialIcons-Regular.woff2") format("woff2");
+}
+
+/* fallback */
+@font-face {
+  font-family: "Material Icons Outlined";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./MaterialIconsOutlined-Regular.otf") format("opentype");
+}
+
+/* fallback */
+@font-face {
+  font-family: "Material Icons Round";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./MaterialIconsRound-Regular.otf") format("opentype");
+}
+
+/* fallback */
+@font-face {
+  font-family: "Material Icons Sharp";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./MaterialIconsSharp-Regular.otf") format("opentype");
+}
+.material-icons {
+  display: inline-block;
+  font-family: "Material Icons";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: normal;
+  font-feature-settings: "liga";
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
+.material-icons-outlined {
+  display: inline-block;
+  font-family: "Material Icons Outlined";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: normal;
+  font-feature-settings: "liga";
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -moz-osx-font-smoothing: grayscale;
+}
+.material-icons-round {
+  display: inline-block;
+  font-family: "Material Icons Round";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: normal;
+  font-feature-settings: "liga";
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -moz-osx-font-smoothing: grayscale;
+}
+.material-icons-sharp {
+  display: inline-block;
+  font-family: "Material Icons Sharp";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: normal;
+  font-feature-settings: "liga";
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -moz-osx-font-smoothing: grayscale;
+}

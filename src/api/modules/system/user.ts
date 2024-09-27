@@ -53,7 +53,7 @@ export const resetPassWord = (ids: number[]) => {
 
 // * 获取用户角色列表
 export const getRoleSelect = () => {
-  return http.get<Account.ResRole[]>(PORT1 + `/system/user/roleSelect`);
+  return http.get<Account.ResRole[]>(PORT1 + `/system/role/listAll`);
 };
 //  * 获取用户角色
 export const getUserRole = (id: number) => {

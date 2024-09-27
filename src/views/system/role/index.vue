@@ -11,8 +11,17 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" :icon="CirclePlus" @click="openDrawer(1)">{{ $t("system.role.add") }}</el-button>
-          <el-button type="danger" :icon="Delete" plain @click="batchDelete(scope.selectedListIds)" :disabled="!scope.isSelected">
+          <el-button type="primary" v-auth="['system:role:add']" :icon="CirclePlus" @click="openDrawer(1)">{{
+            $t("system.role.add")
+          }}</el-button>
+          <el-button
+            type="danger"
+            v-auth="['system:role:reomve']"
+            :icon="Delete"
+            plain
+            @click="batchDelete(scope.selectedListIds)"
+            :disabled="!scope.isSelected"
+          >
             {{ $t("system.role.batchDelete") }}
           </el-button>
         </template>
@@ -21,12 +30,24 @@
           <el-button type="primary" link v-if="scope.row.roleId !== 1" :icon="View" @click="openDrawer(2, scope.row)">{{
             $t("main.view")
           }}</el-button>
-          <el-button type="primary" link v-if="scope.row.roleId !== 1" :icon="EditPen" @click="openDrawer(3, scope.row)">{{
-            $t("main.edit")
-          }}</el-button>
-          <el-button type="primary" link v-if="scope.row.roleId !== 1" :icon="Delete" @click="deleteAccount(scope.row)">{{
-            $t("main.delete")
-          }}</el-button>
+          <el-button
+            type="primary"
+            v-auth="['system:role:edit']"
+            link
+            v-if="scope.row.roleId !== 1"
+            :icon="EditPen"
+            @click="openDrawer(3, scope.row)"
+            >{{ $t("main.edit") }}</el-button
+          >
+          <el-button
+            type="primary"
+            v-auth="['system:role:remove']"
+            link
+            v-if="scope.row.roleId !== 1"
+            :icon="Delete"
+            @click="deleteAccount(scope.row)"
+            >{{ $t("main.delete") }}</el-button
+          >
         </template>
       </ProTable>
       <RoleDrawer ref="drawerRef" />

@@ -177,9 +177,9 @@ export namespace Menu {
 // 角色管理模块
 export namespace Role {
   export interface ReqRoleParams extends ReqPage {
-    level: string;
-    name: string;
-    sort: number;
+    level?: string;
+    name?: string;
+    sort?: number;
   }
   export interface ResRole {
     createBy?: string;
@@ -325,6 +325,13 @@ export namespace Notice {
     createDept: string;
     papeView: string;
     status: string;
+  }
+  export interface pushMessage {
+    title: string;
+    body: string;
+    payload: string;
+    type: string;
+    equipmentToken: string;
   }
 }
 
