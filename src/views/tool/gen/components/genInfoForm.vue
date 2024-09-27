@@ -233,8 +233,8 @@
 <script setup lang="ts" name="GenInfoForm">
 import { ref, watch } from "vue";
 import { Gen } from "@/api/interface/tool";
-import { getRoleList } from "@/api/modules/system/menu";
 import { handleTree } from "@/utils";
+import { getRoleList } from "@/api/modules/system/role";
 
 const subColumns = ref<Gen.Column[]>([]);
 const menuOptions = ref([]);
@@ -276,7 +276,7 @@ function setSubTableColumns(value) {
 /** 查询菜单下拉树结构 */
 function getMenuTreeselect() {
   getRoleList({ pageNum: 1, pageSize: 10000 }).then(response => {
-    menuOptions.value = handleTree(response.data, "menuId");
+    menuOptions.value = handleTree(response.rows, "menuId");
   });
 }
 
