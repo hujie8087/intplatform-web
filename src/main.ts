@@ -6,6 +6,8 @@ import "@/styles/reset.scss";
 import "@/styles/common.scss";
 // iconfont css
 import "@/assets/iconfont/iconfont.scss";
+// material-icons css
+import "@/assets/iconfont/material-icons.scss";
 // font css
 import "@/assets/fonts/font.scss";
 // element css

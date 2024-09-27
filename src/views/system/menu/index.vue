@@ -11,7 +11,7 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus" @click="openDrawer(1)">新增菜单 </el-button>
+        <el-button type="primary" v-auth="['system:menu:add']" :icon="CirclePlus" @click="openDrawer(1)">新增菜单 </el-button>
       </template>
       <!-- 菜单图标 -->
       <template #icon="scope">
@@ -21,9 +21,15 @@
       </template>
       <!-- 菜单操作 -->
       <template #operation="scope">
-        <el-button type="success" link :icon="EditPen" @click="openDrawer(3, scope.row)"> 编辑 </el-button>
-        <el-button type="primary" link :icon="Plus" @click="openDrawer(2, scope.row)"> 新增 </el-button>
-        <el-button type="danger" link :icon="Delete" @click="deleteAccount(scope.row)"> 删除 </el-button>
+        <el-button type="success" v-auth="['system:menu:edit']" link :icon="EditPen" @click="openDrawer(3, scope.row)">
+          编辑
+        </el-button>
+        <el-button type="primary" v-auth="['system:menu:add']" link :icon="Plus" @click="openDrawer(2, scope.row)">
+          新增
+        </el-button>
+        <el-button type="danger" v-auth="['system:menu:remove']" link :icon="Delete" @click="deleteAccount(scope.row)">
+          删除
+        </el-button>
       </template>
     </ProTable>
     <!-- 新增、编辑、查看 -->
@@ -57,7 +63,6 @@ const dataCallback = (data: any) => {
   tableData.value = handleTree(data.data, "menuId");
   return {
     list: tableData.value,
-    total: tableData.value.length,
     current: data.current,
     size: data.size
   };

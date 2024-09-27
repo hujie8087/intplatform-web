@@ -36,3 +36,8 @@ export const getNoticeList = (params: Notice.ReqNoticeParams) => {
 export const exportNotice = (params: Notice.ReqNoticeParams) => {
   return http.download(PORT1 + `/system/notice/export`, { params });
 };
+
+// * 发送消息推送
+export const sendMessage = (params: Notice.pushMessage) => {
+  return http.post(PORT1 + `/system/sendMessage/sendOne`, params);
+};

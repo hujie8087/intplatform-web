@@ -20,14 +20,27 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
-          <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
-          <el-button type="primary" :icon="Upload" plain @click="batchAdd">批量添加用户</el-button>
-          <el-button type="warning" :icon="Download" plain @click="downloadFile">导出用户数据</el-button>
+          <el-button type="primary" v-auth="['system:user:add']" :icon="CirclePlus" @click="openDrawer('新增')">
+            新增用户
+          </el-button>
+          <el-button type="primary" v-auth="['system:user:import']" :icon="Upload" plain @click="batchAdd">
+            批量添加用户
+          </el-button>
+          <el-button type="warning" v-auth="['system:user:export']" :icon="Download" plain @click="downloadFile">
+            导出用户数据
+          </el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button type="primary" link v-if="scope.row.userId !== 1" :icon="EditPen" @click="openDrawer('编辑', scope.row)">
+          <el-button
+            type="primary"
+            link
+            v-if="scope.row.userId !== 1"
+            :icon="EditPen"
+            v-auth="['system:user:edit']"
+            @click="openDrawer('编辑', scope.row)"
+          >
             编辑
           </el-button>
           <el-dropdown v-if="scope.row.userId !== 1" style="display: inline-block; margin-left: 10px; vertical-align: middle">
@@ -35,13 +48,24 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item>
-                  <el-button type="primary" link :icon="Refresh" @click="resetPass(scope.row)">重置密码</el-button>
+                  <el-button type="primary" link :icon="Refresh" v-auth="['system:user:resetPwd']" @click="resetPass(scope.row)"
+                    >重置密码</el-button
+                  >
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-button type="primary" link :icon="CircleCheck" @click="handleAuthRole(scope.row)">分配角色</el-button>
+                  <el-button
+                    type="primary"
+                    link
+                    :icon="CircleCheck"
+                    v-auth="['system:user:edit']"
+                    @click="handleAuthRole(scope.row)"
+                    >分配角色</el-button
+                  >
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
+                  <el-button type="primary" link :icon="Delete" v-auth="['system:user:remove']" @click="deleteAccount(scope.row)"
+                    >删除</el-button
+                  >
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -75,10 +99,11 @@ import {
   BatchAddUser,
   getUserDepartment
 } from "@/api/modules/user";
-import { Account } from "@/api/interface/system";
+import { Account, Role } from "@/api/interface/system";
 import { getUserRole, updateRole, changeUserStatus } from "@/api/modules/system/user";
 import { genderType, userStatus, userType } from "@/utils/serviceDict";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
+import { getRoleList } from "@/api/modules/system/role";
 const { BUTTONS } = useAuthButtons();
 
 // ProTable 实例
@@ -140,6 +165,12 @@ const columns = reactive<ColumnProps<Account.ResAccountList>[]>([
   { prop: "operation", label: "操作", width: 230, fixed: "right" }
 ]);
 
+const roleList = ref<Role.ResRole[]>([]);
+const getRolesList = async () => {
+  const res = await getRoleList({ pageNum: 1, pageSize: 1000 });
+  roleList.value = res.rows;
+};
+getRolesList();
 // 默认 treeFilter 参数
 const treeFilterValues = reactive({ deptId: 0 });
 const changeTreeFilter = (val: number) => {
@@ -193,14 +224,21 @@ const batchAdd = () => {
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<Account.ResAccountList> = {}) => {
+const openDrawer = async (title: string, row: Partial<Account.ResAccountList> = {}) => {
+  let rowData = { ...row };
+  if (rowData.userId) {
+    const res = await getUserRole(rowData.userId);
+    rowData = res.user;
+    rowData.roleIds = rowData.roles ? rowData.roles.map(item => item.roleId) : [];
+  }
   const params = {
     title,
     isView: title === "查看",
-    rowData: row,
+    rowData: { ...rowData },
     api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
     getTableList: proTable.value?.getTableList,
-    deptList: treeFilterRef.value?.treeData
+    deptList: treeFilterRef.value?.treeData,
+    roleList: roleList.value
   };
   drawerRef.value?.acceptParams(params);
 };

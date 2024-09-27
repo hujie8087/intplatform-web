@@ -1,26 +1,26 @@
 // 系统角色接口管理
 import { ResPage } from "@/api/interface/index";
-import { Account } from "@/api/interface/system";
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
 import { Building } from "@/api/interface/food/building";
+import { Role } from "@/api/interface/system";
 
 /**
  * @name 角色管理模块
  */
 // * 获取角色列表
-export const getRoleList = (params: Account.ReqAccountParams) => {
-  return http.get<ResPage<Account.ResAccountList>>(PORT1 + `/system/role/list`, params);
+export const getRoleList = (params: Role.ReqRoleParams) => {
+  return http.getNoData<ResPage<Role.ResRole>>(PORT1 + `/system/role/list`, params);
 };
 
 // * 新增角色
 export const addRole = (params: FormData) => {
-  return http.post<ResPage<Account.ResAccountList>>(PORT1 + `/system/role`, params);
+  return http.post<ResPage<Role.ResRole>>(PORT1 + `/system/role`, params);
 };
 
 // * 获取角色详情
 export const getRoleInfo = (id: number) => {
-  return http.get<ResPage<Account.ResAccountList>>(PORT1 + `/system/role/${id}`);
+  return http.get<ResPage<Role.ResRole>>(PORT1 + `/system/role/${id}`);
 };
 
 // * 编辑角色
@@ -44,5 +44,5 @@ export const changeRoleStatus = (params: { roleId: number; status: number }) => 
 
 // * 获取生活区域第一级列表
 export const getBuildingFirstList = () => {
-  return http.get<Building.ResBuilding[]>(PORT1 + `/maintenance/food/building/firstlist`);
+  return http.get<Building.ResBuilding[]>(PORT1 + `/maintenance/building/firstlist`);
 };

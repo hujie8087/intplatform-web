@@ -12,18 +12,37 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增系统通知</el-button>
-          <el-button type="danger" :disabled="!scope.isSelected" :icon="Delete" @click="batchDelete(scope.selectedListIds)">
+          <el-button type="primary" v-auth="['system:notice:add']" :icon="CirclePlus" @click="openDrawer('新增')"
+            >新增系统通知</el-button
+          >
+          <el-button
+            type="danger"
+            v-auth="['system:notice:remove']"
+            :disabled="!scope.isSelected"
+            :icon="Delete"
+            @click="batchDelete(scope.selectedListIds)"
+          >
             批量删除通知
           </el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button type="primary" link v-if="scope.row.userId !== 1" :icon="EditPen" @click="openDrawer('编辑', scope.row)">
+          <el-button type="primary" v-auth="['system:notice:query']" link :icon="View" @click="openDrawer('查看', scope.row)"
+            >查看</el-button
+          >
+          <el-button
+            type="primary"
+            v-auth="['system:notice:edit']"
+            link
+            v-if="scope.row.userId !== 1"
+            :icon="EditPen"
+            @click="openDrawer('编辑', scope.row)"
+          >
             编辑
           </el-button>
-          <el-button type="primary" link :icon="Delete" @click="deleteNoticeHandle(scope.row)">删除</el-button>
+          <el-button type="primary" v-auth="['system:notice:remove']" link :icon="Delete" @click="deleteNoticeHandle(scope.row)"
+            >删除</el-button
+          >
         </template>
       </ProTable>
       <NoticeDrawer ref="drawerRef" />

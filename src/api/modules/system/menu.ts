@@ -8,31 +8,31 @@ import http from "@/api";
  * @name 菜单管理模块
  */
 // * 获取菜单列表
-export const getRoleList = (params: Menu.ReqMenuParams) => {
+export const getMenuList = (params: Menu.ReqMenuParams) => {
   return http.get<ResPage<Menu.ResMenu>>(PORT1 + `/system/menu/list`, params);
 };
 
 // * 新增菜单
-export const addRole = (params: FormData) => {
+export const addMenu = (params: FormData) => {
   return http.post<ResPage<Menu.ResMenu>>(PORT1 + `/system/menu`, params);
 };
 
 // * 获取菜单详情
-export const getRoleInfo = (id: number) => {
+export const getMenuInfo = (id: number) => {
   return http.get<ResPage<Menu.ResMenu>>(PORT1 + `/system/menu/${id}`);
 };
 
 // * 编辑菜单
-export const editRole = (params: FormData) => {
+export const editMenu = (params: FormData) => {
   return http.put(PORT1 + `/system/menu`, params);
 };
 
 // * 删除菜单
-export const deleteRole = (id: number) => {
+export const deleteMenu = (id: number) => {
   return http.delete(PORT1 + `/system/menu/${id}`);
 };
 // * 批量菜单
-export const deleteMoreRole = (params: number[]) => {
+export const deleteMoreMenu = (params: number[]) => {
   return http.post(PORT1 + `/system/menu/delByIds`, params);
 };
 

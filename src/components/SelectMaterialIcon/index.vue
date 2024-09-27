@@ -10,16 +10,24 @@
       @click="openDialog"
     >
       <template #append>
-        <el-button :icon="customIcons[iconValue]" />
+        <!-- <el-button :icon="customIcons[iconValue]" /> -->
+        <span class="material-icons">
+          {{ iconValue }}
+        </span>
       </template>
     </el-input>
     <el-dialog v-model="dialogVisible" :title="placeholder" top="50px" width="66%">
-      <el-input v-model="inputValue" placeholder="搜索图标" size="large" :prefix-icon="Icons.Search" />
+      <el-input v-model="inputValue" placeholder="搜索图标" size="large">
+        <template #append>
+          <span class="material-icons">search</span>
+        </template>
+      </el-input>
       <el-scrollbar v-if="Object.keys(iconsList).length">
         <div class="icon-list">
-          <div v-for="item in iconsList" :key="item" class="icon-item" @click="selectIcon(item)">
-            <component :is="item"></component>
-            <span>{{ item.name }}</span>
+          <div v-for="item in Object.keys(iconsList)" :key="item" class="icon-item" @click="selectIcon(item)">
+            <!-- <component :is="item.content"></component> -->
+            <div class="material-icons" style="margin-bottom: 5px">{{ item }}</div>
+            <div>{{ item }}</div>
           </div>
         </div>
       </el-scrollbar>
@@ -28,9 +36,9 @@
   </div>
 </template>
 
-<script setup lang="ts" name="SelectIcon">
-import { ref, computed } from "vue";
-import * as Icons from "@element-plus/icons-vue";
+<script setup lang="ts" name="SelectMaterialIcon">
+import { computed, ref } from "vue";
+import * as Icons from "@/assets/json/materialIcons.json";
 
 interface SelectIconProps {
   iconValue: string;
@@ -59,8 +67,8 @@ const emit = defineEmits<{
 }>();
 const selectIcon = (item: any) => {
   dialogVisible.value = false;
-  valueIcon.value = item.name;
-  emit("update:iconValue", item.name);
+  valueIcon.value = item;
+  emit("update:iconValue", item);
   setTimeout(() => inputRef.value.blur(), 0);
 };
 
@@ -84,6 +92,7 @@ const iconsList = computed((): { [key: string]: any } => {
   }
   return result;
 });
+console.log(iconsList.value);
 </script>
 
 <style scoped lang="scss">
