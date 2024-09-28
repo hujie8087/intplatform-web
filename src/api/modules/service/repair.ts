@@ -34,8 +34,40 @@ export const deleteMoreRepair = (params: number[]) => {
 
 // * 获取宿舍报修数据
 export const getRepairList = (params: Repair.ReqRepairParams) => {
+  // 定义需要检查的字段列表
+  const fieldsToCheck = ["repairArea", "roomNo", "repairPerson", "repairMan", "repairState", "ancestors"];
+
+  // 遍历检查各字段是否为空，赋值flag
+  for (const field of fieldsToCheck) {
+    if (!params[field]?.trim) {
+      params.flag = 1;
+      break; // 如果已经找到空值，就不需要继续检查了
+    }
+  }
   return http.get<Repair.ResRepair[][]>(PORT1 + `/maintenance/repair/list`, params);
 };
+// export const getRepairList = (params: Repair.ReqRepairParams) => {
+//   // 如果没有传过来条件，标志赋值1，就按照各区域保修管理员查看自己的区域报修单
+//   if (params.repairArea?.trim == null) {
+//     params.flag = 1;
+//   }
+//   if (params.roomNo?.trim == null) {
+//     params.flag = 1;
+//   }
+//   if (params.repairPerson?.trim == null) {
+//     params.flag = 1;
+//   }
+//   if (params.repairMan?.trim == null) {
+//     params.flag = 1;
+//   }
+//   if (params.repairState?.trim == null) {
+//     params.flag = 1;
+//   }
+//   if (params.ancestors?.trim == null) {
+//     params.flag = 1;
+//   }
+//   if (params.repairArea) return http.get<Repair.ResRepair[][]>(PORT1 + `/maintenance/repair/list`, params);
+// };
 
 // 获取报修类型列表
 export const getRepairTypeList = (params: Repair.ReqRepairTypeParams) => {
