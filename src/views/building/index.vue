@@ -77,9 +77,9 @@ import {
   addBuilding,
   getBuildingTree,
   getBuildingById
-} from "@/api/modules/food/building";
+} from "@/api/modules/productDisplay/building";
 import { useI18n } from "vue-i18n";
-import { Building } from "@/api/interface/food/building";
+import { Building } from "@/api/interface/productDisplay/building";
 import { BuildingStore } from "@/stores/modules/building";
 import { findChildrenById } from "@/utils/index";
 const { t } = useI18n(); // 解构出t方法

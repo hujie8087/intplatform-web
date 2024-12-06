@@ -1,7 +1,7 @@
 import { isArray } from "@/utils/is";
 import { FieldNamesProps } from "@/components/ProTable/interface";
 import { Menu } from "@/api/interface/system";
-import { Building } from "@/api/interface/food/building";
+import { Building } from "@/api/interface/productDisplay/building";
 
 const mode = import.meta.env.VITE_ROUTER_MODE;
 

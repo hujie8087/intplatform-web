@@ -93,6 +93,8 @@ import { Repair } from "@/api/interface/service/repair";
 import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
 import { useUserStore } from "@/stores/modules/user";
+import { sendMessage } from "@/api/modules/system/notice";
+import { getUserInfoByUsername } from "@/api/modules/system/user";
 const { t } = useI18n(); // 解构出t方法
 
 const userInfo = useUserStore().userInfo;
@@ -141,10 +143,23 @@ const handleSubmit = () => {
     formData.repairManId = userInfo.user.userId;
     formData.readStatus = "1";
     try {
-      await drawerProps.value.api!(formData);
+      // await drawerProps.value.api!(formData);
       ElMessage.success({
         message: t("main.successMsg", { title: "报修单", method: `${drawerProps.value.title}` })
       });
+      // 获取用户详情
+      const res = await getUserInfoByUsername(drawerProps.value.rowData.createBy!);
+      if (res.msg) {
+        let title = formData.repairState === 1 ? "您的报修单已完成" : "您的维修单已完成";
+        sendMessage({
+          title: title,
+          body: formData.repairArea + "/" + formData.roomNo,
+          type: "1",
+          payload: ``,
+          userName: drawerProps.value.rowData.updateBy!,
+          equipmentToken: res.msg
+        });
+      }
       drawerProps.value.getTableList!();
       drawerVisible.value = false;
     } catch (error) {

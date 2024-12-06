@@ -1,7 +1,7 @@
 // 生活区楼栋管理
 import http from "@/api";
 import { PORT1 } from "@/api/config/servicePort";
-import { Building } from "@/api/interface/food/building";
+import { Building } from "@/api/interface/productDisplay/building";
 
 /**
  * @name 楼栋管理模块

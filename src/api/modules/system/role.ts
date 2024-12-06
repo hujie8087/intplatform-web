@@ -2,7 +2,7 @@
 import { ResPage } from "@/api/interface/index";
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
-import { Building } from "@/api/interface/food/building";
+import { Building } from "@/api/interface/productDisplay/building";
 import { Role } from "@/api/interface/system";
 
 /**

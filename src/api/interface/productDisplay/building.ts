@@ -28,4 +28,5 @@ export namespace Building {
     remainingList: number;
     checkVO: Statistics[];
   }
+  export type CreateBuilding = Optional<ResBuilding, "id">;
 }

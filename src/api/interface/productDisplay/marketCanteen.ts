@@ -1,12 +1,12 @@
 import { ReqPage } from "..";
 
-// * 楼栋管理模块
-export namespace Canteen {
-  export interface ReqCanteenParams extends ReqPage {
+// * 商店管理模块
+export namespace MarketCanteen {
+  export interface ReqMarketCanteenParams extends ReqPage {
     name?: string;
     status?: string;
   }
-  export interface ResCanteen {
+  export interface ResMarketCanteen {
     createBy: string;
     createTime: string;
     updateBy: string;
@@ -21,6 +21,7 @@ export namespace Canteen {
     bookTable: number;
     pickup: number;
     code: string;
+    pickTypes: number[];
     delFlag: string;
     deleteBy: string;
     deleteTime: string;
@@ -28,5 +29,7 @@ export namespace Canteen {
     pickupTypeIds: number[];
     deliveryIds: number[];
     deliveryTimeIds: number[];
+    newDeliveryIds: number[];
   }
+  export type CreateMarketCanteen = Optional<ResMarketCanteen, "id" | "createTime" | "updateTime">;
 }

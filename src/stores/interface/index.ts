@@ -1,5 +1,5 @@
 import { DictOptions, Login } from "@/api/interface";
-import { Building } from "@/api/interface/food/building";
+import { Building } from "@/api/interface/productDisplay/building";
 import { Menu } from "@/api/interface/system";
 
 export type LayoutType = "vertical" | "classic" | "transverse" | "columns";

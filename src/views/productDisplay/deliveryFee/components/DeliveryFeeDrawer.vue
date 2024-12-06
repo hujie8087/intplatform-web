@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="drawerVisible" :destroy-on-close="true" width="1080" :title="`${drawerProps.title}餐厅`">
+  <el-dialog v-model="drawerVisible" :destroy-on-close="true" width="500" :title="`${drawerProps.title}配送费`">
     <el-form
       ref="ruleFormRef"
       label-width="120px"
@@ -10,25 +10,42 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-row>
-        <el-col :span="12">
-          <el-form-item :label="`${$t('system.notice.noticeTitle')}`" prop="noticeTitle">
+        <el-col :span="24">
+          <el-form-item label="配送费名称" prop="name">
             <el-input
               v-model="drawerProps.rowData.name"
-              :placeholder="`${$t('main.inputError', { msg: $t('system.notice.noticeTitle') })}`"
+              :placeholder="`${$t('main.inputError', '配送费名称')}`"
               clearable
             ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item :label="`${$t('system.notice.status')}`" prop="status">
-            <el-radio-group
-              v-model="drawerProps.rowData!.status"
-              :placeholder="`${$t('main.inputError', { msg: $t('system.notice.status') })}`"
-            >
-              <el-radio v-for="item in drawerProps.noticeStatusOptions" :key="item.value" :label="item.value">{{
-                item.label
-              }}</el-radio>
-            </el-radio-group>
+          <el-form-item label="配送费价格" prop="price">
+            <el-input-number
+              v-model="drawerProps.rowData.price"
+              :placeholder="`${$t('main.inputError', '配送费价格')}`"
+              clearable
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="计费条件" prop="billingConditions">
+            <el-input
+              v-model="drawerProps.rowData.billingConditions"
+              :placeholder="`${$t('main.inputError', '计费条件')}`"
+              clearable
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="备注" prop="remark">
+            <el-input
+              type="textarea"
+              rows="4"
+              v-model="drawerProps.rowData.remark"
+              :placeholder="`${$t('main.inputError', '备注')}`"
+              clearable
+            ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -40,24 +57,24 @@
   </el-dialog>
 </template>
 
-<script setup lang="ts" name="CanteenDrawer">
+<script setup lang="ts" name="DeliveryFeeDrawer">
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
-import { Canteen } from "@/api/interface/food/canteen";
+import { DeliveryFee } from "@/api/interface/productDisplay/deliveryFee";
 import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({
-  noticeName: [{ required: true, message: t("main.inputError", { msg: t("system.notice.noticeName") }) }],
-  noticeKey: [{ required: true, message: t("main.inputError", { msg: t("system.notice.noticeKey") }) }],
-  noticeValue: [{ required: true, message: t("main.inputError", { msg: t("system.notice.noticeValue") }) }]
+  name: [{ required: true, message: t("main.inputError", { msg: "配送费名称" }) }],
+  price: [{ required: true, message: t("main.inputError", { msg: "配送费价格" }) }],
+  billingConditions: [{ required: true, message: t("main.inputError", { msg: "计费条件" }) }]
 });
 
 interface DrawerProps {
   title: string;
   isView: boolean;
-  rowData: Partial<Canteen.ResCanteen>;
+  rowData: Partial<DeliveryFee.ResDeliveryFee>;
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
   noticeTypeOptions?: DictOptions[];
@@ -71,8 +88,8 @@ const drawerProps = ref<DrawerProps>({
   title: "",
   rowData: {
     name: "",
-    status: 0,
-    createBy: ""
+    price: 0,
+    billingConditions: ""
   }
 });
 // 接收父组件传过来的参数
@@ -89,7 +106,7 @@ const handleSubmit = () => {
     try {
       await drawerProps.value.api!(drawerProps.value.rowData);
       ElMessage.success({
-        message: t("main.successMsg", { title: t("system.notice.noticeName"), method: `${drawerProps.value.title}` })
+        message: t("main.successMsg", { title: "配送费", method: `${drawerProps.value.title}` })
       });
       drawerProps.value.getTableList!();
       drawerVisible.value = false;

@@ -18,7 +18,7 @@ export const addUser = (params: FormData) => {
 };
 
 // * 获取用户详情
-export const getUserInfo = (id: number) => {
+export const By = (id: number) => {
   return http.get<ResPage<Account.ResAccountList>>(PORT1 + `/system/user/${id}`);
 };
 
@@ -72,4 +72,9 @@ export const changeUserStatus = ({ userId, status }) => {
 // * 修改用户密码
 export const updatePassWord = (params: Account.ReqUpdatePassWord) => {
   return http.put(PORT1 + `/system/user/UpdatePwd`, params);
+};
+
+// * 获取用户详情
+export const getUserInfoByUsername = (username: string) => {
+  return http.get<Account.ResAccountList>(PORT1 + `/system/user/getSenderId/${username}`);
 };
