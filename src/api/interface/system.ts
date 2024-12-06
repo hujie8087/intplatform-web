@@ -34,6 +34,7 @@ export namespace Account {
     roleIds: number[] | null;
     postIds: number[] | null;
     roleId: number | null;
+    mobilePhoneId: string;
     admin: boolean;
   }
   export interface ResStatus {
@@ -332,6 +333,7 @@ export namespace Notice {
     payload: string;
     type: string;
     equipmentToken: string;
+    userName: string;
   }
 }
 

@@ -156,3 +156,12 @@ export interface DictOptions {
   tagType?: string;
   cssClass?: string;
 }
+
+// 取餐类型
+export interface DictOptionsType {
+  name: string;
+  id: number;
+  price?: number;
+}
+
+export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

@@ -84,7 +84,7 @@ import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { useI18n } from "vue-i18n";
 import { Role } from "@/api/interface/system";
-import { Building } from "@/api/interface/food/building";
+import { Building } from "@/api/interface/productDisplay/building";
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({

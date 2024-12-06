@@ -76,7 +76,7 @@ import { getMenuSelect, getMenuTree } from "@/api/modules/system/menu";
 
 import { useI18n } from "vue-i18n";
 import { Menu } from "@/api/interface/system";
-import { Building } from "@/api/interface/food/building";
+import { Building } from "@/api/interface/productDisplay/building";
 const { t } = useI18n(); // 解构出t方法
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref();

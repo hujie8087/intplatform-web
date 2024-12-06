@@ -68,9 +68,9 @@ import {
   changeUserStatus,
   resetUserPassWord,
   BatchAddUser,
-  getUserStatus,
-  getUserGender
+  getUserStatus
 } from "@/api/modules/user";
+import { genderType } from "@/utils/serviceDict";
 
 const router = useRouter();
 
@@ -139,9 +139,9 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
     prop: "gender",
     label: "性别",
     // 字典数据（本地数据）
-    // enum: genderType,
+    enum: genderType,
     // 字典请求不带参数
-    enum: getUserGender,
+    // enum: getUserGender,
     // 字典请求携带参数
     // enum: () => getUserGender({ id: 1 }),
     search: { el: "select", props: { filterable: true } },

@@ -50,7 +50,7 @@ import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
 import { useDict } from "@/hooks/useDict";
 import PublicDrawer from "./components/PublicDrawer.vue";
-import { getAllBuildingTree } from "@/api/modules/food/building";
+import { getAllBuildingTree } from "@/api/modules/productDisplay/building";
 import { omit } from "lodash";
 
 const { t } = useI18n(); // 解构出t方法

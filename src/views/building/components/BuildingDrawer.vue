@@ -75,7 +75,7 @@ import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import type Node from "element-plus/es/components/tree/src/model/node";
 import { useI18n } from "vue-i18n";
-import { Building } from "@/api/interface/food/building";
+import { Building } from "@/api/interface/productDisplay/building";
 // import { getBuildingNode, getBuildingTree } from "@/api/modules/dormitory/building";
 import { findChildrenById } from "@/utils/index";
 import { BuildingStore } from "@/stores/modules/building";

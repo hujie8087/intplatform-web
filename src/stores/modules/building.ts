@@ -1,4 +1,4 @@
-import { Building } from "@/api/interface/food/building";
+import { Building } from "@/api/interface/productDisplay/building";
 import { defineStore } from "pinia";
 import { BuildingState } from "../interface";
 
