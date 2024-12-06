@@ -8,6 +8,8 @@ export namespace Repair {
     repairPerson?: string;
     repairMan?: string;
     repairState?: string;
+    ancestors?: string;
+    flag?: number;
   }
   export interface ResRepair {
     id: number;
@@ -47,6 +49,7 @@ export namespace Repair {
     ancestors?: string;
     appDelFlag?: string;
     readStatus?: string;
+    flag?: number;
   }
 
   export interface ReqRepairTypeParams extends ReqPage {
