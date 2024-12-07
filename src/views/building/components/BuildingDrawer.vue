@@ -183,7 +183,7 @@ const handleSubmit = () => {
           Promise.all(promises)
             .finally(() => {
               ElMessage.success({
-                message: t("main.successMsg", { title: t("dormitory.building.building"), method: `${drawerProps.value.title}` })
+                message: t("main.successMsg", { title: "楼栋房间", method: `${drawerProps.value.title}` })
               });
               drawerProps.value.getTableList!();
               // drawerProps.value.updateBuilding!(drawerProps.value.rowData.pid);

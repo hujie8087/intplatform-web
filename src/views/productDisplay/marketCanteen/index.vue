@@ -29,7 +29,7 @@
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
           <el-button
-            type="primary"
+            type="warning"
             link
             v-if="scope.row.userId !== 1"
             v-auth="['food:canteen:edit']"
@@ -38,7 +38,7 @@
           >
             编辑
           </el-button>
-          <el-button type="primary" link v-auth="['food:canteen:remove']" :icon="Delete" @click="deleteCanteenHandle(scope.row)">
+          <el-button type="danger" link v-auth="['food:canteen:remove']" :icon="Delete" @click="deleteCanteenHandle(scope.row)">
             删除
           </el-button>
         </template>

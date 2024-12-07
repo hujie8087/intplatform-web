@@ -29,7 +29,7 @@
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)"> 查看 </el-button>
           <el-button
-            type="primary"
+            type="warning"
             link
             v-if="scope.row.userId !== 1"
             v-auth="['food:commodity:edit']"
@@ -39,7 +39,7 @@
             编辑
           </el-button>
           <el-button
-            type="primary"
+            type="danger"
             link
             v-auth="['food:commodity:remove']"
             :icon="Delete"
@@ -164,6 +164,26 @@ const columns = reactive<ColumnProps<Commodity.ResCommodity>[]>([
   },
   { prop: "price", label: "价格", width: 80 },
   { prop: "stock", label: "库存", width: 80 },
+  {
+    prop: "isHot",
+    label: "是否热销",
+    sortable: true,
+    tag: true,
+    width: 100,
+    render: scope => {
+      return (
+        <>
+          <el-switch
+            model-value={scope.row.isHot}
+            active-text={scope.row.isHot ? "是" : "否"}
+            active-value={1}
+            inactive-value={0}
+            onClick={() => changeIsHotHandle(scope.row)}
+          />
+        </>
+      );
+    }
+  },
   { prop: "sort", label: "排序", width: 80 },
   {
     prop: "status",
@@ -208,8 +228,13 @@ const batchDelete = async (ids: number[]) => {
 
 // 修改状态
 const changeStatusHandle = async (row: Commodity.ResCommodity) => {
-  row.status = row.status === 1 ? 0 : 1;
-  await useHandleData(editCommodity, row, `修改【${row.name}】菜品状态`);
+  await useHandleData(editCommodity, { id: row.id, status: row.status == 1 ? 0 : 1 }, `切换【${row.name}】菜品状态`);
+  proTable.value?.getTableList();
+};
+
+// 修改是否热销
+const changeIsHotHandle = async (row: Commodity.ResCommodity) => {
+  await useHandleData(editCommodity, { id: row.id, isHot: row.isHot == 1 ? 0 : 1 }, `切换【${row.name}】菜品热销状态`);
   proTable.value?.getTableList();
 };
 

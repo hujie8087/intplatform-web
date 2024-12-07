@@ -21,6 +21,7 @@ export namespace Commodity {
     createTime: string;
     updateTime: string;
     status: number;
+    isHot: number;
     canteenName: string;
     categoryName: string;
     commodityParameterList: CommodityParameter[];
