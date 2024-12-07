@@ -76,6 +76,7 @@ const { t } = useI18n(); // 解构出t方法
 
 // 图片地址
 const imageUrl = import.meta.env.VITE_APP_BASE_FILE;
+const foodUrl = import.meta.env.VITE_APP_FOOD_URL;
 
 // 所属餐厅
 const canteenOptions = ref<DictOptions[]>([]);
@@ -123,11 +124,11 @@ const columns = reactive<ColumnProps<Commodity.ResCommodity>[]>([
       return (
         <el-image
           style="width: 35px; height: 35px"
-          src={imageUrl + scope.row.image}
+          src={scope.row.image.includes("food") ? foodUrl + scope.row.image : imageUrl + scope.row.image}
           zoom-rate={1.2}
           max-scale={7}
           min-scale={0.2}
-          preview-src-list={[imageUrl + scope.row.image]}
+          preview-src-list={[scope.row.image.includes("food") ? foodUrl + scope.row.image : imageUrl + scope.row.image]}
           initial-index={4}
           fit="cover"
           preview-teleported
