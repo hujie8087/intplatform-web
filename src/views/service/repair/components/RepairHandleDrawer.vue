@@ -143,7 +143,7 @@ const handleSubmit = () => {
     formData.repairManId = userInfo.user.userId;
     formData.readStatus = "1";
     try {
-      // await drawerProps.value.api!(formData);
+      await drawerProps.value.api!(formData);
       ElMessage.success({
         message: t("main.successMsg", { title: "报修单", method: `${drawerProps.value.title}` })
       });
