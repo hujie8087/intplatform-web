@@ -1,7 +1,7 @@
 <template>
   <el-dropdown trigger="click">
     <div class="avatar">
-      <img :src="avatar === '' ? avatarBaseUrl : avatar" alt="avatar" />
+      <img :src="avatar === '' ? avatarBaseUrl : filePath + avatar" alt="avatar" />
     </div>
     <template #dropdown>
       <el-dropdown-menu>
@@ -36,6 +36,8 @@ import avatarBaseUrl from "@/assets/images/avatar.gif";
 const router = useRouter();
 const userStore = useUserStore();
 const avatar = computed(() => userStore.userInfo.user.avatar);
+
+const filePath = import.meta.env.VITE_APP_BASE_FILE;
 
 // 退出登录
 const logout = () => {

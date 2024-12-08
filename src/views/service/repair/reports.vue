@@ -15,9 +15,9 @@
               @change="changeDate"
             />
           </el-form-item>
-          <el-form-item>
+          <!-- <el-form-item>
             <el-button type="warning" :icon="Download" plain @click="downloadFile">导出用户数据</el-button>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
       </div>
       <div class="card table-main">
@@ -44,9 +44,9 @@ import { DictOptions } from "@/api/interface";
 import dayjs from "dayjs";
 import ReportsChart from "./components/ReportsChart.vue";
 import ReportsColumnChart from "./components/ReportsColumnChart.vue";
-import { Download } from "@element-plus/icons-vue";
-import { ElMessageBox } from "element-plus";
-import { useDownload } from "@/hooks/useDownload";
+// import { Download } from "@element-plus/icons-vue";
+// import { ElMessageBox } from "element-plus";
+// import { useDownload } from "@/hooks/useDownload";
 
 interface ChartProp {
   value: number;
@@ -97,11 +97,11 @@ const changeDate = val => {
   initParam.endTime = val[1];
   getReportData();
 };
-const downloadFile = async () => {
-  ElMessageBox.confirm("确认导出报修数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload("", "报修数据报表", true, ".xlsx", "post", initParam)
-  );
-};
+// const downloadFile = async () => {
+//   ElMessageBox.confirm("确认导出报修数据?", "温馨提示", { type: "warning" }).then(() =>
+//     useDownload("", "报修数据报表", true, ".xlsx", "post", initParam)
+//   );
+// };
 getReportData();
 </script>
 <style lang="scss">

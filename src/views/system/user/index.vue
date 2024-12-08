@@ -34,7 +34,7 @@
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
           <el-button
-            type="primary"
+            type="warning"
             link
             v-if="scope.row.userId !== 1"
             :icon="EditPen"
@@ -44,7 +44,7 @@
             编辑
           </el-button>
           <el-dropdown v-if="scope.row.userId !== 1" style="display: inline-block; margin-left: 10px; vertical-align: middle">
-            <el-button type="primary" link :icon="DArrowRight">更多</el-button>
+            <el-button type="success" link :icon="DArrowRight">更多</el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item>
@@ -63,7 +63,7 @@
                   >
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-button type="primary" link :icon="Delete" v-auth="['system:user:remove']" @click="deleteAccount(scope.row)"
+                  <el-button type="danger" link :icon="Delete" v-auth="['system:user:remove']" @click="deleteAccount(scope.row)"
                     >删除</el-button
                   >
                 </el-dropdown-item>

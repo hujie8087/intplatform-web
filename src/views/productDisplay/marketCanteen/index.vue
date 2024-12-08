@@ -178,7 +178,7 @@ const columns = reactive<ColumnProps<MarketCanteen.ResMarketCanteen>[]>([
       );
     }
   },
-  { prop: "addressId", label: "配送区域" },
+  // { prop: "addressId", label: "配送区域" },
   {
     prop: "status",
     label: "状态",

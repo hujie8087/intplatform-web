@@ -151,13 +151,11 @@ const categoryOptions = ref<DictOptions[]>([]);
 const getCategoryList = async (canteenId: number) => {
   const res = await getCategoryListOptions(canteenId);
   categoryOptions.value = res.data.map(item => ({ label: item.name, value: item.id }));
-  console.log(categoryOptions.value);
 };
 
 const handleCanteenChange = (canteenId: number) => {
   getCategoryList(canteenId);
 };
-
 interface DrawerProps {
   title: string;
   isView: boolean;
@@ -181,6 +179,9 @@ const drawerProps = ref<DrawerProps>({
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
+  if (params.rowData.canteenId) {
+    getCategoryList(params.rowData.canteenId);
+  }
 };
 
 // 提交数据（新增/编辑）
