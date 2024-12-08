@@ -87,8 +87,6 @@ import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 import { useDict } from "@/hooks/useDict";
 
-const baseFileUrl = import.meta.env.VITE_APP_BASE_FILE;
-
 const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
   newParams.createTime && (newParams.startQueryTime = newParams.createTime[0]);
@@ -210,7 +208,7 @@ const columns = reactive<ColumnProps<Order.ResOrder>[]>([
 
 // 打印
 const handlePrint = (row: Order.ResOrder) => {
-  window.open(baseFileUrl + "/findById/" + row.id);
+  window.open("https://api.iwipwedabay.com//api/food/mis//findById/" + row.id);
 };
 // 打印菜品
 const handlePrintDish = async (row: Order.ResOrder) => {
@@ -235,12 +233,6 @@ const handleExport = async () => {
   );
 };
 
-// 批量删除
-// const batchDelete = async (ids: number[]) => {
-//   await useHandleData(deleteOrder, ids, t("main.deleteBatchMsg", { title: "订单" }));
-//   proTable.value?.clearSelection();
-//   proTable.value?.getTableList();
-// };
 const drawerRef = ref<InstanceType<typeof OrderDrawer> | null>(null);
 const orderDetailDishList = ref<Order.ResOrderDish[]>([]);
 // 打开查看订单详情

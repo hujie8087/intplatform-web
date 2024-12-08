@@ -79,7 +79,7 @@ const columns = reactive<ColumnProps<Menu.MenuOptions>[]>([
   { prop: "path", label: "菜单路径", search: { el: "input" } },
   { prop: "component", label: "组件路径" },
   { prop: "perms", label: "权限标记" },
-  { prop: "status", label: "显示状态", width: 100, tag: true, enum: visibleType },
+  { prop: "visible", label: "显示状态", width: 100, tag: true, enum: visibleType },
   { prop: "operation", label: "操作", width: 250, fixed: "right" }
 ]);
 

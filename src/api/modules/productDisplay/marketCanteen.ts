@@ -75,5 +75,5 @@ export const getCanteenListOptions = () => {
 
 // * 获取分类数据列表
 export const getCategoryListOptions = (canteenId: number) => {
-  return http.get<DictOptionsType[]>(PORT1 + `/productdisplay/category/getCategoryByCanteenId/${canteenId}`);
+  return http.get<DictOptionsType[]>(PORT1 + `/productdisplay/category/typeList/${canteenId}`);
 };
