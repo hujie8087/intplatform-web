@@ -36,7 +36,12 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="价格" prop="price">
-            <el-input-number v-model="drawerProps.rowData.price" :placeholder="`${$t('main.inputError', '价格')}`" clearable />
+            <el-input-number
+              v-model="drawerProps.rowData.price"
+              min="0"
+              :placeholder="`${$t('main.inputError', '价格')}`"
+              clearable
+            />
           </el-form-item>
         </el-col>
         <!-- 库存 -->

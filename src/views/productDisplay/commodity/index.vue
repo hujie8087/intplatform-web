@@ -139,12 +139,17 @@ const columns = reactive<ColumnProps<Commodity.ResCommodity>[]>([
   {
     prop: "canteenId",
     label: "所属餐厅",
-    search: { el: "select", props: { onChange: getCategoryList } },
+    search: { el: "select", props: { onChange: getCategoryList, clearable: false } },
     enum: canteenOptions
   },
   {
     prop: "categoryName",
+    label: "分类"
+  },
+  {
+    prop: "categoryId",
     label: "分类",
+    isShow: false,
     search: {
       // 自定义 search 显示内容
       render: ({ searchParam }) => {
@@ -153,6 +158,7 @@ const columns = reactive<ColumnProps<Commodity.ResCommodity>[]>([
             disabled={categoryOptions.value.length === 0}
             vModel_trim={searchParam.categoryName}
             placeholder="请选择分类"
+            clearable={true}
           >
             {categoryOptions.value.map(item => (
               <el-option label={item.label} value={item.value} />
