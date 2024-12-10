@@ -20,10 +20,10 @@
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button type="primary" link v-if="scope.row.userId !== 1" :icon="EditPen" @click="openDrawer('编辑', scope.row)">
+          <el-button type="warning" link v-if="scope.row.userId !== 1" :icon="EditPen" @click="openDrawer('编辑', scope.row)">
             编辑
           </el-button>
-          <el-button type="primary" link :icon="Delete" @click="deleteBusesHandle(scope.row)">删除</el-button>
+          <el-button type="danger" link :icon="Delete" @click="deleteBusesHandle(scope.row)">删除</el-button>
         </template>
       </ProTable>
       <BusesDrawer ref="drawerRef" />

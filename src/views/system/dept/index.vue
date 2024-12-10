@@ -18,11 +18,11 @@
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="success" v-auth="['system:dept:edit']" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"
-            >编辑</el-button
-          >
           <el-button type="primary" v-auth="['system:dept:add']" link :icon="Plus" @click="openDrawer('新增', scope.row)"
             >新增</el-button
+          >
+          <el-button type="warning" v-auth="['system:dept:edit']" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"
+            >编辑</el-button
           >
           <el-button
             type="danger"

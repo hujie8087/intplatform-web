@@ -31,7 +31,7 @@
             >查看</el-button
           >
           <el-button
-            type="primary"
+            type="warning"
             v-auth="['system:notice:edit']"
             link
             v-if="scope.row.userId !== 1"
@@ -40,7 +40,7 @@
           >
             编辑
           </el-button>
-          <el-button type="primary" v-auth="['system:notice:remove']" link :icon="Delete" @click="deleteNoticeHandle(scope.row)"
+          <el-button type="danger" v-auth="['system:notice:remove']" link :icon="Delete" @click="deleteNoticeHandle(scope.row)"
             >删除</el-button
           >
         </template>

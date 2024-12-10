@@ -16,12 +16,12 @@
             批量删除操作日志
           </el-button>
           <el-button type="warning" :icon="Delete" @click="cleanOperaLogHandle">清空系统日志</el-button>
-          <el-button type="primary" :icon="Download" plain @click="downloadFile">导出系统日志数据</el-button>
+          <el-button type="success" :icon="Download" plain @click="downloadFile">导出系统日志数据</el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button type="primary" link :icon="Delete" @click="deleteOperaLogHandle(scope.row)">删除</el-button>
+          <el-button type="danger" link :icon="Delete" @click="deleteOperaLogHandle(scope.row)">删除</el-button>
         </template>
       </ProTable>
       <OperaLogDrawer ref="drawerRef" />

@@ -13,7 +13,7 @@
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
           <el-button
-            type="primary"
+            type="success"
             v-auth="['food:order:take']"
             :disabled="!scope.isSelected"
             :icon="CirclePlus"

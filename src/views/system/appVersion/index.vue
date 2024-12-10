@@ -26,7 +26,7 @@
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="success" v-auth="['commonality:app:edit']" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"
+          <el-button type="warning" v-auth="['commonality:app:edit']" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"
             >编辑</el-button
           >
           <el-button

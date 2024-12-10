@@ -30,7 +30,7 @@
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
           <el-button
-            type="success"
+            type="warning"
             link
             v-if="scope.row.userId !== 1"
             v-auth="['other:type:edit']"
@@ -93,9 +93,17 @@ const columns = reactive<ColumnProps<GuideType.ResGuideType>[]>([
   { prop: "id", label: "序号", width: 80 },
   { prop: "title", label: "指南类型名称", search: { el: "input", tooltip: "请输入指南类型名称" } },
   {
+    prop: "img",
+    width: 120,
+    label: "指南图标",
+    render(scope) {
+      return <span class="material-icons">{scope.row.img}</span>;
+    }
+  },
+  {
     prop: "isLogin ",
     label: "需要登录",
-    width: 100,
+    width: 120,
     render(scope) {
       return <ElTag type={scope.row.isLogin === 1 ? "success" : "danger"}>{scope.row.isLogin === 1 ? "是" : "否"}</ElTag>;
     }
@@ -107,7 +115,7 @@ const columns = reactive<ColumnProps<GuideType.ResGuideType>[]>([
     sortable: true,
     tag: true,
     search: { el: "select", props: { filterable: true } },
-    width: 100
+    width: 120
   },
   { prop: "operation", label: "操作", width: 230, fixed: "right" }
 ]);

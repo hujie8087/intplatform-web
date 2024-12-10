@@ -31,7 +31,7 @@
             $t("main.view")
           }}</el-button>
           <el-button
-            type="primary"
+            type="warning"
             v-auth="['system:role:edit']"
             link
             v-if="scope.row.roleId !== 1"
@@ -40,7 +40,7 @@
             >{{ $t("main.edit") }}</el-button
           >
           <el-button
-            type="primary"
+            type="danger"
             v-auth="['system:role:remove']"
             link
             v-if="scope.row.roleId !== 1"
