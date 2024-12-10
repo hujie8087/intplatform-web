@@ -1,4 +1,4 @@
-import { ResPage, User } from "@/api/interface/index";
+import { ResPage, Result, User } from "@/api/interface/index";
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
 import { Menu } from "../interface/system";
@@ -94,4 +94,9 @@ export const editMenu = (params: Menu.MetaProps) => {
 // 删除菜单
 export const deleteMenu = (id: string) => {
   return http.delete(PORT1 + `/system/menu/${id}`);
+};
+
+// 修改密码
+export const changePassword = (params: { oldPassword: string; newPassword: string }) => {
+  return http.put<Result>(PORT1 + `/system/user/profile/updatePwd`, params);
 };
