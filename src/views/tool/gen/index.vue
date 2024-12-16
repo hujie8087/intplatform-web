@@ -10,7 +10,7 @@
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button link type="primary" icon="View" @click="handlePreview(scope.row)">预览</el-button>
-          <el-button type="primary" link icon="edit" @click="openDrawer(scope.row)"> 编辑 </el-button>
+          <el-button type="warning" link icon="edit" @click="openDrawer(scope.row)"> 编辑 </el-button>
           <!-- <el-button type="primary" link :icon="Delete" @click="deleteBusesHandle(scope.row)">删除</el-button> -->
         </template>
       </ProTable>

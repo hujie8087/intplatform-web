@@ -30,7 +30,7 @@
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
           <el-button
-            type="success"
+            type="warning"
             link
             v-if="scope.row.userId !== 1"
             :icon="EditPen"

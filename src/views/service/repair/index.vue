@@ -38,7 +38,7 @@
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="success" link :icon="View" @click="openViewDrawer('查看', scope.row)">查看</el-button>
+          <el-button type="primary" link :icon="View" @click="openViewDrawer('查看', scope.row)">查看</el-button>
           <el-button
             type="danger"
             link

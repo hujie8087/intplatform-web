@@ -8,27 +8,27 @@
           <!-- <el-button type="warning" :icon="Delete" :disabled="!scope.isSelected" @click="batchDeleteJob(scope.selectedListIds)">
             删除
           </el-button> -->
-          <el-button type="primary" :icon="Download" plain @click="downloadFile">导出</el-button>
-          <el-button type="primary" :icon="Switch" plain @click="downloadFile">日志</el-button>
+          <el-button type="warning" :icon="Download" plain @click="downloadFile">导出</el-button>
+          <el-button type="success" :icon="Switch" plain @click="downloadFile">日志</el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="primary" link v-if="scope.row.userId !== 1" :icon="EditPen" @click="openDrawer('编辑', scope.row)">
+          <el-button type="warning" link v-if="scope.row.userId !== 1" :icon="EditPen" @click="openDrawer('编辑', scope.row)">
             编辑
           </el-button>
-          <el-button type="primary" link :icon="Delete" @click="deleteJob(scope.row)">删除</el-button>
+          <el-button type="danger" link :icon="Delete" @click="deleteJob(scope.row)">删除</el-button>
           <el-dropdown v-if="scope.row.userId !== 1" style="display: inline-block; margin-left: 10px; vertical-align: middle">
-            <el-button type="primary" link :icon="DArrowRight">更多</el-button>
+            <el-button type="success" link :icon="DArrowRight">更多</el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item>
                   <el-button type="primary" link :icon="CaretRight" @click="runJobHandle(scope.row)">执行一次</el-button>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-button type="primary" link :icon="View" @click="showTaskDetail(scope.row)">任务详情</el-button>
+                  <el-button type="info" link :icon="View" @click="showTaskDetail(scope.row)">任务详情</el-button>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-button type="primary" link :icon="Operation" @click="toTaskDetail(scope.row)">调度日志</el-button>
+                  <el-button type="warning" link :icon="Operation" @click="toTaskDetail(scope.row)">调度日志</el-button>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>

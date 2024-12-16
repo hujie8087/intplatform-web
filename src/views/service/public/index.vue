@@ -25,8 +25,8 @@
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="success" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button type="primary" link :icon="Edit" v-auth="['other:show:edit']" @click="openDrawer('编辑', scope.row)">
+          <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+          <el-button type="warning" link :icon="Edit" v-auth="['other:show:edit']" @click="openDrawer('编辑', scope.row)">
             编辑
           </el-button>
           <el-button type="danger" link :icon="Delete" v-auth="['other:show:delete']" @click="deleteOtherHandle(scope.row)">

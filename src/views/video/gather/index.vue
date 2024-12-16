@@ -23,8 +23,8 @@
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"> 编辑 </el-button>
-          <el-button type="success" link :icon="VideoPlay" @click="openVideoDrawer(scope.row)">视频管理</el-button>
-          <el-button type="warning" link :icon="Delete" @click="deleteGatherHandle(scope.row)">删除</el-button>
+          <el-button type="warning" link :icon="VideoPlay" @click="openVideoDrawer(scope.row)">视频管理</el-button>
+          <el-button type="danger" link :icon="Delete" @click="deleteGatherHandle(scope.row)">删除</el-button>
         </template>
       </ProTable>
     </div>

@@ -21,11 +21,11 @@
       </template>
       <!-- 菜单操作 -->
       <template #operation="scope">
-        <el-button type="success" v-auth="['system:menu:edit']" link :icon="EditPen" @click="openDrawer(3, scope.row)">
-          编辑
-        </el-button>
         <el-button type="primary" v-auth="['system:menu:add']" link :icon="Plus" @click="openDrawer(2, scope.row)">
           新增
+        </el-button>
+        <el-button type="warning" v-auth="['system:menu:edit']" link :icon="EditPen" @click="openDrawer(3, scope.row)">
+          编辑
         </el-button>
         <el-button type="danger" v-auth="['system:menu:remove']" link :icon="Delete" @click="deleteAccount(scope.row)">
           删除

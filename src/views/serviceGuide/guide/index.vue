@@ -27,7 +27,8 @@
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="success" link :icon="Edit" v-auth="['other:article:edit']" @click="openDrawer('编辑', scope.row)"
+          <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+          <el-button type="warning" link :icon="Edit" v-auth="['other:article:edit']" @click="openDrawer('编辑', scope.row)"
             >编辑</el-button
           >
           <el-button type="danger" link :icon="Delete" v-auth="['other:article:remove']" @click="deleteGuideHandle(scope.row)"
@@ -45,7 +46,7 @@ import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import GuideDrawer from "./components/GuideDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Edit } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, Edit, View } from "@element-plus/icons-vue";
 import { getGuideList, deleteGuide, editGuide, addGuide, getGuideById } from "@/api/modules/serviceGuide/guide";
 import { Guide } from "@/api/interface/serviceGuide";
 import { useI18n } from "vue-i18n";
