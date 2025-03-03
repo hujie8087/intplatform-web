@@ -1,7 +1,7 @@
 <template>
   <div class="main-box">
     <div class="table-box">
-      <div class="card" style=" height: 100%;padding-top: 0">
+      <div class="card" style="height: 100%; padding-top: 0">
         <el-form ref="ruleFormRef" v-if="formData?.id" :model="formData" label-width="120px" label-suffix=" :">
           <el-row :gutter="80">
             <el-col :span="12">
@@ -110,7 +110,7 @@
                       placeholder="请选择"
                       filterable
                       v-if="isDeptAudit === 1"
-                      style=" display: inline-block; width: 200px;margin-left: 10px"
+                      style="display: inline-block; width: 200px; margin-left: 10px"
                     >
                       <el-option v-for="item in deptList" :key="item.deptId" :label="item.deptName" :value="item.deptId" />
                     </el-select>
