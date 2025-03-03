@@ -51,7 +51,7 @@
                 </el-link>
                 <el-button
                   type="text"
-                  style="color: red; padding: 0 2px"
+                  style=" padding: 0 2px;color: red"
                   size="small"
                   :icon="Close"
                   @click="handleDelete(index)"
@@ -123,7 +123,7 @@ import SelectMaterialIcon from "@/components/SelectMaterialIcon/index.vue";
 import { useUserStore } from "@/stores/modules/user";
 import { CirclePlus, Close } from "@element-plus/icons-vue";
 const { t } = useI18n(); // 解构出t方法
-const baseUrl = import.meta.env.VITE_API_URL;
+const baseUrl = import.meta.env.VITE_APP_BASE_FILE;
 const userStore = useUserStore();
 const fileList = ref<UploadUserFile[]>([]);
 const content = ref("");
