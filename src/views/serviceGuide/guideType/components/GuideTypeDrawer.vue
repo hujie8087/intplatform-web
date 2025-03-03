@@ -51,7 +51,7 @@
                 </el-link>
                 <el-button
                   type="text"
-                  style=" padding: 0 2px;color: red"
+                  style="padding: 0 2px; color: red"
                   size="small"
                   :icon="Close"
                   @click="handleDelete(index)"
