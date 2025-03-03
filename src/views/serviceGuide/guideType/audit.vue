@@ -1,11 +1,11 @@
 <template>
   <div class="main-box">
     <div class="table-box">
-      <div class="card" style="padding-top: 0px; height: 100%">
+      <div class="card" style=" height: 100%;padding-top: 0">
         <el-form ref="ruleFormRef" v-if="formData?.id" :model="formData" label-width="120px" label-suffix=" :">
           <el-row :gutter="80">
             <el-col :span="12">
-              <h3 style="position: sticky; top: 0px; background-color: #fff; z-index: 100; margin: 0; line-height: 60px">
+              <h3 style="position: sticky; top: 0; z-index: 100; margin: 0; line-height: 60px; background-color: #ffffff">
                 内容详情
               </h3>
               <el-row>
@@ -39,7 +39,14 @@
                 </el-col>
                 <!-- 附件 -->
                 <el-col :span="24">
-                  <el-form-item label="附件" prop="file"> </el-form-item>
+                  <el-form-item label="附件" prop="file">
+                    <span style="margin-right: 10px" v-for="(item, index) in formData.file?.split(',')" :key="index">
+                      <!-- 带删除按钮 -->
+                      <el-link :href="baseUrl + item" target="_blank">
+                        {{ item.split("/").pop() }}
+                      </el-link>
+                    </span>
+                  </el-form-item>
                 </el-col>
                 <el-col :span="24">
                   <el-form-item label="状态" prop="status">
@@ -103,7 +110,7 @@
                       placeholder="请选择"
                       filterable
                       v-if="isDeptAudit === 1"
-                      style="margin-left: 10px; display: inline-block; width: 200px"
+                      style=" display: inline-block; width: 200px;margin-left: 10px"
                     >
                       <el-option v-for="item in deptList" :key="item.deptId" :label="item.deptName" :value="item.deptId" />
                     </el-select>
@@ -150,6 +157,7 @@ useDict("sys_notice_status", "sys_notice_type").then(res => {
   guideTypeStatusOptions.value = res.sys_notice_status;
   guideTypeTypeOptions.value = res.sys_notice_type;
 });
+const baseUrl = import.meta.env.VITE_APP_BASE_FILE;
 const nextApprovalFlag = ref(0);
 const content = ref<string>("");
 const getGuideTypeInfo = async () => {
