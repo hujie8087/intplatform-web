@@ -9,7 +9,14 @@ export namespace GuideType {
     title: string;
     isLogin?: number;
     status?: string;
+    approvalStatus: number;
+    approvalFirstMessage: string;
+    approvalSecondMessage: string;
+    approvalThirdMessage: string;
+    approvalMessage: string;
+    nextApprovalFlag: number;
     delFlag?: string;
+    sort?: number;
     remark?: string;
     def1?: string;
     def2?: string;
@@ -24,6 +31,9 @@ export namespace GuideType {
     deleteTime?: Date;
     img?: string;
     content?: string;
+    approvalDeptId?: number;
+    approvalDeptMessage?: string;
+    file?: string;
   }
 }
 
@@ -37,8 +47,15 @@ export namespace Guide {
     title?: string;
     isLogin?: number;
     status?: string;
+    approvalStatus: number;
+    approvalFirstMessage: string;
+    approvalSecondMessage: string;
+    approvalThirdMessage: string;
+    approvalMessage: string;
+    sort: number;
     delFlag?: string;
     remark?: string;
+    nextApprovalFlag: number;
     def1?: string;
     def2?: string;
     def3?: string;

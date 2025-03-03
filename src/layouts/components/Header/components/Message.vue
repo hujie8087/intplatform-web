@@ -2,12 +2,18 @@
   <div class="message">
     <el-popover placement="bottom" :width="310" trigger="click">
       <template #reference>
-        <el-badge :value="5" class="item">
+        <el-badge :value="totalCount" class="item">
           <i :class="'iconfont icon-xiaoxi'" class="toolBar-icon"></i>
         </el-badge>
       </template>
       <el-tabs v-model="activeName">
-        <el-tab-pane label="通知(5)" name="first">
+        <el-tab-pane :label="`待办(${todoCount})`" name="first">
+          <div class="message-empty">
+            <img src="@/assets/images/notData.png" alt="notData" />
+            <div>暂无待办</div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane :label="`通知(${notificationCount})`" name="second">
           <div class="message-list">
             <div class="message-item">
               <img src="@/assets/images/msg01.png" alt="" class="message-icon" />
@@ -46,16 +52,10 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="消息(0)" name="second">
+        <el-tab-pane :label="`消息(${messageCount})`" name="third">
           <div class="message-empty">
             <img src="@/assets/images/notData.png" alt="notData" />
             <div>暂无消息</div>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="待办(0)" name="third">
-          <div class="message-empty">
-            <img src="@/assets/images/notData.png" alt="notData" />
-            <div>暂无待办</div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -64,8 +64,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import { useMessageStore } from "@/stores/modules/message";
 const activeName = ref("first");
+
+const { messageCount, notificationCount, todoCount } = useMessageStore();
+
+const totalCount = computed(() => messageCount + notificationCount + todoCount);
 </script>
 
 <style scoped lang="scss">

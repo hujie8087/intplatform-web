@@ -20,7 +20,7 @@ export const addGuideType = (params: FormData) => {
   return http.post(PORT1 + `/other/guideType`, params);
 };
 // * 编辑服务指南类型类型
-export const editGuideType = (params: FormData) => {
+export const editGuideType = (params: GuideType.ResGuideType) => {
   return http.put(PORT1 + `/other/guideType`, params);
 };
 // * 删除服务指南类型类型

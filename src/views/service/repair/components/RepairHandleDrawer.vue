@@ -156,7 +156,7 @@ const handleSubmit = () => {
           body: formData.repairArea + "/" + formData.roomNo,
           type: "1",
           payload: ``,
-          userName: drawerProps.value.rowData.updateBy!,
+          userName: drawerProps.value.rowData.createBy!,
           equipmentToken: res.msg
         });
       }

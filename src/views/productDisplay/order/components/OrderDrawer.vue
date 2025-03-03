@@ -15,7 +15,7 @@
       <el-descriptions-item label="配送时间">{{ drawerProps.rowData.deliveryArea }}</el-descriptions-item>
       <el-descriptions-item label="总金额">{{ drawerProps.rowData.totalPrice }}</el-descriptions-item>
     </el-descriptions>
-    <el-table :data="drawerProps.orderDetailDishList" border style="margin-top: 20px" :show-summary="true">
+    <el-table :data="drawerProps.orderDetailDishList" border style="margin-top: 20px" :show-summary="true" max-height="400">
       <el-table-column prop="name" label="商品名称" />
       <el-table-column prop="num" label="数量" />
       <el-table-column prop="deal" label="份量" />

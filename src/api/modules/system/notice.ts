@@ -9,12 +9,12 @@ import { ResPage } from "@/api/interface";
  */
 
 // * 新增系统通知
-export const addNotice = (params: FormData) => {
+export const addNotice = (params: Notice.ReqCreateNoticeParams) => {
   return http.post(PORT1 + `/system/notice`, params);
 };
 
 // * 编辑系统通知
-export const editNotice = (params: FormData) => {
+export const editNotice = (params: Notice.ResNotice) => {
   return http.put(PORT1 + `/system/notice`, params);
 };
 

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="drawerVisible" :destroy-on-close="true" width="500" :title="`${drawerProps.title}配送费`">
+  <el-dialog v-model="drawerVisible" :destroy-on-close="true" width="1000" :title="`${drawerProps.title}留言`">
     <el-form
       ref="ruleFormRef"
       label-width="120px"

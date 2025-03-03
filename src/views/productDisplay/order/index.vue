@@ -208,7 +208,9 @@ const columns = reactive<ColumnProps<Order.ResOrder>[]>([
 
 // 打印
 const handlePrint = (row: Order.ResOrder) => {
-  window.open("https://api.iwipwedabay.com//api/food/mis//findById/" + row.id);
+  // window.open("https://api.iwipwedabay.com//api/food/mis//findById/" + row.id);
+  window.open("http://10.40.11.26:10210/findById/" + row.id);
+  // window.open("http://10.40.10.18:10210/findById/" + row.id);
 };
 // 打印菜品
 const handlePrintDish = async (row: Order.ResOrder) => {
@@ -238,7 +240,7 @@ const orderDetailDishList = ref<Order.ResOrderDish[]>([]);
 // 打开查看订单详情
 const openDrawer = async (row: Partial<Order.ResOrder> = {}) => {
   if (row.id) {
-    const res = await getOrderDishList({ orderId: row.id });
+    const res = await getOrderDishList({ orderId: row.id, page: 1, size: 999999 });
     orderDetailDishList.value = res.rows;
   }
   const params = {

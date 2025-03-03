@@ -21,6 +21,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   return {
     base: viteEnv.VITE_PUBLIC_PATH,
     root,
+    assetsInclude: ["**/*.webp"],
     resolve: {
       alias: {
         "@": resolve(__dirname, "./src"),

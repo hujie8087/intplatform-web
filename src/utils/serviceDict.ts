@@ -70,3 +70,18 @@ export const listClassOptions = [
   { label: computed(() => I18n.global.t("dict.warning")).value, value: "warning" },
   { label: computed(() => I18n.global.t("dict.danger")).value, value: "danger" }
 ];
+
+/**
+ * @description：审核状态
+ */
+export const auditStatus = [
+  { label: computed(() => I18n.global.t("dict.firstAudit")).value, value: "1" },
+  { label: computed(() => I18n.global.t("dict.secondAudit")).value, value: "2" },
+  { label: computed(() => I18n.global.t("dict.audit")).value, value: "3" },
+  { label: computed(() => I18n.global.t("dict.thirdAudit")).value, value: "4" }
+];
+
+/**
+ * @description：状态颜色
+ */
+export const tagTypeOptions = ["success", "danger", "warning", "info", "primary", "error"];

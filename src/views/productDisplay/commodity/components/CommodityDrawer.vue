@@ -38,7 +38,7 @@
           <el-form-item label="价格" prop="price">
             <el-input-number
               v-model="drawerProps.rowData.price"
-              min="0"
+              :min="0"
               :placeholder="`${$t('main.inputError', '价格')}`"
               clearable
             />
@@ -123,7 +123,7 @@
         <!-- 备注 -->
         <el-col :span="24">
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" rows="4" v-model="drawerProps.rowData.remark" placeholder="请输入备注" />
+            <el-input type="textarea" :rows="4" v-model="drawerProps.rowData.remark" placeholder="请输入备注" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -197,7 +197,7 @@ const handleSubmit = () => {
     try {
       await drawerProps.value.api!(drawerProps.value.rowData);
       ElMessage.success({
-        message: t("main.successMsg", { title: "配送费", method: `${drawerProps.value.title}` })
+        message: t("main.successMsg", { title: "菜品信息", method: `${drawerProps.value.title}` })
       });
       drawerProps.value.getTableList!();
       drawerVisible.value = false;

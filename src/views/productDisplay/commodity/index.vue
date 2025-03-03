@@ -178,7 +178,7 @@ const columns = reactive<ColumnProps<Commodity.ResCommodity>[]>([
     width: 100,
     render: scope => {
       return (
-        <>
+        <span>
           <el-switch
             model-value={scope.row.isHot}
             active-text={scope.row.isHot ? "是" : "否"}
@@ -186,7 +186,7 @@ const columns = reactive<ColumnProps<Commodity.ResCommodity>[]>([
             inactive-value={0}
             onClick={() => changeIsHotHandle(scope.row)}
           />
-        </>
+        </span>
       );
     }
   },
@@ -198,6 +198,7 @@ const columns = reactive<ColumnProps<Commodity.ResCommodity>[]>([
     sortable: true,
     tag: true,
     width: 100,
+    search: { el: "select" },
     render: scope => {
       return (
         <el-switch

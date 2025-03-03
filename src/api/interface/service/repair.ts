@@ -31,6 +31,8 @@ export namespace Repair {
     repairType: number;
     rating: string;
     ratingMessage: string;
+    engineer: string;
+    engineerId: number;
     delFlag?: string;
     remark?: string;
     def1?: string;

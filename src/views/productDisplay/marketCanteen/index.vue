@@ -166,7 +166,7 @@ const columns = reactive<ColumnProps<MarketCanteen.ResMarketCanteen>[]>([
     label: "取餐类型",
     render: scope => {
       return (
-        <>
+        <span>
           {scope.row.pickupTypeIds.map(item => {
             return (
               <el-tag style="margin-right: 5px" type={item === 1 ? "success" : item === 2 ? "danger" : ""}>
@@ -174,10 +174,11 @@ const columns = reactive<ColumnProps<MarketCanteen.ResMarketCanteen>[]>([
               </el-tag>
             );
           })}
-        </>
+        </span>
       );
     }
   },
+  { prop: "code", label: "店铺编码" },
   // { prop: "addressId", label: "配送区域" },
   {
     prop: "status",
@@ -189,7 +190,7 @@ const columns = reactive<ColumnProps<MarketCanteen.ResMarketCanteen>[]>([
     search: { el: "select" },
     render: scope => {
       return (
-        <>
+        <span>
           <el-switch
             model-value={scope.row.status}
             active-text={scope.row.status ? "启用" : "禁用"}
@@ -197,7 +198,7 @@ const columns = reactive<ColumnProps<MarketCanteen.ResMarketCanteen>[]>([
             inactive-value={0}
             onClick={() => changeStatus(scope.row)}
           />
-        </>
+        </span>
       );
     },
     width: 100
