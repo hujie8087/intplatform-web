@@ -102,17 +102,13 @@ const selectionChange = (val: Building.ResBuilding[]) => {
 
 // 删除楼栋信息
 const deleteAccount = async (params: Building.ResBuilding) => {
-  await useHandleData(
-    deleteBuilding,
-    params.id,
-    t("main.deleteMsg", { msg: params.title, title: t("dormitory.building.building") })
-  );
+  await useHandleData(deleteBuilding, params.id, t("main.deleteMsg", { msg: params.title, title: "楼栋" }));
   getTableList();
 };
 
 // 批量删除楼栋信息
 const batchDelete = async (ids: number[]) => {
-  await useHandleData(deleteMoreBuilding, ids, t("main.deleteBatchMsg", { title: t("dormitory.building.building") }));
+  await useHandleData(deleteMoreBuilding, ids, t("main.deleteBatchMsg", { title: "楼栋" }));
   getTableList();
 };
 

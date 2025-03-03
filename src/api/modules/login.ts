@@ -40,3 +40,8 @@ export const getAuthButtonListApi = () => {
 export const logoutApi = () => {
   return http.delete(PORT1 + `/auth/logout`);
 };
+
+// 储存用户设备token
+export const saveUserMobilePhoneId = (params: { mobilePhoneId: string }) => {
+  return http.put(PORT1 + `/system/user/addToken`, params);
+};

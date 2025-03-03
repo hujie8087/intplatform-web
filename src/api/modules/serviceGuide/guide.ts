@@ -20,7 +20,7 @@ export const addGuide = (params: FormData) => {
   return http.post(PORT1 + `/other/guideArticle`, params);
 };
 // * 编辑服务指南内容
-export const editGuide = (params: FormData) => {
+export const editGuide = (params: Guide.ResGuide) => {
   return http.put(PORT1 + `/other/guideArticle`, params);
 };
 // * 删除服务指南内容

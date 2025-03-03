@@ -25,3 +25,28 @@ export const cleanOperaLog = () => {
 export const exportOperaLog = (params: OperaLog.ReqOperaLogParams) => {
   return http.download(PORT1 + `/system/operlog/export`, params);
 };
+
+// * 获取登录日志列表
+export const getLoginLogList = (params: OperaLog.ReqOperaLogParams) => {
+  return http.get<OperaLog.ResOperaLog>(PORT1 + `/system/operlog/loginLog`, params);
+};
+
+// * 导出登录日志
+export const exportLoginLog = (params: OperaLog.ReqOperaLogParams) => {
+  return http.download(PORT1 + `/system/logininfor/export`, params);
+};
+
+// * 删除登录日志
+export const deleteLoginLog = (id: string) => {
+  return http.delete(PORT1 + `/system/logininfor/${id}`);
+};
+
+// * 清空登录日志
+export const cleanLoginLog = () => {
+  return http.delete(PORT1 + `/system/logininfor/clean`);
+};
+
+// * 解锁用户
+export const unlockUser = (params: { userId: string }) => {
+  return http.get(PORT1 + `/system/logininfor/unlock/${params.userId}`);
+};

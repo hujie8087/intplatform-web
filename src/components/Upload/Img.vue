@@ -43,7 +43,11 @@
     <div class="el-upload__tip">
       <slot name="tip"></slot>
     </div>
-    <el-image-viewer v-if="imgViewVisible" :url-list="[imageUrl]" @close="imgViewVisible = false" />
+    <el-image-viewer
+      v-if="imgViewVisible"
+      :url-list="[imageUrl.includes('food') ? foodUrl + imageUrl : filePath + imageUrl]"
+      @close="imgViewVisible = false"
+    />
   </div>
 </template>
 

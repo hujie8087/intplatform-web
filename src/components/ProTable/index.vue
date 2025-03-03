@@ -35,7 +35,7 @@
     <el-table
       ref="tableRef"
       v-bind="$attrs"
-      :data="tableData"
+      :data="processTableData || tableData"
       :border="border"
       :row-key="rowKey"
       @selection-change="selectionChange"
@@ -68,7 +68,7 @@
           </template>
         </el-table-column>
         <!-- other -->
-        <TableColumn v-if="!item.type && item.prop && item.isShow" :column="item">
+        <TableColumn v-else :column="item">
           <template v-for="slot in Object.keys($slots)" #[slot]="scope">
             <slot :name="slot" v-bind="scope" />
           </template>
@@ -165,6 +165,11 @@ const radio = ref("");
 // 表格多选 Hooks
 const { selectionChange, selectedList, selectedListIds, isSelected } = useSelection(props.rowKey);
 
+const toggleSelection = (rows: { [key: string]: any }[]) => {
+  tableRef.value!.toggleRowSelection(rows, true);
+  console.log(rows);
+};
+
 // 表格操作 Hooks
 const {
   tableData,
@@ -178,7 +183,6 @@ const {
   handleCurrentChange,
   key
 } = useTable(props.requestApi, props.initParam, props.pagination, props.dataCallback, props.requestError);
-console.log(tableData);
 
 // 清空选中数据列表
 const clearSelection = () => tableRef.value!.clearSelection();
@@ -321,6 +325,7 @@ defineExpose({
   enumMap,
   isSelected,
   selectedList,
-  selectedListIds
+  selectedListIds,
+  toggleSelection
 });
 </script>

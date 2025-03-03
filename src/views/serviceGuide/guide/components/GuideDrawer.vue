@@ -4,8 +4,6 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="服务指南类型" prop="typeId">
-            <!-- 选择报修人 -->
-            <!-- <el-select v-model="drawerProps.rowData.typeId" /> -->
             <el-select v-model="drawerProps.rowData.typeId" placeholder="请选择">
               <el-option v-for="item in drawerProps.guideTypeOptions" :label="item.label" :value="item.value" :key="item.value">
               </el-option>
@@ -103,6 +101,9 @@ const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
+    if (drawerProps.value.rowData.approvalStatus === -1) {
+      drawerProps.value.rowData.approvalStatus = 0;
+    }
     const formData = { ...drawerProps.value.rowData, content: content.value, img: iconValue.value };
     try {
       await drawerProps.value.api!(formData);

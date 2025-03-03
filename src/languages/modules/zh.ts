@@ -163,13 +163,13 @@ export default {
       remark: "备注"
     },
     notice: {
-      noticeList: "通知列表",
+      noticeList: "列表",
       add: "新增",
       notice: "通知",
-      noticeTitle: "通知标题",
-      noticeType: "通知类型",
+      noticeTitle: "标题",
+      noticeType: "类型",
       status: "状态",
-      noticeContent: "通知内容",
+      noticeContent: "内容",
       noticeDept: "发布部门"
     },
     app: {
@@ -267,7 +267,12 @@ export default {
     warning: "警告",
     danger: "危险",
     systemUser: "系统用户",
-    appUser: "APP用户"
+    appUser: "APP用户",
+    audit: "审核",
+    firstAudit: "一级审核",
+    secondAudit: "二级审核",
+    thirdAudit: "三级审核",
+    otherAudit: "其他部门审核"
   },
   transportation: {
     buses: {

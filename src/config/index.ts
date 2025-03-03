@@ -1,7 +1,7 @@
 // ? 全局默认配置项
 
 // 首页地址（默认）
-export const HOME_URL: string = "/index";
+export const HOME_URL: string = "/home/index";
 
 // 登录页地址（默认）
 export const LOGIN_URL: string = "/login";
@@ -17,3 +17,14 @@ export const AMAP_MAP_KEY: string = "";
 
 // 百度地图 key
 export const BAIDU_MAP_KEY: string = "";
+
+// firebase config
+export const FIREBASE_CONFIG: any = {
+  apiKey: "AIzaSyC3aPZumZvuLvKkQw39KxeTCwtIu8dHwww",
+  authDomain: "iwip-intplatform.firebaseapp.com",
+  projectId: "iwip-intplatform",
+  storageBucket: "iwip-intplatform.firebasestorage.app",
+  messagingSenderId: "876588716398",
+  appId: "1:876588716398:web:e6d02163f82df81048b17f",
+  measurementId: "G-YCXGEQMMW1"
+};

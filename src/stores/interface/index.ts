@@ -75,3 +75,9 @@ export interface BuildingState {
   buildingList: Building.ResBuilding[];
   allBuildingList: Building.ResBuilding[];
 }
+
+export interface MessageState {
+  messageCount: number;
+  notificationCount: number;
+  todoCount: number;
+}

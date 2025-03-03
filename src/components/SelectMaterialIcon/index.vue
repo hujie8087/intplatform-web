@@ -92,7 +92,6 @@ const iconsList = computed((): { [key: string]: any } => {
   }
   return result;
 });
-console.log(iconsList.value);
 </script>
 
 <style scoped lang="scss">

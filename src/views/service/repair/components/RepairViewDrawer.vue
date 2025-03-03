@@ -57,6 +57,13 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label>
+          <div class="cell-item">维修人</div>
+        </template>
+        {{ drawerProps.rowData.engineer ?? "--" }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template #label>
           <div class="cell-item">维修时间</div>
         </template>
         {{ drawerProps.rowData.repairTime ?? "--" }}

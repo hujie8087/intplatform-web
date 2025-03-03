@@ -73,6 +73,7 @@
                   name="files"
                   :limit="1"
                   :show-file-list="false"
+                  :on-change="handleChange"
                   :on-success="handleSuccess"
                   :on-progress="handleProgress"
                 >
@@ -122,6 +123,8 @@ import { AppVersion } from "@/api/interface/system";
 import { DictOptions } from "@/api/interface";
 import { Upload } from "@element-plus/icons-vue";
 import { useUserStore } from "@/stores/modules/user";
+import SparkMD5 from "spark-md5";
+
 const { t } = useI18n(); // 解构出t方法
 const progress = ref(0);
 const baseUrl = import.meta.env.VITE_API_URL;
@@ -184,6 +187,12 @@ const handleSuccess = (response: any, uploadFile: UploadFile) => {
   drawerProps.value.rowData!.apkUrl = response.data[0].url;
   drawerProps.value.rowData!.apkSize = uploadFile?.size ? Math.floor(uploadFile?.size / 1000) : 0;
 };
+
+const handleChange = (uploadFile: UploadFile) => {
+  const md5 = SparkMD5.ArrayBuffer.hash(uploadFile.raw);
+  drawerProps.value.rowData!.apkMd5 = md5;
+};
+
 defineExpose({
   acceptParams
 });

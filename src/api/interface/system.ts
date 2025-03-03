@@ -312,20 +312,44 @@ export namespace Notice {
     type?: string;
     status?: string;
   }
+  export interface ReqCreateNoticeParams {
+    noticeTitle: string;
+    noticeContent: string;
+    noticeType: string;
+    createDept?: string;
+    status: string;
+    remark?: string;
+    img?: string;
+    file?: string;
+    video?: string;
+    sort?: number;
+  }
   export interface ResNotice {
-    createBy: string;
-    createTime: string;
-    updateBy: string | null;
-    updateTime: string | null;
-    remark: string;
+    createBy?: string;
+    createTime?: string;
+    updateBy?: string | null;
+    updateTime?: string | null;
+    remark?: string;
+    img?: string;
+    file?: string;
+    video?: string;
     noticeId: number;
     noticeTitle: string;
     noticeType: string;
     noticeGrade: string;
     noticeContent: string;
     createDept: string;
+    sort: number;
+    nextApprovalFlag: number;
     papeView: string;
     status: string;
+    approvalStatus: number;
+    approvalFirstMessage: string;
+    approvalSecondMessage: string;
+    approvalThirdMessage: string;
+    approvalMessage: string;
+    approvalDeptId?: number;
+    approvalDeptMessage?: string;
   }
   export interface pushMessage {
     title: string;
@@ -384,6 +408,7 @@ export namespace AppVersion {
     id: number;
     apkSize: number;
     apkUrl: string;
+    apkMd5: string;
     createTime: string;
     hasUpdate: string;
     isIgnorable: string;
@@ -393,5 +418,88 @@ export namespace AppVersion {
     updateType: string;
     versionCode: number;
     versionName: string;
+  }
+}
+
+// 登录日志模块
+export namespace LoginLog {
+  export interface ReqLoginLogParams extends ReqPage {
+    userName?: string;
+    ipaddr?: string;
+    status?: string;
+    loginTime?: string;
+  }
+  export interface ResLoginLog {
+    browser: string;
+    createBy: string;
+    createTime: string;
+    infoId: number;
+    ipaddr: string;
+    loginLocation: string;
+    loginTime: string;
+    msg: string;
+    os: string;
+    remark: string;
+    status: string;
+    updateBy: string;
+    updateTime: string;
+    userName: string;
+  }
+}
+
+// app菜单管理模块
+export namespace AppMenu {
+  export interface ReqAppMenuParams extends ReqPage {
+    cname?: string;
+    status?: string;
+  }
+  export interface ResAppMenu {
+    id: number;
+    cname: string;
+    uname: string;
+    yname: string;
+    sort: number;
+    status: number;
+    icon: string;
+    isMic: number;
+    router: string;
+    permissions: string;
+    delFlag: string;
+    createBy: string;
+    remark: string;
+    createTime: string;
+    updateBy: string;
+    updateTime: string;
+    deleteBy: string;
+    deleteTime: string;
+    isLogin: number;
+    typeId: number;
+  }
+}
+
+// app菜单类型管理模块
+export namespace AppMenuType {
+  export interface ReqAppMenuTypeParams extends ReqPage {
+    cname?: string;
+    status?: string;
+  }
+  export interface ResAppMenuType {
+    id: number;
+    cname: string;
+    uname: string;
+    yname: string;
+    sort: number;
+    status: number;
+    icon: string;
+    permissions: string;
+    delFlag: string;
+    createBy: string;
+    createTime: string;
+    updateBy: string;
+    updateTime: string;
+    deleteBy: string;
+    deleteTime: string;
+    isLogin: number;
+    remark: string;
   }
 }

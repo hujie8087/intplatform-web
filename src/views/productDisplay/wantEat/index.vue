@@ -8,6 +8,7 @@
         :request-api="getComplaintMessageList"
         :data-callback="dataCallback"
         :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
+        :init-param="{ typeId: 1 }"
         row-key="id"
       >
         <!-- 表格 header 按钮 -->
@@ -87,6 +88,7 @@ const columns = reactive<ColumnProps<Complaint.ResComplaintMessage>[]>([
   { prop: "def2", label: "工号", width: 150 },
   { prop: "def1", label: "菜名", width: 150 },
   { prop: "content", label: "做法" },
+  { prop: "createTime", label: "提交时间", width: 150 },
   { prop: "operation", label: "操作", width: 230, fixed: "right" }
 ]);
 
