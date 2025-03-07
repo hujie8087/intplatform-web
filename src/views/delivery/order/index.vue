@@ -93,7 +93,7 @@ const columns = reactive<ColumnProps<OrderDelivery.ResOrderDelivery>[]>([
   { prop: "deliveryTel", label: "收货人电话", width: 120 },
   { prop: "deliveryAddress", label: "配送地址", width: 260 },
   { prop: "orderTime", label: "下单时间", width: 120 },
-  { prop: "sourceNo", label: "订单来源编号", width: 150 },
+  { prop: "sourceNo", label: "订单来源编号", width: 150, search: { el: "input" } },
   { prop: "deliveryStatus", label: "订单状态", width: 150, enum: orderStatusOptions, tag: true, search: { el: "select" } },
   { prop: "errorMsg", label: "异常信息", width: 100 },
   { prop: "remark", label: "备注", width: 100 },
