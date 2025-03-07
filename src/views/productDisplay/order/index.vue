@@ -208,8 +208,8 @@ const columns = reactive<ColumnProps<Order.ResOrder>[]>([
 
 // 打印
 const handlePrint = (row: Order.ResOrder) => {
-  // window.open("https://api.iwipwedabay.com//api/food/mis//findById/" + row.id);
-  window.open("http://10.40.11.26:10210/findById/" + row.id);
+  window.open("https://api.iwipwedabay.com//api/food/mis//findById/" + row.id);
+  // window.open("http://10.40.11.26:10210/findById/" + row.id);
   // window.open("http://10.40.10.18:10210/findById/" + row.id);
 };
 // 打印菜品
