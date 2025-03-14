@@ -125,11 +125,11 @@ const staffColumns: ColumnProps[] = [
 const staffTableRef = ref<ProTableInstance>();
 const staffSelectTableRef = ref<ProTableInstance>();
 const staffSelectColumns: ColumnProps[] = [
-  { prop: "nickName", label: "姓名" },
-  { prop: "userName", label: "工号" },
+  { prop: "name", label: "姓名" },
+  { prop: "deliveryNo", label: "工号" },
   { prop: "tel", label: "联系电话" },
-  { prop: "type", label: "配送类型", enum: delivery_staff_type, tag: true },
-  { prop: "status", label: "状态", enum: sys_normal_disable, tag: true },
+  // { prop: "type", label: "配送类型", enum: delivery_staff_type, tag: true },
+  // { prop: "status", label: "状态", enum: sys_normal_disable, tag: true },
   { prop: "operation", label: "操作" }
 ];
 interface DrawerProps {
@@ -139,18 +139,25 @@ interface DrawerProps {
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
   deliveryStaffTypeOptions?: DictOptions[];
+  deliveryDetail: any;
 }
 // drawer框状态
 const drawerVisible = ref(false);
 const drawerProps = ref<DrawerProps>({
   isView: false,
   title: "",
-  rowData: {}
+  rowData: {},
+  deliveryDetail: {
+    orderDeliveryTrip: {},
+    orderDeliveryList: []
+  }
 });
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
+  selectedStaff.value = [params.deliveryDetail.orderDeliveryTrip];
+  selectedOrder.value = params.deliveryDetail.orderDeliveryList;
   getOrderList();
 };
 const handleSelectStaffDialog = () => {
