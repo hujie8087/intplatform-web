@@ -173,7 +173,7 @@ const deptName = ref<string>("");
 // 获取部门列表
 const getDeptDataList = async () => {
   const res = await getDeptList({ pageNum: 1, pageSize: 10000 });
-  deptList.value = res.data.filter(item => [46, 21, 57].includes(item.deptId));
+  deptList.value = res.data.filter(item => [541, 552, 621].includes(item.deptId));
   if (formData.value?.approvalDeptId) {
     deptName.value = deptList.value.find(item => item.deptId === formData.value?.approvalDeptId)?.deptName ?? "";
   }
