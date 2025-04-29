@@ -19,6 +19,7 @@ export namespace DeliveryStaff {
     delFlag: string;
     id: number;
     nickName: string;
+    staffType: number;
     remark: string;
     sourceMsgIds: number[];
     sourceMsgs: DeliveryStation.ResDeliveryStation[];

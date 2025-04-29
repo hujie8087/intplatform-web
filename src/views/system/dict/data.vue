@@ -11,14 +11,7 @@
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button
-          type="warning
-        "
-          link
-          :icon="EditPen"
-          @click="openDrawer('编辑', scope.row)"
-          >编辑</el-button
-        >
+        <el-button type="warning" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <el-button type="danger" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
@@ -48,6 +41,7 @@ import {
 } from "@/api/modules/system/dict";
 import { userStatus } from "@/utils/serviceDict";
 
+const baseUrl = import.meta.env.VITE_API_URL;
 const route = useRoute();
 
 // ProTable 实例
@@ -138,7 +132,7 @@ const batchDelete = async (id: number[]) => {
 // 导出字典数据列表
 const downloadFile = async () => {
   ElMessageBox.confirm("确认导出字典数据数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload("/system/dict/data/export", "字典数据列表", true, ".xlsx", "get", proTable.value?.searchParam)
+    useDownload(`${baseUrl}/system/dict/data/export`, "字典数据列表", true, ".xlsx", "get", proTable.value?.searchParam)
   );
 };
 
