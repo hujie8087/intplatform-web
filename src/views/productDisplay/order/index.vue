@@ -87,6 +87,7 @@ import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 import { useDict } from "@/hooks/useDict";
 
+const baseUrl = import.meta.env.VITE_API_URL;
 const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
   newParams.createTime && (newParams.startQueryTime = newParams.createTime[0]);
@@ -208,9 +209,9 @@ const columns = reactive<ColumnProps<Order.ResOrder>[]>([
 
 // 打印
 const handlePrint = (row: Order.ResOrder) => {
-  window.open("https://api.iwipwedabay.com//api/food/mis//findById/" + row.id);
+  // window.open("https://api.iwipwedabay.com//api/food/mis//findById/" + row.id);
   // window.open("http://10.40.11.26:10210/findById/" + row.id);
-  // window.open("http://10.40.10.18:10210/findById/" + row.id);
+  window.open("http://10.40.10.18:10210/findById/" + row.id);
 };
 // 打印菜品
 const handlePrintDish = async (row: Order.ResOrder) => {
@@ -224,14 +225,7 @@ const handlePrintDish = async (row: Order.ResOrder) => {
 // 导出
 const handleExport = async () => {
   ElMessageBox.confirm("确认导出订单数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload(
-      "/intplatform-stage-api/productdisplay/food/order/export",
-      "订单数据",
-      true,
-      ".xlsx",
-      "post",
-      proTable.value?.searchParam
-    )
+    useDownload(`${baseUrl}/productdisplay/food/order/export`, "订单数据", true, ".xlsx", "post", proTable.value?.searchParam)
   );
 };
 

@@ -43,7 +43,7 @@ import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 import { DictOptions } from "@/api/interface";
 const { t } = useI18n(); // 解构出t方法
-
+const baseUrl = import.meta.env.VITE_API_URL;
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
@@ -114,7 +114,7 @@ const cleanOperaLogHandle = async () => {
 // 导出系统日志
 const downloadFile = async () => {
   ElMessageBox.confirm("确认导出系统日志数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload("api/system/operlog/export", "系统日志列表", true, ".xlsx", "post", proTable.value?.searchParam)
+    useDownload(`${baseUrl}/system/operlog/export`, "系统日志列表", true, ".xlsx", "post", proTable.value?.searchParam)
   );
 };
 // 打开 drawer(新增、查看、编辑)

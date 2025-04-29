@@ -105,7 +105,7 @@ import { genderType, userStatus, userType } from "@/utils/serviceDict";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { getRoleList } from "@/api/modules/system/role";
 const { BUTTONS } = useAuthButtons();
-
+const baseUrl = import.meta.env.VITE_API_URL;
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
@@ -137,7 +137,7 @@ const columns = reactive<ColumnProps<Account.ResAccountList>[]>([
     search: { el: "select" },
     render: scope => {
       return (
-        <>
+        <span>
           {BUTTONS.value["system:user:edit"] ? (
             <el-switch
               model-value={scope.row.status}
@@ -149,7 +149,7 @@ const columns = reactive<ColumnProps<Account.ResAccountList>[]>([
           ) : (
             <el-tag type={scope.row.status === "0" ? "success" : "danger"}>{scope.row.status ? "启用" : "禁用"}</el-tag>
           )}
-        </>
+        </span>
       );
     }
   },
@@ -206,7 +206,7 @@ const resetPass = async (params: Account.ResAccountList) => {
 // 导出用户列表
 const downloadFile = async () => {
   ElMessageBox.confirm("确认导出用户数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload("intplatform-stage-api/system/user/export", "用户列表", true, ".xlsx", "post", proTable.value?.searchParam)
+    useDownload(`${baseUrl}/system/user/export`, "用户列表", true, ".xlsx", "post", proTable.value?.searchParam)
   );
 };
 

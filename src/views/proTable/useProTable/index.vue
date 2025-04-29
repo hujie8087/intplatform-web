@@ -72,6 +72,7 @@ import {
 } from "@/api/modules/user";
 import { genderType } from "@/utils/serviceDict";
 
+const baseUrl = import.meta.env.VITE_API_URL;
 const router = useRouter();
 
 // 跳转详情页
@@ -175,7 +176,7 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
     fieldNames: { label: "userLabel", value: "userStatus" },
     render: scope => {
       return (
-        <>
+        <span>
           {BUTTONS.value.status ? (
             <el-switch
               model-value={scope.row.status}
@@ -187,7 +188,7 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
           ) : (
             <el-tag type={scope.row.status ? "success" : "danger"}>{scope.row.status ? "启用" : "禁用"}</el-tag>
           )}
-        </>
+        </span>
       );
     }
   },
@@ -241,7 +242,7 @@ const changeStatus = async (row: User.ResUserList) => {
 // 导出用户列表
 const downloadFile = async () => {
   ElMessageBox.confirm("确认导出用户数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload(`/system/user/export`, "用户列表", true, ".xlsx", "post", proTable.value?.searchParam)
+    useDownload(`${baseUrl}/system/user/export`, "用户列表", true, ".xlsx", "post", proTable.value?.searchParam)
   );
 };
 

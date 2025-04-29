@@ -46,7 +46,7 @@ import { Config } from "@/api/interface/system";
 import { systemConfigOptions } from "@/utils/serviceDict";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n(); // 解构出t方法
-
+const baseUrl = import.meta.env.VITE_API_URL;
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
@@ -92,7 +92,7 @@ const batchDelete = async (ids: number[]) => {
 // 导出系统参数列表
 const downloadFile = async () => {
   ElMessageBox.confirm("确认导出系统参数数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload("/system/config/export", "系统参数列表", true, ".xlsx", "post", proTable.value?.searchParam)
+    useDownload(`${baseUrl}/system/config/export`, "系统参数列表", true, ".xlsx", "post", proTable.value?.searchParam)
   );
 };
 

@@ -36,3 +36,8 @@ export const deleteMoreComplaintMessage = (params: number[]) => {
 export const getComplaintMessageList = (params: Complaint.ReqComplaintMessageParams) => {
   return http.get<Complaint.ResComplaintMessage[][]>(PORT1 + `/other/ComplaintMessage/list`, params);
 };
+
+// * 导出宿舍投诉与建议数据
+export const exportComplaintMessage = (params: Complaint.ReqComplaintMessageParams) => {
+  return http.get(PORT1 + `/other/ComplaintMessage/export`, params);
+};

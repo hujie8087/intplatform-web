@@ -77,6 +77,10 @@ const staffStatusOptions = ref<DictOptions[]>([
   { label: "禁用", value: "1", tagType: "danger" },
   { label: "忙碌", value: "3", tagType: "warning" }
 ]);
+const staffTypeOptions = ref<DictOptions[]>([
+  { label: "配送员", value: "0", tagType: "success" },
+  { label: "打包员", value: "1", tagType: "danger" }
+]);
 
 const tagTypeOptions = ref<string[]>(["success", "danger", "warning", "info", "primary", "error"]);
 
@@ -108,6 +112,20 @@ const columns = reactive<ColumnProps<DeliveryStaff.ResDeliveryStaff>[]>([
   { prop: "nickName", label: "姓名", width: 250, search: { el: "input" } },
   { prop: "userName", label: "工号", width: 150, search: { el: "input" } },
   { prop: "tel", label: "联系电话", width: 200, search: { el: "input" } },
+  {
+    prop: "staffType",
+    label: "类型",
+    width: 200,
+    enum: staffTypeOptions,
+    search: { el: "select" },
+    render: scope => {
+      return (
+        <el-tag type={staffTypeOptions.value.find(option => option.value === scope.row.staffType)?.tagType}>
+          {staffTypeOptions.value.find(option => option.value === scope.row.staffType)?.label}
+        </el-tag>
+      );
+    }
+  },
   {
     prop: "sourceMsgIds",
     label: "配送站点",

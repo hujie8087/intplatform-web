@@ -65,7 +65,7 @@ import { useDownload } from "@/hooks/useDownload";
 import { useRouter } from "vue-router";
 import { userStatus } from "@/utils/serviceDict";
 const { t } = useI18n(); // 解构出t方法
-
+const baseUrl = import.meta.env.VITE_API_URL;
 const router = useRouter();
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
@@ -149,7 +149,7 @@ const refreshCacheHandle = async () => {
 // 导出字典
 const downloadHandle = async () => {
   ElMessageBox.confirm("确认导出字典数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload("/system/dict/type/export", "字典列表", true, ".xlsx", "get", proTable.value?.searchParam)
+    useDownload(`${baseUrl}/system/dict/type/export`, "字典列表", true, ".xlsx", "get", proTable.value?.searchParam)
   );
 };
 

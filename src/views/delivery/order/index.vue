@@ -61,6 +61,7 @@ getDeliveryStationOptions();
 
 // 字典数据 配送状态(0  待接单 1  已接单  2 已送达  3  已收货  4  已评价 )
 const orderStatusOptions = ref<DictOptions[]>([
+  { label: "待打包", value: 99, tagType: "danger" },
   { label: "待配送", value: 0, tagType: "danger" },
   { label: "已接单", value: 1, tagType: "warning" },
   { label: "已送达", value: 2, tagType: "success" },

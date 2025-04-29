@@ -64,6 +64,7 @@ import {
 } from "@/api/modules/user";
 import { genderType, userStatus } from "@/utils/serviceDict";
 
+const baseUrl = import.meta.env.VITE_API_URL;
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 
@@ -152,7 +153,7 @@ const resetPass = async (params: User.ResUserList) => {
 // 导出用户列表
 const downloadFile = async () => {
   ElMessageBox.confirm("确认导出用户数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload("api/system/user/export", "用户列表", true, ".xlsx", "post", proTable.value?.searchParam)
+    useDownload(`${baseUrl}/system/user/export`, "用户列表", true, ".xlsx", "post", proTable.value?.searchParam)
   );
 };
 

@@ -22,6 +22,8 @@
           >
             批量删除
           </el-button>
+          <!-- 导出 -->
+          <el-button type="primary" :icon="Download" @click="exportExcel">导出</el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
@@ -47,7 +49,7 @@ import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import FeedbackDrawer from "./components/FeedbackDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { Delete, View } from "@element-plus/icons-vue";
+import { Delete, Download, View } from "@element-plus/icons-vue";
 import {
   getComplaintMessageList,
   addComplaintMessage,
@@ -59,9 +61,11 @@ import { useI18n } from "vue-i18n";
 import { useDict } from "@/hooks/useDict";
 import { DictOptions } from "@/api/interface";
 import { Complaint } from "@/api/interface/service/complaint";
+import { ElMessageBox } from "element-plus";
+import { useDownload } from "@/hooks/useDownload";
 
 const { t } = useI18n(); // 解构出t方法
-
+const baseUrl = import.meta.env.VITE_API_URL;
 // 字典数据
 const sys_normal_disable = ref<DictOptions[]>([]);
 useDict("sys_normal_disable").then(res => {
@@ -121,5 +125,14 @@ const openDrawer = async (title: string, row: Partial<Complaint.ResComplaintMess
     noticeStatusOptions: sys_normal_disable.value
   };
   drawerRef.value?.acceptParams(params);
+};
+
+// 导出
+
+// 导出
+const exportExcel = async () => {
+  ElMessageBox.confirm("确认导出我想说数据?", "温馨提示", { type: "warning" }).then(() =>
+    useDownload(`${baseUrl}/other/ComplaintMessage/export`, "我想说数据", true, ".xlsx", "post", { typeId: 2 })
+  );
 };
 </script>
