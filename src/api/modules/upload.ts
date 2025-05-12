@@ -14,3 +14,8 @@ export const uploadImg = (params: FormData) => {
 export const uploadVideo = (params: FormData) => {
   return http.post<Upload.ResFileUrl>(PORT1 + `/file/uploadVideo`, params, { cancel: false });
 };
+
+// 动植物图片上传
+export const uploadFlora = (params: FormData) => {
+  return http.post<Upload.ResFileUrl>(PORT1 + `/file/uploadFlora`, params, { cancel: false });
+};

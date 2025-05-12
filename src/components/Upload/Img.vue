@@ -71,6 +71,7 @@ interface UploadFileProps {
   height?: string; // 组件高度 ==> 非必传（默认为 150px）
   width?: string; // 组件宽度 ==> 非必传（默认为 150px）
   borderRadius?: string; // 组件边框圆角 ==> 非必传（默认为 8px）
+  fileLabel?: string; // 文件标签 ==> 非必传（默认为 图片）
 }
 
 // 接受父组件参数
@@ -82,7 +83,8 @@ const props = withDefaults(defineProps<UploadFileProps>(), {
   fileType: () => ["image/jpeg", "image/png", "image/gif", "image/webp"],
   height: "150px",
   width: "150px",
-  borderRadius: "8px"
+  borderRadius: "8px",
+  fileLabel: "files"
 });
 
 // 生成组件唯一id
@@ -108,11 +110,11 @@ const emit = defineEmits<{
 }>();
 const handleHttpUpload = async (options: UploadRequestOptions) => {
   let formData = new FormData();
-  formData.append("files", options.file);
+  formData.append(props.fileLabel, options.file);
   try {
     const api = props.api ?? uploadImg;
     const { data } = await api(formData);
-    emit("update:imageUrl", data[0].url);
+    emit("update:imageUrl", data.isArray ? data[0].url : data.url);
     // 调用 el-form 内部的校验方法（可自动校验）
     formItemContext?.prop && formContext?.validateField([formItemContext.prop as string]);
   } catch (error) {

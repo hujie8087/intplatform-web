@@ -241,7 +241,8 @@ export default {
     searchTime: "查询时间",
     createTime: "创建时间",
     updateTime: "更新时间",
-    releaseTime: "发布时间"
+    releaseTime: "发布时间",
+    copyMsg: "复制{msg}"
   },
   dict: {
     man: "男",
