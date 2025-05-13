@@ -156,13 +156,13 @@ const columns = reactive<ColumnProps<AppMenuType.ResAppMenuType>[]>([
           {BUTTONS.value["*:*:*"] || BUTTONS.value["other:type:edit"] ? (
             <el-switch
               model-value={scope.row.status}
-              active-text={scope.row.status ? "启用" : "禁用"}
+              active-text={scope.row.status === 0 ? "启用" : "禁用"}
               active-value={0}
               inactive-value={1}
               onClick={() => changeStatus(scope.row)}
             />
           ) : (
-            <el-tag type={scope.row.status ? "success" : "danger"}>{scope.row.status ? "启用" : "禁用"}</el-tag>
+            <el-tag type={scope.row.status === 0 ? "success" : "danger"}>{scope.row.status === 0 ? "启用" : "禁用"}</el-tag>
           )}
         </span>
       );
