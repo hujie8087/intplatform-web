@@ -19,6 +19,8 @@ export namespace Order {
     remark: string;
     print: number;
     refund: number;
+    singlePlayer: string;
+    singleTime: string;
     statusName: string;
     tableNumber: string;
     pickupType: number;

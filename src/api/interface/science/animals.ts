@@ -28,5 +28,8 @@ export namespace Animals {
     remark: string;
     sort: number;
     status: string;
+    otherName: string;
+    feature: string;
+    code: string;
   }
 }

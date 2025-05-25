@@ -63,6 +63,7 @@ interface UploadFileProps {
   height?: string; // 组件高度 ==> 非必传（默认为 150px）
   width?: string; // 组件宽度 ==> 非必传（默认为 150px）
   borderRadius?: string; // 组件边框圆角 ==> 非必传（默认为 8px）
+  folderName?: string; // 文件夹名称 ==> 非必传（默认为 图片）
 }
 
 const props = withDefaults(defineProps<UploadFileProps>(), {
@@ -74,7 +75,8 @@ const props = withDefaults(defineProps<UploadFileProps>(), {
   fileType: () => ["image/jpeg", "image/png", "image/gif"],
   height: "150px",
   width: "150px",
-  borderRadius: "8px"
+  borderRadius: "8px",
+  folderName: "image"
 });
 
 // 获取 el-form 组件上下文
@@ -127,6 +129,7 @@ const beforeUpload: UploadProps["beforeUpload"] = rawFile => {
 const handleHttpUpload = async (options: UploadRequestOptions) => {
   let formData = new FormData();
   formData.append("files", options.file);
+  formData.append("fName", props.folderName);
   try {
     const api = props.api ?? uploadImg;
     const { data } = await api(formData);

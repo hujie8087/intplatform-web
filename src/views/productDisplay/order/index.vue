@@ -86,8 +86,11 @@ import OrderDrawer from "./components/OrderDrawer.vue";
 import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 import { useDict } from "@/hooks/useDict";
+import { useUserStore } from "@/stores/modules/user";
+import dayjs from "dayjs";
 
 const baseUrl = import.meta.env.VITE_API_URL;
+const userStore = useUserStore();
 const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
   newParams.createTime && (newParams.startQueryTime = newParams.createTime[0]);
@@ -203,15 +206,29 @@ const columns = reactive<ColumnProps<Order.ResOrder>[]>([
       }
     }
   },
+  {
+    prop: "",
+    label: "打单人",
+    width: 180,
+    render: scope => {
+      return (
+        <div>
+          <div>{scope.row.singlePlayer}</div>
+          <div>{scope.row.singleTime}</div>
+        </div>
+      );
+    }
+  },
   { prop: "totalPrice", label: "总金额", width: 80 },
   { prop: "operation", label: "操作", width: 230, fixed: "right" }
 ]);
 
 // 打印
-const handlePrint = (row: Order.ResOrder) => {
+const handlePrint = async (row: Order.ResOrder) => {
   // window.open("https://api.iwipwedabay.com//api/food/mis//findById/" + row.id);
   // window.open("http://10.40.11.26:10210/findById/" + row.id);
   window.open("http://10.40.10.18:10210/findById/" + row.id);
+  await editOrder({ ...row, singlePlayer: userStore.userInfo.user.userName, singleTime: dayjs().format("YYYY-MM-DD HH:mm:ss") });
 };
 // 打印菜品
 const handlePrintDish = async (row: Order.ResOrder) => {

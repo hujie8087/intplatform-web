@@ -12,6 +12,24 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="drawerProps.rowData!.name" :placeholder="`${$t('main.inputError', { msg: '名称' })}`"></el-input>
       </el-form-item>
+      <el-form-item label="别名" prop="otherName">
+        <el-input v-model="drawerProps.rowData!.otherName" :placeholder="`${$t('main.inputError', { msg: '别名' })}`"></el-input>
+      </el-form-item>
+      <el-form-item label="编码" prop="code">
+        <el-input v-model="drawerProps.rowData!.code" :placeholder="`${$t('main.inputError', { msg: '编码' })}`"></el-input>
+      </el-form-item>
+      <el-form-item label="科属" prop="peacockType">
+        <el-input
+          v-model="drawerProps.rowData!.peacockType"
+          :placeholder="`${$t('main.inputError', { msg: '科属' })}`"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="特征" prop="feature">
+        <el-input v-model="drawerProps.rowData!.feature" :placeholder="`${$t('main.inputError', { msg: '特征' })}`"></el-input>
+      </el-form-item>
+      <el-form-item label="习性" prop="habit">
+        <el-input v-model="drawerProps.rowData!.habit" :placeholder="`${$t('main.inputError', { msg: '习性' })}`"></el-input>
+      </el-form-item>
       <el-form-item label="图片" prop="picture">
         <UploadImg
           v-model:image-url="drawerProps.rowData!.picture"
