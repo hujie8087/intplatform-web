@@ -12,7 +12,7 @@
     "dev": "vite",
     "serve": "vite",
     "build:dev": "vite build --mode development",
-    "build:test": "vue-tsc && vite build --mode test",
+    "build:test": "vite build --mode test",
     "build:pro": "vite build --mode production",
     "type:check": "vue-tsc --noEmit --skipLibCheck",
     "preview": "npm run build:dev && vite preview",
