@@ -49,7 +49,7 @@
           <el-button type="success" link @click="copyAccount(scope.row)">复制</el-button>
         </template>
       </ProTable>
-      <AnimalsDrawer ref="drawerRef" />
+      <PlantDrawer ref="drawerRef" />
     </div>
   </div>
 </template>
@@ -59,7 +59,7 @@ import { ref, reactive, computed } from "vue";
 import { ColumnProps } from "@/components/ProTable/interface";
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
-import AnimalsDrawer from "./components/AnimalsDrawer.vue";
+import PlantDrawer from "./components/PlantDrawer.vue";
 import { CirclePlus, Delete, Download } from "@element-plus/icons-vue";
 import { getAnimalsList, deleteMoreAnimals, editAnimals, addAnimals, getAnimalsById } from "@/api/modules/science/animals";
 
@@ -110,6 +110,11 @@ const columns = computed((): ColumnProps[] => [
     label: "名称",
     search: { el: "input" }
   },
+  { prop: "otherName", label: "别名" },
+  { prop: "code", label: "编码" },
+  { prop: "peacockType", label: "科属" },
+  { prop: "feature", label: "特征" },
+  { prop: "habit", label: "习性" },
   { prop: "origin", label: "分布区域" },
   {
     prop: "picture",
@@ -130,7 +135,6 @@ const columns = computed((): ColumnProps[] => [
       );
     }
   },
-  { prop: "introduce", label: "简介" },
   { prop: "language", label: "语言", width: 80, enum: languageOptions, tag: true, search: { el: "select" } },
   {
     prop: "sort",

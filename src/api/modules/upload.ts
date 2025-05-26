@@ -19,3 +19,8 @@ export const uploadVideo = (params: FormData) => {
 export const uploadFlora = (params: FormData) => {
   return http.post<Upload.ResFileUrl>(PORT1 + `/file/uploadFlora`, params, { cancel: false });
 };
+
+// 图片上传带文件夹
+export const uploadByfName = (params: { file: File; fName: string }) => {
+  return http.post<Upload.ResFileUrl>(PORT1 + `/file/uploadByfName`, params, { cancel: false });
+};
