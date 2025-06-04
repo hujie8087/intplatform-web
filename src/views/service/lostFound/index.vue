@@ -32,6 +32,10 @@
           <el-button type="danger" link :icon="Delete" v-auth="['other:show:delete']" @click="deleteFoundHandle(scope.row)">
             删除
           </el-button>
+          <!-- 审核 -->
+          <el-button type="success" link v-auth="['other:show:audit']" :icon="Check" @click="openDrawer('审核', scope.row)"
+            >审核</el-button
+          >
         </template>
       </ProTable>
     </div>
@@ -43,17 +47,23 @@ import { ref, reactive } from "vue";
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Edit, View } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, Edit, View, Check } from "@element-plus/icons-vue";
 import { getFoundList, deleteFound, getFoundById, addFound, editFound } from "@/api/modules/service/found";
 import { Found } from "@/api/interface/service/found";
 import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
 import PublicDrawer from "./components/FoundDrawer.vue";
 const { t } = useI18n(); // 解构出t方法
+
+const fileUrl = import.meta.env.VITE_APP_BASE_FILE;
 // 字典数据
 const otherTypeOptions = ref<DictOptions[]>([
   { label: "未领取", value: "0" },
   { label: "已领取", value: "1" }
+]);
+const auditStatusOptions = ref<DictOptions[]>([
+  { label: "未审核", value: "0" },
+  { label: "已审核", value: "1" }
 ]);
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
@@ -70,15 +80,32 @@ const columns = reactive<ColumnProps<Found.ResFound>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { type: "index", label: "序号", width: 50 },
   { prop: "lostName", label: "失物名称" },
-  { prop: "foundPlace", label: "失物地点" },
   { prop: "foundName", label: "失物联系人" },
+  { prop: "foundPlace", label: "失物地点" },
   { prop: "foundPhone", label: "联系电话" },
-  { prop: "photo", label: "图片" },
+  {
+    prop: "photo",
+    label: "图片",
+    width: 100,
+    render: row => {
+      return (
+        <el-image
+          src={fileUrl + row.row.photo.split(",")[0]}
+          preview-src-list={row.row.photo.split(",").map(item => fileUrl + item)}
+          fit="cover"
+          preview-teleported
+          style={{ height: "80px" }}
+        />
+      );
+    }
+  },
   { prop: "remark", label: "失物描述" },
-  { prop: "receiveName", label: "领取人" },
-  { prop: "receiveTime", label: "领取时间" },
-  { prop: "receivePlace", label: "领取地点" },
+  { prop: "foundTime", label: "丢失时间" },
+  { prop: "receiveName", label: "拾取人" },
+  { prop: "receiveTime", label: "拾取时间" },
+  { prop: "receivePlace", label: "拾取地点" },
   { prop: "isFound", label: "是否领取", enum: otherTypeOptions, search: { el: "select" }, tag: true },
+  { prop: "reviewStatus", label: "审核状态", enum: auditStatusOptions, search: { el: "select" }, tag: true },
   { prop: "operation", label: "操作", width: 230, fixed: "right" }
 ]);
 

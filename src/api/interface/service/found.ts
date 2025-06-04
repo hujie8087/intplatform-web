@@ -19,6 +19,7 @@ export namespace Found {
     receivePlace: string;
     isFound: string;
     delFlag: string;
+    reviewStatus: string;
     remark: string;
     def1: string;
     def2: string;

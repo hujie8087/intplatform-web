@@ -28,7 +28,8 @@ const language = computed(() => globalStore.language);
 
 const languageList = [
   { label: "简体中文", value: "zh" },
-  { label: "English", value: "en" }
+  { label: "English", value: "en" },
+  { label: "Indonesia", value: "id" }
 ];
 
 const changeLanguage = (lang: string) => {

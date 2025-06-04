@@ -58,6 +58,7 @@ export namespace Login {
       userType: string;
       email: string;
       phonenumber: string;
+      card: string;
       sex: string;
       avatar: string;
       status: string;

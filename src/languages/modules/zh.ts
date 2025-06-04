@@ -295,5 +295,20 @@ export default {
       allPath: "总线路图",
       remark: "备注"
     }
+  },
+  locationCollection: {
+    title: "位置采集",
+    station: "站点",
+    longitude: "经度",
+    latitude: "纬度",
+    upload: "上传位置信息",
+    getLocation: "获取当前位置",
+    getLocationSuccess: "获取当前位置成功",
+    getLocationError: "获取当前位置失败",
+    getLocationErrorMsg: "请您先获取当前位置",
+    uploadSuccess: "位置信息上传成功",
+    uploadError: "位置信息上传失败",
+    uploadErrorMsg: "请您先上传位置信息",
+    mapPreview: "地图预览"
   }
 };
