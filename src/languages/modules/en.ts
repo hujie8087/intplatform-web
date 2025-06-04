@@ -39,6 +39,11 @@ export default {
     uploadSuccess: "Upload Location Information Success",
     uploadError: "Upload Location Information Error",
     uploadErrorMsg: "Please upload the location information first",
-    mapPreview: "Map Preview"
+    mapPreview: "Map Preview",
+    success: "Success",
+    error: "Error",
+    uploaded: "Uploaded",
+    notUploaded: "Not Uploaded",
+    status: "Status"
   }
 };

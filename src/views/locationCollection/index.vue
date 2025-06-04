@@ -45,6 +45,20 @@
       <div class="language-container">
         <Language />
       </div>
+      <div class="location-list">
+        <el-table :data="stationList" style="width: 100%" height="400" border>
+          <el-table-column :label="t('locationCollection.station')" prop="fsAddress" align="center" />
+          <el-table-column :label="t('locationCollection.longitude')" prop="longitude" align="center" />
+          <el-table-column :label="t('locationCollection.latitude')" prop="latitude" align="center" />
+          <el-table-column :label="t('locationCollection.status')" prop="status" align="center" sortable>
+            <template #default="scope">
+              <el-tag :type="scope.row.status ? 'success' : 'danger'">{{
+                scope.row.status ? t("locationCollection.uploaded") : t("locationCollection.notUploaded")
+              }}</el-tag>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
     </div>
   </div>
 </template>
@@ -56,6 +70,7 @@ import { Location, MapLocation, Aim, Upload } from "@element-plus/icons-vue";
 import { editLocationCollection, getStationListApi } from "@/api/modules/delivery/locationCollection";
 import { useI18n } from "vue-i18n";
 import Language from "@/layouts/components/Header/components/Language.vue";
+import { LocationCollection } from "@/api/interface/delivery/locationCollection";
 const { t } = useI18n();
 
 const isLoading = ref(false);
@@ -66,7 +81,7 @@ const locationList = ref({
   station: ""
 });
 
-const stationList = ref<{ fsAddress: string; fsIds: string }[]>([]);
+const stationList = ref<LocationCollection.ResLocationCollection[]>([]);
 
 const formRef = ref<InstanceType<typeof ElForm>>();
 const rules = ref({
@@ -78,7 +93,10 @@ const rules = ref({
 // 获取站点列表
 const getStationList = async () => {
   const res = await getStationListApi();
-  stationList.value = res.data;
+  stationList.value = res.data.map(item => ({
+    ...item,
+    status: item.latitude ? 1 : 0
+  }));
 };
 getStationList();
 
@@ -116,6 +134,7 @@ const uploadLocation = async () => {
       if (+res.code === 200) {
         ElMessage.success(t("locationCollection.uploadSuccess"));
         console.log(locationList.value);
+        getStationList();
       } else {
         ElMessage.error(t("locationCollection.uploadError"));
       }
@@ -132,13 +151,13 @@ const uploadLocation = async () => {
   justify-content: center;
   width: 100%;
   min-height: 100%;
-  padding: 20px;
+  padding: 10px;
   background-color: #f5f7fa;
   .location-card {
     position: relative;
     width: 100%;
     max-width: 600px;
-    padding: 24px;
+    padding: 14px;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
@@ -188,6 +207,9 @@ const uploadLocation = async () => {
       justify-content: center;
       margin-top: 20px;
     }
+  }
+  .location-list {
+    margin-top: 20px;
   }
 }
 

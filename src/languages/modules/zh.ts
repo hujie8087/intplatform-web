@@ -309,6 +309,11 @@ export default {
     uploadSuccess: "位置信息上传成功",
     uploadError: "位置信息上传失败",
     uploadErrorMsg: "请您先上传位置信息",
-    mapPreview: "地图预览"
+    mapPreview: "地图预览",
+    success: "成功",
+    error: "失败",
+    uploaded: "已上传",
+    notUploaded: "未上传",
+    status: "状态"
   }
 };

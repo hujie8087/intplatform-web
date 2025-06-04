@@ -309,6 +309,11 @@ export default {
     uploadSuccess: "Informasi lokasi berhasil diunggah",
     uploadError: "Gagal mengunggah informasi lokasi",
     uploadErrorMsg: "Silakan unggah informasi lokasi terlebih dahulu",
-    mapPreview: "Pratinjau Peta"
+    mapPreview: "Pratinjau Peta",
+    success: "Berhasil",
+    error: "Gagal",
+    uploaded: "Sudah diunggah",
+    notUploaded: "Belum diunggah",
+    status: "Status"
   }
 };
