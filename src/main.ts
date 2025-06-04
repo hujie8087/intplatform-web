@@ -35,7 +35,7 @@ import pinia from "@/stores";
 // errorHandler
 import errorHandler from "@/utils/errorHandler";
 // firebase
-import "@/firebase";
+// import "@/firebase";
 const app = createApp(App);
 
 app.config.errorHandler = errorHandler;
