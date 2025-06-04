@@ -3,6 +3,7 @@ import { getBrowserLang } from "@/utils";
 
 import zh from "./modules/zh";
 import en from "./modules/en";
+import id from "./modules/id";
 
 const i18n = createI18n({
   // Use Composition API, Set to false
@@ -11,7 +12,8 @@ const i18n = createI18n({
   locale: getBrowserLang(),
   messages: {
     zh,
-    en
+    en,
+    id
   }
 });
 

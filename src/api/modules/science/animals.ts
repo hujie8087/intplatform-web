@@ -24,7 +24,7 @@ export const getAnimalsById = (id: number) => {
 
 // * 批量删除动物
 export const deleteMoreAnimals = (ids: number[]) => {
-  return http.get(PORT1 + `/other/fauna/${ids}`);
+  return http.delete(PORT1 + `/other/fauna/${ids}`);
 };
 
 // * 获取动物列表

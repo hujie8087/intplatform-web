@@ -14,6 +14,7 @@ import { LanguageType } from "./stores/interface";
 import { useGlobalStore } from "@/stores/modules/global";
 import en from "element-plus/es/locale/lang/en";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
+import id from "element-plus/es/locale/lang/id";
 const globalStore = useGlobalStore();
 
 // init theme
@@ -25,6 +26,7 @@ const i18n = useI18n();
 onMounted(() => {
   const language = globalStore.language ?? getBrowserLang();
   i18n.locale.value = language;
+  console.log(language);
   globalStore.setGlobalState("language", language as LanguageType);
 });
 
@@ -32,6 +34,7 @@ onMounted(() => {
 const locale = computed(() => {
   if (globalStore.language == "zh") return zhCn;
   if (globalStore.language == "en") return en;
+  if (globalStore.language == "id") return id;
   return getBrowserLang() == "zh" ? zhCn : en;
 });
 

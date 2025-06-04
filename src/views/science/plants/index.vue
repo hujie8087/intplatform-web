@@ -37,16 +37,11 @@
             @click="openDrawer(3, scope.row)"
             >{{ $t("main.edit") }}</el-button
           >
-          <el-button
-            type="danger"
-            v-auth="['other:fauna:remove']"
-            link
-            v-if="scope.row.roleId !== 1"
-            @click="deleteAccount(scope.row)"
-            >{{ $t("main.delete") }}</el-button
-          >
+          <el-button type="danger" v-auth="['other:fauna:remove']" link @click="deletePlant(scope.row)">{{
+            $t("main.delete")
+          }}</el-button>
           <!-- 复制按钮 -->
-          <el-button type="success" link @click="copyAccount(scope.row)">复制</el-button>
+          <el-button type="success" link @click="copyPlant(scope.row)">复制</el-button>
         </template>
       </ProTable>
       <PlantDrawer ref="drawerRef" />
@@ -164,7 +159,7 @@ const columns = computed((): ColumnProps[] => [
 ]);
 
 // 删除角色信息
-const deleteAccount = async (params: Animals.ResAnimals) => {
+const deletePlant = async (params: Animals.ResAnimals) => {
   await useHandleData(deleteMoreAnimals, params.fId, t("main.deleteMsg", { msg: params.name }));
   proTable.value.getTableList();
 };
@@ -182,7 +177,7 @@ const exportData = () => {
 };
 
 // 复制
-const copyAccount = async (row: Animals.ResAnimals) => {
+const copyPlant = async (row: Animals.ResAnimals) => {
   let params = {
     ...row,
     name: row.name + "（复制）",

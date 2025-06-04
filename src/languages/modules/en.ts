@@ -25,5 +25,20 @@ export default {
     personalData: "Personal Data",
     changePassword: "Change Password",
     logout: "Logout"
+  },
+  locationCollection: {
+    title: "Location Collection",
+    station: "Station",
+    longitude: "Longitude",
+    latitude: "Latitude",
+    upload: "Upload Location Information",
+    getLocation: "Get Current Location",
+    getLocationSuccess: "Get Current Location Success",
+    getLocationError: "Get Current Location Error",
+    getLocationErrorMsg: "Please get the current location first",
+    uploadSuccess: "Upload Location Information Success",
+    uploadError: "Upload Location Information Error",
+    uploadErrorMsg: "Please upload the location information first",
+    mapPreview: "Map Preview"
   }
 };
