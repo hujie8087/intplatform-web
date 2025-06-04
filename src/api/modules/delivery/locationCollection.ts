@@ -2,10 +2,10 @@
 import http from "@/api";
 import { PORT1 } from "@/api/config/servicePort";
 import { DeliveryStation } from "@/api/interface/delivery/station";
-
+import { LocationCollection } from "@/api/interface/delivery/locationCollection";
 // 获取所有站点
 export const getStationListApi = () => {
-  return http.get<{ fsAddress: string; fsIds: string }[]>(PORT1 + `/system/mdc/site/queryAllSiteAddressList`);
+  return http.get<LocationCollection.ResLocationCollection[]>(PORT1 + `/system/mdc/site/queryAllSiteAddressList`);
 };
 
 // * 获取位置收集列表
