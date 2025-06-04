@@ -8,6 +8,7 @@ import { ElNotification } from "element-plus";
 if (import.meta.env.MODE === "production") {
   const app = initializeApp(FIREBASE_CONFIG);
   const messaging = getMessaging(app);
+  const fileUrl = "/intplatform/mis/";
   // 请求通知权限
   const requestPermission = () => {
     Notification.requestPermission().then(permission => {
@@ -15,7 +16,7 @@ if (import.meta.env.MODE === "production") {
       if (permission === "granted") {
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker
-            .register("/firebase-messaging-sw.js")
+            .register(`${fileUrl}/firebase-messaging-sw.js`)
             .then(registration => {
               console.log("Service Worker 注册成功:", registration);
 
