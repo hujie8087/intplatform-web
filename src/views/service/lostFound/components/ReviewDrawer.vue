@@ -4,14 +4,14 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="类型" prop="def2">
-            <el-select v-model="drawerProps.rowData.def2" placeholder="请选择失物类型" :disabled="drawerProps.isView">
+            <el-select v-model="drawerProps.rowData.def2" placeholder="请选择失物类型" disabled>
               <el-option v-for="item in drawerProps.foundTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="24">
           <el-form-item label="失物名称" prop="lostName">
-            <el-input v-model="drawerProps.rowData.lostName" :disabled="drawerProps.isView" />
+            <el-input v-model="drawerProps.rowData.lostName" disabled />
           </el-form-item>
         </el-col>
 
@@ -29,51 +29,56 @@
         </el-col>
         <el-col :span="24">
           <el-form-item :label="drawerProps.rowData.def2 === '0' ? '丢失地点' : '拾取地点'" prop="foundPlace">
-            <el-input v-model="drawerProps.rowData.foundPlace" :disabled="drawerProps.isView" />
+            <el-input v-model="drawerProps.rowData.foundPlace" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="24">
           <el-form-item label="拾取人" prop="receiveName">
-            <el-input v-model="drawerProps.rowData.receiveName" :disabled="drawerProps.isView" />
+            <el-input v-model="drawerProps.rowData.receiveName" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="24" v-if="drawerProps.rowData.def2 === '0'">
           <el-form-item label="丢失时间" prop="foundTime">
-            <el-date-picker v-model="drawerProps.rowData.foundTime" type="datetime" :disabled="drawerProps.isView" />
+            <el-date-picker v-model="drawerProps.rowData.foundTime" type="datetime" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="24" v-if="drawerProps.rowData.def2 === '1'">
           <el-form-item label="拾取时间" prop="foundTime">
-            <el-date-picker v-model="drawerProps.rowData.foundTime" type="datetime" :disabled="drawerProps.isView" />
+            <el-date-picker v-model="drawerProps.rowData.foundTime" type="datetime" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="24" v-if="drawerProps.rowData.def2 === '0'">
           <el-form-item label="失物联系人" prop="foundName">
             <!-- 选择报修人 -->
-            <el-input v-model="drawerProps.rowData.foundName" :disabled="drawerProps.isView" />
+            <el-input v-model="drawerProps.rowData.foundName" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="24">
           <el-form-item label="联系电话" prop="tel">
             <!-- 选择报修人 -->
-            <el-input v-model="drawerProps.rowData.tel" :disabled="drawerProps.isView" />
+            <el-input v-model="drawerProps.rowData.tel" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="24">
           <el-form-item label="领取地点" prop="receivePlace">
-            <el-input v-model="drawerProps.rowData.receivePlace" :disabled="drawerProps.isView" />
+            <el-input v-model="drawerProps.rowData.receivePlace" disabled />
           </el-form-item>
         </el-col>
 
         <el-col :span="24">
           <el-form-item label="失物描述" prop="def1">
-            <el-input type="textarea" :rows="4" v-model="drawerProps.rowData.def1" clearable :disabled="drawerProps.isView" />
+            <el-input type="textarea" :rows="4" v-model="drawerProps.rowData.def1" disabled />
           </el-form-item>
         </el-col>
-        <!-- 领取人 -->
-        <el-col :span="24" v-if="drawerProps.rowData.def2 === '1'">
-          <el-form-item label="领取人" prop="foundName">
-            <el-input v-model="drawerProps.rowData.foundName" />
+        <el-col :span="24">
+          <el-form-item label="审核状态" prop="reviewStatus">
+            <el-radio-group v-model="drawerProps.rowData.reviewStatus">
+              <el-radio :label="1">通过</el-radio>
+              <el-radio :label="2">驳回</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="审核意见" prop="def3" v-if="drawerProps.rowData.reviewStatus === 2">
+            <el-input type="textarea" :rows="4" v-model="drawerProps.rowData.def3" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -85,7 +90,7 @@
   </el-dialog>
 </template>
 
-<script setup lang="ts" name="FoundDrawer">
+<script setup lang="ts" name="ReviewDrawer">
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { Found } from "@/api/interface/service/found";
@@ -103,7 +108,6 @@ const rules = reactive({
 interface DrawerProps {
   title: string;
   rowData: Partial<Found.ResFound>;
-  isView?: boolean;
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
   otherTypeOptions?: DictOptions[];
@@ -123,7 +127,7 @@ const drawerProps = ref<DrawerProps>({
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
-  console.log(drawerProps.value.foundTypeOptions);
+  drawerProps.value.rowData.reviewStatus = 1;
 };
 
 // 提交数据（新增/编辑）
@@ -132,13 +136,10 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     const formData = { ...drawerProps.value.rowData };
-    if (drawerProps.value.title === "领取") {
-      formData.isFound = "1";
-    }
     try {
       await drawerProps.value.api!(formData);
       ElMessage.success({
-        message: t("main.successMsg", { title: "失物招领", method: `${drawerProps.value.title}` })
+        message: t("main.successMsg", { title: "失物招领", method: `${drawerProps.value.title}审核` })
       });
       drawerProps.value.getTableList!();
       drawerVisible.value = false;
