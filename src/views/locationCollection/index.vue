@@ -47,10 +47,22 @@
       </div>
       <div class="location-list">
         <el-table :data="stationList" style="width: 100%" height="400" border>
-          <el-table-column :label="t('locationCollection.station')" prop="fsAddress" align="center" />
-          <el-table-column :label="t('locationCollection.longitude')" prop="longitude" align="center" />
-          <el-table-column :label="t('locationCollection.latitude')" prop="latitude" align="center" />
-          <el-table-column :label="t('locationCollection.status')" prop="status" align="center" sortable>
+          <el-table-column :label="t('locationCollection.station')" prop="fsAddress" align="center" width="100%" />
+          <el-table-column
+            :label="t('locationCollection.longitude')"
+            prop="longitude"
+            align="center"
+            class-name="wrap-text"
+            width="100%"
+          />
+          <el-table-column
+            :label="t('locationCollection.latitude')"
+            prop="latitude"
+            align="center"
+            class-name="wrap-text"
+            width="100%"
+          />
+          <el-table-column :label="t('locationCollection.status')" prop="status" align="center" sortable width="100%">
             <template #default="scope">
               <el-tag :type="scope.row.status ? 'success' : 'danger'">{{
                 scope.row.status ? t("locationCollection.uploaded") : t("locationCollection.notUploaded")
@@ -156,7 +168,7 @@ const uploadLocation = async () => {
   .location-card {
     position: relative;
     width: 100%;
-    max-width: 600px;
+    max-width: 100%;
     padding: 14px;
     background-color: white;
     border-radius: 8px;
@@ -165,6 +177,10 @@ const uploadLocation = async () => {
       position: absolute;
       top: 20px;
       right: 20px;
+    }
+    .wrap-text .cell {
+      word-break: break-word;
+      white-space: normal !important;
     }
   }
   .page-title {

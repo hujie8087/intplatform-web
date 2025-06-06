@@ -33,13 +33,29 @@
             删除
           </el-button>
           <!-- 审核 -->
-          <el-button type="success" link v-auth="['other:show:audit']" :icon="Check" @click="openDrawer('审核', scope.row)"
+          <el-button
+            type="success"
+            v-if="scope.row.reviewStatus === 0"
+            link
+            v-auth="['other:show:audit']"
+            :icon="Check"
+            @click="openReviewDrawer('审核', scope.row)"
             >审核</el-button
+          >
+          <!-- 领取 -->
+          <el-button
+            type="primary"
+            link
+            :icon="Check"
+            v-if="scope.row.reviewStatus === 1 && scope.row.isFound === '0'"
+            @click="openDrawer('领取', scope.row)"
+            >领取</el-button
           >
         </template>
       </ProTable>
     </div>
-    <PublicDrawer ref="drawerRef" />
+    <FoundDrawer ref="drawerRef" />
+    <ReviewDrawer ref="reviewDrawerRef" />
   </div>
 </template>
 <script setup lang="tsx" name="OtherFound">
@@ -52,18 +68,23 @@ import { getFoundList, deleteFound, getFoundById, addFound, editFound } from "@/
 import { Found } from "@/api/interface/service/found";
 import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
-import PublicDrawer from "./components/FoundDrawer.vue";
+import FoundDrawer from "./components/FoundDrawer.vue";
+import ReviewDrawer from "./components/ReviewDrawer.vue";
 const { t } = useI18n(); // 解构出t方法
 
 const fileUrl = import.meta.env.VITE_APP_BASE_FILE;
 // 字典数据
 const otherTypeOptions = ref<DictOptions[]>([
-  { label: "未领取", value: "0" },
-  { label: "已领取", value: "1" }
+  { label: "未领取", value: "0", tagType: "danger" },
+  { label: "已领取", value: "1", tagType: "success" }
 ]);
 const auditStatusOptions = ref<DictOptions[]>([
-  { label: "未审核", value: "0" },
-  { label: "已审核", value: "1" }
+  { label: "未审核", value: 0, tagType: "danger" },
+  { label: "已审核", value: 1, tagType: "success" }
+]);
+const foundTypeOptions = ref<DictOptions[]>([
+  { label: "失物", value: "0", tagType: "danger" },
+  { label: "招领", value: "1", tagType: "success" }
 ]);
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
@@ -79,13 +100,15 @@ const dataCallback = (data: any) => {
 const columns = reactive<ColumnProps<Found.ResFound>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { type: "index", label: "序号", width: 50 },
+  { prop: "def2", label: "类型", enum: foundTypeOptions, search: { el: "select" }, tag: true, width: 80 },
   { prop: "lostName", label: "失物名称" },
   { prop: "foundName", label: "失物联系人" },
   { prop: "foundPlace", label: "失物地点" },
-  { prop: "foundPhone", label: "联系电话" },
+  { prop: "tel", label: "联系电话" },
+  { prop: "foundTime", label: "丢失时间" },
   {
     prop: "photo",
-    label: "图片",
+    label: "失物图片",
     width: 100,
     render: row => {
       return (
@@ -99,8 +122,6 @@ const columns = reactive<ColumnProps<Found.ResFound>[]>([
       );
     }
   },
-  { prop: "remark", label: "失物描述" },
-  { prop: "foundTime", label: "丢失时间" },
   { prop: "receiveName", label: "拾取人" },
   { prop: "receiveTime", label: "拾取时间" },
   { prop: "receivePlace", label: "拾取地点" },
@@ -123,7 +144,7 @@ const batchDelete = async (ids: number[]) => {
 };
 
 // 打开 drawer(新增、查看、编辑)
-const drawerRef = ref<InstanceType<typeof PublicDrawer> | null>(null);
+const drawerRef = ref<InstanceType<typeof FoundDrawer> | null>(null);
 const openDrawer = async (title: string, row: Partial<Found.ResFound> = {}) => {
   if (row.id) {
     const res = await getFoundById(row.id);
@@ -131,12 +152,29 @@ const openDrawer = async (title: string, row: Partial<Found.ResFound> = {}) => {
   }
   const params = {
     title,
-    isView: title === "查看",
+    isView: title === "查看" || title === "领取",
     rowData: { ...row },
-    api: title === "新增" ? addFound : title === "编辑" ? editFound : undefined,
+    api: title === "新增" ? addFound : title === "编辑" ? editFound : title === "领取" ? editFound : undefined,
     getTableList: proTable.value?.getTableList,
-    otherTypeOptions: otherTypeOptions.value
+    otherTypeOptions: otherTypeOptions.value,
+    foundTypeOptions: foundTypeOptions.value
   };
   drawerRef.value?.acceptParams(params);
+};
+
+// 审核
+const reviewDrawerRef = ref<InstanceType<typeof ReviewDrawer> | null>(null);
+const openReviewDrawer = async (title: string, row: Partial<Found.ResFound> = {}) => {
+  const params = {
+    title,
+    isView: true,
+    rowData: { ...row },
+    api: editFound,
+    getTableList: proTable.value?.getTableList,
+    otherTypeOptions: otherTypeOptions.value,
+    foundTypeOptions: foundTypeOptions.value,
+    auditStatusOptions: auditStatusOptions.value
+  };
+  reviewDrawerRef.value?.acceptParams(params);
 };
 </script>

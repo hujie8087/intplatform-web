@@ -57,6 +57,7 @@ import { generateUUID } from "@/utils";
 import { uploadImg } from "@/api/modules/upload";
 import { ElNotification, formContextKey, formItemContextKey } from "element-plus";
 import type { UploadProps, UploadRequestOptions } from "element-plus";
+import { isArray } from "lodash";
 
 const filePath = import.meta.env.VITE_APP_BASE_FILE;
 const foodUrl = import.meta.env.VITE_APP_FOOD_URL;
@@ -114,7 +115,7 @@ const handleHttpUpload = async (options: UploadRequestOptions) => {
   try {
     const api = props.api ?? uploadImg;
     const { data } = await api(formData);
-    emit("update:imageUrl", data.isArray ? data[0].url : data.url);
+    emit("update:imageUrl", isArray(data) ? data[0].url : data.url);
     // 调用 el-form 内部的校验方法（可自动校验）
     formItemContext?.prop && formContext?.validateField([formItemContext.prop as string]);
   } catch (error) {
