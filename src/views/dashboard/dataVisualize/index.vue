@@ -4,7 +4,7 @@
       <div class="dataScreen-content">
         <div class="dataScreen-header">
           <div class="header-lf">
-            <el-icon :size="20" style=" margin: 0 5px 0 10px;color: white; vertical-align: middle">
+            <el-icon :size="20" style="margin: 0 5px 0 10px; color: white; vertical-align: middle">
               <Timer />
             </el-icon>
             <span>
@@ -45,17 +45,7 @@
               <div class="dataScreen-main-title">
                 <img src="./images/dataScreen-title-bg.png" alt="" />
                 <span>商店配送订单量</span>
-                <span
-                  style="
-                    position: relative;
-                    z-index: 10;
-                    float: right;
-                    margin-top: 5px;
-                    margin-right: 10px;
-                    margin-bottom: 0;
-                    text-indent: 0;
-                  "
-                >
+                <span class="date-picker-span">
                   <!-- 日期范围查询 -->
                   <el-date-picker
                     v-model="dateRange"
@@ -66,7 +56,7 @@
                     value-format="YYYY-MM-DD"
                     format="YYYY-MM-DD"
                     @change="handleDateChange"
-                    style=" width: 200px;text-indent: 0; background: rgb(255 255 255 / 50%); border: none"
+                    class="date-picker"
                   />
                 </span>
               </div>
@@ -86,20 +76,11 @@
             <div class="dataScreen-main-title">
               <img src="./images/dataScreen-title-bg.png" alt="" />
               <span>人员配送订单量</span>
-              <span
-                style="
-                  position: relative;
-                  z-index: 10;
-                  float: right;
-                  margin-top: 5px;
-                  margin-right: 10px;
-                  margin-bottom: 0;
-                  text-indent: 0;
-                "
-              >
+              <span class="date-picker-span">
                 <!-- 日期范围查询 -->
                 <el-date-picker
                   v-model="dateRange"
+                  class="date-picker"
                   type="daterange"
                   range-separator="至"
                   start-placeholder="开始日期"
@@ -107,7 +88,6 @@
                   value-format="YYYY-MM-DD"
                   format="YYYY-MM-DD"
                   @change="handleDateChange"
-                  style=" width: 200px;text-indent: 0; background: rgb(255 255 255 / 50%); border: none"
                 />
               </span>
             </div>
@@ -123,17 +103,8 @@
               <div class="dataScreen-main-title">
                 <img src="./images/dataScreen-title-bg.png" alt="" />
                 <span>区域维修订单量</span>
-                <span
-                  style="
-                    position: relative;
-                    z-index: 10;
-                    float: right;
-                    margin-top: 5px;
-                    margin-right: 10px;
-                    margin-bottom: 0;
-                    text-indent: 0;
-                  "
-                >
+                <span class="date-picker-span">
+                  >
                   <!-- 日期范围查询 -->
                   <el-date-picker
                     v-model="dateRangeRepair"
@@ -145,7 +116,7 @@
                     format="YYYY-MM-DD"
                     :teleported="false"
                     @change="handleDateRepairChange"
-                    style=" width: 200px;text-indent: 0; background: rgb(255 255 255 / 50%); border: none"
+                    class="date-picker"
                   />
                 </span>
               </div>
@@ -160,28 +131,18 @@
             <div class="dataScreen-main-title">
               <img src="./images/dataScreen-title-bg.png" alt="" />
               <span>餐饮类型单量分布</span>
-              <span
-                style="
-                  position: relative;
-                  z-index: 10;
-                  float: right;
-                  margin-top: 5px;
-                  margin-right: 10px;
-                  margin-bottom: 0;
-                  text-indent: 0;
-                "
-              >
+              <span class="date-picker-span">
                 <!-- 日期范围查询 -->
                 <el-date-picker
-                  v-model="dateRange"
+                  v-model="dateCateringRange"
                   type="daterange"
                   range-separator="至"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
                   value-format="YYYY-MM-DD"
                   format="YYYY-MM-DD"
-                  @change="handleDateChange"
-                  style=" width: 200px;text-indent: 0; background: rgb(255 255 255 / 50%); border: none"
+                  @change="handleDateCateringChange"
+                  class="date-picker"
                 />
               </span>
             </div>
@@ -198,28 +159,18 @@
               <div class="dataScreen-main-title">
                 <img src="./images/dataScreen-title-bg.png" alt="" />
                 <span>餐饮订单量</span>
-                <span
-                  style="
-                    position: relative;
-                    z-index: 10;
-                    float: right;
-                    margin-top: 5px;
-                    margin-right: 10px;
-                    margin-bottom: 0;
-                    text-indent: 0;
-                  "
-                >
+                <span class="date-picker-span">
                   <!-- 日期范围查询 -->
                   <el-date-picker
-                    v-model="dateRange"
+                    v-model="dateCateringRange"
                     type="daterange"
                     range-separator="至"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
                     value-format="YYYY-MM-DD"
                     format="YYYY-MM-DD"
-                    @change="handleDateChange"
-                    style=" width: 200px;text-indent: 0; background: rgb(255 255 255 / 50%); border: none"
+                    @change="handleDateCateringChange"
+                    class="date-picker"
                   />
                 </span>
               </div>
@@ -237,20 +188,11 @@
               <div class="dataScreen-main-title">
                 <img src="./images/dataScreen-title-bg.png" alt="" />
                 <span>维修类型单量分布</span>
-                <span
-                  style="
-                    position: relative;
-                    z-index: 10;
-                    float: right;
-                    margin-top: 5px;
-                    margin-right: 10px;
-                    margin-bottom: 0;
-                    text-indent: 0;
-                  "
-                >
+                <span class="date-picker-span">
                   <!-- 日期范围查询 -->
                   <el-date-picker
                     v-model="dateRangeRepair"
+                    class="date-picker"
                     type="daterange"
                     range-separator="至"
                     start-placeholder="开始日期"
@@ -258,7 +200,6 @@
                     value-format="YYYY-MM-DD"
                     format="YYYY-MM-DD"
                     @change="handleDateRepairChange"
-                    style=" width: 200px;text-indent: 0; background: rgb(255 255 255 / 50%); border: none"
                   />
                 </span>
               </div>
@@ -303,7 +244,10 @@ const cateringScreenData = ref<DataVisualize.ResCateringScreenData>({
   forType: []
 });
 const getCateringScreenDataHandler = async () => {
-  const res = await getCateringScreenData();
+  const res = await getCateringScreenData({
+    beginTime: dateCateringRange.value[0],
+    endTime: dateCateringRange.value[1]
+  });
   cateringScreenData.value = res.data;
 };
 const getDeliveryOrderCountData = async () => {
@@ -320,6 +264,8 @@ const dataTime = reactive({
   week: dayjs().locale("zh-cn").format("dddd"),
   time: dayjs().format("HH:mm:ss")
 });
+const dateCateringRange = ref<string[]>([]);
+
 // 设置响应式
 const resize = () => {
   // 重新加载板块
@@ -353,6 +299,11 @@ const handleDateRepairChange = () => {
   getReportData();
 };
 getReportData();
+const handleDateCateringChange = () => {
+  cateringScreenData.value.forStore = [];
+  cateringScreenData.value.forType = [];
+  getCateringScreenDataHandler();
+};
 </script>
 
 <style scoped lang="scss">

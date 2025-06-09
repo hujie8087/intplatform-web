@@ -12,6 +12,8 @@ export const getDeliveryOrderCount = (params: { beginTime: string; endTime: stri
 };
 
 // 餐饮大屏数据展示
-export const getCateringScreenData = () => {
-  return http.get<DataVisualize.ResCateringScreenData>(PORT1 + `/productdisplay/food/order/cateringScreen`);
+export const getCateringScreenData = (params: { beginTime: string; endTime: string }) => {
+  return http.get<DataVisualize.ResCateringScreenData>(PORT1 + `/productdisplay/food/order/cateringScreen`, {
+    ...params
+  });
 };
