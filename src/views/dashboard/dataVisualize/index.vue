@@ -1,93 +1,358 @@
 <template>
-  <div class="dataVisualize-box">
-    <div class="card top-box">
-      <div class="top-title">数据可视化</div>
-      <el-tabs v-model="tabActive" class="demo-tabs">
-        <el-tab-pane v-for="item in tab" :key="item.name" :label="item.label" :name="item.name"></el-tab-pane>
-      </el-tabs>
-      <div class="top-content">
-        <el-row :gutter="40">
-          <el-col class="mb40" :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
-            <div class="item-left sle">
-              <span class="left-title">访问总数</span>
-              <div class="img-box">
-                <img src="./images/book-sum.png" alt="" />
-              </div>
-              <span class="left-number">848.132w</span>
+  <div class="home" ref="el">
+    <div class="dataScreen-container">
+      <div class="dataScreen-content">
+        <div class="dataScreen-header">
+          <div class="header-lf">
+            <el-icon :size="20" style=" margin: 0 5px 0 10px;color: white; vertical-align: middle">
+              <Timer />
+            </el-icon>
+            <span>
+              {{ dataTime.data }}
+            </span>
+            <span>
+              {{ dataTime.week }}
+            </span>
+            <span>
+              {{ dataTime.time }}
+            </span>
+          </div>
+          <div class="header-ct">
+            <div class="header-ct-title">
+              <img src="./images/dataScreen-header-title.png" alt="" srcset="" />
             </div>
-          </el-col>
-          <el-col class="mb40" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-            <div class="item-center">
-              <div class="gitee-traffic traffic-box">
-                <div class="traffic-img">
-                  <img src="./images/add_person.png" alt="" />
-                </div>
-                <span class="item-value">2222</span>
-                <span class="traffic-name sle">Gitee 访问量</span>
+          </div>
+          <div class="header-ri">
+            <div
+              class="header-btn"
+              @click="
+                () => {
+                  toggle();
+                  resize();
+                }
+              "
+            >
+              <el-icon>
+                <FullScreen />
+              </el-icon>
+              <span>{{ isFullscreen ? "退出" : "全屏" }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="dataScreen-main">
+          <div class="dataScreen-lf">
+            <div class="dataScreen-top">
+              <div class="dataScreen-main-title">
+                <img src="./images/dataScreen-title-bg.png" alt="" />
+                <span>商店配送订单量</span>
+                <span
+                  style="
+                    position: relative;
+                    z-index: 10;
+                    float: right;
+                    margin-top: 5px;
+                    margin-right: 10px;
+                    margin-bottom: 0;
+                    text-indent: 0;
+                  "
+                >
+                  <!-- 日期范围查询 -->
+                  <el-date-picker
+                    v-model="dateRange"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    value-format="YYYY-MM-DD"
+                    format="YYYY-MM-DD"
+                    @change="handleDateChange"
+                    style=" width: 200px;text-indent: 0; background: rgb(255 255 255 / 50%); border: none"
+                  />
+                </span>
               </div>
-              <div class="gitHub-traffic traffic-box">
-                <div class="traffic-img">
-                  <img src="./images/add_team.png" alt="" />
-                </div>
-                <span class="item-value">2222</span>
-                <span class="traffic-name sle">GitHub 访问量</span>
-              </div>
-              <div class="today-traffic traffic-box">
-                <div class="traffic-img">
-                  <img src="./images/today.png" alt="" />
-                </div>
-                <span class="item-value">4567</span>
-                <span class="traffic-name sle">今日访问量</span>
-              </div>
-              <div class="yesterday-traffic traffic-box">
-                <div class="traffic-img">
-                  <img src="./images/book_sum.png" alt="" />
-                </div>
-                <span class="item-value">1234</span>
-                <span class="traffic-name sle">昨日访问量</span>
+              <div class="dataScreen-main-chart">
+                <Curve
+                  ref="curveRef"
+                  v-if="deliveryCompletionRate.sourceMsg.length > 0"
+                  :data="deliveryCompletionRate.sourceMsg"
+                  label="siteName"
+                  value="orderCount"
+                  title="商店"
+                />
               </div>
             </div>
-          </el-col>
-          <el-col class="mb40" :xs="24" :sm="24" :md="24" :lg="10" :xl="10">
-            <div class="item-right">
-              <div class="echarts-title">Gitee / GitHub 访问量占比</div>
-              <div class="book-echarts">
-                <Pie ref="pieRef" />
+          </div>
+          <div class="dataScreen-ct">
+            <div class="dataScreen-main-title">
+              <img src="./images/dataScreen-title-bg.png" alt="" />
+              <span>人员配送订单量</span>
+              <span
+                style="
+                  position: relative;
+                  z-index: 10;
+                  float: right;
+                  margin-top: 5px;
+                  margin-right: 10px;
+                  margin-bottom: 0;
+                  text-indent: 0;
+                "
+              >
+                <!-- 日期范围查询 -->
+                <el-date-picker
+                  v-model="dateRange"
+                  type="daterange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  value-format="YYYY-MM-DD"
+                  format="YYYY-MM-DD"
+                  @change="handleDateChange"
+                  style=" width: 200px;text-indent: 0; background: rgb(255 255 255 / 50%); border: none"
+                />
+              </span>
+            </div>
+            <div class="dataScreen-main-chart">
+              <HotPlateChart
+                v-if="deliveryCompletionRate.deliveryStaff.length > 0"
+                :data="deliveryCompletionRate.deliveryStaff"
+              />
+            </div>
+          </div>
+          <div class="dataScreen-rg">
+            <div class="dataScreen-top">
+              <div class="dataScreen-main-title">
+                <img src="./images/dataScreen-title-bg.png" alt="" />
+                <span>区域维修订单量</span>
+                <span
+                  style="
+                    position: relative;
+                    z-index: 10;
+                    float: right;
+                    margin-top: 5px;
+                    margin-right: 10px;
+                    margin-bottom: 0;
+                    text-indent: 0;
+                  "
+                >
+                  <!-- 日期范围查询 -->
+                  <el-date-picker
+                    v-model="dateRangeRepair"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    value-format="YYYY-MM-DD"
+                    format="YYYY-MM-DD"
+                    :teleported="false"
+                    @change="handleDateRepairChange"
+                    style=" width: 200px;text-indent: 0; background: rgb(255 255 255 / 50%); border: none"
+                  />
+                </span>
+              </div>
+              <div class="dataScreen-main-chart">
+                <AnnualUseChart v-if="reportData && reportData?.region.length > 0" :data="reportData" />
               </div>
             </div>
-          </el-col>
-        </el-row>
-      </div>
-    </div>
-    <div class="card bottom-box">
-      <div class="bottom-title">数据来源</div>
-      <div class="bottom-tabs">
-        <el-tabs v-model="tabActive" class="demo-tabs">
-          <el-tab-pane v-for="item in tab" :key="item.name" :label="item.label" :name="item.name"></el-tab-pane>
-        </el-tabs>
-      </div>
-      <div class="curve-echarts">
-        <Curve ref="curveRef" />
+          </div>
+        </div>
+        <div class="dataScreen-main">
+          <div class="dataScreen-ct">
+            <div class="dataScreen-main-title">
+              <img src="./images/dataScreen-title-bg.png" alt="" />
+              <span>餐饮类型单量分布</span>
+              <span
+                style="
+                  position: relative;
+                  z-index: 10;
+                  float: right;
+                  margin-top: 5px;
+                  margin-right: 10px;
+                  margin-bottom: 0;
+                  text-indent: 0;
+                "
+              >
+                <!-- 日期范围查询 -->
+                <el-date-picker
+                  v-model="dateRange"
+                  type="daterange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  value-format="YYYY-MM-DD"
+                  format="YYYY-MM-DD"
+                  @change="handleDateChange"
+                  style=" width: 200px;text-indent: 0; background: rgb(255 255 255 / 50%); border: none"
+                />
+              </span>
+            </div>
+            <div class="dataScreen-main-chart">
+              <AgeRatioChart
+                ref="ageRatioChartRef"
+                v-if="cateringScreenData.forType.length > 0"
+                :data="cateringScreenData.forType"
+              />
+            </div>
+          </div>
+          <div class="dataScreen-lf">
+            <div class="dataScreen-top">
+              <div class="dataScreen-main-title">
+                <img src="./images/dataScreen-title-bg.png" alt="" />
+                <span>餐饮订单量</span>
+                <span
+                  style="
+                    position: relative;
+                    z-index: 10;
+                    float: right;
+                    margin-top: 5px;
+                    margin-right: 10px;
+                    margin-bottom: 0;
+                    text-indent: 0;
+                  "
+                >
+                  <!-- 日期范围查询 -->
+                  <el-date-picker
+                    v-model="dateRange"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    value-format="YYYY-MM-DD"
+                    format="YYYY-MM-DD"
+                    @change="handleDateChange"
+                    style=" width: 200px;text-indent: 0; background: rgb(255 255 255 / 50%); border: none"
+                  />
+                </span>
+              </div>
+              <div class="dataScreen-main-chart">
+                <CateringDataChart
+                  ref="cateringDataChartRef"
+                  v-if="cateringScreenData.forStore.length > 0"
+                  :data="cateringScreenData.forStore"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="dataScreen-rg">
+            <div class="dataScreen-top">
+              <div class="dataScreen-main-title">
+                <img src="./images/dataScreen-title-bg.png" alt="" />
+                <span>维修类型单量分布</span>
+                <span
+                  style="
+                    position: relative;
+                    z-index: 10;
+                    float: right;
+                    margin-top: 5px;
+                    margin-right: 10px;
+                    margin-bottom: 0;
+                    text-indent: 0;
+                  "
+                >
+                  <!-- 日期范围查询 -->
+                  <el-date-picker
+                    v-model="dateRangeRepair"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    value-format="YYYY-MM-DD"
+                    format="YYYY-MM-DD"
+                    @change="handleDateRepairChange"
+                    style=" width: 200px;text-indent: 0; background: rgb(255 255 255 / 50%); border: none"
+                  />
+                </span>
+              </div>
+              <div class="dataScreen-main-chart">
+                <Pie
+                  v-if="reportData && reportData?.type.length > 0"
+                  :data="reportData.type.map(val => ({ value: val.num, name: val.name }))"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts" name="dataVisualize">
-import { ref } from "vue";
-import Pie from "./components/pie.vue";
 import Curve from "./components/curve.vue";
+import HotPlateChart from "./components/HotPlateChart.vue";
+import { getDeliveryOrderCount, getCateringScreenData } from "@/api/modules/dashboard";
+import { ref, onMounted, reactive } from "vue";
+import { DataVisualize } from "@/api/interface/dashboard";
+import dayjs from "dayjs";
+import { useFullscreen } from "@vueuse/core";
+import CateringDataChart from "./components/CateringDataChart.vue";
+import AgeRatioChart from "./components/AgeRatioChart.vue";
+import { getRepairReport } from "@/api/modules/service/repair";
+import { Repair } from "@/api/interface/service/repair";
+import AnnualUseChart from "./components/AnnualUseChart.vue";
+import Pie from "./components/pie.vue";
+const el = ref<HTMLElement | null>(null);
 
-const tabActive = ref(1);
+const { isFullscreen, toggle } = useFullscreen(el);
+const curveRef = ref();
+const deliveryCompletionRate = ref<DataVisualize.ResDeliveryCompletionRate>({
+  deliveryStaff: [],
+  sourceMsg: []
+});
+const cateringScreenData = ref<DataVisualize.ResCateringScreenData>({
+  forStore: [],
+  forType: []
+});
+const getCateringScreenDataHandler = async () => {
+  const res = await getCateringScreenData();
+  cateringScreenData.value = res.data;
+};
+const getDeliveryOrderCountData = async () => {
+  const res = await getDeliveryOrderCount({
+    beginTime: dateRange.value[0],
+    endTime: dateRange.value[1]
+  });
+  deliveryCompletionRate.value = res.data;
+};
 
-const tab = [
-  { label: "未来7日", name: 1 },
-  { label: "近七日", name: 2 },
-  { label: "近一月", name: 3 },
-  { label: "近三月", name: 4 },
-  { label: "近半年", name: 5 },
-  { label: "近一年", name: 6 }
-];
+const dateRange = ref<string[]>([]);
+const dataTime = reactive({
+  data: dayjs().format("YYYY/MM/DD"),
+  week: dayjs().locale("zh-cn").format("dddd"),
+  time: dayjs().format("HH:mm:ss")
+});
+// 设置响应式
+const resize = () => {
+  // 重新加载板块
+  getDeliveryOrderCountData();
+};
+onMounted(() => {
+  getDeliveryOrderCountData();
+  getCateringScreenDataHandler();
+});
+const handleDateChange = () => {
+  deliveryCompletionRate.value.deliveryStaff = [];
+  deliveryCompletionRate.value.sourceMsg = [];
+  getDeliveryOrderCountData();
+};
+
+const dateRangeRepair = ref<string[]>([
+  dayjs().subtract(6, "days").format("YYYY-MM-DD 00:00:00"),
+  dayjs().format("YYYY-MM-DD 23:59:59")
+]);
+// 获取维修报告
+const reportData = ref<Repair.RepairData>();
+const getReportData = async () => {
+  const res = await getRepairReport({
+    beginTime: dateRangeRepair.value[0],
+    endTime: dateRangeRepair.value[1]
+  });
+  reportData.value = res.data;
+};
+const handleDateRepairChange = () => {
+  reportData.value = undefined;
+  getReportData();
+};
+getReportData();
 </script>
 
 <style scoped lang="scss">
