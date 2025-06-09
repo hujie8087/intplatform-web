@@ -104,7 +104,6 @@
                 <img src="./images/dataScreen-title-bg.png" alt="" />
                 <span>区域维修订单量</span>
                 <span class="date-picker-span">
-                  >
                   <!-- 日期范围查询 -->
                   <el-date-picker
                     v-model="dateRangeRepair"
@@ -114,7 +113,7 @@
                     end-placeholder="结束日期"
                     value-format="YYYY-MM-DD"
                     format="YYYY-MM-DD"
-                    :teleported="false"
+                    :clearable="false"
                     @change="handleDateRepairChange"
                     class="date-picker"
                   />
@@ -199,6 +198,7 @@
                     end-placeholder="结束日期"
                     value-format="YYYY-MM-DD"
                     format="YYYY-MM-DD"
+                    :clearable="false"
                     @change="handleDateRepairChange"
                   />
                 </span>
@@ -245,15 +245,15 @@ const cateringScreenData = ref<DataVisualize.ResCateringScreenData>({
 });
 const getCateringScreenDataHandler = async () => {
   const res = await getCateringScreenData({
-    beginTime: dateCateringRange.value[0],
-    endTime: dateCateringRange.value[1]
+    beginTime: dateCateringRange.value ? dateCateringRange.value[0] : undefined,
+    endTime: dateCateringRange.value ? dateCateringRange.value[1] : undefined
   });
   cateringScreenData.value = res.data;
 };
 const getDeliveryOrderCountData = async () => {
   const res = await getDeliveryOrderCount({
-    beginTime: dateRange.value[0],
-    endTime: dateRange.value[1]
+    beginTime: dateRange.value ? dateRange.value[0] : undefined,
+    endTime: dateRange.value ? dateRange.value[1] : undefined
   });
   deliveryCompletionRate.value = res.data;
 };
@@ -289,8 +289,8 @@ const dateRangeRepair = ref<string[]>([
 const reportData = ref<Repair.RepairData>();
 const getReportData = async () => {
   const res = await getRepairReport({
-    beginTime: dateRangeRepair.value[0],
-    endTime: dateRangeRepair.value[1]
+    beginTime: dateRangeRepair.value ? dateRangeRepair.value[0] : undefined,
+    endTime: dateRangeRepair.value ? dateRangeRepair.value[1] : undefined
   });
   reportData.value = res.data;
 };
