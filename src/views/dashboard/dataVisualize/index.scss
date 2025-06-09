@@ -212,6 +212,21 @@
           img {
             margin: 0 10px 0 20px;
           }
+          .date-picker-span {
+            position: relative;
+            z-index: 10;
+            float: right;
+            margin-top: 5px;
+            margin-right: 10px;
+            margin-bottom: 0;
+            text-indent: 0 !important;
+            :deep(.el-date-editor) {
+              width: 200px;
+              text-indent: 0;
+              background: rgb(255 255 255 / 50%);
+              border: none;
+            }
+          }
         }
         .dataScreen-main-chart {
           position: relative;

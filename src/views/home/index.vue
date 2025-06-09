@@ -18,7 +18,7 @@ const all_permission = "*:*:*";
 
 onMounted(() => {
   console.log(authStore.authMenuList);
-  if (currentPageRoles.includes(all_permission) || currentPageRoles.includes("home-data-visualize")) {
+  if (currentPageRoles.includes(all_permission) || currentPageRoles.includes("home:data:visualize")) {
     isShow.value = false;
   }
 });
