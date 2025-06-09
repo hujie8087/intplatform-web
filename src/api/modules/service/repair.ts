@@ -91,6 +91,6 @@ export const deleteRepairType = (id: number) => {
 };
 
 // * 报修数据报表
-export const getRepairReport = (params: { beginTime: string; endTime: string }) => {
+export const getRepairReport = (params: { beginTime?: string; endTime?: string }) => {
   return http.get<Repair.RepairData>(PORT1 + `maintenance/repair/forms`, params);
 };
