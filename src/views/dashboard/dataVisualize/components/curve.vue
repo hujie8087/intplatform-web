@@ -5,22 +5,23 @@
 </template>
 
 <script setup lang="ts" name="cure">
-import { ECOption } from "@/components/ECharts/config";
+import echarts, { ECOption } from "@/components/ECharts/config";
 import ECharts from "@/components/ECharts/index.vue";
+import { DataVisualize } from "@/api/interface/dashboard";
+const props = defineProps<{
+  data: DataVisualize.DeliveryStaff[];
+  label: string;
+  value: string;
+}>();
 
-const curveData = [
-  { value: 30, spotName: "掘金" },
-  { value: 90, spotName: "CSDN" },
-  { value: 10, spotName: "Gitee" },
-  { value: 70, spotName: "GitHub" },
-  { value: 20, spotName: "知乎" },
-  { value: 60, spotName: "MyBlog" },
-  { value: 55, spotName: "简书" },
-  { value: 80, spotName: "StackOverFlow" },
-  { value: 50, spotName: "博客园" }
-];
+// 接收父组件传入的label
+const label = props.label;
+const value = props.value;
 
+const curveData = props.data;
+const colors = ["#F6C95C", "#EF7D33", "#1F9393", "#184EA1", "#81C8EF", "#9270CA", "#D0D0D0"];
 const option: ECOption = {
+  color: colors,
   tooltip: {
     trigger: "axis",
     backgroundColor: "transparent",
@@ -31,8 +32,8 @@ const option: ECOption = {
     formatter: (p: any) => {
       let dom = `<div style="width:100%; height: 70px !important; display:flex;flex-direction: column;justify-content: space-between;padding:10px;box-sizing: border-box;
       color:#fff; background: #6B9DFE;border-radius: 4px;font-size:14px; ">
-        <div style="display: flex; align-items: center;"> <div style="width:5px;height:5px;background:#ffffff;border-radius: 50%;margin-right:5px"></div>平台 :  ${p[0].name}</div>
-        <div style="display: flex;align-items: center;"><div style="width:5px;height:5px;background:#ffffff;border-radius: 50%;margin-right:5px"></div>数据量 :  ${p[0].value}</div>
+        <div style="display: flex; align-items: center;"> <div style="width:5px;height:5px;background:#ffffff;border-radius: 50%;margin-right:5px"></div>${p[0].name}</div>
+        <div style="display: flex;align-items: center;"><div style="width:5px;height:5px;background:#ffffff;border-radius: 50%;margin-right:5px"></div>订单量 :  ${p[0].value}</div>
       </div>`;
       return dom;
     }
@@ -43,7 +44,8 @@ const option: ECOption = {
   },
   grid: {
     left: "0",
-    right: "0"
+    right: "0",
+    bottom: "50px"
   },
   dataZoom: [
     {
@@ -72,7 +74,7 @@ const option: ECOption = {
       type: "category",
       data: curveData.map((val: any) => {
         return {
-          value: val.spotName
+          value: val[label]
         };
       }),
       axisTick: {
@@ -81,11 +83,10 @@ const option: ECOption = {
       axisLabel: {
         margin: 20,
         interval: 0,
-        color: "#a1a1a1",
-        fontSize: 14,
+        color: "#3F559C",
+        fontSize: 12,
         formatter: function (name: string) {
-          undefined;
-          return name.length > 8 ? name.slice(0, 8) + "..." : name;
+          return name !== null ? (name.length > 8 ? name.slice(0, 8) + "..." : name) : "--";
         }
       },
       axisLine: {
@@ -105,7 +106,7 @@ const option: ECOption = {
         show: false
       },
       splitLine: {
-        show: true,
+        show: false,
         lineStyle: {
           color: "#c0c0c0"
         }
@@ -118,7 +119,7 @@ const option: ECOption = {
           if (value === 0) {
             return value + "";
           } else if (value >= 10000) {
-            return value / 10000 + "w";
+            return (value / 10000).toFixed(1) + "w";
           }
           return value + "";
         }
@@ -131,12 +132,20 @@ const option: ECOption = {
       type: "bar",
       data: curveData.map((val: any) => {
         return {
-          value: val.value
+          value: val[value]
         };
       }),
-      barWidth: "45px",
+      barWidth: "25px",
+      label: {
+        show: true,
+        position: "top"
+      },
       itemStyle: {
-        color: "#C5D8FF",
+        // 渐变
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: "#C5D8FF" },
+          { offset: 1, color: "#6B9DFE" }
+        ]),
         borderRadius: [12, 12, 0, 0]
       },
       emphasis: {

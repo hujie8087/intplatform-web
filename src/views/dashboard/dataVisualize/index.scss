@@ -1,154 +1,241 @@
-.dataVisualize-box {
-  .top-box {
+.home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: url("../dashboard/dataVisualize/images/Grid4.png") no-repeat #c1dcf1;
+  background-position: center;
+  background-size: 100% 100%;
+  * {
     box-sizing: border-box;
-    padding: 25px 40px 0;
-    margin-bottom: 10px;
-    .top-title {
-      margin-bottom: 10px;
-      font-family: DIN;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .top-content {
-      margin-top: 10px;
-      .item-left {
-        box-sizing: border-box;
+  }
+  .dataScreen-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding-top: 50px;
+    overflow: hidden;
+    background: url("./images/bottom-bg.png") no-repeat bottom center;
+    .dataScreen-content {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      .dataScreen-header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
         height: 100%;
-        padding: 40px 0 30px 30px;
-        overflow: hidden;
-        color: #ffffff;
-        background: url("./images/book-bg.png");
-        background-position: 50%;
-        background-size: cover;
-        border-radius: 20px;
-        .left-title {
-          font-family: DIN;
-          font-size: 20px;
+        padding-top: 10px;
+        background: url("./images/dataScreen-header.png") no-repeat;
+        background-position: top center;
+        background-size: 100% auto;
+        .header-ct-title {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 82px;
+          font-family: YouSheBiaoTiHei;
+          font-size: 32px;
+          line-height: 78px;
+          color: #05e8fe;
+          text-align: center;
+          letter-spacing: 4px;
         }
-        .img-box {
+        .header-lf,
+        .header-ri {
+          position: relative;
+          z-index: 10;
+          font-size: 16px;
+          line-height: 36px;
+          color: #5a9be6;
+          span {
+            margin-right: 15px;
+          }
+        }
+        .header-btn {
           display: flex;
           align-items: center;
-          justify-content: center;
-          width: 90px;
-          height: 90px;
-          margin: 40px 0 20px;
-          background-color: #ffffff;
-          border-radius: 20px;
-          box-shadow: 0 10px 20px rgb(0 0 0 / 14%);
-          img {
-            width: 60px;
-            height: 65px;
+          padding: 0 10px;
+          margin-right: 20px;
+          font-size: 14px;
+          cursor: pointer;
+          background-color: #cce0f4;
+          border: 2px solid #ffffff;
+          border-radius: 4px;
+          box-shadow: 0 4px 4px #c2d3e6;
+          span {
+            margin: 0 0 0 5px;
           }
         }
-        .left-number {
-          overflow: hidden;
-          font-family: DIN;
-          font-size: 62px;
-        }
       }
-      .item-center {
+      .dataScreen-main {
+        position: relative;
+        z-index: 100;
         display: flex;
-        flex-wrap: wrap;
-        place-content: space-between space-between;
-        height: 100%;
-        .traffic-box {
-          box-sizing: border-box;
+        flex: 1;
+        justify-content: space-between;
+        width: 100%;
+        height: 50%;
+        padding: 0 10px 10px;
+        .dataScreen-lf {
+          width: 40%;
+          height: 100%;
+          .dataScreen-top,
+          .dataScreen-bottom {
+            position: relative;
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .dataScreen-ct {
+          width: 29%;
+          height: 100%;
+          .dataScreen-map {
+            position: relative;
+            box-sizing: border-box;
+            flex: 1;
+            width: 100%;
+            padding-top: 20px;
+            .dataScreen-map-item {
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              width: 100%;
+              height: 100%;
+              padding: 10px;
+              cursor: pointer;
+              background: linear-gradient(to top, rgb(200 213 225 / 50%), rgb(230 243 255 / 40%));
+              border-radius: 5px;
+              &::before {
+                position: absolute;
+                inset: 2px;
+                display: block;
+                padding: 2px;
+                content: "";
+                background-image: linear-gradient(
+                  to top,
+                  rgb(189 205 228 / 30%) 0%,
+                  rgb(197 214 231 / 30%) 70%,
+                  rgb(218 234 248 / 30%) 100%
+                );
+                background-clip: padding-box;
+                border-radius: 5px;
+              }
+              .dataScreen-map-value {
+                font-family: YouSheBiaoTiHei;
+                font-size: 54px;
+                font-weight: bold;
+              }
+              .dataScreen-map-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+                color: #ffffff;
+                border-radius: 10px;
+              }
+            }
+          }
+          .dataScreen-cb {
+            position: relative;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            padding-top: 54px;
+            background: url("./images/dataScreen-main-cb.png") no-repeat;
+            background-size: 100% 100%;
+          }
+        }
+        .dataScreen-rg {
           display: flex;
           flex-direction: column;
-          width: 47%;
-          height: 48%;
-          padding: 25px;
-          border-radius: 30px;
-          .traffic-img {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 70px;
-            height: 70px;
-            margin-bottom: 10px;
-            background-color: #ffffff;
-            border-radius: 19px;
+          justify-content: space-between;
+          width: 30%;
+          height: 100%;
+          .dataScreen-top,
+          .dataScreen-bottom {
+            position: relative;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
           }
         }
-        img {
-          width: 33px;
-          height: 33px;
-        }
-        .item-value {
-          margin-bottom: 4px;
-          font-family: DIN;
-          font-size: 28px;
-          font-weight: bold;
-          color: #1a1a37;
-        }
-        .traffic-name {
-          overflow: hidden;
-          font-family: DIN;
-          font-size: 15px;
-          color: #1a1a37;
-          white-space: nowrap;
-        }
-        .gitee-traffic {
-          background: url("./images/1-bg.png");
-          background-color: #e8faea;
-          background-size: 100% 100%;
-        }
-        .gitHub-traffic {
-          background: url("./images/2-bg.png");
-          background-color: #e7e1fb;
-          background-size: 100% 100%;
-        }
-        .today-traffic {
-          background: url("./images/3-bg.png");
-          background-color: #fdf3e9;
-          background-size: 100% 100%;
-        }
-        .yesterday-traffic {
-          background: url("./images/4-bg.png");
-          background-color: #f0f5fb;
-          background-size: 100% 100%;
-        }
-      }
-      .item-right {
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: 430px;
-        border: 1px solid var(--el-border-color);
-        border-radius: 25px;
-        .echarts-title {
-          padding: 15px 20px;
-          font-family: DIN;
-          font-size: 18px;
-          font-weight: bold;
-          border-bottom: 1px solid var(--el-border-color);
-        }
-        .book-echarts {
-          flex: 1;
+        .dataScreen-main-title {
+          position: relative;
           width: 100%;
+          clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%);
+          line-height: 35px;
+          background: linear-gradient(to right, #c3d5e8 0%, #c5d6e7 45%, rgb(192 212 234 / 52%) 85%, rgb(192 212 234 / 0%) 100%);
+          border: 2px solid;
+          border-image: linear-gradient(to right, #e6f3ff, rgb(230 243 255 / 40%)) 1;
+          box-shadow: 0 4px 4px 4px rgb(155 177 213 / 26%);
+          &::before {
+            position: absolute;
+            top: 0;
+            left: -2px;
+            display: block;
+            width: 100%;
+            height: 100%;
+            clip-path: polygon(5% 0, calc(5% + 3px) 0, 3px 100%, 0 100%);
+            content: "";
+            background-color: #e6f3ff;
+          }
+          &::after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: block;
+            width: 100%;
+            height: 100%;
+            content: "";
+            background: url("./images/Vector.png") no-repeat bottom left;
+          }
+          span {
+            margin-bottom: 12px;
+            font-family: YouSheBiaoTiHei;
+            font-size: 18px;
+            line-height: 16px;
+            color: #1a2041;
+            text-indent: 80px;
+            letter-spacing: 1px;
+          }
+          img {
+            margin: 0 10px 0 20px;
+          }
+        }
+        .dataScreen-main-chart {
+          position: relative;
+          width: 100%;
+          height: calc(100% - 40px);
+          padding: 2px;
+          background: linear-gradient(to top, #e6f3ff, rgb(230 243 255 / 40%));
+          border-radius: 10px;
+          &::before {
+            position: absolute;
+            inset: 2px;
+            display: block;
+            padding: 2px;
+            content: "";
+            background-image: linear-gradient(to top, #bdcde4 0%, #c5d6e7 70%, #daeaf8 100%);
+            background-clip: padding-box;
+            border-radius: 10px;
+          }
+        }
+        .dataScreen-center-chart {
+          width: 100%;
+          height: calc(100% - 50px);
         }
       }
-    }
-  }
-  .bottom-box {
-    position: relative;
-    padding: 20px 0 0;
-    .bottom-title {
-      position: absolute;
-      top: 75px;
-      left: 50px;
-      font-family: DIN;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .bottom-tabs {
-      padding: 0 50px;
-    }
-    .curve-echarts {
-      box-sizing: border-box;
-      height: 400px;
-      padding: 0 50px;
     }
   }
 }

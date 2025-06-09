@@ -80,7 +80,8 @@ const otherTypeOptions = ref<DictOptions[]>([
 ]);
 const auditStatusOptions = ref<DictOptions[]>([
   { label: "未审核", value: 0, tagType: "danger" },
-  { label: "已审核", value: 1, tagType: "success" }
+  { label: "已审核", value: 1, tagType: "success" },
+  { label: "已驳回", value: 2, tagType: "warning" }
 ]);
 const foundTypeOptions = ref<DictOptions[]>([
   { label: "失物", value: "0", tagType: "danger" },

@@ -81,6 +81,7 @@ export namespace Repair {
     name: string;
     repairArea: string;
     num: number;
+    total: number;
   }
 
   export interface RepairData {
