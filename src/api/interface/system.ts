@@ -418,6 +418,8 @@ export namespace AppVersion {
     updateType: string;
     versionCode: number;
     versionName: string;
+    def1: string;
+    def2: string;
   }
 }
 
