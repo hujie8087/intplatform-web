@@ -10,10 +10,10 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" v-auth="['other:fauna:add']" :icon="CirclePlus" @click="openDrawer(1)">新增</el-button>
+          <el-button type="primary" v-auth="['car:message:add']" :icon="CirclePlus" @click="openDrawer(1)">新增</el-button>
           <el-button
             type="danger"
-            v-auth="['other:fauna:remove']"
+            v-auth="['car:message:remove']"
             :icon="Delete"
             plain
             @click="batchDelete(scope.selectedListIds)"
@@ -24,25 +24,13 @@
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="primary" link v-if="scope.row.roleId !== 1" @click="openDrawer(2, scope.row)">{{
-            $t("main.view")
+          <el-button type="primary" link @click="openDrawer(2, scope.row)">{{ $t("main.view") }}</el-button>
+          <el-button type="warning" v-auth="['car:message:edit']" link @click="openDrawer(3, scope.row)">{{
+            $t("main.edit")
           }}</el-button>
-          <el-button
-            type="warning"
-            v-auth="['other:fauna:edit']"
-            link
-            v-if="scope.row.roleId !== 1"
-            @click="openDrawer(3, scope.row)"
-            >{{ $t("main.edit") }}</el-button
-          >
-          <el-button
-            type="danger"
-            v-auth="['other:fauna:remove']"
-            link
-            v-if="scope.row.roleId !== 1"
-            @click="deleteAccount(scope.row)"
-            >{{ $t("main.delete") }}</el-button
-          >
+          <el-button type="danger" v-auth="['car:message:remove']" link @click="deleteAccount(scope.row)">{{
+            $t("main.delete")
+          }}</el-button>
         </template>
       </ProTable>
       <BusCarDrawer ref="drawerRef" />
