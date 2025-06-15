@@ -63,6 +63,9 @@ import { useI18n } from "vue-i18n";
 import { BusDeparture, BusLine, BusStation } from "@/api/interface/bus";
 import { commonStatus } from "@/utils/serviceDict";
 import { DictOptions } from "@/api/interface";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
+import { ElMessage } from "element-plus";
+const { BUTTONS } = useAuthButtons();
 
 const { t } = useI18n(); // 解构出t方法
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -166,6 +169,27 @@ const columns = computed((): ColumnProps[] => [
     }
   },
   {
+    prop: "sort",
+    label: "排序",
+    width: 120,
+    render(scope) {
+      return (
+        <span>
+          {BUTTONS.value["*:*:*"] || BUTTONS.value["other:article:edit"] ? (
+            <el-input-number
+              v-model={scope.row.sort}
+              controls-position="right"
+              style="width: 100px"
+              onChange={() => setSort(scope.row)}
+            />
+          ) : (
+            <el-tag type={scope.row.status ? "success" : "danger"}>{scope.row.status ? "启用" : "禁用"}</el-tag>
+          )}
+        </span>
+      );
+    }
+  },
+  {
     prop: "remark",
     label: "备注",
     width: 120
@@ -239,6 +263,16 @@ const getStationList = (lineType: number, carSiteList: BusStation.ResBusStation[
 const handleStatusChange = async (rowData: Partial<BusLine.ResBusLine>) => {
   await useHandleData(updateBusLineStatus, rowData.clId, "修改线路状态");
   proTable.value.getTableList();
+};
+
+// 修改线路排序
+const setSort = async (row: BusLine.ResBusLine) => {
+  try {
+    await editBusLine(row);
+    proTable.value?.getTableList();
+  } catch (error) {
+    ElMessage.error("设置排序失败");
+  }
 };
 
 // 打开 drawer(新增、查看、编辑)

@@ -74,7 +74,7 @@ export const addBusLine = (params: BusLine.ReqBusLine) => {
 };
 
 // * 编辑公交线路数据
-export const editBusLine = (params: BusLine.ReqBusLine) => {
+export const editBusLine = (params: BusLine.ResBusLine) => {
   return http.put(PORT1 + `/other/line`, params);
 };
 
