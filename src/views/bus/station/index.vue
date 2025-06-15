@@ -10,10 +10,10 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" v-auth="['other:site:add']" :icon="CirclePlus" @click="openDrawer(1)">新增</el-button>
+          <el-button type="primary" v-auth="['car:site:add']" :icon="CirclePlus" @click="openDrawer(1)">新增</el-button>
           <el-button
             type="danger"
-            v-auth="['other:site:remove']"
+            v-auth="['car:site:remove']"
             :icon="Delete"
             plain
             @click="batchDelete(scope.selectedListIds)"
@@ -24,12 +24,10 @@
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="primary" link v-if="scope.row.roleId !== 1" @click="openDrawer(2, scope.row)">{{
-            $t("main.view")
-          }}</el-button>
+          <el-button type="primary" link @click="openDrawer(2, scope.row)">{{ $t("main.view") }}</el-button>
           <el-button
             type="warning"
-            v-auth="['other:site:edit']"
+            v-auth="['car:site:edit']"
             link
             v-if="scope.row.roleId !== 1"
             @click="openDrawer(3, scope.row)"
@@ -37,7 +35,7 @@
           >
           <el-button
             type="danger"
-            v-auth="['other:site:remove']"
+            v-auth="['car:site:remove']"
             link
             v-if="scope.row.roleId !== 1"
             @click="deleteAccount(scope.row)"
