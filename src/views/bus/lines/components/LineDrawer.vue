@@ -76,9 +76,9 @@
         <el-col :span="12">
           <!-- 时刻表 -->
           <el-form-item label="时刻表" prop="cdtId">
-            <div style=" padding: 10px;border: 1px solid #dcdfe6; border-radius: 5px">
+            <div style="padding: 10px; border: 1px solid #dcdfe6; border-radius: 5px">
               <div style="margin-bottom: 5px">
-                已选时刻表:<span style=" margin-left: 10px; font-weight: bold;color: #409eff">{{
+                已选时刻表:<span style="margin-left: 10px; font-weight: bold; color: #409eff">{{
                   drawerProps.rowData!.cdtId?.length
                 }}</span>
               </div>
