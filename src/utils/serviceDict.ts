@@ -85,3 +85,10 @@ export const auditStatus = [
  * @description：状态颜色
  */
 export const tagTypeOptions = ["success", "danger", "warning", "info", "primary", "error"];
+/**
+ * @description：共用状态
+ */
+export const commonStatus = [
+  { label: I18n.global.t("dict.enable"), value: 0, tagType: "success" },
+  { label: I18n.global.t("dict.disable"), value: 1, tagType: "danger" }
+];
