@@ -106,6 +106,18 @@
             </el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="24">
+          <el-form-item label="AI1" prop="def1">
+            <el-input v-model="drawerProps.rowData!.def1" :placeholder="`${$t('main.inputError', { msg: $t('main.remark') })}`">
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="AI2" prop="def2">
+            <el-input v-model="drawerProps.rowData!.def2" :placeholder="`${$t('main.inputError', { msg: $t('main.remark') })}`">
+            </el-input>
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
     <template #footer>
