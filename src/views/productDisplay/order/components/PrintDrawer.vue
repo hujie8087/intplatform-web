@@ -38,7 +38,7 @@
                 下单时间: <span>{{ order.createTime }}</span>
               </h3>
             </div>
-            <hr style=" margin: 10px 0;border: 1px dashed black" />
+            <hr />
 
             <!-- 订单明细表格 -->
             <el-table
@@ -59,7 +59,7 @@
               <el-table-column prop="price" label="价格" width="50" align="center" />
             </el-table>
 
-            <hr style=" margin: 10px 0;border: 1px dashed black" />
+            <hr />
 
             <!-- 订单总价 -->
             <h3>
@@ -187,6 +187,10 @@ defineExpose({
   }
   h1 {
     text-align: center;
+  }
+  hr {
+    margin: 10px 0;
+    border: 1px dashed black;
   }
 }
 </style>
