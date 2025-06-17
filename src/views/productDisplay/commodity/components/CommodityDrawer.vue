@@ -81,6 +81,12 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <!-- 是否单独配送 -->
+        <el-col :span="8">
+          <el-form-item label="是否单独配送" prop="identification">
+            <el-switch v-model="drawerProps.rowData.identification" :active-value="1" :inactive-value="0" />
+          </el-form-item>
+        </el-col>
         <!-- 商品图片 -->
         <el-col :span="24">
           <el-form-item label="商品图片" prop="image">

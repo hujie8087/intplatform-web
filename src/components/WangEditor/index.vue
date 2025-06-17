@@ -1,15 +1,25 @@
 <template>
   <div :class="['editor-box', self_disabled ? 'editor-disabled' : '']">
     <Toolbar v-if="!hideToolBar" class="editor-toolbar" :editor="editorRef" :default-config="toolbarConfig" :mode="mode" />
-    <Editor
+    <div style="margin-bottom: 10px">
+      <el-button @click="toggleSourceView">{{ isSourceView ? "返回编辑器" : "编辑源码" }}</el-button>
+    </div>
+    <div v-show="!isSourceView">
+      <Editor
+        v-model="valueHtml"
+        class="editor-content"
+        :style="{ height }"
+        :mode="mode"
+        :default-config="editorConfig"
+        @on-created="handleCreated"
+        @on-blur="handleBlur"
+      />
+    </div>
+    <textarea
+      v-show="isSourceView"
       v-model="valueHtml"
-      class="editor-content"
-      :style="{ height }"
-      :mode="mode"
-      :default-config="editorConfig"
-      @on-created="handleCreated"
-      @on-blur="handleBlur"
-    />
+      style="width: 100%; height: 300px; padding: 10px; border: 1px solid #cccccc"
+    ></textarea>
   </div>
 </template>
 
@@ -20,6 +30,7 @@ import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import { uploadImg } from "@/api/modules/upload";
 import "@wangeditor/editor/dist/css/style.css";
 import { formContextKey, formItemContextKey } from "element-plus";
+import { ref } from "vue";
 const filePath = import.meta.env.VITE_APP_BASE_FILE;
 // 富文本 DOM 元素
 const editorRef = shallowRef();
@@ -29,6 +40,10 @@ const handleCreated = (editor: any) => {
   editorRef.value = editor;
 };
 
+const isSourceView = ref(false);
+const toggleSourceView = () => {
+  isSourceView.value = !isSourceView.value;
+};
 // 接收父组件参数，并设置默认值
 interface RichEditorProps {
   value: string; // 富文本值 ==> 必传

@@ -57,7 +57,8 @@ import {
   getBusLineById,
   getBusStationList,
   getBusDepartureList,
-  updateBusLineStatus
+  updateBusLineStatus,
+  editBusLineSort
 } from "@/api/modules/service/other";
 import { useI18n } from "vue-i18n";
 import { BusDeparture, BusLine, BusStation } from "@/api/interface/bus";
@@ -175,7 +176,7 @@ const columns = computed((): ColumnProps[] => [
     render(scope) {
       return (
         <span>
-          {BUTTONS.value["*:*:*"] || BUTTONS.value["other:article:edit"] ? (
+          {BUTTONS.value["*:*:*"] || BUTTONS.value["car:line:edit"] ? (
             <el-input-number
               v-model={scope.row.sort}
               controls-position="right"
@@ -268,7 +269,7 @@ const handleStatusChange = async (rowData: Partial<BusLine.ResBusLine>) => {
 // 修改线路排序
 const setSort = async (row: BusLine.ResBusLine) => {
   try {
-    await editBusLine(row);
+    await editBusLineSort(row);
     proTable.value?.getTableList();
   } catch (error) {
     ElMessage.error("设置排序失败");
