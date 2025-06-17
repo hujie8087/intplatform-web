@@ -78,6 +78,11 @@ export const editBusLine = (params: BusLine.ResBusLine) => {
   return http.put(PORT1 + `/other/line`, params);
 };
 
+// * 编辑公交线路排序
+export const editBusLineSort = (params: BusLine.ResBusLine) => {
+  return http.put(PORT1 + `/other/line/editSort`, params);
+};
+
 // * 删除公交线路数据
 export const deleteBusLine = (id: number) => {
   return http.delete(PORT1 + `/other/line/${id}`);
