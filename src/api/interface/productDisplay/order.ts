@@ -26,7 +26,7 @@ export namespace Order {
     pickupType: number;
     deliveryArea: string;
     address: string;
-    orderDetailsList: string;
+    orderDetailsList: ResOrderDish[];
   }
   export interface ResOrderDish {
     code: string;
