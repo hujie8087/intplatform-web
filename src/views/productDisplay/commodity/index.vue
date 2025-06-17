@@ -192,6 +192,26 @@ const columns = reactive<ColumnProps<Commodity.ResCommodity>[]>([
   },
   { prop: "sort", label: "排序", width: 80 },
   {
+    prop: "identification",
+    label: "是否单独配送",
+    sortable: true,
+    tag: true,
+    width: 100,
+    render: scope => {
+      return (
+        <span>
+          <el-switch
+            model-value={scope.row.identification}
+            active-text={scope.row.identification ? "是" : "否"}
+            active-value={1}
+            inactive-value={0}
+            onClick={() => changeIdentificationHandle(scope.row)}
+          />
+        </span>
+      );
+    }
+  },
+  {
     prop: "status",
     label: "状态",
     enum: sys_normal_disable,
@@ -242,6 +262,16 @@ const changeStatusHandle = async (row: Commodity.ResCommodity) => {
 // 修改是否热销
 const changeIsHotHandle = async (row: Commodity.ResCommodity) => {
   await useHandleData(editCommodity, { id: row.id, isHot: row.isHot == 1 ? 0 : 1 }, `切换【${row.name}】菜品热销状态`);
+  proTable.value?.getTableList();
+};
+
+// 修改是否单独配送
+const changeIdentificationHandle = async (row: Commodity.ResCommodity) => {
+  await useHandleData(
+    editCommodity,
+    { id: row.id, identification: row.identification == 1 ? 0 : 1 },
+    `切换【${row.name}】菜品单独配送状态`
+  );
   proTable.value?.getTableList();
 };
 

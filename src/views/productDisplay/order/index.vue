@@ -63,6 +63,7 @@
         </template>
       </ProTable>
       <OrderDrawer ref="drawerRef" />
+      <PrintDrawer ref="printDrawerRef" />
     </div>
   </div>
 </template>
@@ -86,11 +87,12 @@ import OrderDrawer from "./components/OrderDrawer.vue";
 import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 import { useDict } from "@/hooks/useDict";
-import { useUserStore } from "@/stores/modules/user";
-import dayjs from "dayjs";
+import PrintDrawer from "./components/PrintDrawer.vue";
+
+const printDrawerRef = ref<InstanceType<typeof PrintDrawer> | null>(null);
 
 const baseUrl = import.meta.env.VITE_API_URL;
-const userStore = useUserStore();
+
 const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
   newParams.createTime && (newParams.startQueryTime = newParams.createTime[0]);
@@ -227,8 +229,8 @@ const columns = reactive<ColumnProps<Order.ResOrder>[]>([
 const handlePrint = async (row: Order.ResOrder) => {
   // window.open("https://api.iwipwedabay.com//api/food/mis//findById/" + row.id);
   // window.open("http://10.40.11.26:10210/findById/" + row.id);
-  window.open("http://10.40.10.18:10210/findById/" + row.id);
-  await editOrder({ ...row, singlePlayer: userStore.userInfo.user.userName, singleTime: dayjs().format("YYYY-MM-DD HH:mm:ss") });
+  // window.open("http://10.40.10.18:10210/findById/" + row.id);
+  printDrawerRef.value?.acceptParams({ orderId: row.id });
 };
 // 打印菜品
 const handlePrintDish = async (row: Order.ResOrder) => {

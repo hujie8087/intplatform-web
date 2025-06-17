@@ -51,3 +51,8 @@ export const updateMoreOrderStatus = (params: { id: number; status: number }[]) 
 export const exportOrder = (params: Order.ReqOrderParams) => {
   return http.post(PORT1 + `/productdisplay/food/order/export`, params);
 };
+
+// 获取打印订单
+export const getPrintOrder = (id: number) => {
+  return http.get<Order.ResOrder[]>(PORT1 + `/productdisplay/findById/${id}`);
+};

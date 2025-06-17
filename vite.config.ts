@@ -50,6 +50,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     esbuild: {
       pure: viteEnv.VITE_DROP_CONSOLE ? ["console.log", "debugger"] : []
     },
+    optimizeDeps: {
+      include: ["qrcode"]
+    },
     build: {
       outDir: "dist",
       minify: "esbuild",
