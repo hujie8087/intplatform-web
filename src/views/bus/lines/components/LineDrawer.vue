@@ -31,16 +31,6 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="线路详情" prop="lineDetails">
-            <el-input
-              type="textarea"
-              :rows="5"
-              v-model="drawerProps.rowData!.lineDetails"
-              :placeholder="`${$t('main.inputError', { msg: '备注' })}`"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item label="运行图片" prop="path">
             <UploadImg
               v-model:image-url="drawerProps.rowData!.linePath"
@@ -52,6 +42,30 @@
             >
               <template #tip> 上传图片最大为 5M </template>
             </UploadImg>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="运行总图" prop="allPath">
+            <UploadImg
+              v-model:image-url="drawerProps.rowData!.allPath"
+              :file-size="5"
+              width="100px"
+              height="100px"
+              :api="uploadFlora"
+              file-label="file"
+            >
+              <template #tip> 上传图片最大为 5M </template>
+            </UploadImg>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="线路详情" prop="lineDetails">
+            <el-input
+              type="textarea"
+              :rows="5"
+              v-model="drawerProps.rowData!.lineDetails"
+              :placeholder="`${$t('main.inputError', { msg: '备注' })}`"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">

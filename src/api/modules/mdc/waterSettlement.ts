@@ -30,5 +30,8 @@ export const deleteMoreWaterSettlement = (ids: number[]) => {
 
 // * 获取水单结算列表
 export const getWaterSettlementList = (params: WaterSettlement.ReqWaterSettlementParams) => {
-  return http.get<ResPage<WaterSettlement.ResWaterSettlement>>(PORT1 + `/order/orders/queryfoodorderwatersettlementlist`, params);
+  return http.getUrl<ResPage<WaterSettlement.ResWaterSettlement>>(
+    PORT1 + `/order/orders/queryfoodorderwatersettlementlist`,
+    params
+  );
 };

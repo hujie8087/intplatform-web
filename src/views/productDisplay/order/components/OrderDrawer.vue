@@ -13,6 +13,8 @@
       </el-descriptions-item>
       <el-descriptions-item label="配送地址">{{ drawerProps.rowData.address }}</el-descriptions-item>
       <el-descriptions-item label="配送时间">{{ drawerProps.rowData.deliveryArea }}</el-descriptions-item>
+      <el-descriptions-item label="配送费">{{ drawerProps.rowData.postPrice }}</el-descriptions-item>
+
       <el-descriptions-item label="总金额">{{ drawerProps.rowData.totalPrice }}</el-descriptions-item>
     </el-descriptions>
     <el-table :data="drawerProps.orderDetailDishList" border style="margin-top: 20px" :show-summary="true" max-height="400">

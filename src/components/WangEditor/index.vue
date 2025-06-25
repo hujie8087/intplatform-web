@@ -11,6 +11,7 @@
         :style="{ height }"
         :mode="mode"
         :default-config="editorConfig"
+        @custom-paste="customPaste"
         @on-created="handleCreated"
         @on-blur="handleBlur"
       />
@@ -38,6 +39,45 @@ const editorRef = shallowRef();
 // 实列化编辑器
 const handleCreated = (editor: any) => {
   editorRef.value = editor;
+};
+
+const customPaste = (editor: any, event: any) => {
+  event.preventDefault();
+  console.log(event);
+  const clipboardData = event.clipboardData;
+  let html = clipboardData?.getData("text/html") || "";
+  let text = clipboardData?.getData("text/plain") || "";
+
+  if (html) {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    tempDiv.querySelectorAll("p[style]").forEach(p => {
+      const style = p.getAttribute("style") || "";
+
+      if (p.querySelector("img")) {
+        const newStyle = style
+          .split(";")
+          .filter(s => !s.trim().startsWith("text-indent"))
+          .join(";")
+          .trim();
+
+        if (newStyle) {
+          p.setAttribute("style", newStyle);
+        } else {
+          p.removeAttribute("style");
+        }
+      }
+    });
+
+    html = tempDiv.innerHTML;
+  }
+
+  const cleanedHtml = html || `<p>${text}</p>`;
+  editor.dangerouslyInsertHtml(cleanedHtml);
+  console.log(cleanedHtml);
+  // ✅ 返回 true 表示粘贴行为已处理，阻止默认处理
+  return true;
 };
 
 const isSourceView = ref(false);

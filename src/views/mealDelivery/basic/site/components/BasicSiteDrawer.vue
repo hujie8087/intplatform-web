@@ -1,0 +1,158 @@
+<template>
+  <el-dialog v-model="drawerVisible" :destroy-on-close="true" width="800" :title="`${drawerProps.title}站点`">
+    <el-form
+      ref="ruleFormRef"
+      label-width="120px"
+      label-suffix=" :"
+      :rules="rules"
+      :disabled="drawerProps.isView"
+      :model="drawerProps.rowData"
+      :hide-required-asterisk="drawerProps.isView"
+    >
+      <el-row>
+        <!-- 来源类型 -->
+        <el-col :span="12">
+          <el-form-item label="餐饮" prop="nationType">
+            <el-select v-model="drawerProps.rowData.nationType" placeholder="请选择餐饮">
+              <el-option v-for="item in drawerProps.foodTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="地址(中文)" prop="fsAddressCn">
+            <el-input
+              v-model="drawerProps.rowData.fsAddressCn"
+              :placeholder="`${$t('main.inputError', '地址(中文)')}`"
+              clearable
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="食堂" prop="fsMessHallId">
+            <el-select v-model="drawerProps.rowData.fsMessHallId" placeholder="请选择食堂">
+              <el-option
+                v-for="item in drawerProps.messHallListOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="地址(英文)" prop="fsAddressEn">
+            <el-input
+              v-model="drawerProps.rowData.fsAddressEn"
+              :placeholder="`${$t('main.inputError', '地址(英文)')}`"
+              clearable
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="车号" prop="fcId">
+            <el-input v-model="drawerProps.rowData.fcId" :placeholder="`${$t('main.inputError', '车号')}`" clearable></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="地址(印尼)" prop="fsAddressId">
+            <el-input
+              v-model="drawerProps.rowData.fsAddressId"
+              :placeholder="`${$t('main.inputError', '地址(印尼)')}`"
+              clearable
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <!-- 状态 -->
+        <el-col :span="24">
+          <el-form-item label="状态" prop="status">
+            <el-radio-group v-model="drawerProps.rowData.status">
+              <el-radio label="0">启用</el-radio>
+              <el-radio label="1">禁用</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <template #footer>
+      <el-button @click="drawerVisible = false">{{ $t("main.cancel") }}</el-button>
+      <el-button type="primary" v-show="!drawerProps.isView" @click="handleSubmit">{{ $t("main.confirm") }}</el-button>
+    </template>
+  </el-dialog>
+</template>
+
+<script setup lang="ts" name="DeliveryStationDrawer">
+import { ref, reactive } from "vue";
+import { ElMessage, FormInstance } from "element-plus";
+import { BasicSite } from "@/api/interface/mealDelivery/basic/site";
+import { useI18n } from "vue-i18n";
+import { DictOptions } from "@/api/interface";
+const { t } = useI18n(); // 解构出t方法
+
+const rules = reactive({
+  nationType: [{ required: true, message: t("main.selectError", { msg: "餐饮" }) }],
+  fsAddressCn: [{ required: true, message: t("main.inputError", { msg: "地址(中文)" }) }],
+  fsAddressEn: [{ required: true, message: t("main.inputError", { msg: "地址(英文)" }) }],
+  fcId: [{ required: true, message: t("main.inputError", { msg: "车号" }) }],
+  fsAddressId: [{ required: true, message: t("main.inputError", { msg: "地址(印尼)" }) }],
+  status: [{ required: true, message: t("main.selectError", { msg: "状态" }) }]
+});
+
+interface DrawerProps {
+  title: string;
+  isView: boolean;
+  rowData: Partial<BasicSite.ResBasicSite>;
+  api?: (params: any) => Promise<any>;
+  getTableList?: () => Promise<any>;
+  messHallListOptions?: DictOptions[];
+  carListOptions?: DictOptions[];
+  foodTypeOptions?: DictOptions[];
+}
+
+// drawer框状态
+const drawerVisible = ref(false);
+const drawerProps = ref<DrawerProps>({
+  isView: false,
+  title: "",
+  rowData: {
+    fsAddressCn: "",
+    fsAddressEn: "",
+    fsAddressId: "",
+    fsMessHallId: 0,
+    fcId: 0,
+    nationType: "",
+    status: ""
+  }
+});
+// 接收父组件传过来的参数
+const acceptParams = (params: DrawerProps): void => {
+  drawerProps.value = params;
+  drawerVisible.value = true;
+};
+
+// 提交数据（新增/编辑）
+const ruleFormRef = ref<FormInstance>();
+const handleSubmit = () => {
+  ruleFormRef.value!.validate(async valid => {
+    if (!valid) return;
+    try {
+      await drawerProps.value.api!(drawerProps.value.rowData);
+      ElMessage.success({
+        message: t("main.successMsg", { title: "站点", method: `${drawerProps.value.title}` })
+      });
+      drawerProps.value.getTableList!();
+      drawerVisible.value = false;
+    } catch (error) {
+      console.log(error);
+    }
+  });
+};
+defineExpose({
+  acceptParams
+});
+</script>
+<style scoped>
+#map {
+  width: 100%;
+  height: 600px;
+}
+</style>

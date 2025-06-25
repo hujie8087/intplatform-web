@@ -34,5 +34,6 @@ export namespace WaterSettlement {
     teamSubmitTime: any;
     deptSubmitTime: string;
     children: any;
+    showTimeline: boolean;
   }
 }

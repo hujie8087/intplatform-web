@@ -10,6 +10,7 @@ import { useUserStore } from "@/stores/modules/user";
 import router from "@/routers";
 import { markRaw } from "vue";
 import { Warning } from "@element-plus/icons-vue";
+import { tansParams } from "@/utils";
 
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   loading?: boolean;
@@ -116,6 +117,11 @@ class RequestHttp {
   }
   getRow<T>(url: string, params?: object, _object = {}): Promise<ResPage<T>> {
     return this.service.get(url, { params, ..._object });
+  }
+  // 拼接url并转码
+  getUrl<T>(url: string, params?: object, _object = {}): Promise<T & Result> {
+    let stringParams = tansParams({ ...params, ..._object });
+    return this.service.get(url + "?" + stringParams, {});
   }
   getNoData<T>(url: string, params?: object, _object = {}): Promise<T & Result> {
     return this.service.get(url, { params, ..._object });

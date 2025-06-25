@@ -15,6 +15,8 @@ export namespace Order {
     expectedTime: string;
     endTime: string;
     totalPrice: number;
+    pickupCode: string;
+    postPrice: number;
     status: number;
     remark: string;
     print: number;

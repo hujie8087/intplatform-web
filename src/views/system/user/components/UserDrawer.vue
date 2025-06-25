@@ -133,6 +133,19 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
+          <el-form-item :label="`${$t('system.user.canteen')}`" prop="canteenId">
+            <el-select
+              v-model="canteenIds"
+              :placeholder="`${$t('main.selectError', { msg: $t('system.user.canteen') })}`"
+              clearable
+              multiple
+              style="width: 100%"
+            >
+              <el-option v-for="item in drawerProps.canteenList" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item :label="`${$t('main.remark')}`" prop="remark">
             <el-input
               v-model="drawerProps.rowData!.remark"
@@ -170,6 +183,7 @@ import { Account, Role } from "@/api/interface/system";
 import { useI18n } from "vue-i18n";
 import UploadImg from "@/components/Upload/Img.vue";
 import { updateRole } from "@/api/modules/system/user";
+import { DictOptions } from "@/api/interface";
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({
@@ -190,8 +204,9 @@ interface DrawerProps {
     [key: string]: any;
   }[];
   roleList?: Role.ResRole[];
+  canteenList?: DictOptions[];
 }
-
+const canteenIds = ref<number[]>([]);
 // drawer框状态
 const drawerVisible = ref(false);
 const drawerProps = ref<DrawerProps>({
@@ -207,6 +222,9 @@ const acceptParams = (params: DrawerProps): void => {
   if (drawerProps.value.rowData?.roles) {
     drawerProps.value.rowData.roleIds = drawerProps.value.rowData.roles.map(item => item.roleId);
   }
+  if (drawerProps.value.rowData?.canteenId) {
+    canteenIds.value = drawerProps.value.rowData.canteenId.split(",").map(Number);
+  }
   deptListOptions.value = drawerProps.value.deptList!.map(item => {
     return {
       label: item.deptName,
@@ -221,7 +239,7 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     try {
-      await drawerProps.value.api!(drawerProps.value.rowData);
+      await drawerProps.value.api!({ ...drawerProps.value.rowData, canteenId: canteenIds.value.join(",") });
       ElMessage.success({
         message: t("main.successMsg", { title: t("system.user.user"), method: `${drawerProps.value.title}` })
       });

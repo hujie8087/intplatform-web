@@ -10,7 +10,9 @@ import { reactive, computed, toRefs } from "vue";
  * */
 export const useTable = (
   api?: (params: any) => Promise<any>,
-  initParam: object = {},
+  initParam: { pageSize?: number } = {
+    pageSize: 10
+  },
   isPageable: boolean = true,
   dataCallBack?: (data: any) => any,
   requestError?: (error: any) => void
@@ -23,7 +25,7 @@ export const useTable = (
       // 当前页数
       pageNum: 1,
       // 每页显示条数
-      pageSize: 10,
+      pageSize: initParam.pageSize || 10,
       // 总条数
       total: 0
     },
@@ -142,7 +144,6 @@ export const useTable = (
     state.pageable.pageNum = val;
     getTableList();
   };
-
   return {
     ...toRefs(state),
     getTableList,

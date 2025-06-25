@@ -63,7 +63,7 @@
               <div class="dataScreen-main-chart">
                 <Curve
                   ref="curveRef"
-                  v-if="deliveryCompletionRate.sourceMsg.length > 0"
+                  v-if="deliveryCompletionRate.sourceMsg && deliveryCompletionRate.sourceMsg.length > 0"
                   :data="deliveryCompletionRate.sourceMsg"
                   label="siteName"
                   value="orderCount"
@@ -93,7 +93,7 @@
             </div>
             <div class="dataScreen-main-chart">
               <HotPlateChart
-                v-if="deliveryCompletionRate.deliveryStaff.length > 0"
+                v-if="deliveryCompletionRate.deliveryStaff && deliveryCompletionRate.deliveryStaff.length > 0"
                 :data="deliveryCompletionRate.deliveryStaff"
               />
             </div>
@@ -120,7 +120,7 @@
                 </span>
               </div>
               <div class="dataScreen-main-chart">
-                <AnnualUseChart v-if="reportData && reportData?.region.length > 0" :data="reportData" />
+                <AnnualUseChart v-if="reportData && reportData?.region && reportData?.region.length > 0" :data="reportData" />
               </div>
             </div>
           </div>
@@ -148,7 +148,7 @@
             <div class="dataScreen-main-chart">
               <AgeRatioChart
                 ref="ageRatioChartRef"
-                v-if="cateringScreenData.forType.length > 0"
+                v-if="cateringScreenData.forType && cateringScreenData.forType.length > 0"
                 :data="cateringScreenData.forType"
               />
             </div>
@@ -176,7 +176,7 @@
               <div class="dataScreen-main-chart">
                 <CateringDataChart
                   ref="cateringDataChartRef"
-                  v-if="cateringScreenData.forStore.length > 0"
+                  v-if="cateringScreenData.forStore && cateringScreenData.forStore.length > 0"
                   :data="cateringScreenData.forStore"
                 />
               </div>
@@ -205,7 +205,7 @@
               </div>
               <div class="dataScreen-main-chart">
                 <Pie
-                  v-if="reportData && reportData?.type.length > 0"
+                  v-if="reportData && reportData?.type && reportData?.type.length > 0"
                   :data="reportData.type.map(val => ({ value: val.num, name: val.name }))"
                 />
               </div>

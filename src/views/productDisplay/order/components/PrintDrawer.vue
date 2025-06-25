@@ -21,18 +21,17 @@
               <h3 v-if="order.pickupType == 1">取餐类型: <span>堂食</span></h3>
               <h3 v-if="order.pickupType == 2">取餐类型: <span>打包</span></h3>
               <h3 v-if="order.pickupType == 3">取餐类型: <span>配送</span></h3>
-              <h3 v-if="order.pickupType == 4">取餐类型: <span>订桌</span></h3>
               <h3 v-if="order.pickupType == 3">
                 配送地址: <span>{{ order.address }}</span>
               </h3>
               <h3 v-if="order.pickupType == 3">
-                预计送达: <span>{{ order.expectedTime }}</span>
+                预计送达: <span>{{ order.deliveryArea }}</span>
               </h3>
               <h3 v-if="order.pickupType == 3">
-                配送区域: <span>{{ order.deliveryArea }}</span>
+                配送区域: <span>{{ order.expectedTime }}</span>
               </h3>
-              <h3 v-if="order.pickupType == 4">
-                桌号: <span>{{ order.tableNumber }}</span>
+              <h3 v-if="order.pickupType == 3">
+                货架: <span>{{ order.pickupCode }}</span>
               </h3>
               <h3>
                 下单时间: <span>{{ order.createTime }}</span>
