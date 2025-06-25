@@ -31,14 +31,7 @@
           <el-button type="primary" v-auth="['system:notice:query']" link :icon="View" @click="openViewDrawer(scope.row)"
             >查看</el-button
           >
-          <el-button
-            type="warning"
-            v-auth="['system:notice:edit']"
-            link
-            v-if="scope.row.approvalStatus < 1"
-            :icon="EditPen"
-            @click="openDrawer(scope.row)"
-          >
+          <el-button type="warning" v-auth="['system:notice:edit']" link :icon="EditPen" @click="openDrawer(scope.row)">
             编辑
           </el-button>
           <el-button type="danger" v-auth="['system:notice:remove']" link :icon="Delete" @click="deleteNoticeHandle(scope.row)"

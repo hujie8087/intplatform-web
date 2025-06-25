@@ -11,6 +11,7 @@ export namespace Account {
   export interface ResAccountList {
     createBy: string | null;
     createTime: string;
+    canteenId: string;
     updateBy: string | null;
     updateTime: string | null;
     remark: string | null;

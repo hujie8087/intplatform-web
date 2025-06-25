@@ -58,7 +58,8 @@ export default {
       changeSuccess: "密码修改成功!",
       logoutSuccess: "退出登录成功！",
       confirmLogout: "您是否确认退出登录?",
-      tips: "温馨提示"
+      tips: "温馨提示",
+      canteen: "餐厅"
     },
     dept: {
       deptList: "部门列表",

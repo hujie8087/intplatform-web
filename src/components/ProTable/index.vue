@@ -93,6 +93,7 @@
       <Pagination
         v-if="pagination"
         :pageable="pageable"
+        :page-size="pageSize"
         :handle-size-change="handleSizeChange"
         :handle-current-change="handleCurrentChange"
       />
@@ -126,6 +127,7 @@ export interface ProTableProps {
   dataCallback?: (data: any) => any; // 返回数据的回调函数，可以对数据进行处理 ==> 非必传
   title?: string; // 表格标题 ==> 非必传
   pagination?: boolean; // 是否需要分页组件 ==> 非必传（默认为true）
+  pageSize?: number[]; // 每页条数 ==> 非必传（默认为[10, 20, 30, 50, 100]）
   initParam?: any; // 初始化请求参数 ==> 非必传（默认为{}）
   border?: boolean; // 是否带有纵向边框 ==> 非必传（默认为true）
   toolButton?: ("refresh" | "setting" | "search")[] | boolean; // 是否显示表格功能按钮 ==> 非必传（默认为true）
@@ -142,6 +144,7 @@ const props = withDefaults(defineProps<ProTableProps>(), {
   border: true,
   toolButton: true,
   rowKey: "id",
+  pageSize: () => [10, 20, 30, 50, 100, 300],
   searchCol: () => ({ xs: 1, sm: 2, md: 2, lg: 4, xl: 6 })
 });
 
@@ -167,13 +170,13 @@ const { selectionChange, selectedList, selectedListIds, isSelected } = useSelect
 
 const toggleSelection = (rows: { [key: string]: any }[]) => {
   tableRef.value!.toggleRowSelection(rows, true);
-  console.log(rows);
 };
 
 // 表格操作 Hooks
 const {
   tableData,
   pageable,
+  totalParam,
   searchParam,
   searchInitParam,
   getTableList,
@@ -314,6 +317,7 @@ defineExpose({
   tableData: processTableData,
   radio,
   pageable,
+  totalParam,
   searchParam,
   searchInitParam,
   getTableList,

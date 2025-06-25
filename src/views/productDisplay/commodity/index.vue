@@ -13,7 +13,7 @@
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
           <el-button type="primary" :icon="CirclePlus" v-auth="['food:commodity:add']" @click="openDrawer('新增')">
-            新增菜品
+            新增商品
           </el-button>
           <el-button
             type="danger"
@@ -22,8 +22,12 @@
             :icon="Delete"
             @click="batchDelete(scope.selectedListIds)"
           >
-            批量删除菜品
+            批量删除商品
           </el-button>
+          <!-- 导入 -->
+          <el-button type="warning" :icon="Upload" @click="importCommodityExcel"> 导入商品 </el-button>
+          <!-- 导出 -->
+          <el-button type="warning" plain :icon="Download" @click="exportCommodityExcel"> 导出商品 </el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
@@ -50,6 +54,7 @@
         </template>
       </ProTable>
       <CommodityDrawer ref="drawerRef" />
+      <ImportExcel ref="importExcelRef" />
     </div>
   </div>
 </template>
@@ -58,19 +63,23 @@ import { ref, reactive } from "vue";
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import CommodityDrawer from "./components/CommodityDrawer.vue";
+import ImportExcel from "@/components/ImportExcel/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, EditPen, View } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, Download, EditPen, Upload, View } from "@element-plus/icons-vue";
 import {
   getCommodityList,
   deleteCommodity,
   editCommodity,
   addCommodity,
-  getCommodityById
+  getCommodityById,
+  importCommodity
 } from "@/api/modules/productDisplay/commodity";
 import { Commodity } from "@/api/interface/productDisplay/commodity";
 import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
 import { getCanteenListOptions, getCategoryListOptions } from "@/api/modules/productDisplay/marketCanteen";
+import { ElMessageBox } from "element-plus";
+import { useDownload } from "@/hooks/useDownload";
 
 const { t } = useI18n(); // 解构出t方法
 
@@ -115,7 +124,7 @@ const dataCallback = (data: any) => {
 const columns = reactive<ColumnProps<Commodity.ResCommodity>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { prop: "code", label: "编码", width: 80, search: { el: "input" } },
-  { prop: "name", label: "菜品名称", search: { el: "input" } },
+  { prop: "name", label: "商品名称", search: { el: "input" } },
   // 图片
   {
     prop: "image",
@@ -240,28 +249,28 @@ const columns = reactive<ColumnProps<Commodity.ResCommodity>[]>([
   { prop: "operation", label: "操作", width: 230, fixed: "right" }
 ]);
 
-// 删除菜品
+// 删除商品
 const deleteCommodityHandle = async (params: Commodity.ResCommodity) => {
-  await useHandleData(deleteCommodity, params.id, `删除【${params.name}】菜品`);
+  await useHandleData(deleteCommodity, params.id, `删除【${params.name}】商品`);
   proTable.value?.getTableList();
 };
 
 // 批量删除
 const batchDelete = async (ids: number[]) => {
-  await useHandleData(deleteCommodity, ids, t("main.deleteBatchMsg", { title: "菜品" }));
+  await useHandleData(deleteCommodity, ids, t("main.deleteBatchMsg", { title: "商品" }));
   proTable.value?.clearSelection();
   proTable.value?.getTableList();
 };
 
 // 修改状态
 const changeStatusHandle = async (row: Commodity.ResCommodity) => {
-  await useHandleData(editCommodity, { id: row.id, status: row.status == 1 ? 0 : 1 }, `切换【${row.name}】菜品状态`);
+  await useHandleData(editCommodity, { id: row.id, status: row.status == 1 ? 0 : 1 }, `切换【${row.name}】商品状态`);
   proTable.value?.getTableList();
 };
 
 // 修改是否热销
 const changeIsHotHandle = async (row: Commodity.ResCommodity) => {
-  await useHandleData(editCommodity, { id: row.id, isHot: row.isHot == 1 ? 0 : 1 }, `切换【${row.name}】菜品热销状态`);
+  await useHandleData(editCommodity, { id: row.id, isHot: row.isHot == 1 ? 0 : 1 }, `切换【${row.name}】商品热销状态`);
   proTable.value?.getTableList();
 };
 
@@ -270,9 +279,29 @@ const changeIdentificationHandle = async (row: Commodity.ResCommodity) => {
   await useHandleData(
     editCommodity,
     { id: row.id, identification: row.identification == 1 ? 0 : 1 },
-    `切换【${row.name}】菜品单独配送状态`
+    `切换【${row.name}】商品单独配送状态`
   );
   proTable.value?.getTableList();
+};
+
+// 导入商品
+const importExcelRef = ref<InstanceType<typeof ImportExcel> | null>(null);
+const importCommodityExcel = () => {
+  const params = {
+    title: "商品",
+    tempApi: `${baseUrl}productdisplay/commodity/importTemplate`,
+    importApi: importCommodity,
+    getTableList: proTable.value?.getTableList
+  };
+  importExcelRef.value?.acceptParams(params);
+};
+
+const baseUrl = import.meta.env.VITE_API_URL;
+// 导出商品
+const exportCommodityExcel = () => {
+  ElMessageBox.confirm("确认导出商品数据?", "温馨提示", { type: "warning" }).then(() =>
+    useDownload(`${baseUrl}productdisplay/commodity/export`, "商品列表", true, ".xlsx", "post", proTable.value?.searchParam)
+  );
 };
 
 // 打开 drawer(新增、查看、编辑)

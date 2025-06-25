@@ -32,9 +32,9 @@
           </template>
         </el-upload>
       </el-form-item>
-      <el-form-item label="数据覆盖 :">
+      <!-- <el-form-item label="数据覆盖 :">
         <el-switch v-model="isCover" />
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
   </el-dialog>
 </template>
@@ -76,7 +76,7 @@ const acceptParams = (params: ExcelParameterProps) => {
 // Excel 导入模板下载
 const downloadTemp = () => {
   if (!parameter.value.tempApi) return;
-  useDownload(parameter.value.tempApi, `${parameter.value.title}模板`, true, ".xlsx", "post");
+  useDownload(parameter.value.tempApi, `${parameter.value.title}模板`, true, ".xlsx", "get");
 };
 
 // 文件上传

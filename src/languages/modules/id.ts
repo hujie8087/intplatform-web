@@ -58,7 +58,8 @@ export default {
       changeSuccess: "Kata sandi berhasil diubah!",
       logoutSuccess: "Berhasil keluar!",
       confirmLogout: "Anda yakin ingin keluar?",
-      tips: "Pengingat"
+      tips: "Pengingat",
+      canteen: "Restoran"
     },
     dept: {
       deptList: "Daftar Departemen",

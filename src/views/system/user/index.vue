@@ -104,6 +104,8 @@ import { getUserRole, updateRole, changeUserStatus } from "@/api/modules/system/
 import { genderType, userStatus, userType } from "@/utils/serviceDict";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { getRoleList } from "@/api/modules/system/role";
+import { getCanteenListOptions } from "@/api/modules/productDisplay/marketCanteen";
+import { DictOptions } from "@/api/interface";
 const { BUTTONS } = useAuthButtons();
 const baseUrl = import.meta.env.VITE_API_URL;
 // ProTable 实例
@@ -178,6 +180,13 @@ const changeTreeFilter = (val: number) => {
   treeFilterValues.deptId = val;
 };
 
+const canteenList = ref<DictOptions[]>([]);
+const getCanteenList = async () => {
+  const res = await getCanteenListOptions();
+  canteenList.value = [{ label: "全部", value: 0 }, ...res.data.map(item => ({ label: item.name, value: item.id }))];
+};
+getCanteenList();
+
 watch(
   () => proTable.value?.radio,
   () => proTable.value?.radio && ElMessage.success(`选中 id 为【${proTable.value?.radio}】的数据`)
@@ -238,7 +247,8 @@ const openDrawer = async (title: string, row: Partial<Account.ResAccountList> = 
     api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
     getTableList: proTable.value?.getTableList,
     deptList: treeFilterRef.value?.treeData,
-    roleList: roleList.value
+    roleList: roleList.value,
+    canteenList: canteenList.value
   };
   drawerRef.value?.acceptParams(params);
 };
