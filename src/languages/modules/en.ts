@@ -240,7 +240,9 @@ export default {
     startTime: "Start Time",
     endTime: "End Time",
     searchTime: "Search Time",
+    createBy: "Create By",
     createTime: "Create Time",
+    updateBy: "Update By",
     updateTime: "Update Time",
     releaseTime: "Release Time",
     copyMsg: "Copy {msg}"
@@ -316,5 +318,39 @@ export default {
     uploaded: "Uploaded",
     notUploaded: "Not Uploaded",
     status: "Status"
+  },
+  company: {
+    company: "Company",
+    companyName: "Company Name",
+    companyCode: "Company Code",
+    status: "Status",
+    remark: "Remark"
+  },
+  religion: {
+    buddhism: "Buddhism",
+    christianity: "Christianity",
+    islam: "Islam",
+    catholicism: "Catholicism",
+    confucianism: "Confucianism",
+    hinduism: "Hinduism",
+    BeliefInOneAlmightyGod: "Belief in One Almighty God",
+    unknown: "Unknown"
+  },
+  employee: {
+    employee: "Employee",
+    employeeList: "Employee List",
+    employeeAdd: "Add Employee",
+    employeeEdit: "Edit Employee",
+    company: "Company",
+    jobNumber: "Job Number",
+    username: "Name",
+    dept: "Department",
+    post: "Post",
+    phone: "Phone",
+    status: "Status",
+    nationType: "Nation Type",
+    postName: "Post",
+    religion: "Religion",
+    sex: "Sex"
   }
 };

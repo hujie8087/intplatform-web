@@ -240,7 +240,9 @@ export default {
     startTime: "开始时间",
     endTime: "结束时间",
     searchTime: "查询时间",
+    createBy: "创建人",
     createTime: "创建时间",
+    updateBy: "更新人",
     updateTime: "更新时间",
     releaseTime: "发布时间",
     copyMsg: "复制{msg}"
@@ -316,5 +318,39 @@ export default {
     uploaded: "已上传",
     notUploaded: "未上传",
     status: "状态"
+  },
+  company: {
+    company: "公司",
+    companyName: "公司名称",
+    companyCode: "公司编码",
+    status: "状态",
+    remark: "备注"
+  },
+  religion: {
+    buddhism: "佛教",
+    christianity: "基督教",
+    islam: "伊斯兰教",
+    catholicism: "天主教",
+    confucianism: "儒教",
+    hinduism: "印度教",
+    beliefInOneAlmightyGod: "至高神",
+    unknown: "未知"
+  },
+  employee: {
+    employee: "员工",
+    employeeList: "员工列表",
+    employeeAdd: "新增员工",
+    employeeEdit: "编辑员工",
+    company: "费用归属公司",
+    jobNumber: "工号",
+    username: "姓名",
+    dept: "部门",
+    post: "岗位",
+    phone: "手机号",
+    status: "状态",
+    nationType: "国籍",
+    postName: "岗位",
+    religion: "宗教",
+    sex: "性别"
   }
 };

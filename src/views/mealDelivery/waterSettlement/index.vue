@@ -29,7 +29,7 @@ import { ref, reactive } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
 import WaterSettlementDrawer from "./components/WaterSettlementDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { Download } from "@element-plus/icons-vue";
+import { Download, ArrowDown } from "@element-plus/icons-vue";
 import { getWaterSettlementList } from "@/api/modules/mdc/waterSettlement";
 import { WaterSettlement } from "@/api/interface/mealDelivery/waterSettlement";
 // import dayjs from "dayjs";
@@ -96,24 +96,6 @@ const orderStatusMapping = (row: WaterSettlement.ResWaterSettlement): { text: st
   return { text: "未知", color: "danger" };
 };
 
-const orderDateTime = (row: WaterSettlement.ResWaterSettlement) => {
-  const key = `${row.orderStatus}_${row.centerStatus}`;
-  const timeMap = {
-    "0_1": row.teamSubmitTime,
-    "0_2": row.deptSubmitTime,
-    "1_3": row.leadTime,
-    "3_3": row.mealTime,
-    "4_3": row.completeTime
-  };
-
-  return timeMap[key] ?? "";
-};
-
-// const tagTypeOptions = ref<string[]>(["success", "danger", "warning", "info", "primary", "error"]);
-// const orderDate = ref<string[]>([
-//   dayjs().startOf("day").format("YYYY-MM-DD HH:mm:ss"),
-//   dayjs().endOf("day").format("YYYY-MM-DD HH:mm:ss")
-// ]);
 const initParam = reactive({
   pageNum: 1,
   pageSize: 300,
@@ -167,7 +149,6 @@ const getSiteAddressList = async () => {
 getSiteAddressList();
 
 // 表格配置项
-const expandedRowSet = ref(new Set());
 const orderDataCache = new Map();
 
 function getCachedOrderData(row) {
@@ -253,40 +234,36 @@ const columns = reactive<ColumnProps<WaterSettlement.ResWaterSettlement>[]>([
     label: "订单状态",
     width: 120,
     render(scope) {
-      const rowId = scope.row.orderNo;
-      const isExpanded = expandedRowSet.value.has(rowId);
+      const orderData = getCachedOrderData(scope.row);
+
       return (
         <div>
-          <div
-            class="table-column-order-status"
-            v-show={!isExpanded}
-            onClick={() => {
-              expandedRowSet.value.add(rowId);
+          <el-dropdown trigger="click">
+            {{
+              default: () => (
+                <el-tag type={orderStatusMapping(scope.row).color} style="cursor: pointer;">
+                  {orderStatusMapping(scope.row).text}
+                  <el-icon style="margin-left: 4px;">
+                    <ArrowDown />
+                  </el-icon>
+                </el-tag>
+              ),
+              dropdown: () => (
+                <el-dropdown-menu>
+                  {orderData.map((item, index) => (
+                    <el-dropdown-item key={index}>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <el-tag type={item.color === "#0bbd87" ? "success" : "info"} size="small">
+                          {item.content}
+                        </el-tag>
+                        <span style="font-size: 12px; color: #909399;">{item.timestamp || "未完成"}</span>
+                      </div>
+                    </el-dropdown-item>
+                  ))}
+                </el-dropdown-menu>
+              )
             }}
-          >
-            <el-tag type={orderStatusMapping(scope.row).color}>{orderStatusMapping(scope.row).text}</el-tag>
-            <br />
-            <span style="font-size: 12px; line-height: 12px; color: #909399">{orderDateTime(scope.row)}</span>
-          </div>
-          <div
-            v-show={isExpanded}
-            onClick={() => {
-              expandedRowSet.value.delete(rowId);
-            }}
-          >
-            <el-timeline reverse={false} style="padding: 0">
-              {getCachedOrderData(scope.row).map((activity, index) => (
-                <el-timeline-item
-                  key={index}
-                  timestamp={activity.timestamp}
-                  color={activity.color}
-                  style="font-size: 12px; text-align: left;padding:0"
-                >
-                  {activity.content}
-                </el-timeline-item>
-              ))}
-            </el-timeline>
-          </div>
+          </el-dropdown>
         </div>
       );
     }

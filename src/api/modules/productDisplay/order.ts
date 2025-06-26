@@ -56,3 +56,8 @@ export const exportOrder = (params: Order.ReqOrderParams) => {
 export const getPrintOrder = (id: number) => {
   return http.get<Order.ResOrder[]>(PORT1 + `/productdisplay/findById/${id}`);
 };
+
+// 退款
+export const refundOrder = (id: number) => {
+  return http.get(PORT1 + `/productdisplay/food/order/depositById?id=${id}`);
+};

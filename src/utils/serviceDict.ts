@@ -92,3 +92,15 @@ export const commonStatus = [
   { label: I18n.global.t("dict.enable"), value: 0, tagType: "success" },
   { label: I18n.global.t("dict.disable"), value: 1, tagType: "danger" }
 ];
+
+// 宗教
+export const religionOptions = [
+  { label: computed(() => I18n.global.t("religion.unknown")).value, value: "0" },
+  { label: computed(() => I18n.global.t("religion.islam")).value, value: "1" },
+  { label: computed(() => I18n.global.t("religion.christianity")).value, value: "2" },
+  { label: computed(() => I18n.global.t("religion.buddhism")).value, value: "3" },
+  { label: computed(() => I18n.global.t("religion.catholicism")).value, value: "4" },
+  { label: computed(() => I18n.global.t("religion.confucianism")).value, value: "5" },
+  { label: computed(() => I18n.global.t("religion.hinduism")).value, value: "6" },
+  { label: computed(() => I18n.global.t("religion.beliefInOneAlmightyGod")).value, value: "7" }
+];
