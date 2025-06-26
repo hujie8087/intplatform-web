@@ -60,6 +60,15 @@
           <el-button type="warning" link v-auth="['food:order:print']" :icon="Printer" @click="handlePrintDish(scope.row)"
             >打印菜品</el-button
           >
+          <!-- 退款 -->
+          <el-button
+            type="danger"
+            link
+            v-auth="['food:order:refund']"
+            v-if="scope.row.status === 1"
+            @click="handleRefund(scope.row)"
+            >退款</el-button
+          >
         </template>
       </ProTable>
       <OrderDrawer ref="drawerRef" />
@@ -78,13 +87,14 @@ import {
   getOrderDishList,
   updateOrderStatus,
   editOrder,
-  updateMoreOrderStatus
+  updateMoreOrderStatus,
+  refundOrder
 } from "@/api/modules/productDisplay/order";
 import { Order } from "@/api/interface/productDisplay/order";
 import { DictOptions } from "@/api/interface";
 import { getCanteenListOptions, getPickupType } from "@/api/modules/productDisplay/marketCanteen";
 import OrderDrawer from "./components/OrderDrawer.vue";
-import { ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 import { useDict } from "@/hooks/useDict";
 import PrintDrawer from "./components/PrintDrawer.vue";
@@ -247,7 +257,15 @@ const handleExport = async () => {
     useDownload(`${baseUrl}/productdisplay/food/order/export`, "订单数据", true, ".xlsx", "post", proTable.value?.searchParam)
   );
 };
-
+// 退款
+const handleRefund = async (row: Order.ResOrder) => {
+  ElMessageBox.confirm("确认退款?", "温馨提示", { type: "warning" }).then(async () => {
+    refundOrder(row.id).then(() => {
+      ElMessage.success("退款成功");
+      proTable.value?.getTableList();
+    });
+  });
+};
 const drawerRef = ref<InstanceType<typeof OrderDrawer> | null>(null);
 const orderDetailDishList = ref<Order.ResOrderDish[]>([]);
 // 打开查看订单详情

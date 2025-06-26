@@ -7,7 +7,7 @@
     :page-sizes="pageSize"
     :total="pageable.total"
     layout="total, sizes, prev, pager, next, jumper"
-    :small="assemblySize === 'small'"
+    :size="assemblySize === 'small' ? 'small' : 'default'"
     @size-change="handleSizeChange"
     @current-change="handleCurrentChange"
   ></el-pagination>

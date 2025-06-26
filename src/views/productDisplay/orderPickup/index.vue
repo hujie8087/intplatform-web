@@ -13,7 +13,7 @@
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
           <el-button type="primary" v-auth="['food:canteen:add']" :icon="CirclePlus" @click="openDrawer('新增')">
-            新增商店
+            新增
           </el-button>
           <el-button
             type="danger"
@@ -22,7 +22,7 @@
             :icon="Delete"
             @click="batchDelete(scope.selectedListIds)"
           >
-            批量删除商店
+            批量删除
           </el-button>
         </template>
         <!-- 表格操作 -->
@@ -97,7 +97,7 @@ const columns = reactive<ColumnProps<OrderPickup.ResOrderPickup>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { prop: "id", label: "序号", width: 80 },
   { prop: "name", label: "订桌/货架名称", search: { el: "input" } },
-  { prop: "canteenId", label: "商店", enum: canteenList, search: { el: "select" } },
+  { prop: "canteenId", label: "货架", enum: canteenList, search: { el: "select" } },
   { prop: "sort", label: "排序" },
   {
     prop: "status",

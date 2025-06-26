@@ -240,7 +240,9 @@ export default {
     startTime: "Waktu Mulai",
     endTime: "Waktu Selesai",
     searchTime: "Waktu Pencarian",
+    createBy: "Pembuat",
     createTime: "Waktu Pembuatan",
+    updateBy: "Pembaru",
     updateTime: "Waktu Pembaruan",
     releaseTime: "Waktu Rilis",
     copyMsg: "Salin {msg}"
@@ -316,5 +318,39 @@ export default {
     uploaded: "Sudah diunggah",
     notUploaded: "Belum diunggah",
     status: "Status"
+  },
+  company: {
+    company: "Perusahaan",
+    companyName: "Nama Perusahaan",
+    companyCode: "Kode Perusahaan",
+    status: "Status",
+    remark: "Catatan"
+  },
+  religion: {
+    buddhism: "Buddhism",
+    christianity: "Christianity",
+    islam: "Islam",
+    catholicism: "Catholicism",
+    confucianism: "Confucianism",
+    hinduism: "Hinduism",
+    BeliefInOneAlmightyGod: "Belief in One Almighty God",
+    unknown: "Unknown"
+  },
+  employee: {
+    employee: "Karyawan",
+    employeeList: "Daftar Karyawan",
+    employeeAdd: "Tambah Karyawan",
+    employeeEdit: "Edit Karyawan",
+    company: "Perusahaan",
+    jobNumber: "Nomor Pekerjaan",
+    username: "Nama",
+    dept: "Departemen",
+    post: "Posisi",
+    phone: "Telepon",
+    status: "Status",
+    nationType: "Negara",
+    postName: "Posisi",
+    religion: "Agama",
+    sex: "Jenis Kelamin"
   }
 };
