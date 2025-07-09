@@ -121,7 +121,7 @@ const drawerProps = ref<DrawerProps>({
 });
 const treeRef = ref();
 
-const checkStrictly = ref(true);
+const checkStrictly = ref(false);
 const checkAll = ref(false);
 const expandAll = (val: boolean) => {
   let nodes = treeRef.value?.store._getAllNodes() || [];
@@ -142,6 +142,8 @@ const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
   repairAreaIds.value = params.rowData.repairAreaId ? params.rowData.repairAreaId?.split("/").map(item => Number(item)) : [];
+  drawerProps.value.menuIds = params.menuIds ?? [];
+  console.log(drawerProps.value.menuIds);
 };
 
 // 提交数据（新增/编辑）

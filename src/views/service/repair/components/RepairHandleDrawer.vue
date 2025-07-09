@@ -36,7 +36,7 @@
             <el-select v-model="drawerProps.rowData.repairType" placeholder="请选择维修类型" clearable>
               <el-option
                 v-for="item in drawerProps.repairTypeOptions"
-                :key="item.value"
+                :key="item.label"
                 :label="item.label"
                 :value="item.value"
               />
@@ -71,7 +71,7 @@
               v-model="drawerProps.rowData!.repairState"
               :placeholder="`${$t('main.selectError', { msg: '维修状态' })}`"
             >
-              <el-radio v-for="item in drawerProps.repairStatusOptions" :key="item.value" :label="item.value">{{
+              <el-radio v-for="item in drawerProps.repairStatusOptions" :key="item.label" :label="item.value">{{
                 item.label
               }}</el-radio>
             </el-radio-group>

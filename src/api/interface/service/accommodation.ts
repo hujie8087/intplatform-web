@@ -56,4 +56,65 @@ export namespace Accommodation {
     def1: string; // 自定义字段1
     def2: string; // 自定义字段2
   }
+
+  // 保洁项目
+  export interface ReqCleanParams extends ReqPage {
+    title?: string;
+    status?: string;
+  }
+  export interface ResClean {
+    chargePrice: number;
+    chargeType: number;
+    updateTime: string;
+    remark: string;
+    delFlag: string;
+    params: object;
+    projectDetails: string;
+    endQueryTime: string;
+    createBy: string;
+    createTime: string;
+    updateBy: string;
+    chargeMethod: string;
+    id: number;
+    belongingCompany: string;
+    ancestors: string;
+    searchValue: string;
+    startQueryTime: string;
+    status: number;
+  }
+
+  export type CreateCleanParams = Omit<ResClean, "id">;
+
+  // 保洁订单
+  export interface ReqCleanOrderParams extends ReqPage {
+    clNo?: string;
+    contacts?: string;
+    tel?: string;
+    orderStatus?: number;
+    clArea?: string;
+    status?: string;
+  }
+  export interface ResCleanOrder {
+    id: number;
+    contacts: string;
+    tel: string;
+    cpId: number;
+    orderStatus: number;
+    cleanPrice: number;
+    remark: string;
+    clNo: string;
+    clArea: string;
+    roomNo: string;
+    rlaId: bigint;
+    rlId: bigint;
+    reserveDate: string;
+    createBy: string;
+    createTime: string;
+    updateBy: string;
+    updateTime: string;
+    evaluate: string;
+    score: number;
+    handler: string;
+    handleTime: string;
+  }
 }

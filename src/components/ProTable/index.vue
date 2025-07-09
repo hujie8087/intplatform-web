@@ -22,12 +22,12 @@
         <slot name="toolButton">
           <el-button v-if="showToolButton('refresh')" :icon="Refresh" circle @click="getTableList" />
           <el-button v-if="showToolButton('setting') && columns.length" :icon="Operation" circle @click="openColSetting" />
-          <!-- <el-button
+          <el-button
             v-if="showToolButton('search') && searchColumns?.length"
             :icon="Search"
             circle
             @click="isShowSearch = !isShowSearch"
-          /> -->
+          />
         </slot>
       </div>
     </div>
@@ -110,7 +110,7 @@ import { useTable } from "@/hooks/useTable";
 import { useSelection } from "@/hooks/useSelection";
 import { BreakPoint } from "@/components/Grid/interface";
 import { ColumnProps, TypeProps } from "@/components/ProTable/interface";
-import { Refresh, Operation } from "@element-plus/icons-vue";
+import { Refresh, Operation, Search } from "@element-plus/icons-vue";
 import { handleProp } from "@/utils";
 import SearchForm from "@/components/SearchForm/index.vue";
 import Pagination from "./components/Pagination.vue";

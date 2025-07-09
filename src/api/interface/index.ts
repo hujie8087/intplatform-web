@@ -153,7 +153,7 @@ export namespace User {
 
 export interface DictOptions {
   label: string;
-  value: number | string;
+  value: number | string | boolean;
   tagType?: string;
   cssClass?: string;
 }
