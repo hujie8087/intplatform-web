@@ -35,42 +35,14 @@
         </el-col>
         <el-col :span="24">
           <el-form-item :label="`${$t('employee.dept')}`" prop="deptId">
-            <!-- 当部门数据量过大时，使用普通select组件 -->
-            <el-select
-              v-if="drawerProps.deptList && drawerProps.deptList.length > 100"
-              v-model="deptId"
-              :placeholder="`${$t('main.selectError', { msg: $t('employee.dept') })}`"
-              clearable
-              filterable
-              style="width: 100%"
-            >
-              <el-option
-                v-for="item in drawerProps.deptList"
-                :key="item.deptId"
-                :label="item.deptName"
-                :value="item.deptId"
-                v-memo="[item.deptId, item.deptName]"
-              />
-            </el-select>
-
-            <!-- 数据量较小时使用tree-select -->
             <el-tree-select
-              v-else
               v-model="deptId"
-              :data="optimizedDeptList"
-              :props="{
-                label: 'deptName',
-                value: 'deptId',
-                children: 'children'
-              }"
-              check-strictly
-              :render-after-expand="false"
+              :data="drawerProps.deptList"
+              :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
+              value-key="deptId"
               :filterable="true"
-              :clearable="true"
               placeholder="请选择部门"
-              style="width: 100%"
-              node-key="deptId"
-              :reserve-keyword="true"
+              check-strictly
             />
           </el-form-item>
         </el-col>
@@ -166,19 +138,20 @@
       </el-row>
     </el-form>
     <template #footer>
-      <el-button @click="drawerVisible = false">{{ $t("main.cancel") }}</el-button>
+      <el-button @click="closeDrawer">{{ $t("main.cancel") }}</el-button>
       <el-button type="primary" v-show="!drawerProps.isView" @click="handleSubmit">{{ $t("main.confirm") }}</el-button>
     </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts" name="EmployeeDrawer">
-import { ref, reactive, computed } from "vue";
+import { ref, reactive } from "vue";
 import { genderType, religionOptions } from "@/utils/serviceDict";
 import { ElMessage, FormInstance } from "element-plus";
 import { useI18n } from "vue-i18n";
 import { Employee } from "@/api/interface/mealDelivery/system/employee";
 import { DictOptions } from "@/api/interface";
+
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({
@@ -191,22 +164,21 @@ const rules = reactive({
 });
 
 const deptId = ref<number>(0);
-
 // 性能优化：部门数据缓存
 const deptCache = ref<Map<string, any>>(new Map());
 
 // 性能优化：计算属性，优化部门数据渲染
-const optimizedDeptList = computed(() => {
-  if (!drawerProps.value.deptList) return [];
+// const optimizedDeptList = computed(() => {
+//   if (!drawerProps.value.deptList) return [];
 
-  // 对于中等数据量，只返回顶级部门
-  const deptList = drawerProps.value.deptList;
-  if (deptList.length > 50) {
-    return deptList.filter(dept => !dept.parentId || dept.parentId === 0);
-  }
+//   // 对于中等数据量，只返回顶级部门
+//   const deptList = drawerProps.value.deptList;
+//   if (deptList.length > 50) {
+//     return deptList.filter(dept => !dept.parentId || dept.parentId === 0);
+//   }
 
-  return deptList;
-});
+//   return deptList;
+// });
 
 interface DrawerProps {
   title: string;
@@ -244,7 +216,10 @@ const acceptParams = (params: DrawerProps): void => {
     }
   }
 };
-
+const closeDrawer = () => {
+  drawerVisible.value = false;
+  deptId.value = 0;
+};
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {

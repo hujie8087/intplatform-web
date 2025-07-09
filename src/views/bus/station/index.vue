@@ -106,12 +106,12 @@ const columns = computed((): ColumnProps[] => [
   {
     prop: "longitude",
     label: "经度",
-    width: 100
+    width: 150
   },
   {
     prop: "latitude",
     label: "纬度",
-    width: 100
+    width: 150
   },
   {
     prop: "sort",

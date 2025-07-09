@@ -97,7 +97,6 @@
               :data="drawerProps.deptList"
               check-strictly
               value-key="id"
-              :render-after-expand="false"
               :placeholder="`${$t('main.selectError', { msg: $t('system.user.dept') })}`"
               filterable
               style="width: 100%"

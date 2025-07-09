@@ -67,3 +67,58 @@ export const deleteApply = (id: number) => {
 export const auditApply = (params: FormData) => {
   return http.post(PORT1 + `/other/applyOnline/audit`, params);
 };
+
+// * 获取保洁项目列表
+export const getCleanList = (params: Accommodation.ReqCleanParams) => {
+  return http.getRow<Accommodation.ResClean>(PORT1 + `/maintenance/clean/project/list`, params);
+};
+
+// * 新增保洁项目
+export const addClean = (params: FormData) => {
+  return http.post(PORT1 + `/maintenance/clean/project`, params);
+};
+
+// * 编辑保洁项目
+export const editClean = (params: FormData) => {
+  return http.put(PORT1 + `/maintenance/clean/project`, params);
+};
+
+// * 删除保洁项目
+export const deleteClean = (id: number) => {
+  return http.delete(PORT1 + `/maintenance/clean/project/${id}`);
+};
+
+// * 获取保洁项目详情
+export const getCleanById = (id: number) => {
+  return http.get<Accommodation.ResClean>(PORT1 + `/maintenance/clean/project/${id}`);
+};
+
+// * 获取保洁订单列表
+export const getCleanOrderList = (params: Accommodation.ReqCleanOrderParams) => {
+  return http.get<Accommodation.ResCleanOrder[]>(PORT1 + `/maintenance/clean/order/list`, params);
+};
+
+// * 新增保洁订单
+export const addCleanOrder = (params: FormData) => {
+  return http.post(PORT1 + `/maintenance/clean/order`, params);
+};
+
+// * 编辑保洁订单
+export const editCleanOrder = (params: FormData) => {
+  return http.put(PORT1 + `/maintenance/clean/order`, params);
+};
+
+// * 删除保洁订单
+export const deleteCleanOrder = (id: number) => {
+  return http.delete(PORT1 + `/maintenance/clean/order/${id}`);
+};
+
+// * 获取保洁订单详情
+export const getCleanOrderById = (id: number) => {
+  return http.get<Accommodation.ResCleanOrder>(PORT1 + `/maintenance/clean/order/${id}`);
+};
+
+// * 退款保洁订单
+export const refundCleanOrder = (id: number) => {
+  return http.get(PORT1 + `/maintenance/clean/order/refund`, { id });
+};

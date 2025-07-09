@@ -33,7 +33,7 @@ export const editUser = (params: { id: string }) => {
 
 // 删除用户
 export const deleteUser = (params: { id: string[] }) => {
-  return http.delete(PORT1 + `/system/user`, params);
+  return http.delete(PORT1 + `/system/user/${params.id.join(",")}`);
 };
 
 // 切换用户状态

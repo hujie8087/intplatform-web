@@ -121,7 +121,7 @@ const columns = computed((): ColumnProps[] => [
     prop: "lineName",
     label: "名称",
     search: { el: "input" },
-    width: 120
+    width: 80
   },
   {
     prop: "carSiteList",
@@ -152,7 +152,7 @@ const columns = computed((): ColumnProps[] => [
   {
     prop: "lineDetails",
     label: "线路详情",
-    width: 120
+    width: 140
   },
   {
     prop: "linePath",
@@ -217,7 +217,7 @@ const columns = computed((): ColumnProps[] => [
     }
   },
   { prop: "createTime", label: "创建时间", width: 160 },
-  { prop: "operation", label: "操作", fixed: "right", width: 230 }
+  { prop: "operation", label: "操作", fixed: "right", width: 180 }
 ]);
 
 // 获取线路站点

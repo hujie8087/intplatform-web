@@ -194,6 +194,7 @@ const openDrawer = async (num: number, rowData: Partial<Role.ResRole> = {}) => {
     await getRoleMenuTreeselect(rowData.roleId as number);
   } else {
     await getMenuTreeList();
+    menuIds.value = [];
   }
   let params = {
     title,
