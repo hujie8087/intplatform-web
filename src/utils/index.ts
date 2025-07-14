@@ -330,7 +330,7 @@ export function filterRoute(menuList: Menu.MenuOptions[], path: string = ""): an
     item.path = path ? path + "/" + item.path : item.path;
     item.meta = {
       icon: item.meta?.icon || "",
-      title: item.meta.title,
+      title: item.meta?.title || "",
       isLink: "",
       isHide: item.hidden ? item.hidden : false,
       isFull: false,

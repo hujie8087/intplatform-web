@@ -1,3 +1,5 @@
+import { EpPropMergeType } from "element-plus/es/utils";
+
 // 请求响应参数（不包含data）
 export interface Result {
   code: string;
@@ -154,7 +156,7 @@ export namespace User {
 export interface DictOptions {
   label: string;
   value: number | string | boolean;
-  tagType?: string;
+  tagType?: EpPropMergeType<StringConstructor, "primary" | "danger" | "warning" | "success" | "info", unknown>;
   cssClass?: string;
 }
 
