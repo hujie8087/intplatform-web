@@ -25,6 +25,23 @@
             <el-input v-model="drawerProps.rowData!.repairMessage" type="textarea" clearable disabled />
           </el-form-item>
         </el-col>
+        <el-col :span="24">
+          <el-form-item label="报修图片" prop="repairPhoto">
+            <div v-if="drawerProps.rowData.repairPhoto">
+              <el-image
+                v-for="img in drawerProps.rowData.repairPhoto?.split(',')"
+                :key="img"
+                style="width: 100px; height: 100px"
+                :src="filePath + img"
+                :zoom-rate="1.2"
+                :max-scale="7"
+                :min-scale="0.2"
+                :preview-src-list="drawerProps.rowData.repairPhoto?.split(',').map(item => filePath + item)"
+                fit="cover"
+              />
+            </div>
+          </el-form-item>
+        </el-col>
         <el-col :span="24" v-show="drawerProps.rowData!.ratingMessage">
           <el-form-item label="维修反馈信息" prop="ratingMessage">
             <el-input v-model="drawerProps.rowData!.ratingMessage" type="textarea" clearable disabled />
@@ -98,7 +115,7 @@ import { getUserInfoByUsername } from "@/api/modules/system/user";
 const { t } = useI18n(); // 解构出t方法
 
 const userInfo = useUserStore().userInfo;
-
+const filePath = import.meta.env.VITE_APP_BASE_FILE;
 const rules = reactive({
   repairType: [{ required: true, message: t("main.inputError", { msg: "维修类型" }) }],
   repairState: [{ required: true, message: t("main.selectError", { msg: "维修状态" }) }],

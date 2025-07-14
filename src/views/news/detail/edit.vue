@@ -1,8 +1,8 @@
 <template>
   <div class="main-box">
     <div class="table-box">
-      <div class="card" style="padding-top: 0px; height: 100%">
-        <h3 style="position: sticky; top: 0px; background-color: #fff; z-index: 100; margin: 0; line-height: 60px">编辑内容</h3>
+      <div class="card" style=" height: 100%;padding-top: 0">
+        <h3 style="position: sticky; top: 0; z-index: 100; margin: 0; line-height: 60px; background-color: #ffffff">编辑内容</h3>
         <el-form
           ref="ruleFormRef"
           v-if="formData?.noticeId"
@@ -19,7 +19,7 @@
                   :placeholder="`${$t('main.selectError', { msg: $t('system.notice.noticeType') })}`"
                   disabled
                 >
-                  <el-option v-for="item in noticeTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+                  <el-option v-for="item in noticeTypeOptions" :key="item.label" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -100,7 +100,7 @@
                   v-model="formData!.status"
                   :placeholder="`${$t('main.inputError', { msg: $t('system.notice.status') })}`"
                 >
-                  <el-radio v-for="item in noticeStatusOptions" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
+                  <el-radio v-for="item in noticeStatusOptions" :key="item.label" :label="item.value">{{ item.label }}</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
