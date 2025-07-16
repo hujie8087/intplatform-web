@@ -29,13 +29,7 @@
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button
-            type="warning"
-            v-if="scope.row.approvalStatus < 1"
-            link
-            v-auth="['other:type:edit']"
-            :icon="EditPen"
-            @click="openDrawer('编辑', scope.row)"
+          <el-button type="warning" link v-auth="['other:type:edit']" :icon="EditPen" @click="openDrawer('编辑', scope.row)"
             >编辑</el-button
           >
           <el-button type="danger" link :icon="Delete" v-auth="['other:type:remove']" @click="deleteGuideTypeHandle(scope.row)"
