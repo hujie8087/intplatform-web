@@ -37,6 +37,11 @@ export const deleteMoreChamber = (params: number[]) => {
   return http.post(PORT1 + `/coupleRoom/room/chamber/delByIds`, params);
 };
 
+// * 导出房间
+export const exportChamber = (params: CoupleRoom.ReqRoomParams) => {
+  return http.get(PORT1 + `/coupleRoom/room/chamber/export`, params);
+};
+
 // * 获取订单列表
 export const getCoupleRoomOrderList = (params: CoupleRoom.ReqOrderParams) => {
   return http.getRow<CoupleRoom.ResRoomOrder>(PORT1 + `/coupleRoom/room/order/list`, params);

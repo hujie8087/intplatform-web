@@ -101,8 +101,8 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label><i class="el-icon-location-outline"></i>结果</template>
-        <el-tag type="success" v-if="audit.status === 1">同意</el-tag>
-        <el-tag type="danger" v-if="audit.status === 2">拒绝</el-tag>
+        <el-tag type="success" v-if="audit.status === '1'">同意</el-tag>
+        <el-tag type="danger" v-if="audit.status === '2'">拒绝</el-tag>
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label><i class="el-icon-tickets"></i>意见</template>{{ audit.content }}
