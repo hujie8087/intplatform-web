@@ -96,7 +96,7 @@ export namespace CoupleRoom {
     id: number;
     name: string;
     orderId: number;
-    status: number;
+    status: string;
     title: string;
   }
 

@@ -93,8 +93,8 @@
       <el-form ref="form" :model="auditForm" label-width="80px">
         <el-form-item label="结果" prop="status">
           <el-radio-group v-model="auditForm.status">
-            <el-radio :label="1">同意</el-radio>
-            <el-radio :label="2">拒绝</el-radio>
+            <el-radio :label="'1'">同意</el-radio>
+            <el-radio :label="'2'">拒绝</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="意见" prop="content">

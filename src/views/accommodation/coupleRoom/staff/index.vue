@@ -16,7 +16,7 @@
           <el-button
             type="danger"
             :disabled="!scope.isSelected"
-            v-auth="['delivery:staff:remove']"
+            v-auth="['room:staff:remove']"
             :icon="Delete"
             @click="batchDelete(scope.selectedListIds)"
           >
@@ -26,11 +26,13 @@
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button type="info" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button type="primary" link :icon="Edit" @click="openDrawer('编辑', scope.row)">编辑</el-button>
+          <el-button type="primary" v-auth="['room:staff:edit']" link :icon="Edit" @click="openDrawer('编辑', scope.row)"
+            >编辑</el-button
+          >
           <el-button
             type="danger"
             link
-            v-auth="['delivery:staff:remove']"
+            v-auth="['room:staff:remove']"
             :icon="Delete"
             @click="deleteCoupleRoomStaffHandle(scope.row)"
           >

@@ -13,15 +13,15 @@
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
           <el-button type="primary" @click="handleAdd">新增</el-button>
-          <el-button type="danger" @click="handleDelete">删除</el-button>
+          <el-button type="danger" v-auth="['room:chamber:remove']" @click="handleBatchDelete">删除</el-button>
           <!-- 导出 -->
-          <el-button type="warning" @click="handleExport">导出</el-button>
+          <el-button type="warning" v-auth="['room:chamber:export']" @click="handleExport">导出</el-button>
           <!-- 导入 -->
-          <el-button type="success" @click="handleImport">导入</el-button>
+          <el-button type="success" v-auth="['room:chamber:import']" @click="handleImport">导入</el-button>
         </template>
         <template #operation="scope">
-          <el-button type="primary" link @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button type="danger" link @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="primary" link v-auth="['room:chamber:edit']" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button type="danger" link v-auth="['room:chamber:remove']" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </ProTable>
     </div>
@@ -32,7 +32,7 @@
 import { ref, computed } from "vue";
 import ChamberDrawer from "./components/ChamberDrawer.vue";
 import dayjs from "dayjs";
-import { addChamber, deleteChamber, editChamber, getChamberList } from "@/api/modules/service/coupleRoom";
+import { addChamber, deleteChamber, deleteMoreChamber, editChamber, getChamberList } from "@/api/modules/service/coupleRoom";
 import { CoupleRoom } from "@/api/interface/service/coupleRoom";
 import { DictOptions } from "@/api/interface";
 import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
@@ -40,8 +40,10 @@ import ProTable from "@/components/ProTable/index.vue";
 import { ElMessage } from "element-plus";
 import { useDict } from "@/hooks/useDict";
 import { useHandleData } from "@/hooks/useHandleData";
+import { useDownload } from "@/hooks/useDownload";
 const proTable = ref<ProTableInstance>();
 
+const baseUrl = import.meta.env.VITE_API_URL;
 const drawerRef = ref<InstanceType<typeof ChamberDrawer>>();
 // 字典数据
 const coupleRoomArea = ref<DictOptions[]>([]);
@@ -232,6 +234,16 @@ const handleDelete = async (row: CoupleRoom.ResRoom) => {
   proTable.value?.getTableList();
 };
 
+// 批量删除
+const handleBatchDelete = async () => {
+  const selectedList = proTable.value?.selectedListIds;
+  if (!selectedList) {
+    ElMessage.warning("请选择要删除的客房");
+    return;
+  }
+  await useHandleData(deleteMoreChamber, selectedList, `删除客房`);
+  proTable.value?.getTableList();
+};
 // 新增
 const handleAdd = () => {
   drawerRef.value?.acceptParams({
@@ -245,8 +257,7 @@ const handleAdd = () => {
 
 // 导出
 const handleExport = () => {
-  ElMessage.success("导出成功");
-  console.log("导出");
+  useDownload(`${baseUrl}/coupleRoom/room/chamber/export`, "客房租赁房间", true, ".xlsx", "post", {});
 };
 
 // 导入
