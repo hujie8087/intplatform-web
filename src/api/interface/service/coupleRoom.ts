@@ -24,7 +24,7 @@ export namespace CoupleRoom {
     isSubmit: string | null;
     startTime: string | null;
     endTime: string | null;
-    order: ResRoomOrder[];
+    roomOrders: ResRoomOrder[];
   }
   // 订单管理
   export interface ReqOrderParams extends ReqPage {

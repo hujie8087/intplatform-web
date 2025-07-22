@@ -183,20 +183,20 @@ const getRoomStatus = (row: CoupleRoom.ResRoom, date: string) => {
   }
 
   // 格式化传入的日期
-  let formattedDate = new Date(dayjs(date).format("YYYY-MM-DD"));
-  let lastTime = new Date(dayjs(row.lastTime).format("YYYY-MM-DD"));
-
+  let formattedDate = dayjs(date).format("YYYY-MM-DD");
+  let lastTime = dayjs(row.lastTime).format("YYYY-MM-DD");
   // 遍历订单数组，根据 keychain 值来判断状态
-  if (row.order && Array.isArray(row.order)) {
+  if (row.roomOrders && Array.isArray(row.roomOrders)) {
     // 筛选出状态为1和10的订单，因为这两个状态的订单是已提交的订单
-    const foundOrder = row.order
+    const foundOrder = row.roomOrders
       .filter(order => order.status === 1 || order.status === 10)
       .find(order => {
-        let startDate = new Date(dayjs(order.startTime).format("YYYY-MM-DD"));
-        let endDate = new Date(dayjs(order.endTime).format("YYYY-MM-DD"));
+        let startDate = dayjs(order.startTime).format("YYYY-MM-DD");
+        let endDate = dayjs(order.endTime).format("YYYY-MM-DD");
         // 检查订单时间范围和当前日期
         return formattedDate >= startDate && formattedDate < endDate;
       });
+    console.log(foundOrder);
     if (foundOrder) {
       if (foundOrder.status === 1) {
         return "待审核";
