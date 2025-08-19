@@ -1,6 +1,7 @@
 // 用户信息模块
 
 import { ReqPage } from "../..";
+import { User } from "./user";
 
 export namespace Role {
   export interface ReqRoleParams extends ReqPage {
@@ -37,5 +38,11 @@ export namespace Role {
     permissions: string[] | null;
     permIds: number[] | null;
     admin: boolean;
+  }
+  export interface ResAuthRole {
+    roles: ResRole[];
+    user: User.ResUser;
+    code: number;
+    msg: string;
   }
 }

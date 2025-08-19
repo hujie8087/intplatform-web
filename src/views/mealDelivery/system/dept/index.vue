@@ -13,21 +13,21 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
-          <el-button type="primary" v-auth="['system:dept:add']" :icon="CirclePlus" @click="openDrawer('新增')"
+          <el-button type="primary" v-mealAuth="['system:dept:add']" :icon="CirclePlus" @click="openDrawer('新增')"
             >新增部门</el-button
           >
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="primary" v-auth="['system:dept:add']" link :icon="Plus" @click="openDrawer('新增', scope.row)"
+          <el-button type="primary" v-mealAuth="['system:dept:add']" link :icon="Plus" @click="openDrawer('新增', scope.row)"
             >新增</el-button
           >
-          <el-button type="warning" v-auth="['system:dept:edit']" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"
+          <el-button type="warning" v-mealAuth="['system:dept:edit']" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"
             >编辑</el-button
           >
           <el-button
             type="danger"
-            v-auth="['system:dept:remove']"
+            v-mealAuth="['system:dept:remove']"
             v-if="scope.row.deptId !== 100"
             link
             :icon="Delete"

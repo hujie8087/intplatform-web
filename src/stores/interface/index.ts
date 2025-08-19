@@ -54,6 +54,7 @@ export interface TabsState {
 export interface AuthState {
   routeName: string;
   authButtonList: string[];
+  mealDeliveryAuthButtonList: string[];
   authMenuList: Menu.MenuOptions[];
 }
 

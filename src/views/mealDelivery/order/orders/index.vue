@@ -20,15 +20,36 @@
           <!-- 批量打印(A4) -->
           <el-button type="primary" :disabled="!proTable?.isSelected" :icon="Printer" @click="printA4">批量打印(A4)</el-button>
           <!-- 批量确认 -->
-          <el-button type="success" :disabled="!proTable?.isSelected" :icon="Check" @click="batchConfirm">批量确认</el-button>
+          <el-button
+            type="success"
+            v-mealAuth="['order:orders:confirmOrder']"
+            :disabled="!proTable?.isSelected"
+            :icon="Check"
+            @click="batchConfirm"
+            >批量确认</el-button
+          >
           <!-- 修改订单信息 -->
-          <el-button type="warning" :disabled="selectedList.length !== 1" :icon="Edit" @click="editOrderInfo"
+          <el-button
+            type="warning"
+            v-mealAuth="['system:order:pcEdit']"
+            :disabled="selectedList.length !== 1"
+            :icon="Edit"
+            @click="editOrderInfo"
             >修改订单信息</el-button
           >
           <!-- 导出结算单 -->
-          <el-button type="danger" :icon="Download" @click="handleBatchExportCheck">导出核对</el-button>
+          <el-button type="danger" v-mealAuth="['order:orders:export']" :icon="Download" @click="handleBatchExportCheck"
+            >导出核对</el-button
+          >
           <!-- 导出查看结算任务列表 -->
-          <el-button type="danger" plain :icon="Download" @click="handleBatchExportCheckTaskTable">查看核对任务列表</el-button>
+          <el-button
+            type="danger"
+            plain
+            v-mealAuth="['order:orders:export']"
+            :icon="Download"
+            @click="handleBatchExportCheckTaskTable"
+            >查看核对任务列表</el-button
+          >
         </template>
         <!-- Expand -->
         <template #expand="scope">
@@ -50,6 +71,7 @@
             type="primary"
             link
             @click="submitOrder(scope.row)"
+            v-mealAuth="['order:orders:confirmOrder']"
             >提交</el-button
           >
           <el-button

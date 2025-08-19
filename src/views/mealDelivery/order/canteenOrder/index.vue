@@ -20,7 +20,14 @@
           <!-- 批量打印(A4) -->
           <el-button type="primary" :disabled="!proTable?.isSelected" :icon="Printer" @click="printA4">批量打印(A4)</el-button>
           <!-- 批量确认 -->
-          <el-button type="success" :disabled="!proTable?.isSelected" :icon="Check" @click="batchConfirm">批量接收</el-button>
+          <el-button
+            type="success"
+            v-mealAuth="['order:orders:receiveOrder']"
+            :disabled="!proTable?.isSelected"
+            :icon="Check"
+            @click="batchConfirm"
+            >批量接收</el-button
+          >
         </template>
         <!-- Expand -->
         <template #expand="scope">

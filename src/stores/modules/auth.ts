@@ -8,6 +8,8 @@ export const useAuthStore = defineStore({
   state: (): AuthState => ({
     // 按钮权限列表
     authButtonList: [],
+    // 报餐送餐按钮权限列表
+    mealDeliveryAuthButtonList: [],
     // 菜单权限列表
     authMenuList: [],
     // 当前页面的 router name，用来做按钮权限筛选
@@ -16,6 +18,8 @@ export const useAuthStore = defineStore({
   getters: {
     // 按钮权限列表
     authButtonListGet: state => state.authButtonList,
+    // 报餐送餐按钮权限列表
+    mealDeliveryAuthButtonListGet: state => state.mealDeliveryAuthButtonList,
     // 菜单权限列表 ==> 这里的菜单没有经过任何处理
     authMenuListGet: state => state.authMenuList,
     // 菜单权限列表 ==> 左侧菜单栏渲染，需要剔除 isHide == true
@@ -29,6 +33,10 @@ export const useAuthStore = defineStore({
     // Get AuthButtonList
     async getAuthButtonList(data: string[]) {
       this.authButtonList = data;
+    },
+    // Get MealDeliveryAuthButtonList
+    async getMealDeliveryAuthButtonList(data: string[]) {
+      this.mealDeliveryAuthButtonList = data;
     },
     // Get AuthMenuList
     async getAuthMenuList() {

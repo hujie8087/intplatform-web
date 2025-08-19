@@ -27,7 +27,7 @@
         >
           <!-- 表格 header 按钮 -->
           <template #tableHeader>
-            <el-button type="primary" v-auth="['system:user:add']" :icon="CirclePlus" @click="openDrawer('新增')">
+            <el-button type="primary" v-mealAuth="['system:user:add']" :icon="CirclePlus" @click="openDrawer('新增')">
               新增
             </el-button>
             <el-button
@@ -38,10 +38,10 @@
               @click="deleteAccount(null)"
               >删除</el-button
             >
-            <el-button type="primary" v-auth="['system:user:import']" :icon="Upload" plain @click="batchAdd">
+            <el-button type="primary" v-mealAuth="['system:user:import']" :icon="Upload" plain @click="batchAdd">
               批量添加
             </el-button>
-            <el-button type="warning" v-auth="['system:user:export']" :icon="Download" plain @click="downloadFile">
+            <el-button type="warning" v-mealAuth="['system:user:export']" :icon="Download" plain @click="downloadFile">
               导出用户数据
             </el-button>
           </template>
@@ -53,7 +53,7 @@
               link
               v-if="scope.row.userId !== 1"
               :icon="EditPen"
-              v-auth="['system:user:edit']"
+              v-mealAuth="['system:user:edit']"
               @click="openDrawer('编辑', scope.row)"
             >
               编辑
@@ -63,15 +63,32 @@
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item>
-                    <el-button type="primary" link :icon="Refresh" v-auth="['system:user:resetPwd']" @click="resetPass(scope.row)"
+                    <el-button
+                      type="primary"
+                      link
+                      :icon="Refresh"
+                      v-mealAuth="['system:user:resetPwd']"
+                      @click="resetPass(scope.row)"
                       >重置密码</el-button
                     >
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <el-button type="primary" link :icon="CircleCheck" v-auth="['system:user:edit']">分配角色</el-button>
+                    <el-button
+                      type="primary"
+                      link
+                      :icon="CircleCheck"
+                      v-mealAuth="['system:user:edit']"
+                      @click="openRoleDrawer(scope.row)"
+                      >分配角色</el-button
+                    >
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <el-button type="danger" link :icon="Delete" v-auth="['system:user:remove']" @click="deleteAccount(scope.row)"
+                    <el-button
+                      type="danger"
+                      link
+                      :icon="Delete"
+                      v-mealAuth="['system:user:remove']"
+                      @click="deleteAccount(scope.row)"
                       >删除</el-button
                     >
                   </el-dropdown-item>
@@ -107,13 +124,16 @@ import {
   addUser,
   changeUserStatus,
   resetUserPwd,
-  deptTreeSelect
+  deptTreeSelect,
+  updateAuthRole,
+  getAuthRole
 } from "@/api/modules/mdc/system/user";
 import { User } from "@/api/interface/mealDelivery/system/user";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 const { BUTTONS } = useAuthButtons();
 import { useDict } from "@/hooks/useDict";
 import { DictOptions } from "@/api/interface";
+import { Role } from "@/api/interface/mealDelivery/system/role";
 
 const baseUrl = import.meta.env.VITE_API_URL;
 // ProTable 实例
@@ -320,6 +340,28 @@ const onSplitterMouseDown = (e: MouseEvent) => {
 
   window.addEventListener("mousemove", onMouseMove);
   window.addEventListener("mouseup", onMouseUp);
+};
+
+// 打开角色分配 drawer
+const roleDrawerRef = ref<InstanceType<typeof RoleDrawer> | null>(null);
+const openRoleDrawer = async (row: User.ResUser) => {
+  let roleList: Role.ResRole[] = [];
+  let user = ref<User.ResUser>();
+  if (row.userId) {
+    const res = await getAuthRole(row.userId);
+    roleList = res.roles;
+    user.value = res.user;
+  }
+
+  const params = {
+    title: "角色分配",
+    isView: false,
+    rowData: user.value,
+    api: updateAuthRole,
+    getTableList: proTable.value?.getTableList,
+    roleList: roleList
+  };
+  roleDrawerRef.value?.acceptParams(params);
 };
 </script>
 

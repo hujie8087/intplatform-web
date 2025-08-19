@@ -12,12 +12,12 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" v-auth="['system:role:add']" :icon="CirclePlus" @click="openDrawer(1)">{{
+          <el-button type="primary" v-mealAuth="['system:role:add']" :icon="CirclePlus" @click="openDrawer(1)">{{
             $t("system.role.add")
           }}</el-button>
           <el-button
             type="danger"
-            v-auth="['system:role:reomve']"
+            v-mealAuth="['system:role:remove']"
             :icon="Delete"
             plain
             @click="batchDelete(scope.selectedListIds)"
@@ -30,7 +30,7 @@
         <template #operation="scope">
           <el-button
             type="warning"
-            v-auth="['system:role:edit']"
+            v-mealAuth="['system:role:edit']"
             link
             v-if="scope.row.roleId !== 1"
             :icon="EditPen"
@@ -39,22 +39,36 @@
           >
           <el-button
             type="danger"
-            v-auth="['system:role:remove']"
+            v-mealAuth="['system:role:remove']"
             link
             v-if="scope.row.roleId !== 1"
             :icon="Delete"
             @click="deleteAccount(scope.row)"
             >{{ $t("main.delete") }}</el-button
           >
-          <el-dropdown v-auth="['system:role:edit']" style="display: inline-block; vertical-align: middle">
+          <el-dropdown v-mealAuth="['system:role:edit']" style="display: inline-block; vertical-align: middle">
             <el-button type="success" link :icon="DArrowRight">更多</el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item>
-                  <el-button type="primary" link :icon="Refresh" @click="handleDataScope(scope.row)">数据权限</el-button>
+                  <el-button
+                    type="primary"
+                    v-mealAuth="['system:role:edit']"
+                    link
+                    :icon="Refresh"
+                    @click="handleDataScope(scope.row)"
+                    >数据权限</el-button
+                  >
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-button type="primary" link :icon="CircleCheck" @click="handleAuthUser(scope.row)">分配用户</el-button>
+                  <el-button
+                    type="primary"
+                    v-mealAuth="['system:role:edit']"
+                    link
+                    :icon="CircleCheck"
+                    @click="handleAuthUser(scope.row)"
+                    >分配用户</el-button
+                  >
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
