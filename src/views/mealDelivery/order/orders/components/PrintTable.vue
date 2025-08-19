@@ -18,7 +18,7 @@
         <col width="80" />
       </colgroup>
       <tr>
-        <td colspan="14" style=" padding: 10px; font-size: 20px; color: red;text-align: center; vertical-align: middle">
+        <td colspan="14" style="padding: 10px; font-size: 20px; color: red; text-align: center; vertical-align: middle">
           <p v-if="props.foodTypeList[0] == '0'">打包饭申报、配送汇总表<br />CHINA PACK MEAL 中国餐</p>
           <p v-else>打包饭申报、配送汇总表<br />Indonesia PACK MEAL 印尼餐</p>
         </td>
