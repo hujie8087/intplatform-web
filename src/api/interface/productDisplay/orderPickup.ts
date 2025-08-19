@@ -1,20 +1,25 @@
 import { ReqPage } from "..";
 
 // * 订桌/货架管理模块
-export namespace OrderPickup {
-  export interface ReqOrderPickupParams extends ReqPage {
+export namespace PickupCode {
+  export interface ReqPickupCodeParams extends ReqPage {
     name?: string;
     status?: string;
   }
-  export interface ResOrderPickup {
+  export interface ResPickupCode {
     canteenId: number;
-    createTime: string;
-    fullStatus: number;
     id: number;
-    name: string;
-    sort: number;
-    status: number;
-    updateTime: string;
+    code: string;
+    enabled: string;
   }
-  export type CreateOrderPickup = Optional<ResOrderPickup, "id" | "createTime" | "updateTime">;
+  export interface CreatePickupCode {
+    num: number;
+    canteenId: number | undefined;
+    pick: string;
+    layers: number;
+  }
+  export interface BatchUpdatePickupCodeStatus {
+    code: string;
+    enabled: number;
+  }
 }

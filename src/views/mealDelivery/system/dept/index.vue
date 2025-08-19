@@ -4,11 +4,12 @@
       <ProTable
         ref="proTable"
         :columns="columns"
-        :request-api="listDept"
+        :request-api="listDeptTree"
         :pagination="false"
         :search-col="{ xs: 1, sm: 1, md: 6, lg: 6, xl: 6 }"
         row-key="deptId"
         :data-callback="dataCallback"
+        :expand-row-keys="expandRowKeys"
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
@@ -47,7 +48,7 @@ import DeptDrawer from "./components/DeptDrawer.vue";
 import ProTable from "@/components/ProTable/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, EditPen, Plus } from "@element-plus/icons-vue";
-import { listDept, delDept, updateDept, getDept, addDept, listDeptExcludeChild } from "@/api/modules/mdc/system/dept";
+import { listDeptTree, delDept, updateDept, getDept, addDept, listDeptExcludeChild } from "@/api/modules/mdc/system/dept";
 import { Dept } from "@/api/interface/mealDelivery/system/dept";
 import { handleTree } from "@/utils";
 import { userStatus } from "@/utils/serviceDict";
@@ -55,8 +56,9 @@ import { userStatus } from "@/utils/serviceDict";
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
-  return handleTree(data.data, "deptId");
+  return data.data;
 };
+const expandRowKeys = ref<string[]>(["100"]);
 // 表格配置项
 const columns = reactive<ColumnProps<Dept.ResDept>[]>([
   { prop: "deptName", label: "部门名称", search: { el: "input" }, align: "left" },
@@ -92,8 +94,8 @@ const openDrawer = async (title: string, row: Partial<Dept.ResDept> = {}) => {
     deptOptions.value = handleTree(res.data, "deptId");
   }
   if (title === "新增") {
-    const res = await listDept({ pageNum: 1, pageSize: 1000 });
-    deptOptions.value = handleTree(res.rows, "deptId");
+    const res = await listDeptTree({ pageNum: 1, pageSize: 1000 });
+    deptOptions.value = handleTree(res.data, "deptId");
   }
   const params = {
     title,

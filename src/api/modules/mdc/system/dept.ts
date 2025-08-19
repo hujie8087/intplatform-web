@@ -36,3 +36,8 @@ export function updateDept(data) {
 export function delDept(deptId) {
   return http.delete<any>(PORT1 + "/system/mdc/dept/" + deptId);
 }
+
+// 查询部门树列表(带员工数量)
+export function listDeptTreeWithEmployeeCount(query) {
+  return http.get<Dept.ResEmployeeTree>(PORT1 + "/system/mdc/employee/deptTree", query);
+}

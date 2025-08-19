@@ -109,8 +109,8 @@ export function exportWaterSettlement(data: any) {
 }
 
 //导出核对
-export function exportCheck(query: any) {
-  return http.get<any>(PORT1 + "/order/orders/exportCheck", { params: query });
+export function exportCheck(data: any) {
+  return http.post<any>(PORT1 + "/order/orders/exportCheck", data);
 }
 
 //部门批量提交
@@ -144,5 +144,7 @@ export function canteenConfirmPrint(ordersId: string) {
 }
 
 export function queryFoodOrderDeliverySummaryList(data: any) {
-  return http.post<any>(PORT1 + "/order/orders/queryfoodorderdeliverysummarylist?oIds=" + data);
+  return http.post<MdcOrder.ResFoodOrderDeliverySummary[]>(
+    PORT1 + "/order/orders/queryfoodorderdeliverysummarylist?oIds=" + data
+  );
 }

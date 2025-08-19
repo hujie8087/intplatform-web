@@ -2,7 +2,7 @@ import { EpPropMergeType } from "element-plus/es/utils";
 
 // 请求响应参数（不包含data）
 export interface Result {
-  code: string;
+  code: string | number;
   msg: string;
 }
 
@@ -158,6 +158,8 @@ export interface DictOptions {
   value: number | string | boolean;
   tagType?: EpPropMergeType<StringConstructor, "primary" | "danger" | "warning" | "success" | "info", unknown>;
   cssClass?: string;
+  enLabel?: string;
+  idLabel?: string;
 }
 
 // 取餐类型

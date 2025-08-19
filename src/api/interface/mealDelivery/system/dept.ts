@@ -34,4 +34,12 @@ export namespace Dept {
     parentName: string | null;
     children: ResDept[];
   }
+
+  export interface ResEmployeeTree {
+    id: number;
+    label: string;
+    num: number;
+    deptPath: string;
+    children: ResEmployeeTree[];
+  }
 }

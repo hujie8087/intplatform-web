@@ -149,7 +149,7 @@ const columns = reactive<ColumnProps<Account.ResAccountList>[]>([
               onClick={() => changeStatus(scope.row)}
             />
           ) : (
-            <el-tag type={scope.row.status === "0" ? "success" : "danger"}>{scope.row.status ? "启用" : "禁用"}</el-tag>
+            <el-tag type={scope.row.status === "0" ? "success" : "danger"}>{scope.row.status === "0" ? "启用" : "禁用"}</el-tag>
           )}
         </span>
       );

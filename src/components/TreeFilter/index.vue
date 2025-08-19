@@ -20,15 +20,9 @@
         :default-checked-keys="multiple ? selected : []"
         @node-click="handleNodeClick"
         @check="handleCheckChange"
-      >
-        <template #default="scope">
-          <span class="el-tree-node__label">
-            <slot :row="scope">
-              {{ scope.node.label }}
-            </slot>
-          </span>
-        </template>
-      </el-tree>
+        :render-content="renderContent"
+        :default-expanded-keys="defaultExpandedKeys"
+      />
     </el-scrollbar>
   </div>
 </template>
@@ -47,12 +41,14 @@ interface TreeFilterProps {
   multiple?: boolean; // 是否为多选 ==> 非必传，默认为 false
   defaultValue?: any; // 默认选中的值 ==> 非必传
   checkStrictly?: boolean;
+  defaultExpandedKeys?: number[]; // 展开的行 ==> 非必传
 }
 const props = withDefaults(defineProps<TreeFilterProps>(), {
   id: "id",
   label: "label",
   multiple: false,
-  checkStrictly: false
+  checkStrictly: false,
+  defaultExpandedKeys: () => []
 });
 
 const defaultProps = {
@@ -78,6 +74,26 @@ onBeforeMount(async () => {
     treeAllData.value = [{ id: "", [props.label]: "全部" }, ...data];
   }
 });
+
+const renderContent = (h: any, { node, data }: any) => {
+  return h(
+    "span",
+    {
+      class: "el-tree-node__label"
+    },
+    [
+      h("span", node.label),
+      data.num &&
+        h(
+          "span",
+          {
+            class: "el-tree-node__label-count"
+          },
+          [h("span", `(${data.num})`)]
+        )
+    ]
+  );
+};
 
 // 使用 nextTick 防止打包后赋值不生效，开发环境是正常的
 watch(
