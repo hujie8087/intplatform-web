@@ -43,18 +43,6 @@
           style="width: 100%; padding: 10px 0; border-radius: 4px; box-shadow: 0 0 0 1px #dcdfe6"
         />
       </el-form-item>
-      <el-form-item :label="`${$t('system.role.building')}`" prop="repairAreaId">
-        <el-select
-          v-model="repairAreaIds"
-          multiple
-          collapse-tags
-          collapse-tags-tooltip
-          :max-collapse-tags="5"
-          placeholder="请选择"
-        >
-          <el-option v-for="item in drawerProps.buildingOptions" :label="item.title" :value="item.id" :key="item.id"> </el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item :label="`${$t('system.role.status')}`" prop="status">
         <el-switch
           v-model="drawerProps.rowData.status"
@@ -84,7 +72,7 @@ import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { useI18n } from "vue-i18n";
 import { Role } from "@/api/interface/system";
-import { Building } from "@/api/interface/productDisplay/building";
+import { Menu } from "@/api/interface/mealDelivery/system/menu";
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({
@@ -99,10 +87,10 @@ interface DrawerProps {
   rowData: Role.ResRole;
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
-  menuList?: Role.ResMenu[];
+  menuList?: Menu.ResMenu[];
   menuIds: number[];
-  buildingOptions?: Building.ResBuilding[];
 }
+
 // drawer框状态
 const drawerVisible = ref(false);
 const drawerProps = ref<DrawerProps>({
@@ -121,7 +109,7 @@ const drawerProps = ref<DrawerProps>({
 });
 const treeRef = ref();
 
-const checkStrictly = ref(false);
+const checkStrictly = ref(true);
 const checkAll = ref(false);
 const expandAll = (val: boolean) => {
   let nodes = treeRef.value?.store._getAllNodes() || [];

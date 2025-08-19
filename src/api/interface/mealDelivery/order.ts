@@ -96,4 +96,22 @@ export namespace MdcOrder {
     delFlag: string;
     firstLevelDeptName: string;
   }
+
+  export interface ResFoodOrderDeliverySummary {
+    orderDate: string;
+    orderNo: string;
+    companyName: string;
+    deptId: number;
+    deptPath: string;
+    createBy: string;
+    jobNumber: string;
+    num: number;
+    foodName: string;
+    foodType: string;
+    deliverySite: string;
+    phoneNumber: string;
+    fcName: string;
+    packageType: string;
+    canteen: string;
+  }
 }

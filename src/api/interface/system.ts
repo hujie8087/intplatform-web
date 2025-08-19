@@ -123,6 +123,10 @@ export namespace Dept {
     parentName: string | null;
     children: ResDept[];
   }
+  export interface ResDeptTree {
+    depts: ResDept[];
+    checkedKeys: number[];
+  }
 }
 
 // 菜单管理模块
@@ -275,6 +279,8 @@ export namespace Dict {
     dictCode: number;
     dictSort: number;
     dictLabel: string;
+    dictLabelEn: string;
+    dictLabelId: string;
     dictValue: string;
     dictType: string;
     cssClass: string;

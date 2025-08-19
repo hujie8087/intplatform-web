@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="drawerVisible" :destroy-on-close="true" width="800" :title="`${drawerProps.title}订桌/货架`">
+  <el-dialog v-model="drawerVisible" :destroy-on-close="true" width="800" :title="`${drawerProps.title}货架`">
     <el-form
       ref="ruleFormRef"
       label-width="120px"
@@ -10,37 +10,29 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-row>
-        <el-col :span="24">
-          <el-form-item label="订桌/货架名称" prop="name">
-            <el-input v-model="drawerProps.rowData!.name" placeholder="请输入订桌/货架名称" clearable></el-input>
+        <el-col :span="12">
+          <el-form-item label="货架名称" prop="code">
+            <el-input v-model="drawerProps.rowData!.code" placeholder="请输入货架名称" clearable></el-input>
           </el-form-item>
         </el-col>
         <!-- 配送区域 -->
         <el-col :span="12">
           <el-form-item label="商店" prop="canteenId">
             <el-select v-model="drawerProps.rowData!.canteenId" placeholder="请选择商店">
-              <el-option v-for="item in drawerProps.canteenList" :key="item.value" :label="item.label" :value="item.value">
+              <el-option v-for="item in drawerProps.canteenList" :key="item.label" :label="item.label" :value="item.value">
                 {{ item.label }}
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <!-- 排序 -->
-        <el-col :span="12">
-          <el-form-item label="排序" prop="sort">
-            <el-input-number v-model="drawerProps.rowData!.sort" placeholder="请输入排序" :min="0" />
-          </el-form-item>
-        </el-col>
         <!-- 状态 -->
         <el-col :span="12">
-          <el-form-item label="状态" prop="status">
-            <el-switch v-model="drawerProps.rowData!.status" :active-value="1" :inactive-value="0" />
-          </el-form-item>
-        </el-col>
-        <!-- 状态 -->
-        <el-col :span="12">
-          <el-form-item label="订桌状态" prop="fullStatus">
-            <el-switch v-model="drawerProps.rowData!.fullStatus" :active-value="1" :inactive-value="0" />
+          <el-form-item label="状态" prop="enabled">
+            <el-radio-group v-model="drawerProps.rowData!.enabled">
+              <el-radio v-for="item in drawerProps.statusList" :key="item.label" :label="item.value">
+                {{ item.label }}
+              </el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-col>
       </el-row>
@@ -52,10 +44,10 @@
   </el-dialog>
 </template>
 
-<script setup lang="ts" name="CanteenDrawer">
+<script setup lang="ts" name="PickupCodeDrawer">
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
-import { OrderPickup } from "@/api/interface/productDisplay/orderPickup";
+import { PickupCode } from "@/api/interface/productDisplay/orderPickup";
 import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
 
@@ -70,10 +62,11 @@ const rules = reactive({
 interface DrawerProps {
   title: string;
   isView: boolean;
-  rowData?: Partial<OrderPickup.ResOrderPickup>;
+  rowData?: Partial<PickupCode.ResPickupCode>;
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
   canteenList?: DictOptions[];
+  statusList?: DictOptions[];
 }
 
 // drawer框状态

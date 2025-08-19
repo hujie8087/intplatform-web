@@ -9,14 +9,26 @@
         :data-callback="dataCallback"
         :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
         :init-param="initParam"
-        row-key="oId"
+        row-key="orderNo"
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="">
+          <!-- 批量打印(小票) -->
+          <el-button type="primary" :disabled="!proTable?.isSelected" :icon="Printer" @click="printTicket"
+            >批量打印(小票)</el-button
+          >
+          <!-- 批量打印(A4) -->
+          <el-button type="primary" :disabled="!proTable?.isSelected" :icon="Printer" @click="printA4">批量打印(A4)</el-button>
+          <!-- 批量确认 -->
+          <el-button type="success" :disabled="!proTable?.isSelected" :icon="Check" @click="batchConfirm">批量确认</el-button>
+          <!-- 修改订单信息 -->
+          <el-button type="warning" :disabled="selectedList.length !== 1" :icon="Edit" @click="editOrderInfo"
+            >修改订单信息</el-button
+          >
           <!-- 导出结算单 -->
-          <el-button type="warning" :icon="Download" @click="exportMdcOrder">导出结算单</el-button>
+          <el-button type="danger" :icon="Download" @click="handleBatchExportCheck">导出核对</el-button>
           <!-- 导出查看结算任务列表 -->
-          <el-button type="warning" plain :icon="Download" @click="exportMdcOrder">导出查看结算任务列表</el-button>
+          <el-button type="danger" plain :icon="Download" @click="handleBatchExportCheckTaskTable">查看核对任务列表</el-button>
         </template>
         <!-- Expand -->
         <template #expand="scope">
@@ -32,28 +44,130 @@
           </div>
         </template>
         <!-- 表格操作 -->
-        <template #operation>
-          <el-button type="primary" link>提交</el-button>
-          <el-button type="danger" link>驳回</el-button>
+        <template #operation="scope">
+          <el-button
+            v-show="scope.row.leaderStatus === '1' && scope.row.centerStatus === '2'"
+            type="primary"
+            link
+            @click="submitOrder(scope.row)"
+            >提交</el-button
+          >
+          <el-button
+            v-show="scope.row.leaderStatus === '1' && scope.row.centerStatus === '2'"
+            type="danger"
+            link
+            @click="rejectOrder(scope.row)"
+            >驳回</el-button
+          >
+          <el-button
+            style="margin: 0"
+            v-show="scope.row.leaderStatus === '1' && scope.row.centerStatus === '3'"
+            disabled
+            size="small"
+            type="text"
+            >已提交至食堂
+          </el-button>
+          <el-tag v-show="scope.row.leaderStatus === '2'" disabled type="danger" size="small">已驳回</el-tag>
         </template>
       </ProTable>
       <!-- <MdcOrderDrawer ref="drawerRef" />
       <UserTaskInfoForm ref="userTaskInfoFormRef" /> -->
+      <PrintTemplate ref="printTemplateRef" />
+      <UserTaskListTable ref="userTaskListTableRef" />
+      <UserTaskInfoForm ref="userTaskInfoFormRef" />
     </div>
+    <!-- 修改弹窗 -->
+    <el-dialog title="修改食堂" v-model="openEditDialog" width="20%">
+      <el-form :rules="rules" ref="editFormRef" :model="editForm" label-width="100px">
+        <el-form-item label="食堂" prop="fdId">
+          <el-select v-model="editForm.fdId" placeholder="请选择食堂" clearable>
+            <el-option v-for="dict in messHallListOptions" :key="dict.label" :label="dict.label" :value="dict.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="配送方式" prop="deliveryType">
+          <el-radio v-model="editForm.deliveryType" label="0">配送</el-radio>
+          <el-radio v-model="editForm.deliveryType" label="1">自取</el-radio>
+        </el-form-item>
+        <!-- 新增的打包类型选择 -->
+        <el-form-item label="打包类型" prop="packageType">
+          <el-select v-model="editForm.packageType" placeholder="请选择打包类型" clearable>
+            <el-option label="打包饭" value="0"></el-option>
+            <el-option label="盒装饭" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="openEditDialog = false">取消</el-button>
+        <el-button type="primary" @click="submitEditForm">保存</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="tsx" name="MdcOrder">
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
 // import MdcOrderDrawer from "./components/MdcOrderDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { Download } from "@element-plus/icons-vue";
-import { listOrders } from "@/api/modules/mdc/system/order/orders";
+import { Check, Download, Edit, Printer } from "@element-plus/icons-vue";
+import {
+  confirmOrdersStatus,
+  exportCheck,
+  listOrders,
+  orderReject,
+  queryFoodOrderDeliverySummaryList,
+  updateOrders,
+  updatePrintStatus
+} from "@/api/modules/mdc/system/order/orders";
 import { DictOptions } from "@/api/interface";
 import { getAllCarNameList, getAllMessHallNameList, getAllSiteAddressList } from "@/api/modules/mdc/system";
-import UserTaskInfoForm from "@/components/UserTaskInfoForm/index.vue";
+import UserTaskInfoForm from "./components/UserTaskInfoForm.vue";
+import UserTaskListTable from "./components/UserTaskListTable.vue";
 import dayjs from "dayjs";
 import { MdcOrder } from "@/api/interface/mealDelivery/order";
+import { useHandleData } from "@/hooks/useHandleData";
+import { ElForm, ElMessage, FormRules } from "element-plus";
+import PrintTemplate from "./components/PrintTemplate.vue";
+
+const printTemplateRef = ref<InstanceType<typeof PrintTemplate>>();
+const selectedList = computed(() => {
+  return proTable.value?.selectedList.filter(item => item.orderNo) ?? [];
+});
+const openEditDialog = ref(false);
+const editForm = ref({
+  fdId: "",
+  deliveryType: "",
+  packageType: "",
+  orderNo: "",
+  oId: ""
+});
+const rules = ref<FormRules>({
+  fdId: [{ required: true, message: "食堂不能为空", trigger: "blur" }]
+});
+const editFormRef = ref<InstanceType<typeof ElForm>>();
+const submitEditForm = () => {
+  editFormRef.value?.validate(valid => {
+    if (valid) {
+      let fcMessHallObj = messHallListOptions.value.find(messHall => messHall.value === editForm.value.fdId);
+      if (fcMessHallObj) {
+        let editNewForm = {
+          oId: editForm.value.oId,
+          fdId: editForm.value.fdId,
+          canteen: fcMessHallObj.label,
+          deliveryType: editForm.value.deliveryType,
+          packageType: editForm.value.packageType
+        };
+        updateOrders(editNewForm).then(response => {
+          if (response.code === 200) {
+            ElMessage.success("修改成功");
+            openEditDialog.value = false;
+            proTable.value?.clearSelection();
+            proTable.value?.getTableList();
+          }
+        });
+      }
+    }
+  });
+};
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
@@ -83,9 +197,9 @@ const foodNameMap = ref<DictOptions[]>([
 
 // 出餐方式
 const foodTypeOptions = ref<DictOptions[]>([
-  { label: "中国餐", value: "0", tagType: "primary" },
-  { label: "印尼餐", value: "1", tagType: "success" },
-  { label: "桶装水", value: "2", tagType: "warning" }
+  { label: "中国餐", value: "0", tagType: "primary", idLabel: "Makanan Cina" },
+  { label: "印尼餐", value: "1", tagType: "success", idLabel: "Makanan Indonesia" },
+  { label: "桶装水", value: "2", tagType: "warning", idLabel: "Air Mineral" }
 ]);
 
 const printStatusOptions = ref<DictOptions[]>([
@@ -102,7 +216,6 @@ const orderStatusOptions = ref<DictOptions[]>([
 
 const orderStatusMapping = (row: MdcOrder.ResMdcOrder): { text: string; color: string } => {
   const { orderStatus, centerStatus } = row;
-  console.log(orderStatus, centerStatus);
 
   if ("0" === orderStatus && "1" === centerStatus) {
     // 班组已下单
@@ -379,15 +492,223 @@ const getOrderData = (row: MdcOrder.ResMdcOrder): { timestamp: string; color: st
 
 const userTaskInfoFormRef = ref<InstanceType<typeof UserTaskInfoForm>>();
 // 导出结算单
-const exportMdcOrder = () => {
-  let newParams = JSON.parse(JSON.stringify(proTable.value?.totalParam));
-
-  userTaskInfoFormRef.value?.acceptParams({
-    rowData: {},
-    fileName: "报餐送餐系统-结算表" + new Date().getTime() + ".xlsx",
-    // api: exportMdcOrder,
-    params: newParams
+const handleBatchExportCheck = () => {
+  userTaskInfoFormRef.value?.create("报餐送餐系统-结算表" + new Date().getTime() + ".xlsx");
+  exportCheck({
+    ...proTable.value?.totalParam,
+    params: {
+      beginTime: proTable.value?.searchParam.orderDate[0],
+      endTime: proTable.value?.searchParam.orderDate[1]
+    }
+  }).then(res => {
+    let taskId = res.data;
+    userTaskInfoFormRef.value?.show(taskId);
   });
+};
+
+// 查看核对任务列表
+const userTaskListTableRef = ref<InstanceType<typeof UserTaskListTable>>();
+const handleBatchExportCheckTaskTable = () => {
+  userTaskListTableRef.value?.create(3, 1, "报餐送餐系统-核对表" + new Date().getTime() + ".xlsx");
+};
+// 提交订单
+const submitOrder = async (row: MdcOrder.ResMdcOrder) => {
+  await useHandleData(confirmOrdersStatus, row.oId, "提交订单");
+  proTable.value?.getTableList();
+};
+
+// 驳回订单
+const rejectOrder = async (row: MdcOrder.ResMdcOrder) => {
+  await useHandleData(orderReject, row.oId, "驳回订单");
+  proTable.value?.getTableList();
+};
+
+// 批量确认
+const batchConfirm = () => {
+  useHandleData(
+    confirmOrdersStatus,
+    proTable.value?.selectedList.filter(item => item.orderNo).map(item => item.oId),
+    "批量确认(" + proTable.value?.selectedList.filter(item => item.orderNo).length + ")条数据"
+  );
+};
+
+// 修改订单信息
+const editOrderInfo = () => {
+  openEditDialog.value = true;
+  editForm.value = {
+    oId: selectedList.value[0].oId,
+    fdId: selectedList.value[0].fdId,
+    deliveryType: selectedList.value[0].deliveryType,
+    packageType: selectedList.value[0].packageType,
+    orderNo: selectedList.value[0].orderNo
+  };
+};
+
+const printOrderCallback = async (orderIds: number[]) => {
+  const res = await updatePrintStatus(orderIds.join(","));
+  console.log(res);
+  if (res.code === 200) {
+    ElMessage.success("打印成功");
+    proTable.value?.getTableList();
+  }
+};
+
+// 批量打印(小票)
+const printTicket = async () => {
+  let fcNameList: string[] = [];
+  let foodTypeList: string[] = [];
+  let ids: number[] = [];
+  let selectedList = [...(proTable.value?.selectedList.filter(item => !item.userNo) ?? [])];
+  console.log(selectedList);
+  if (!selectedList.length) {
+    ElMessage.warning("请选择要打印的订单!");
+    return;
+  }
+
+  for (let i = 0; i < selectedList.length; i++) {
+    const row = selectedList[i] as MdcOrder.ResMdcOrder;
+    let centerStatus = row.centerStatus;
+    if ("2" === centerStatus) {
+      ElMessage.warning("待打印的数据中含有未提交的订单, 请先提交 !");
+      return;
+    }
+    let leaderStatus = row.leaderStatus;
+    if ("2" === leaderStatus) {
+      ElMessage.warning("待打印的数据中含有已驳回的订单!");
+      return;
+    }
+    if (row.foodType) {
+      foodTypeList.push(row.foodType.trim());
+    }
+    if (row.fcName) {
+      fcNameList.push(row.fcName.trim());
+    }
+    ids.push(row.oId);
+
+    try {
+      // 对每个 deptId 调用 listDeptExcludeChild
+      // const persoInfo = await getDept(row.deptId);
+      // 将返回的数据添加到行数据中
+      selectedList[i].persoInfo = row.createBy;
+    } catch (error) {
+      console.error("Error fetching department info:", error);
+      // 可以处理错误，例如显示消息或跳过当前行
+    }
+  }
+  console.log(fcNameList.filter(item => item.trim()).length);
+  if (fcNameList.filter(item => item.trim()).length > 1) {
+    ElMessage.warning("请选择同一车号进行打印");
+    return;
+  }
+  if (foodTypeList.filter(item => item.trim()).length > 1) {
+    ElMessage.warning("请选择同一餐饮类型进行打印");
+    return;
+  }
+
+  try {
+    let res = await queryFoodOrderDeliverySummaryList(ids);
+    // 获取要打印的区域
+    const data = {
+      data: res.data.map(item => {
+        if (item.foodType === "0") {
+          return {
+            ...item,
+            pageSize: 15,
+            pageNumber: Math.ceil(item.num / 15)
+          };
+        } else {
+          return {
+            ...item,
+            pageSize: 30,
+            pageNumber: Math.ceil(item.num / 30)
+          };
+        }
+      })
+    };
+
+    // 使用 Vue 3 的方式创建打印组件
+    if (printTemplateRef.value) {
+      // 设置打印回调
+      printTemplateRef.value.printOrder(data.data, () => {
+        printOrderCallback(ids);
+      });
+    } else {
+      ElMessage.error("打印组件未初始化");
+    }
+  } catch (error) {
+    console.error("打印失败:", error);
+    ElMessage.error("打印失败，请重试");
+  }
+};
+
+// 批量打印(A4)
+const printA4 = async () => {
+  let fcNameList: string[] = [];
+  let foodTypeList: string[] = [];
+  let ids: number[] = [];
+  let selectedList = [...(proTable.value?.selectedList.filter(item => !item.userNo) ?? [])];
+  for (let i = 0; i < selectedList.length; i++) {
+    const row = selectedList[i];
+    let leaderStatus = row["leaderStatus"];
+    if ("2" === leaderStatus) {
+      ElMessage.warning("待打印的数据中含有已驳回的订单!");
+      return;
+    }
+    let centerStatus = row["centerStatus"];
+    if ("2" === centerStatus) {
+      ElMessage.warning("待打印的数据中含有未提交的订单, 请先提交 !");
+      return;
+    }
+    if (row.foodType) {
+      foodTypeList.push(row.foodType.trim());
+    }
+    if (row.fcName) {
+      fcNameList.push(row.fcName.trim());
+    }
+    ids.push(row.oId);
+    try {
+      // 对每个 deptId 调用 listDeptExcludeChild
+      // const persoInfo = await getDept(row.deptId);
+      // 将返回的数据添加到行数据中
+      selectedList[i].persoInfo = row.createBy;
+    } catch (error) {
+      console.error("Error fetching department info:", error);
+      // 可以处理错误，例如显示消息或跳过当前行
+    }
+  }
+  if (selectedList.length > 0 && selectedList.some(item => item.orderStatus === 4)) {
+    ElMessage.warning("待打印的数据中含有未提交的订单, 请先提交 !");
+    return;
+  }
+  if ([...new Set(fcNameList)].length > 1) {
+    ElMessage.warning("请选择同一车号进行打印");
+    return;
+  }
+  if ([...new Set(foodTypeList)].length > 1) {
+    ElMessage.warning("请选择同一餐饮类型进行打印");
+    return;
+  }
+  try {
+    let res = await queryFoodOrderDeliverySummaryList(ids);
+    // 获取要打印的区域
+    const data = {
+      data: res.data,
+      foodTypeList,
+      foodTypeOptions: foodTypeOptions.value
+    };
+    // 使用 Vue 3 的方式创建打印组件
+    if (printTemplateRef.value) {
+      // 设置打印回调
+      printTemplateRef.value.printOrderA4(data, () => {
+        printOrderCallback(ids);
+      });
+    } else {
+      ElMessage.error("打印组件未初始化");
+    }
+  } catch (error) {
+    console.error("打印失败:", error);
+    ElMessage.error("打印失败，请重试");
+  }
 };
 </script>
 <style lang="scss" scoped>

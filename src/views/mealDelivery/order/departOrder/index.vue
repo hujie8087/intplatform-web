@@ -9,14 +9,26 @@
         :data-callback="dataCallback"
         :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
         :init-param="initParam"
-        row-key="oId"
+        row-key="orderNo"
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="">
+          <!-- 批量确认 -->
+          <el-button type="success" :disabled="!proTable?.isSelected" :icon="Check" @click="batchConfirm">批量接收</el-button>
+          <!-- 批量驳回 -->
+          <el-button
+            type="danger"
+            :disabled="!proTable?.isSelected || selectedList.length !== 1"
+            :icon="Close"
+            @click="batchReject"
+            >驳回</el-button
+          >
           <!-- 导出结算单 -->
-          <el-button type="warning" :icon="Download" @click="exportMdcOrder">导出结算单</el-button>
+          <el-button type="warning" :icon="Download" @click="handleBatchExportCheck">导出部门订单核对</el-button>
           <!-- 导出查看结算任务列表 -->
-          <el-button type="warning" plain :icon="Download" @click="exportMdcOrder">导出查看结算任务列表</el-button>
+          <el-button type="warning" plain :icon="Download" @click="handleBatchExportCheckTaskTable"
+            >查看部门订单核对任务列表</el-button
+          >
         </template>
         <!-- Expand -->
         <template #expand="scope">
@@ -47,24 +59,27 @@
           <el-tag v-show="scope.row.leaderStatus === '2'" type="danger">已驳回</el-tag>
         </template>
       </ProTable>
-      <!-- <MdcOrderDrawer ref="drawerRef" />
-      <UserTaskInfoForm ref="userTaskInfoFormRef" /> -->
+      <UserTaskListTable ref="userTaskListTableRef" />
+      <UserTaskInfoForm ref="userTaskInfoFormRef" />
     </div>
   </div>
 </template>
 <script setup lang="tsx" name="MdcOrder">
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
 // import MdcOrderDrawer from "./components/MdcOrderDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { Download } from "@element-plus/icons-vue";
-import { listOrders } from "@/api/modules/mdc/system/order/orders";
+import { Check, Close, Download } from "@element-plus/icons-vue";
+import { batchSubmit, deptReject, exportDeptOrderCheck, listOrders } from "@/api/modules/mdc/system/order/orders";
 import { DictOptions } from "@/api/interface";
 import { getAllCarNameList, getAllMessHallNameList, getAllSiteAddressList } from "@/api/modules/mdc/system";
-import UserTaskInfoForm from "@/components/UserTaskInfoForm/index.vue";
 import dayjs from "dayjs";
 import { MdcOrder } from "@/api/interface/mealDelivery/order";
 import { useDict } from "@/hooks/useDict";
+import UserTaskInfoForm from "../orders/components/UserTaskInfoForm.vue";
+import UserTaskListTable from "../orders/components/UserTaskListTable.vue";
+import { useHandleData } from "@/hooks/useHandleData";
+
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
@@ -75,6 +90,10 @@ const dataCallback = (data: any) => {
     size: data.size
   };
 };
+
+const selectedList = computed(() => {
+  return proTable.value?.selectedList.filter(item => item.orderNo) ?? [];
+});
 
 const foodNameMap = ref<DictOptions[]>([
   { label: "早餐", value: "0", tagType: "primary" },
@@ -107,7 +126,6 @@ const orderStatusOptions = ref<DictOptions[]>([
 
 const orderStatusMapping = (row: MdcOrder.ResMdcOrder): { text: string; color: string } => {
   const { orderStatus, centerStatus } = row;
-  console.log(orderStatus, centerStatus);
 
   if ("0" === orderStatus && "1" === centerStatus) {
     // 班组已下单
@@ -387,17 +405,40 @@ const getOrderData = (row: MdcOrder.ResMdcOrder): { timestamp: string; color: st
   ];
 };
 
-const userTaskInfoFormRef = ref<InstanceType<typeof UserTaskInfoForm>>();
 // 导出结算单
-const exportMdcOrder = () => {
-  let newParams = JSON.parse(JSON.stringify(proTable.value?.totalParam));
-
-  userTaskInfoFormRef.value?.acceptParams({
-    rowData: {},
-    fileName: "报餐送餐系统-结算表" + new Date().getTime() + ".xlsx",
-    // api: exportMdcOrder,
-    params: newParams
+const userTaskInfoFormRef = ref<InstanceType<typeof UserTaskInfoForm>>();
+const handleBatchExportCheck = () => {
+  userTaskInfoFormRef.value?.create("报餐送餐系统-部门订单核对表" + new Date().getTime() + ".xlsx");
+  exportDeptOrderCheck({
+    ...proTable.value?.totalParam,
+    params: {
+      beginTime: proTable.value?.searchParam.orderDate[0],
+      endTime: proTable.value?.searchParam.orderDate[1]
+    }
+  }).then(res => {
+    let taskId = res.data;
+    userTaskInfoFormRef.value?.show(taskId);
   });
+};
+
+// 查看核对任务列表
+const userTaskListTableRef = ref<InstanceType<typeof UserTaskListTable>>();
+const handleBatchExportCheckTaskTable = () => {
+  userTaskListTableRef.value?.create(3, 1, "报餐送餐系统-部门订单核对表" + new Date().getTime() + ".xlsx");
+};
+
+// 批量确认
+const batchConfirm = async () => {
+  const orderIds = proTable.value?.selectedList.filter(item => item.orderNo).map(item => item.oId) ?? [];
+  await useHandleData(batchSubmit, orderIds.join(","), `确认${orderIds.length}条订单`);
+  proTable.value?.getTableList();
+};
+
+// 批量驳回
+const batchReject = async () => {
+  const orderIds = proTable.value?.selectedList.filter(item => item.orderNo).map(item => item.oId) ?? [];
+  await useHandleData(deptReject, orderIds.join(","), `驳回${orderIds.length}条订单`);
+  proTable.value?.getTableList();
 };
 </script>
 <style lang="scss" scoped>

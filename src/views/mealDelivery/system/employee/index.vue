@@ -1,56 +1,62 @@
 <template>
   <div class="main-box">
-    <TreeFilter
-      ref="treeFilterRef"
-      title="部门列表"
-      label="deptName"
-      id="deptId"
-      :request-api="listDeptTree"
-      :default-value="treeFilterValues.deptId"
-      @change="changeTreeFilter"
-    />
-    <div class="table-box">
-      <ProTable
-        ref="proTable"
-        highlight-current-row
-        :columns="columns"
-        :request-api="getEmployeeList"
-        :init-param="treeFilterValues"
-        :data-callback="dataCallback"
-        :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
-      >
-        <!-- 表格 header 按钮 -->
-        <template #tableHeader>
-          <el-button type="primary" v-auth="['system:employee:add']" :icon="CirclePlus" @click="openDrawer('新增')">
-            新增员工
-          </el-button>
-          <el-button type="primary" v-auth="['system:employee:import']" :icon="Upload" plain @click="batchAdd">
-            批量添加员工
-          </el-button>
-          <el-button type="warning" v-auth="['system:employee:export']" :icon="Download" plain @click="downloadFile">
-            导出员工数据
-          </el-button>
-        </template>
-        <!-- 表格操作 -->
-        <template #operation="scope">
-          <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button
-            type="warning"
-            link
-            v-if="scope.row.userId !== 1"
-            :icon="EditPen"
-            v-auth="['system:user:edit']"
-            @click="openDrawer('编辑', scope.row)"
-          >
-            编辑
-          </el-button>
-          <el-button type="danger" link :icon="Delete" v-auth="['system:user:remove']" @click="deleteAccount(scope.row)"
-            >删除</el-button
-          >
-        </template>
-      </ProTable>
-      <EmployeeDrawer ref="drawerRef" />
-      <ImportExcel ref="dialogRef" />
+    <div class="main-content-split">
+      <div class="tree-panel" :style="{ width: leftWidth + 'px' }">
+        <TreeFilter
+          ref="treeFilterRef"
+          title="部门列表"
+          label="label"
+          id="id"
+          :request-api="listDeptTreeWithEmployeeCount"
+          :default-value="treeFilterValues.deptId"
+          @change="changeTreeFilter"
+          :default-expanded-keys="[100]"
+        />
+      </div>
+      <div class="splitter" @mousedown="onSplitterMouseDown"></div>
+      <div class="table-box" :style="{ flex: 1 }">
+        <ProTable
+          ref="proTable"
+          highlight-current-row
+          :columns="columns"
+          :request-api="getEmployeeList"
+          :init-param="treeFilterValues"
+          :data-callback="dataCallback"
+          :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
+        >
+          <!-- 表格 header 按钮 -->
+          <template #tableHeader>
+            <el-button type="primary" v-auth="['system:employee:add']" :icon="CirclePlus" @click="openDrawer('新增')">
+              新增员工
+            </el-button>
+            <el-button type="primary" v-auth="['system:employee:import']" :icon="Upload" plain @click="batchAdd">
+              批量添加员工
+            </el-button>
+            <el-button type="warning" v-auth="['system:employee:export']" :icon="Download" plain @click="downloadFile">
+              导出员工数据
+            </el-button>
+          </template>
+          <!-- 表格操作 -->
+          <template #operation="scope">
+            <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+            <el-button
+              type="warning"
+              link
+              v-if="scope.row.userId !== 1"
+              :icon="EditPen"
+              v-auth="['system:user:edit']"
+              @click="openDrawer('编辑', scope.row)"
+            >
+              编辑
+            </el-button>
+            <el-button type="danger" link :icon="Delete" v-auth="['system:user:remove']" @click="deleteAccount(scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </ProTable>
+        <EmployeeDrawer ref="drawerRef" />
+        <ImportExcel ref="dialogRef" />
+      </div>
     </div>
   </div>
 </template>
@@ -78,7 +84,7 @@ import { Employee } from "@/api/interface/mealDelivery/system/employee";
 import { genderType, religionOptions, userStatus } from "@/utils/serviceDict";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { DictOptions } from "@/api/interface";
-import { listDeptTree } from "@/api/modules/mdc/system/dept";
+import { listDeptTreeWithEmployeeCount } from "@/api/modules/mdc/system/dept";
 import { queryCompanyOptionList } from "@/api/modules/mdc/system/company";
 import { getPostList } from "@/api/modules/system/post";
 import { useDict } from "@/hooks/useDict";
@@ -249,4 +255,66 @@ const openDrawer = async (title: string, row: Partial<Employee.ResEmployee> = {}
   };
   drawerRef.value?.acceptParams(params);
 };
+
+const leftWidth = ref(260); // 初始宽度
+let dragging = false;
+
+const onSplitterMouseDown = (e: MouseEvent) => {
+  dragging = true;
+  document.body.style.cursor = "col-resize";
+  const startX = e.clientX;
+  const startWidth = leftWidth.value;
+
+  const onMouseMove = (moveEvent: MouseEvent) => {
+    if (!dragging) return;
+    const delta = moveEvent.clientX - startX;
+    let newWidth = startWidth + delta;
+    // 限制最小/最大宽度
+    newWidth = Math.max(180, Math.min(newWidth, 600));
+    leftWidth.value = newWidth;
+  };
+
+  const onMouseUp = () => {
+    dragging = false;
+    document.body.style.cursor = "";
+    window.removeEventListener("mousemove", onMouseMove);
+    window.removeEventListener("mouseup", onMouseUp);
+  };
+
+  window.addEventListener("mousemove", onMouseMove);
+  window.addEventListener("mouseup", onMouseUp);
+};
 </script>
+
+<style scoped>
+.main-content-split {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+}
+.tree-panel {
+  min-width: 180px;
+  max-width: 600px;
+  overflow: auto;
+  background: #ffffff;
+  border-right: 1px solid #eeeeee;
+  transition: width 0.1s;
+}
+.splitter {
+  z-index: 2;
+  width: 6px;
+  cursor: col-resize;
+  background: #f5f5f5;
+  transition: background 0.2s;
+}
+.splitter:hover {
+  background: #b3d8fd;
+}
+.table-box {
+  flex: 1;
+  min-width: 0;
+  margin-left: 0;
+  overflow: auto;
+  background: #ffffff;
+}
+</style>

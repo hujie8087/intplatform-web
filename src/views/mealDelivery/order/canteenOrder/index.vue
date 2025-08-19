@@ -9,14 +9,18 @@
         :data-callback="dataCallback"
         :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
         :init-param="initParam"
-        row-key="oId"
+        row-key="orderNo"
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="">
-          <!-- 导出结算单 -->
-          <el-button type="warning" :icon="Download" @click="exportMdcOrder">导出结算单</el-button>
-          <!-- 导出查看结算任务列表 -->
-          <el-button type="warning" plain :icon="Download" @click="exportMdcOrder">导出查看结算任务列表</el-button>
+          <!-- 批量打印(小票) -->
+          <el-button type="primary" :disabled="!proTable?.isSelected" :icon="Printer" @click="printTicket"
+            >批量打印(小票)</el-button
+          >
+          <!-- 批量打印(A4) -->
+          <el-button type="primary" :disabled="!proTable?.isSelected" :icon="Printer" @click="printA4">批量打印(A4)</el-button>
+          <!-- 批量确认 -->
+          <el-button type="success" :disabled="!proTable?.isSelected" :icon="Check" @click="batchConfirm">批量接收</el-button>
         </template>
         <!-- Expand -->
         <template #expand="scope">
@@ -32,8 +36,8 @@
           </div>
         </template>
       </ProTable>
-      <!-- <MdcOrderDrawer ref="drawerRef" />
-      <UserTaskInfoForm ref="userTaskInfoFormRef" /> -->
+      <PrintTemplate ref="printTemplateRef" />
+      <!-- <PrintTable ref="printTableRef" :orderList="orderList" :foodTypeList="foodTypeList" :foodTypeOptions="foodTypeOptions" /> -->
     </div>
   </div>
 </template>
@@ -42,13 +46,21 @@ import { ref, reactive } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
 // import MdcOrderDrawer from "./components/MdcOrderDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { Download } from "@element-plus/icons-vue";
-import { canteensList } from "@/api/modules/mdc/system/order/orders";
+import { Check, Printer } from "@element-plus/icons-vue";
+import {
+  canteensList,
+  queryFoodOrderDeliverySummaryList,
+  receiveOrder,
+  updatePrintStatus
+} from "@/api/modules/mdc/system/order/orders";
 import { DictOptions } from "@/api/interface";
 import { getAllCarNameList, getAllMessHallNameList, getAllSiteAddressList } from "@/api/modules/mdc/system";
-import UserTaskInfoForm from "@/components/UserTaskInfoForm/index.vue";
+import PrintTemplate from "../orders/components/PrintTemplate.vue";
+// import PrintTable from "../orders/components/PrintTable.vue";
 import dayjs from "dayjs";
 import { MdcOrder } from "@/api/interface/mealDelivery/order";
+import { ElMessage } from "element-plus";
+import { useHandleData } from "@/hooks/useHandleData";
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
@@ -59,6 +71,9 @@ const dataCallback = (data: any) => {
     size: data.size
   };
 };
+
+const printTemplateRef = ref<InstanceType<typeof PrintTemplate>>();
+// const printTableRef = ref<InstanceType<typeof PrintTable>>();
 // 字典数据
 const packageTypeOptions = ref<DictOptions[]>([
   { label: "打包袋", value: "0", tagType: "primary" },
@@ -385,17 +400,178 @@ const getOrderData = (row: MdcOrder.ResMdcOrder): { timestamp: string; color: st
   ];
 };
 
-const userTaskInfoFormRef = ref<InstanceType<typeof UserTaskInfoForm>>();
 // 导出结算单
-const exportMdcOrder = () => {
-  let newParams = JSON.parse(JSON.stringify(proTable.value?.totalParam));
 
-  userTaskInfoFormRef.value?.acceptParams({
-    rowData: {},
-    fileName: "报餐送餐系统-结算表" + new Date().getTime() + ".xlsx",
-    // api: exportMdcOrder,
-    params: newParams
-  });
+const printOrderCallback = async (orderIds: number[]) => {
+  const res = await updatePrintStatus(orderIds.join(","));
+  if (res.code === 200) {
+    ElMessage.success("打印成功");
+    proTable.value?.getTableList();
+  }
+};
+// 批量打印(小票)
+const printTicket = async () => {
+  let fcNameList: string[] = [];
+  let foodTypeList: string[] = [];
+  let ids: number[] = [];
+  let selectedList = [...(proTable.value?.selectedList.filter(item => !item.userNo) ?? [])];
+  console.log(selectedList);
+  if (!selectedList.length) {
+    ElMessage.warning("请选择要打印的订单!");
+    return;
+  }
+
+  for (let i = 0; i < selectedList.length; i++) {
+    const row = selectedList[i] as MdcOrder.ResMdcOrder;
+    let centerStatus = row.centerStatus;
+    if ("2" === centerStatus) {
+      ElMessage.warning("待打印的数据中含有未提交的订单, 请先提交 !");
+      return;
+    }
+    let leaderStatus = row.leaderStatus;
+    if ("2" === leaderStatus) {
+      ElMessage.warning("待打印的数据中含有已驳回的订单!");
+      return;
+    }
+    if (row.foodType !== undefined) {
+      foodTypeList.push(row.foodType);
+      ids.push(row.oId ?? "");
+    }
+    if (row.fcName !== undefined) {
+      fcNameList.push(row.fcName);
+    }
+
+    try {
+      // 对每个 deptId 调用 listDeptExcludeChild
+      // const persoInfo = await getDept(row.deptId);
+      // 将返回的数据添加到行数据中
+      selectedList[i].persoInfo = row.createBy;
+    } catch (error) {
+      console.error("Error fetching department info:", error);
+      // 可以处理错误，例如显示消息或跳过当前行
+    }
+  }
+  if ([...new Set(fcNameList)].length > 1) {
+    ElMessage.warning("请选择同一车号进行打印");
+    return;
+  }
+  if ([...new Set(foodTypeList)].length > 1) {
+    ElMessage.warning("请选择同一餐饮类型进行打印");
+    return;
+  }
+
+  try {
+    let res = await queryFoodOrderDeliverySummaryList(ids);
+    // 获取要打印的区域
+    const data = {
+      data: res.data.map(item => {
+        if (item.foodType === "0") {
+          return {
+            ...item,
+            pageSize: 15,
+            pageNumber: Math.ceil(item.num / 15)
+          };
+        } else {
+          return {
+            ...item,
+            pageSize: 30,
+            pageNumber: Math.ceil(item.num / 30)
+          };
+        }
+      })
+    };
+
+    // 使用 Vue 3 的方式创建打印组件
+    if (printTemplateRef.value) {
+      // 设置打印回调
+      printTemplateRef.value.printOrder(data.data, async () => {
+        await printOrderCallback(ids);
+      });
+    } else {
+      ElMessage.error("打印组件未初始化");
+    }
+  } catch (error) {
+    console.error("打印失败:", error);
+    ElMessage.error("打印失败，请重试");
+  }
+};
+
+// 批量打印(A4)
+const printA4 = async () => {
+  let fcNameList: string[] = [];
+  let foodTypeList: string[] = [];
+  let ids: number[] = [];
+  let selectedList = [...(proTable.value?.selectedList.filter(item => !item.userNo) ?? [])];
+  for (let i = 0; i < selectedList.length; i++) {
+    const row = selectedList[i];
+    let leaderStatus = row["leaderStatus"];
+    if ("2" === leaderStatus) {
+      ElMessage.warning("待打印的数据中含有已驳回的订单!");
+      return;
+    }
+    let centerStatus = row["centerStatus"];
+    if ("2" === centerStatus) {
+      ElMessage.warning("待打印的数据中含有未提交的订单, 请先提交 !");
+      return;
+    }
+    if (row.foodType !== undefined) {
+      foodTypeList.push(row.foodType);
+      ids.push(row.oId);
+    }
+    if (row.fcName !== undefined) {
+      fcNameList.push(row.fcName);
+    }
+    try {
+      // 对每个 deptId 调用 listDeptExcludeChild
+      // const persoInfo = await getDept(row.deptId);
+      // 将返回的数据添加到行数据中
+      selectedList[i].persoInfo = row.createBy;
+    } catch (error) {
+      console.error("Error fetching department info:", error);
+      // 可以处理错误，例如显示消息或跳过当前行
+    }
+  }
+  if (selectedList.length > 0 && selectedList.some(item => item.orderStatus === 4)) {
+    ElMessage.warning("待打印的数据中含有未提交的订单, 请先提交 !");
+    return;
+  }
+  console.log(fcNameList);
+  if ([...new Set(fcNameList)].length > 1) {
+    ElMessage.warning("请选择同一车号进行打印");
+    return;
+  }
+  if ([...new Set(foodTypeList)].length > 1) {
+    ElMessage.warning("请选择同一餐饮类型进行打印");
+    return;
+  }
+  try {
+    let res = await queryFoodOrderDeliverySummaryList(ids);
+    // 获取要打印的区域
+    const data = {
+      data: res.data,
+      foodTypeList,
+      foodTypeOptions: foodTypeOptions.value
+    };
+    // 使用 Vue 3 的方式创建打印组件
+    if (printTemplateRef.value) {
+      // 设置打印回调
+      printTemplateRef.value.printOrderA4(data, async () => {
+        await printOrderCallback(ids);
+      });
+    } else {
+      ElMessage.error("打印组件未初始化");
+    }
+  } catch (error) {
+    console.error("打印失败:", error);
+    ElMessage.error("打印失败，请重试");
+  }
+};
+
+// 批量接收
+const batchConfirm = async () => {
+  const orderIds = proTable.value?.selectedList.filter(item => item.orderNo).map(item => item.oId) ?? [];
+  await useHandleData(receiveOrder, orderIds.join(","), `接收${orderIds.length}条订单`);
+  proTable.value?.getTableList();
 };
 </script>
 <style lang="scss" scoped>

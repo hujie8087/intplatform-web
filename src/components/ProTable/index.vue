@@ -40,6 +40,7 @@
       :row-key="rowKey"
       @selection-change="selectionChange"
       :key="key"
+      :expand-row-keys="expandRowKeys"
     >
       <!-- 默认插槽 -->
       <slot />
@@ -133,6 +134,7 @@ export interface ProTableProps {
   toolButton?: ("refresh" | "setting" | "search")[] | boolean; // 是否显示表格功能按钮 ==> 非必传（默认为true）
   rowKey?: string; // 行数据的 Key，用来优化 Table 的渲染，当表格数据多选时，所指定的 id ==> 非必传（默认为 id）
   searchCol?: number | Record<BreakPoint, number>; // 表格搜索项 每列占比配置 ==> 非必传 { xs: 1, sm: 2, md: 2, lg: 3, xl: 4 }
+  expandRowKeys?: string[]; // 展开的行 ==> 非必传
 }
 
 // 接受父组件参数，配置默认值
@@ -145,7 +147,8 @@ const props = withDefaults(defineProps<ProTableProps>(), {
   toolButton: true,
   rowKey: "id",
   pageSize: () => [10, 20, 30, 50, 100, 300],
-  searchCol: () => ({ xs: 1, sm: 2, md: 2, lg: 4, xl: 6 })
+  searchCol: () => ({ xs: 1, sm: 2, md: 2, lg: 4, xl: 6 }),
+  expandRowKeys: () => []
 });
 
 // table 实例

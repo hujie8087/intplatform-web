@@ -35,6 +35,26 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
+          <el-form-item :label="`${$t('system.dict.dictLabelEn')}`" prop="dictLabelEn">
+            <el-input
+              v-model="drawerProps.rowData.dictLabelEn"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.dict.dictLabelEn') })}`"
+              clearable
+            >
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item :label="`${$t('system.dict.dictLabelId')}`" prop="dictLabelId">
+            <el-input
+              v-model="drawerProps.rowData.dictLabelId"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.dict.dictLabelId') })}`"
+              clearable
+            >
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
           <el-form-item :label="`${$t('system.dict.dictValue')}`" prop="dictValue">
             <el-input
               v-model="drawerProps.rowData.dictValue"
