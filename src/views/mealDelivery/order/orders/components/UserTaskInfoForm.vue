@@ -33,7 +33,7 @@
           <el-col :span="12">
             <el-form-item v-if="!success">{{ taskDetailForm.message }}</el-form-item>
             <el-form-item v-if="success"
-              ><a style=" color: blue;text-decoration: underline" @click="downloadFile">下载文件</a></el-form-item
+              ><a style="color: blue; text-decoration: underline" @click="downloadFile">下载文件</a></el-form-item
             >
           </el-col>
         </el-row>
