@@ -26,13 +26,13 @@
         >
           <!-- 表格 header 按钮 -->
           <template #tableHeader>
-            <el-button type="primary" v-auth="['system:employee:add']" :icon="CirclePlus" @click="openDrawer('新增')">
+            <el-button type="primary" v-mealAuth="['system:employee:add']" :icon="CirclePlus" @click="openDrawer('新增')">
               新增员工
             </el-button>
-            <el-button type="primary" v-auth="['system:employee:import']" :icon="Upload" plain @click="batchAdd">
+            <el-button type="primary" v-mealAuth="['system:employee:import']" :icon="Upload" plain @click="batchAdd">
               批量添加员工
             </el-button>
-            <el-button type="warning" v-auth="['system:employee:export']" :icon="Download" plain @click="downloadFile">
+            <el-button type="warning" v-mealAuth="['system:employee:export']" :icon="Download" plain @click="downloadFile">
               导出员工数据
             </el-button>
           </template>
@@ -44,12 +44,12 @@
               link
               v-if="scope.row.userId !== 1"
               :icon="EditPen"
-              v-auth="['system:user:edit']"
+              v-mealAuth="['system:employee:edit']"
               @click="openDrawer('编辑', scope.row)"
             >
               编辑
             </el-button>
-            <el-button type="danger" link :icon="Delete" v-auth="['system:user:remove']" @click="deleteAccount(scope.row)"
+            <el-button type="danger" link :icon="Delete" v-mealAuth="['system:employee:remove']" @click="deleteAccount(scope.row)"
               >删除</el-button
             >
           </template>

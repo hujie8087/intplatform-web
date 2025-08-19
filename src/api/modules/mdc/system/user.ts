@@ -1,6 +1,7 @@
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
 import { User } from "@/api/interface/mealDelivery/system/user";
+import { Role } from "@/api/interface/mealDelivery/system/role";
 
 // 查询用户列表
 export function listUser(query) {
@@ -63,12 +64,12 @@ export function uploadAvatar(data) {
 
 // 查询授权角色
 export function getAuthRole(userId) {
-  return http.get(PORT1 + "/system/mdc/user/authRole/" + userId);
+  return http.getNoData<Role.ResAuthRole>(PORT1 + "/system/mdc/user/authRole/" + userId);
 }
 
 // 保存授权角色
 export function updateAuthRole(data) {
-  return http.put(PORT1 + "/system/mdc/user/authRole", data);
+  return http.put(PORT1 + `/system/mdc/user/authRole?userId=${data.userId}&roleIds=${data.roleIds}`);
 }
 
 // 查询部门下拉树结构

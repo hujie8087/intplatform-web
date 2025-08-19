@@ -12,11 +12,13 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增</el-button>
+          <el-button type="primary" v-mealAuth="['system:messHall:add']" :icon="CirclePlus" @click="openDrawer('新增')">
+            新增
+          </el-button>
           <el-button
             type="danger"
             :disabled="!scope.isSelected"
-            v-auth="['delivery:staff:remove']"
+            v-mealAuth="['system:messHall:remove']"
             :icon="Delete"
             @click="batchDelete(scope.selectedListIds)"
           >
@@ -26,11 +28,13 @@
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button type="default" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button type="primary" link :icon="Edit" @click="openDrawer('编辑', scope.row)">编辑</el-button>
+          <el-button type="primary" link :icon="Edit" v-mealAuth="['system:messHall:edit']" @click="openDrawer('编辑', scope.row)"
+            >编辑</el-button
+          >
           <el-button
             type="danger"
             link
-            v-auth="['delivery:staff:remove']"
+            v-mealAuth="['system:messHall:remove']"
             :icon="Delete"
             @click="deleteDeliveryStationHandle(scope.row)"
           >

@@ -12,12 +12,12 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" v-auth="['system:company:add']" :icon="CirclePlus" @click="openDrawer('新增')"
+          <el-button type="primary" v-mealAuth="['system:company:add']" :icon="CirclePlus" @click="openDrawer('新增')"
             >新增公司</el-button
           >
           <el-button
             type="danger"
-            v-auth="['system:company:remove']"
+            v-mealAuth="['system:company:remove']"
             :disabled="!scope.isSelected"
             :icon="Delete"
             @click="batchDelete(scope.selectedListIds)"
@@ -25,16 +25,21 @@
             批量删除公司
           </el-button>
           <!-- 导出 -->
-          <el-button type="warning" :icon="Download" @click="exportExcel">导出</el-button>
+          <el-button type="warning" v-mealAuth="['system:company:export']" :icon="Download" @click="exportExcel">导出</el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="warning" v-auth="['system:company:edit']" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"
+          <el-button
+            type="warning"
+            v-mealAuth="['system:company:edit']"
+            link
+            :icon="EditPen"
+            @click="openDrawer('编辑', scope.row)"
             >编辑</el-button
           >
           <el-button
             type="danger"
-            v-auth="['system:company:remove']"
+            v-mealAuth="['system:company:remove']"
             v-if="scope.row.companyId !== 100"
             link
             :icon="Delete"

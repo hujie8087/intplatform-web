@@ -66,16 +66,17 @@
 <script setup lang="ts" name="RoleDrawer">
 import { ref } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
-import { Account } from "@/api/interface/system";
 import { useI18n } from "vue-i18n";
+import { Role } from "@/api/interface/mealDelivery/system/role";
+import { User } from "@/api/interface/mealDelivery/system/user";
 const { t } = useI18n(); // 解构出t方法
 
 interface DrawerProps {
   title: string;
   isView: boolean;
   api?: (params: any) => Promise<any>;
-  rowData?: Account.ResAccountList;
-  roleList?: Account.ResRole[];
+  rowData?: User.ResUser;
+  roleList?: Role.ResRole[];
 }
 // drawer框状态
 const drawerVisible = ref(false);
@@ -101,8 +102,6 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     try {
-      console.log(roleForm.value);
-
       await drawerProps.value.api!({ userId: roleForm.value.userId, roleIds: roleForm.value.roleIds.join(",") });
       ElMessage.success({
         message: t("main.successMsg", { method: `${drawerProps.value.title}` })

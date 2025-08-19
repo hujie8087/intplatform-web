@@ -16,3 +16,19 @@ export const useAuthButtons = () => {
     BUTTONS
   };
 };
+
+/**
+ * @description 页面按钮权限
+ * */
+export const useMealDeliveryAuthButtons = () => {
+  const authStore = useAuthStore();
+  const authButtons = authStore.mealDeliveryAuthButtonListGet || [];
+  const BUTTONS = computed(() => {
+    let currentPageAuthButton: { [key: string]: boolean } = {};
+    authButtons.forEach(item => (currentPageAuthButton[item] = true));
+    return currentPageAuthButton;
+  });
+  return {
+    BUTTONS
+  };
+};

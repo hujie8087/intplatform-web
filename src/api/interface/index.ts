@@ -74,6 +74,52 @@ export namespace Login {
       roleId: string;
       admin: boolean;
     };
+    mealUser: {
+      userId: number;
+      username: string;
+      permissions: string[];
+      roles: string[];
+      sysUser: {
+        keyword: string;
+        createBy: string;
+        createTime: string;
+        updateBy: string | null;
+        updateTime: string | null;
+        remark: string;
+        deleteTime: string | null;
+        deleteBy: string | null;
+        userIdList: string | null;
+        strArrays: string | null;
+        statusArrays: string | null;
+        foodArrays: string | null;
+        orderArrays: string | null;
+        userId: number;
+        deptId: number;
+        userName: string;
+        nickName: string;
+        deptPath: string | null;
+        postName: string | null;
+        accountType: string;
+        nationality: string;
+        roleName: string;
+        phonenumber: string;
+        email: string;
+        sex: string;
+        avatar: string;
+        password: string;
+        status: string;
+        delFlag: string;
+        loginIp: string;
+        loginDate: string;
+        roleIds: string | null;
+        postIds: string | null;
+        postNames: string | null;
+        roleId: string | null;
+        postClerkSortNum: number;
+        creator: string | null;
+        admin: boolean;
+      };
+    };
   }
 }
 

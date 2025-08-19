@@ -14,9 +14,13 @@
         <!-- 表格 header 按钮 -->
         <template #tableHeader="">
           <!-- 导出结算单 -->
-          <el-button type="warning" :icon="Download" @click="exportSettlement">导出结算单</el-button>
+          <el-button type="warning" v-mealAuth="['order:orders:waterSettlementExport']" :icon="Download" @click="exportSettlement"
+            >导出结算单</el-button
+          >
           <!-- 导出查看结算任务列表 -->
-          <el-button type="warning" plain :icon="Download" @click="exportSettlement">导出查看结算任务列表</el-button>
+          <el-button type="warning" v-mealAuth="['order:orders:export']" plain :icon="Download" @click="exportSettlement"
+            >导出查看结算任务列表</el-button
+          >
         </template>
       </ProTable>
       <WaterSettlementDrawer ref="drawerRef" />

@@ -11,7 +11,8 @@ export const useUserStore = defineStore({
     userInfo: {
       permissions: [],
       roles: [],
-      user: {} as Login.ResUserInfo["user"]
+      user: {} as Login.ResUserInfo["user"],
+      mealUser: {} as Login.ResUserInfo["mealUser"]
     }
   }),
   getters: {
@@ -32,6 +33,9 @@ export const useUserStore = defineStore({
       this.setUserInfo(res.data);
       const authStore = useAuthStore();
       authStore.getAuthButtonList(res.data.permissions);
+      if (res.data.mealUser) {
+        authStore.getMealDeliveryAuthButtonList(res.data.mealUser.permissions);
+      }
     }
   },
   persist: piniaPersistConfig("logistics-user")

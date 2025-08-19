@@ -24,9 +24,16 @@
             >驳回</el-button
           >
           <!-- 导出结算单 -->
-          <el-button type="warning" :icon="Download" @click="handleBatchExportCheck">导出部门订单核对</el-button>
+          <el-button type="warning" v-mealAuth="['order:orders:export']" :icon="Download" @click="handleBatchExportCheck"
+            >导出部门订单核对</el-button
+          >
           <!-- 导出查看结算任务列表 -->
-          <el-button type="warning" plain :icon="Download" @click="handleBatchExportCheckTaskTable"
+          <el-button
+            type="warning"
+            v-mealAuth="['order:orders:export']"
+            plain
+            :icon="Download"
+            @click="handleBatchExportCheckTaskTable"
             >查看部门订单核对任务列表</el-button
           >
         </template>
