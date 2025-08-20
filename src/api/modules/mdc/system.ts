@@ -1,6 +1,7 @@
 // 车辆管理接口模块
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
+import { BasicSite } from "@/api/interface/mealDelivery/basic/site";
 
 // 获取车辆数据
 export const getAllCarNameList = () => {
@@ -15,4 +16,9 @@ export const getAllMessHallNameList = () => {
 // 获取配送站点列表
 export const getAllSiteAddressList = () => {
   return http.get<{ fsIds: string; fsAddress: string }[]>(PORT1 + `/system/mdc/site/queryAllSiteAddressList`);
+};
+
+// 获取配送站点详情列表
+export const getAllSiteAddressDetailList = (foodType: string) => {
+  return http.get<BasicSite.ResSiteAddressDetail[]>(PORT1 + `/system/mdc/site/querySiteDetailList?foodType=${foodType}`);
 };

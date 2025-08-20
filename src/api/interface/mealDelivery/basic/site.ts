@@ -33,4 +33,15 @@ export namespace BasicSite {
     updateTime: string;
     userIdList: string;
   }
+  export interface ResSiteAddressDetail {
+    fcId: number;
+    fcName: string;
+    fdId: number;
+    fdName: string;
+    fsAddressCn: string;
+    fsAddressEn: string;
+    fsAddressId: string;
+    fsId: number;
+    nationType: string;
+  }
 }

@@ -163,8 +163,8 @@ const getTableList = (params: any) => {
   const newParams = JSON.parse(JSON.stringify(params)); // 深拷贝（可选）
   if (Array.isArray(newParams.orderDate) && newParams.orderDate.length === 2) {
     newParams.params = {
-      beginTime: newParams.orderDate[0],
-      endTime: newParams.orderDate[1]
+      beginTime: newParams.orderDate[0] + " 06:00:00",
+      endTime: newParams.orderDate[1] + " 06:00:00"
     };
     delete newParams.orderDate;
   }
@@ -225,13 +225,10 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
     label: "订单日期",
     isShow: false,
     search: {
-      span: 2,
+      span: 1,
       el: "date-picker",
-      props: { type: "datetimerange", valueFormat: "YYYY-MM-DD HH:mm:ss" },
-      defaultValue: [
-        dayjs().subtract(4, "day").startOf("day").format("YYYY-MM-DD HH:mm:ss"),
-        dayjs().endOf("day").format("YYYY-MM-DD HH:mm:ss")
-      ]
+      props: { type: "daterange", valueFormat: "YYYY-MM-DD" },
+      defaultValue: [dayjs().subtract(4, "day").startOf("day").format("YYYY-MM-DD"), dayjs().endOf("day").format("YYYY-MM-DD")]
     }
   },
   {

@@ -99,20 +99,21 @@
       <UserTaskInfoForm ref="userTaskInfoFormRef" />
     </div>
     <!-- 修改弹窗 -->
-    <el-dialog title="修改食堂" v-model="openEditDialog" width="20%">
+    <el-dialog title="修改站点" v-model="openEditDialog" width="30%">
       <el-form :rules="rules" ref="editFormRef" :model="editForm" label-width="100px">
-        <el-form-item label="食堂" prop="fdId">
-          <el-select v-model="editForm.fdId" placeholder="请选择食堂" clearable>
-            <el-option v-for="dict in messHallListOptions" :key="dict.label" :label="dict.label" :value="dict.value" />
+        <el-form-item label="站点" prop="deliveryId">
+          <el-select v-model="editForm.deliveryId" placeholder="请选择站点" clearable filterable>
+            <el-option
+              v-for="dict in siteAddressDetailListOptions"
+              :key="dict.fsId"
+              :label="dict.fsAddressCn"
+              :value="dict.fsId"
+            />
           </el-select>
-        </el-form-item>
-        <el-form-item label="配送方式" prop="deliveryType">
-          <el-radio v-model="editForm.deliveryType" label="0">配送</el-radio>
-          <el-radio v-model="editForm.deliveryType" label="1">自取</el-radio>
         </el-form-item>
         <!-- 新增的打包类型选择 -->
         <el-form-item label="打包类型" prop="packageType">
-          <el-select v-model="editForm.packageType" placeholder="请选择打包类型" clearable>
+          <el-select v-model="editForm.deliveryType" placeholder="请选择打包类型" clearable>
             <el-option label="打包饭" value="0"></el-option>
             <el-option label="盒装饭" value="1"></el-option>
           </el-select>
@@ -141,7 +142,12 @@ import {
   updatePrintStatus
 } from "@/api/modules/mdc/system/order/orders";
 import { DictOptions } from "@/api/interface";
-import { getAllCarNameList, getAllMessHallNameList, getAllSiteAddressList } from "@/api/modules/mdc/system";
+import {
+  getAllCarNameList,
+  getAllMessHallNameList,
+  getAllSiteAddressDetailList,
+  getAllSiteAddressList
+} from "@/api/modules/mdc/system";
 import UserTaskInfoForm from "./components/UserTaskInfoForm.vue";
 import UserTaskListTable from "./components/UserTaskListTable.vue";
 import dayjs from "dayjs";
@@ -149,36 +155,39 @@ import { MdcOrder } from "@/api/interface/mealDelivery/order";
 import { useHandleData } from "@/hooks/useHandleData";
 import { ElForm, ElMessage, FormRules } from "element-plus";
 import PrintTemplate from "./components/PrintTemplate.vue";
+import { BasicSite } from "@/api/interface/mealDelivery/basic/site";
 
 const printTemplateRef = ref<InstanceType<typeof PrintTemplate>>();
 const selectedList = computed(() => {
   return proTable.value?.selectedList.filter(item => item.orderNo) ?? [];
 });
 const openEditDialog = ref(false);
+const checkOrder = ref<MdcOrder.ResMdcOrder>();
 const editForm = ref({
-  fdId: "",
-  deliveryType: "",
-  packageType: "",
-  orderNo: "",
-  oId: ""
+  deliveryId: -1,
+  deliveryType: ""
 });
 const rules = ref<FormRules>({
-  fdId: [{ required: true, message: "食堂不能为空", trigger: "blur" }]
+  deliveryId: [{ required: true, message: "站点不能为空", trigger: "blur" }],
+  deliveryType: [{ required: true, message: "打包类型不能为空", trigger: "blur" }]
 });
 const editFormRef = ref<InstanceType<typeof ElForm>>();
 const submitEditForm = () => {
   editFormRef.value?.validate(valid => {
     if (valid) {
-      let fcMessHallObj = messHallListOptions.value.find(messHall => messHall.value === editForm.value.fdId);
-      if (fcMessHallObj) {
-        let editNewForm = {
-          oId: editForm.value.oId,
-          fdId: editForm.value.fdId,
-          canteen: fcMessHallObj.label,
-          deliveryType: editForm.value.deliveryType,
-          packageType: editForm.value.packageType
-        };
-        updateOrders(editNewForm).then(response => {
+      let siteAddressDetail = siteAddressDetailListOptions.value.find(
+        siteAddressDetail => siteAddressDetail.fsId === editForm.value.deliveryId
+      );
+      if (siteAddressDetail) {
+        updateOrders({
+          ...checkOrder.value,
+          ...editForm.value,
+          fdId: siteAddressDetail.fdId,
+          canteen: siteAddressDetail.fdName,
+          deliverySite: siteAddressDetail.fsAddressCn,
+          fcId: siteAddressDetail.fcId,
+          fcName: siteAddressDetail.fcName
+        }).then(response => {
           if (response.code === 200) {
             ElMessage.success("修改成功");
             openEditDialog.value = false;
@@ -282,8 +291,8 @@ const getTableList = (params: any) => {
   const newParams = JSON.parse(JSON.stringify(params)); // 深拷贝（可选）
   if (Array.isArray(newParams.orderDate) && newParams.orderDate.length === 2) {
     newParams.params = {
-      beginTime: newParams.orderDate[0],
-      endTime: newParams.orderDate[1]
+      beginTime: newParams.orderDate[0] + " 06:00:00",
+      endTime: newParams.orderDate[1] + " 06:00:00"
     };
     delete newParams.orderDate;
   }
@@ -323,6 +332,12 @@ const getSiteAddressList = async () => {
 };
 getSiteAddressList();
 
+// 获取配送站点详情列表
+const siteAddressDetailListOptions = ref<BasicSite.ResSiteAddressDetail[]>([]);
+const getSiteDetailList = async (foodType: string) => {
+  const res = await getAllSiteAddressDetailList(foodType);
+  siteAddressDetailListOptions.value = res.data;
+};
 // 表格配置项
 const expandedRowSet = ref(new Set());
 const orderDataCache = new Map();
@@ -365,13 +380,10 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
     label: "订单日期",
     isShow: false,
     search: {
-      span: 2,
+      span: 1,
       el: "date-picker",
-      props: { type: "datetimerange", valueFormat: "YYYY-MM-DD HH:mm:ss" },
-      defaultValue: [
-        dayjs().subtract(4, "day").startOf("day").format("YYYY-MM-DD HH:mm:ss"),
-        dayjs().endOf("day").format("YYYY-MM-DD HH:mm:ss")
-      ]
+      props: { type: "daterange", valueFormat: "YYYY-MM-DD" },
+      defaultValue: [dayjs().subtract(4, "day").startOf("day").format("YYYY-MM-DD"), dayjs().endOf("day").format("YYYY-MM-DD")]
     }
   },
   { prop: "pNum", label: "数量", width: 60 },
@@ -519,8 +531,8 @@ const handleBatchExportCheck = () => {
   exportCheck({
     ...proTable.value?.totalParam,
     params: {
-      beginTime: proTable.value?.searchParam.orderDate[0],
-      endTime: proTable.value?.searchParam.orderDate[1]
+      beginTime: proTable.value?.searchParam.orderDate[0] + " 06:00:00",
+      endTime: proTable.value?.searchParam.orderDate[1] + " 06:00:00"
     }
   }).then(res => {
     let taskId = res.data;
@@ -555,14 +567,13 @@ const batchConfirm = () => {
 };
 
 // 修改订单信息
-const editOrderInfo = () => {
+const editOrderInfo = async () => {
   openEditDialog.value = true;
+  await getSiteDetailList(selectedList.value[0].foodType);
+  checkOrder.value = selectedList.value[0] as MdcOrder.ResMdcOrder;
   editForm.value = {
-    oId: selectedList.value[0].oId,
-    fdId: selectedList.value[0].fdId,
-    deliveryType: selectedList.value[0].deliveryType,
-    packageType: selectedList.value[0].packageType,
-    orderNo: selectedList.value[0].orderNo
+    deliveryId: selectedList.value[0].deliveryId,
+    deliveryType: selectedList.value[0].packageType
   };
 };
 

@@ -97,7 +97,8 @@ export default {
       list: "目录",
       button: "按钮",
       visible: "是否显示",
-      isFrame: "是否外链"
+      isFrame: "是否外链",
+      noCache: "是否缓存"
     },
     role: {
       roleId: "角色编号",

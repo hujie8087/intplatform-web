@@ -150,6 +150,7 @@ export namespace Menu {
     isFull: boolean;
     isAffix: boolean;
     isKeepAlive: boolean;
+    noCache?: boolean;
   }
   export interface ResMenu {
     createBy: string | null;
@@ -166,6 +167,7 @@ export namespace Menu {
     component: string;
     query: string;
     isFrame: string;
+    noCache: string;
     isCache: string;
     menuType: string;
     visible: string;

@@ -221,7 +221,7 @@ const columns = reactive<ColumnProps<User.ResUser>[]>([
       );
     }
   },
-  { prop: "createBy", label: "创建人", width: 80 },
+  { prop: "creator", label: "创建人", width: 80 },
   { prop: "createTime", label: "创建时间", width: 140 },
   { prop: "operation", label: "操作", width: 210, fixed: "right" }
 ]);
