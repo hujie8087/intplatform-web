@@ -146,7 +146,7 @@ const columns = reactive<ColumnProps<Employee.ResEmployee>[]>([
   { prop: "jobNumber", label: "employee.jobNumber", search: { el: "input" }, width: 100 },
   { prop: "username", label: "employee.username", search: { el: "input" }, width: 120 },
   { prop: "deptPath", label: "employee.dept", width: 120 },
-  { prop: "companyId", label: "employee.company", width: 120, enum: companyOptions },
+  { prop: "companyName", label: "employee.company", width: 80 },
   { prop: "nationType", label: "employee.nationType", enum: nationOptions },
   { prop: "postId", label: "employee.post", width: 100, enum: postOptions },
   { prop: "phone", label: "employee.phone", width: 120, search: { el: "input" } },
@@ -176,7 +176,7 @@ const columns = reactive<ColumnProps<Employee.ResEmployee>[]>([
       );
     }
   },
-  { prop: "createBy", label: "main.createBy", width: 100 },
+  { prop: "creator", label: "main.createBy", width: 100 },
   {
     prop: "createTime",
     label: "main.createTime",

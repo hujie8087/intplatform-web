@@ -97,7 +97,8 @@ export default {
       list: "Direktori",
       button: "Tombol",
       visible: "Tampilkan",
-      isFrame: "Tautan Eksternal"
+      isFrame: "Tautan Eksternal",
+      noCache: "Tidak Cache"
     },
     role: {
       roleId: "ID Peran",

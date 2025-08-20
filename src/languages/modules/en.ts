@@ -97,7 +97,8 @@ export default {
       list: "List",
       button: "Button",
       visible: "Visible",
-      isFrame: "Is Frame"
+      isFrame: "Is Frame",
+      noCache: "No Cache"
     },
     role: {
       roleId: "Role ID",

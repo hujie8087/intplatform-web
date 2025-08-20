@@ -105,6 +105,11 @@
             ></el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="12" v-if="drawerProps.rowData!.menuType === 'C'">
+          <el-form-item :label="`${$t('system.menu.noCache')}`" prop="noCache">
+            <el-switch v-model="drawerProps.rowData!.isCache" active-value="0" inactive-value="1" />
+          </el-form-item>
+        </el-col>
         <el-col :span="12" v-if="drawerProps.rowData!.menuType !== 'M'">
           <el-form-item :label="`${$t('system.menu.auth')}`" prop="perms">
             <el-input
