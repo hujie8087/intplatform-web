@@ -10,7 +10,7 @@
           :request-api="listDeptTreeWithEmployeeCount"
           :default-value="treeFilterValues.deptId"
           @change="changeTreeFilter"
-          :default-expanded-keys="[100]"
+          :default-expanded-keys="defaultExpandedKeys"
         />
       </div>
       <div class="splitter" @mousedown="onSplitterMouseDown"></div>
@@ -61,7 +61,7 @@
   </div>
 </template>
 <script setup lang="tsx" name="MdcEmployee">
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, computed } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useDownload } from "@/hooks/useDownload";
@@ -199,7 +199,13 @@ const changeTreeFilter = (val: number) => {
   proTable.value!.pageable.pageNum = 1;
   treeFilterValues.deptId = val;
 };
-
+const defaultExpandedKeys = computed(() => {
+  const keys = [];
+  treeFilterRef.value?.treeData.forEach(rootNode => {
+    keys.push(rootNode.id); // 展开第一层节点
+  });
+  return keys;
+});
 watch(
   () => proTable.value?.radio,
   () => proTable.value?.radio && ElMessage.success(`选中 id 为【${proTable.value?.radio}】的数据`)
