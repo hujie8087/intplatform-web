@@ -10,7 +10,7 @@
           :request-api="deptTreeSelect"
           :default-value="treeFilterValues.deptId"
           @change="changeTreeFilter"
-          :default-expanded-keys="[100]"
+          :default-expanded-keys="defaultExpandedKeys"
         />
       </div>
       <div class="splitter" @mousedown="onSplitterMouseDown"></div>
@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="tsx" name="useSelectFilter">
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useDownload } from "@/hooks/useDownload";
@@ -313,6 +313,13 @@ const openDrawer = async (title: string, row: Partial<User.ResUser> = {}) => {
   };
   drawerRef.value?.acceptParams(params);
 };
+const defaultExpandedKeys = computed(() => {
+  const keys = [];
+  treeFilterRef.value?.treeData.forEach(rootNode => {
+    keys.push(rootNode.id); // 展开第一层节点
+  });
+  return keys;
+});
 const leftWidth = ref(260); // 初始宽度
 let dragging = false;
 
