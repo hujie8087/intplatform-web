@@ -413,8 +413,12 @@ const getOrderData = (row: MdcOrder.ResMdcOrder): { timestamp: string; color: st
 const userTaskInfoFormRef = ref<InstanceType<typeof UserTaskInfoForm>>();
 const handleBatchExportCheck = () => {
   userTaskInfoFormRef.value?.create("报餐送餐系统-部门订单核对表" + new Date().getTime() + ".xlsx");
+  let totalParam = {
+    ...proTable.value?.totalParam
+  };
+  delete totalParam.orderDate;
   exportDeptOrderCheck({
-    ...proTable.value?.totalParam,
+    totalParam,
     params: {
       beginTime: proTable.value?.searchParam.orderDate[0],
       endTime: proTable.value?.searchParam.orderDate[1]
