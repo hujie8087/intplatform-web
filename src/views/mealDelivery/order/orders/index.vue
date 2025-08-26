@@ -528,8 +528,11 @@ const userTaskInfoFormRef = ref<InstanceType<typeof UserTaskInfoForm>>();
 // 导出结算单
 const handleBatchExportCheck = () => {
   userTaskInfoFormRef.value?.create("报餐送餐系统-结算表" + new Date().getTime() + ".xlsx");
+  let totalParam: any = proTable.value?.totalParam;
+  delete totalParam.orderDate;
   exportCheck({
-    ...proTable.value?.totalParam,
+    // ...proTable.value?.totalParam,
+    ...totalParam,
     params: {
       beginTime: proTable.value?.searchParam.orderDate[0] + " 06:00:00",
       endTime: proTable.value?.searchParam.orderDate[1] + " 06:00:00"
