@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="drawerVisible" :destroy-on-close="true" title="任务详情">
+  <el-dialog v-model="drawerVisible" :destroy-on-close="true" title="任务详情" @close="dialogEvent">
     <el-descriptions :column="2" border label-width="100px">
       <el-descriptions-item label="任务ID">{{ taskDetailForm.taskId }}</el-descriptions-item>
       <el-descriptions-item label="创建人">{{ taskDetailForm.createBy }}</el-descriptions-item>
@@ -19,8 +19,8 @@
 </template>
 
 <script setup lang="ts" name="WaterSettlementDrawer">
-// import { queryUserTaskInfo } from "@/api/modules/mdc/monitor/usertask";
 import { ref } from "vue";
+const baseFile = import.meta.env.VITE_APP_BASE_FILE;
 
 interface TaskDetailForm {
   taskId: string;
@@ -59,46 +59,51 @@ const drawerProps = ref<DrawerProps>({
   rowData: {},
   fileName: ""
 });
+const timer = ref<number | null>(null);
+const dialogEvent = () => {
+  timer.value = null;
+};
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
   if (params.api) {
-    params.api(params.params).then((res: any) => {
-      console.log(res);
-      //   show(res.data.taskId);
-    });
+    if (timer.value !== null) {
+      window.clearInterval(timer.value);
+      timer.value = null;
+    }
+    let queryUserTaskInfo = params.api;
+    timer.value = window.setInterval(async () => {
+      // try {
+      const { data } = await queryUserTaskInfo(params.params.taskId);
+      taskDetailForm.value.taskId = data.taskId;
+      taskDetailForm.value.startTime = data.startTime;
+      taskDetailForm.value.endTime = data.endTime;
+      taskDetailForm.value.status = data.status;
+      taskDetailForm.value.processPercent = data.processPercent;
+      taskDetailForm.value.message = data.message;
+      taskDetailForm.value.outputPath = data.outputPath;
+      taskDetailForm.value.createTime = data.createTime;
+      taskDetailForm.value.createBy = data.createBy;
+      if (data.status === "Success" && data.outputPath !== "") {
+        success.value = true;
+        // outputPath.value = data.outputPath;
+        taskDetailForm.value.outputPath = data.outputPath;
+        window.clearInterval(timer.value!);
+        timer.value = null;
+      } else if ("Error" === data.status) {
+        window.clearInterval(timer.value!);
+        timer.value = null;
+      }
+      // } catch (error) {
+      //   window.clearInterval(timer.value!);
+      // }
+    }, 500);
   }
 };
-// const taskInterId = ref(0);
-// const show = (taskId: string) => {
-//   setInterval(() => {
-//     queryUserTaskInfo(taskId).then(({ data }) => {
-//       taskDetailForm.value.taskId = data.taskId;
-//       taskDetailForm.value.startTime = data.startTime;
-//       taskDetailForm.value.endTime = data.endTime;
-//       taskDetailForm.value.status = data.status;
-//       taskDetailForm.value.processPercent = data.processPercent;
-//       taskDetailForm.value.message = data.message;
-//       taskDetailForm.value.outputPath = data.outputPath;
-//       taskDetailForm.value.createTime = data.createTime;
-//       taskDetailForm.value.createBy = data.createBy;
-
-//       if ("Success" === data.status && "" !== data.outputPath) {
-//         clearInterval(taskInterId.value);
-//         success.value = true;
-//         taskDetailForm.value.outputPath = data.outputPath;
-//       } else if ("Error" === data.status) {
-//         clearInterval(taskInterId.value);
-//         taskInterId.value = 0;
-//       }
-//     });
-//   }, 500);
-// };
-
 // 提交数据（新增/编辑）
 const downloadFile = () => {
-  console.log(taskDetailForm.value.outputPath);
+  window.open(`${baseFile}${taskDetailForm.value.outputPath}`, "_blank");
 };
 defineExpose({
   acceptParams
