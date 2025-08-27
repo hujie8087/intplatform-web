@@ -95,12 +95,12 @@ export function exportDeptOrderCheck(query: any) {
 
 //导出明细
 export function exportOrders3(query: any) {
-  return http.get<any>(PORT1 + "/order/orders/export3", { params: query });
+  return http.post<any>(PORT1 + "/order/orders/export3", query);
 }
 
 //导出结算
 export function exportSettlement(query: any) {
-  return http.get<any>(PORT1 + "/order/orders/exportSettlement", { params: query });
+  return http.post<any>(PORT1 + "/order/orders/exportSettlement", query);
 }
 
 // 订水结算单导出
