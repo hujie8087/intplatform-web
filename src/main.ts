@@ -34,6 +34,7 @@ import I18n from "@/languages/index";
 import pinia from "@/stores";
 // errorHandler
 import errorHandler from "@/utils/errorHandler";
+import DataVVue3 from "@kjgl77/datav-vue3"; // 导入 DataV Vue3 组件
 // firebase
 // import "@/firebase";
 const app = createApp(App);
@@ -45,4 +46,4 @@ Object.keys(Icons).forEach(key => {
   app.component(key, Icons[key as keyof typeof Icons]);
 });
 
-app.use(ElementPlus).use(directives).use(router).use(I18n).use(pinia).mount("#app");
+app.use(ElementPlus).use(directives).use(router).use(I18n).use(pinia).use(DataVVue3).mount("#app");
