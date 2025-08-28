@@ -28,5 +28,6 @@ export const getPostById = (id: number) => {
 
 // * 获取岗位数据
 export const getPostList = (params: Post.ReqPostParams) => {
-  return http.getRow<Post.ResPost>(PORT1 + `/system/post/list`, params);
+  // return http.getRow<Post.ResPost>(PORT1 + `/system/post/list`, params);
+  return http.getRow<Post.ResPost>(PORT1 + `/system/mdc/post/list`, params);
 };
