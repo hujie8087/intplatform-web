@@ -140,6 +140,7 @@ const treeAll = (val: boolean) => {
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
+  checkStrictly.value = params.rowData.menuCheckStrictly || false; // 父子联动是否勾选
   drawerVisible.value = true;
   repairAreaIds.value = params.rowData.repairAreaId ? params.rowData.repairAreaId?.split("/").map(item => Number(item)) : [];
   drawerProps.value.menuIds = params.menuIds ?? [];
@@ -151,11 +152,16 @@ const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
-    drawerProps.value.rowData.menuIds = treeRef.value?.getCheckedKeys(false);
+    // drawerProps.value.rowData.menuIds = treeRef.value?.getCheckedKeys(false);
+    // 2. 获取完全勾选的节点 ID
+    const checkedKeys = treeRef.value.getCheckedKeys(false, true);
+    const finalKeys = getCheckedWithParents(drawerProps.value.menuList, checkedKeys); // 取到父节点id
     try {
       await drawerProps.value.api!({
         ...drawerProps.value.rowData,
-        menuIds: drawerProps.value.rowData.menuIds,
+        // menuIds: drawerProps.value.rowData.menuIds,
+        menuIds: finalKeys,
+        menuCheckStrictly: checkStrictly.value ? true : false,
         repairAreaId: repairAreaIds.value.join("/")
       });
       ElMessage.success({
@@ -168,6 +174,41 @@ const handleSubmit = () => {
     }
   });
 };
+/**
+ * 获取选中的节点和它们所有父节点的 id
+ * @param treeData 树形结构数据
+ * @param checkedIds 选中的 id 数组
+ * @returns 合并后的 id 数组
+ */
+function getCheckedWithParents(treeData: any[], checkedIds: number[]): number[] {
+  const parentMap = new Map<number, number>(); // 子 -> 父 映射
+
+  // 深度遍历树，记录父子关系
+  function buildParentMap(nodes: any[], parentId?: number) {
+    for (const node of nodes) {
+      if (parentId !== undefined) {
+        parentMap.set(node.id, parentId);
+      }
+      if (node.children && node.children.length) {
+        buildParentMap(node.children, node.id);
+      }
+    }
+  }
+  buildParentMap(treeData);
+
+  const result = new Set<number>();
+
+  // 遍历选中的 id，逐级向上回溯父节点
+  checkedIds.forEach(id => {
+    let current: number | undefined = id;
+    while (current !== undefined) {
+      result.add(current);
+      current = parentMap.get(current);
+    }
+  });
+
+  return Array.from(result);
+}
 
 defineExpose({
   acceptParams

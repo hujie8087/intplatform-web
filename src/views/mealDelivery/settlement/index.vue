@@ -13,13 +13,35 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="">
+          <el-button type="success" v-mealAuth="['order:orders:export']" plain :icon="Download" @click="handleBatchPrintDetail"
+            >导出明细
+          </el-button>
           <!-- 导出结算单 -->
-          <el-button type="warning" v-mealAuth="['order:orders:export']" :icon="Download" @click="exportSettlement"
+          <el-button
+            type="primary"
+            v-mealAuth="['order:orders:export']"
+            plain
+            :icon="Download"
+            @click="handleBatchExportSettlement"
             >导出结算单</el-button
           >
           <!-- 导出查看结算任务列表 -->
-          <el-button type="warning" v-mealAuth="['order:orders:export']" plain :icon="Download" @click="exportSettlement"
-            >导出查看结算任务列表</el-button
+          <el-button
+            type="warning"
+            v-mealAuth="['order:orders:export']"
+            plain
+            :icon="Download"
+            @click="handleBatchPrintDetailTaskTable"
+            >查看明细任务列表</el-button
+          >
+          <!-- 导出查看结算任务列表 -->
+          <el-button
+            type="warning"
+            v-mealAuth="['order:orders:export']"
+            plain
+            :icon="Download"
+            @click="handleBatchExportSettlementTaskTable"
+            >查看结算任务列表</el-button
           >
         </template>
         <!-- Expand -->
@@ -39,6 +61,7 @@
       </ProTable>
       <SettlementDrawer ref="drawerRef" />
       <UserTaskInfoForm ref="userTaskInfoFormRef" />
+      <UserTaskListTable ref="userTaskListTableRef" />
     </div>
   </div>
 </template>
@@ -53,7 +76,10 @@ import { Settlement } from "@/api/interface/mealDelivery/settlement";
 import { useDict } from "@/hooks/useDict";
 import { DictOptions } from "@/api/interface";
 import { getAllCarNameList, getAllMessHallNameList, getAllSiteAddressList } from "@/api/modules/mdc/system";
+import { exportOrders3, exportSettlement } from "@/api/modules/mdc/system/order/orders";
 import UserTaskInfoForm from "@/components/UserTaskInfoForm/index.vue";
+import UserTaskListTable from "@/components/UserTaskListTable/index.vue";
+import { queryUserTaskInfo } from "@/api/modules/mdc/monitor/usertask";
 import dayjs from "dayjs";
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
@@ -149,12 +175,11 @@ const getTableList = (params: any) => {
   const newParams = JSON.parse(JSON.stringify(params)); // 深拷贝（可选）
   if (Array.isArray(newParams.orderDate) && newParams.orderDate.length === 2) {
     newParams.params = {
-      beginTime: newParams.orderDate[0],
-      endTime: newParams.orderDate[1]
+      beginTime: newParams.orderDate[0] + " 00:00:00",
+      endTime: newParams.orderDate[1] + " 00:00:00"
     };
     delete newParams.orderDate;
   }
-
   return queryFoodOrderSettlementList(newParams);
 };
 
@@ -214,10 +239,13 @@ const columns = reactive<ColumnProps<Settlement.ResSettlement>[]>([
     search: {
       span: 2,
       el: "date-picker",
-      props: { type: "datetimerange", valueFormat: "YYYY-MM-DD HH:mm:ss" },
+      // props: { type: "datetimerange", valueFormat: "YYYY-MM-DD HH:mm:ss" },
+      // dayjs().subtract(4, "day").startOf("day").format("YYYY-MM-DD HH:mm:ss"),
+      // dayjs().endOf("day").format("YYYY-MM-DD HH:mm:ss")
+      props: { type: "daterange", valueFormat: "YYYY-MM-DD" },
       defaultValue: [
-        dayjs().subtract(4, "day").startOf("day").format("YYYY-MM-DD HH:mm:ss"),
-        dayjs().endOf("day").format("YYYY-MM-DD HH:mm:ss")
+        dayjs().startOf("day").format("YYYY-MM-DD"), // 今天 00:00
+        dayjs().add(1, "day").endOf("day").format("YYYY-MM-DD") // 明天 23:59:59
       ]
     }
   },
@@ -393,15 +421,67 @@ const getOrderData = (row: Settlement.ResSettlement): { timestamp: string; color
 };
 
 const userTaskInfoFormRef = ref<InstanceType<typeof UserTaskInfoForm>>();
+const userTaskListTableRef = ref();
 // 导出结算单
-const exportSettlement = () => {
-  let newParams = JSON.parse(JSON.stringify(proTable.value?.totalParam));
-
-  userTaskInfoFormRef.value?.acceptParams({
-    rowData: {},
-    fileName: "报餐送餐系统-结算表" + new Date().getTime() + ".xlsx",
-    // api: exportSettlement,
-    params: newParams
+const handleBatchExportSettlement = () => {
+  let totalParam = JSON.parse(JSON.stringify(proTable.value?.totalParam));
+  delete totalParam.orderDate;
+  exportSettlement({
+    ...totalParam,
+    params: {
+      beginTime: proTable.value?.searchParam.orderDate[0] + " 00:00:00",
+      endTime: proTable.value?.searchParam.orderDate[1] + " 00:00:00"
+    }
+  }).then(res => {
+    let taskId = res.data;
+    userTaskInfoFormRef.value?.acceptParams({
+      rowData: {},
+      fileName: "报餐送餐系统-结算表" + new Date().getTime() + ".xlsx",
+      api: queryUserTaskInfo,
+      params: {
+        taskId
+      }
+    });
+  });
+};
+// 导出明细
+const handleBatchPrintDetail = () => {
+  let totalParam = JSON.parse(JSON.stringify(proTable.value?.totalParam));
+  delete totalParam.orderDate;
+  exportOrders3({
+    ...totalParam,
+    params: {
+      beginTime: proTable.value?.searchParam.orderDate[0] + " 00:00:00",
+      endTime: proTable.value?.searchParam.orderDate[1] + " 00:00:00"
+    }
+  }).then(res => {
+    let taskId = res.data;
+    userTaskInfoFormRef.value?.acceptParams({
+      rowData: {},
+      fileName: "报餐送餐系统-明细表" + new Date().getTime() + ".xlsx",
+      api: queryUserTaskInfo,
+      params: {
+        taskId
+      }
+    });
+  });
+};
+// 导出查看明细任务列表
+const handleBatchPrintDetailTaskTable = () => {
+  userTaskListTableRef.value.create({
+    taskCategory: 1,
+    dataOperate: 1,
+    api: queryUserTaskInfo,
+    fileName: "报餐送餐系统-明细表" + new Date().getTime() + ".xlsx"
+  });
+};
+// 导出结算任务列表
+const handleBatchExportSettlementTaskTable = () => {
+  userTaskListTableRef.value.create({
+    taskCategory: 2,
+    dataOperate: 1,
+    api: queryUserTaskInfo,
+    fileName: "报餐送餐系统-明细表" + new Date().getTime() + ".xlsx"
   });
 };
 </script>
