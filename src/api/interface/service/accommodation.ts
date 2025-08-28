@@ -93,6 +93,7 @@ export namespace Accommodation {
     orderStatus?: number;
     clArea?: string;
     status?: string;
+    flag?: number;
   }
   export interface ResCleanOrder {
     id: number;

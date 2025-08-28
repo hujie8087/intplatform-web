@@ -95,6 +95,15 @@ export const getCleanById = (id: number) => {
 
 // * 获取保洁订单列表
 export const getCleanOrderList = (params: Accommodation.ReqCleanOrderParams) => {
+  // 定义需要检查的字段列表
+  const fieldsToCheck = ["repairArea", "roomNo", "repairPerson", "repairMan", "repairState", "ancestors"];
+  // 遍历检查各字段是否为空，赋值flag
+  for (const field of fieldsToCheck) {
+    if (!params[field]?.trim) {
+      params.flag = 1;
+      break; // 如果已经找到空值，就不需要继续检查了
+    }
+  }
   return http.get<Accommodation.ResCleanOrder[]>(PORT1 + `/maintenance/clean/order/list`, params);
 };
 
