@@ -25,7 +25,9 @@
     "commit": "git add -A && czg && git push"
   },
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
     "@element-plus/icons-vue": "2.3.1",
+    "@kjgl77/datav-vue3": "^1.7.4",
     "@types/node": "20.14.11",
     "@vueuse/core": "10.9.0",
     "@wangeditor/editor": "5.1.23",
@@ -38,6 +40,7 @@
     "echarts-liquidfill": "3.1.0",
     "element-plus": "2.8.8",
     "firebase": "^11.2.0",
+    "leaflet-draw": "^1.0.4",
     "lodash": "4.17.21",
     "md5": "2.3.0",
     "mitt": "3.0.1",
@@ -60,6 +63,7 @@
   "devDependencies": {
     "@commitlint/cli": "18.4.3",
     "@commitlint/config-conventional": "18.4.3",
+    "@types/leaflet": "^1.9.20",
     "@types/md5": "2.3.5",
     "@types/nprogress": "0.2.3",
     "@types/qs": "6.9.12",
