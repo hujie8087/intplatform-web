@@ -17,3 +17,22 @@ export const getCateringScreenData = (params: { beginTime?: string; endTime?: st
     ...params
   });
 };
+
+// 人员统计信息
+export const getPersonnelStatistics = params => {
+  return http.get<DataVisualize.Personnel>(PORT1 + `system/statistics/data`, params);
+};
+
+// 维修统计信息
+export const getRepairStatistics = (params: { dateType?: string; ancestors?: string }) => {
+  return http.get<DataVisualize.RepairStatistics>(PORT1 + `maintenance/statistics/repair`, params);
+};
+
+// 排查隐患
+export const getCheckHiddenDanger = (params: { dateType?: string; ancestors?: string }) => {
+  return http.get<DataVisualize.CheckHiddenDanger>(PORT1 + `maintenance/statistics/hiddendanger`, params);
+};
+// 报餐送餐
+export const getMealService = (params: { dateType?: string; ancestors?: string }) => {
+  return http.get<DataVisualize.MealService>(PORT1 + `order/statistics/count`, params);
+};
