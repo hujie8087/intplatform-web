@@ -90,7 +90,8 @@ export function exportOrders(query: any) {
 
 //导出部门订单核对
 export function exportDeptOrderCheck(query: any) {
-  return http.post<any>(PORT1 + "/order/orders/exportDeptOrderCheck", { params: query });
+  // return http.post<any>(PORT1 + "/order/orders/exportDeptOrderCheck", { params: query });
+  return http.post<any>(PORT1 + "/order/orders/exportDeptOrderCheck", query);
 }
 
 //导出明细
