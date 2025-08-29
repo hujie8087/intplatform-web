@@ -215,7 +215,23 @@ function getCachedOrderData(row) {
   }
   return orderDataCache.get(key);
 }
-
+const initDateRange = () => {
+  const now = new Date();
+  const phi = new Date();
+  phi.setHours(6, 0, 0, 0); // 设置为今天的6点
+  let start, end;
+  if (now < phi) {
+    // now < phi
+    start = dayjs().subtract(1, "day").format("YYYY-MM-DD");
+    end = dayjs().format("YYYY-MM-DD");
+  } else {
+    // phi <= now
+    start = dayjs().format("YYYY-MM-DD");
+    end = dayjs().add(1, "day").format("YYYY-MM-DD"); // 明天
+  }
+  // // 更新绑定的日期范围
+  return [start, end];
+};
 const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { type: "expand", width: 30 },
@@ -228,7 +244,8 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
       span: 1,
       el: "date-picker",
       props: { type: "daterange", valueFormat: "YYYY-MM-DD" },
-      defaultValue: [dayjs().subtract(4, "day").startOf("day").format("YYYY-MM-DD"), dayjs().endOf("day").format("YYYY-MM-DD")]
+      // defaultValue: [dayjs().subtract(4, "day").startOf("day").format("YYYY-MM-DD"), dayjs().endOf("day").format("YYYY-MM-DD")]
+      defaultValue: initDateRange()
     }
   },
   {
