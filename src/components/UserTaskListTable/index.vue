@@ -90,7 +90,6 @@ interface DrawerProps {
   fileName: string;
 }
 const create = (params: DrawerProps): void => {
-  debugger;
   fileName.value = params.fileName;
   Object.assign(initParams, {
     taskCategory: params.taskCategory,
