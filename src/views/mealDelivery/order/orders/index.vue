@@ -341,15 +341,15 @@ const getSiteDetailList = async (foodType: string) => {
 };
 // 表格配置项
 const expandedRowSet = ref(new Set());
-const orderDataCache = new Map();
+// const orderDataCache = new Map();
 
-function getCachedOrderData(row) {
+/* function getCachedOrderData(row) {
   const key = row.orderNo;
   if (!orderDataCache.has(key)) {
     orderDataCache.set(key, getOrderData(row));
   }
   return orderDataCache.get(key);
-}
+} */
 const initDateRange = () => {
   const now = new Date();
   const phi = new Date();
@@ -477,7 +477,7 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
             }}
           >
             <el-timeline reverse={false} style="padding: 0">
-              {getCachedOrderData(scope.row).map((activity, index) => (
+              {getOrderData(scope.row).map((activity, index) => (
                 <el-timeline-item
                   key={index}
                   timestamp={activity.timestamp}
