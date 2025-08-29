@@ -10,3 +10,7 @@ export function queryUserTaskInfo(taskId: string) {
 export function queryUserTaskListWithPage(params: any) {
   return http.get<any>(PORT1 + "/monitor/usertask/queryusertasklistwithpage", params);
 }
+// 下载命名文件方法
+export function exportFile(url: string) {
+  return http.downloadNamedFiles(url);
+}

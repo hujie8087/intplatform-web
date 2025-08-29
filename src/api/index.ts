@@ -138,6 +138,9 @@ class RequestHttp {
   download(url: string, params?: object, _object = {}): Promise<BlobPart> {
     return this.service.post(url, params, { ..._object, responseType: "blob" });
   }
+  downloadNamedFiles(url: string, params?: object, _object = {}): Promise<BlobPart> {
+    return this.service.get(url, { params, ..._object, responseType: "blob" });
+  }
 }
 
 export default new RequestHttp(config);
