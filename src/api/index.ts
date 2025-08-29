@@ -138,7 +138,7 @@ class RequestHttp {
   download(url: string, params?: object, _object = {}): Promise<BlobPart> {
     return this.service.post(url, params, { ..._object, responseType: "blob" });
   }
-  // 下载链接没有名字的文件
+  // 下载是链接没有名字的文件
   downloadNamedFiles(url: string, params?: object, _object = {}): Promise<BlobPart> {
     return this.service.get(url, { params, ..._object, responseType: "blob" });
   }
