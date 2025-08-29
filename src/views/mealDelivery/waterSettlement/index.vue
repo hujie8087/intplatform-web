@@ -161,15 +161,15 @@ const getSiteAddressList = async () => {
 getSiteAddressList();
 
 // 表格配置项
-const orderDataCache = new Map();
+// const orderDataCache = new Map();
 
-function getCachedOrderData(row) {
-  const key = row.orderNo;
-  if (!orderDataCache.has(key)) {
-    orderDataCache.set(key, getOrderData(row));
-  }
-  return orderDataCache.get(key);
-}
+// function getCachedOrderData(row) {
+//   const key = row.orderNo;
+//   if (!orderDataCache.has(key)) {
+//     orderDataCache.set(key, getOrderData(row));
+//   }
+//   return orderDataCache.get(key);
+// }
 
 const columns = reactive<ColumnProps<WaterSettlement.ResWaterSettlement>[]>([
   { type: "selection", fixed: "left", width: 50 },
@@ -248,7 +248,7 @@ const columns = reactive<ColumnProps<WaterSettlement.ResWaterSettlement>[]>([
     label: "订单状态",
     width: 120,
     render(scope) {
-      const orderData = getCachedOrderData(scope.row);
+      const orderData = getOrderData(scope.row);
 
       return (
         <div>
