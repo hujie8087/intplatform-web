@@ -18,13 +18,19 @@
             >导出结算单</el-button
           >
           <!-- 导出查看结算任务列表 -->
-          <el-button type="warning" v-mealAuth="['order:orders:export']" plain :icon="Download" @click="exportSettlement"
+          <el-button
+            type="warning"
+            v-mealAuth="['order:orders:export']"
+            plain
+            :icon="Download"
+            @click="handleBatchExportSettlementTaskTable"
             >导出查看结算任务列表</el-button
           >
         </template>
       </ProTable>
       <WaterSettlementDrawer ref="drawerRef" />
       <UserTaskInfoForm ref="userTaskInfoFormRef" />
+      <UserTaskListTable ref="userTaskListTableRef" />
     </div>
   </div>
 </template>
@@ -41,7 +47,9 @@ import { useDict } from "@/hooks/useDict";
 import { DictOptions } from "@/api/interface";
 import { getAllCarNameList, getAllMessHallNameList, getAllSiteAddressList } from "@/api/modules/mdc/system";
 import UserTaskInfoForm from "@/components/UserTaskInfoForm/index.vue";
+import UserTaskListTable from "@/components/UserTaskListTable/index.vue";
 import { exportWaterSettlement } from "@/api/modules/mdc/system/order/orders";
+import { queryUserTaskInfo } from "@/api/modules/mdc/monitor/usertask";
 import dayjs from "dayjs";
 // import { exportWaterSettlement } from "@/api/modules/mdc/system/order/orders";
 // ProTable 实例
@@ -110,8 +118,8 @@ const getTableList = (params: any) => {
   const newParams = JSON.parse(JSON.stringify(params)); // 深拷贝（可选）
   if (Array.isArray(newParams.orderDate) && newParams.orderDate.length === 2) {
     newParams.params = {
-      beginTime: newParams.orderDate[0],
-      endTime: newParams.orderDate[1]
+      beginTime: newParams.orderDate[0] + " 00:00:00",
+      endTime: newParams.orderDate[1] + " 00:00:00"
     };
     delete newParams.orderDate;
   }
@@ -173,8 +181,10 @@ const columns = reactive<ColumnProps<WaterSettlement.ResWaterSettlement>[]>([
     search: {
       span: 2,
       el: "date-picker",
-      props: { type: "datetimerange", valueFormat: "YYYY-MM-DD HH:mm:ss" },
-      defaultValue: [dayjs().startOf("day").format("YYYY-MM-DD HH:mm:ss"), dayjs().endOf("day").format("YYYY-MM-DD HH:mm:ss")]
+      // props: { type: "datetimerange", valueFormat: "YYYY-MM-DD HH:mm:ss" },
+      // defaultValue: [dayjs().startOf("day").format("YYYY-MM-DD HH:mm:ss"), dayjs().endOf("day").format("YYYY-MM-DD HH:mm:ss")]
+      props: { type: "daterange", valueFormat: "YYYY-MM-DD" },
+      defaultValue: [dayjs().format("YYYY-MM-DD"), dayjs().add(1, "day").format("YYYY-MM-DD")]
     }
   },
   { prop: "companyName", label: "付费公司", width: 100 },
@@ -320,14 +330,35 @@ const getOrderData = (row: WaterSettlement.ResWaterSettlement): { timestamp: str
 
 const userTaskInfoFormRef = ref<InstanceType<typeof UserTaskInfoForm>>();
 // 导出结算单
-const exportSettlement = () => {
+const exportSettlement = async () => {
   let newParams = JSON.parse(JSON.stringify(proTable.value?.totalParam));
-
-  userTaskInfoFormRef.value?.acceptParams({
-    rowData: {},
-    fileName: "报餐送餐系统-结算表" + new Date().getTime() + ".xlsx",
-    api: exportWaterSettlement,
-    params: newParams
+  delete newParams.orderDate;
+  await exportWaterSettlement({
+    ...newParams,
+    params: {
+      beginTime: proTable.value?.searchParam.orderDate[0] + " 00:00:00",
+      endTime: proTable.value?.searchParam.orderDate[1] + " 00:00:00"
+    }
+  }).then(res => {
+    let taskId = res.data;
+    userTaskInfoFormRef.value?.acceptParams({
+      rowData: {},
+      fileName: "报餐送餐系统-结算表" + new Date().getTime() + ".xlsx",
+      api: queryUserTaskInfo,
+      params: {
+        taskId
+      }
+    });
+  });
+};
+const userTaskListTableRef = ref();
+// 导出查看任务列表
+const handleBatchExportSettlementTaskTable = () => {
+  userTaskListTableRef.value.create({
+    taskCategory: 4,
+    dataOperate: 1,
+    api: queryUserTaskInfo,
+    fileName: "报餐送餐系统-结算表" + new Date().getTime() + ".xlsx"
   });
 };
 </script>
