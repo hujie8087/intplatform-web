@@ -246,7 +246,7 @@ const transformDeptList = list => {
   return list.map(item => ({
     ...item,
     shortLabel: item.label, // 下拉展示用
-    label: item.deptPath, // 输入框展示用
+    label: item.deptPath || item.label, // 输入框展示用
     children: item.children ? transformDeptList(item.children) : []
   }));
 };
@@ -255,6 +255,13 @@ const openDrawer = async (title: string, row: Partial<Employee.ResEmployee> = {}
   if (rowData.id) {
     const res = await getEmployee(rowData.id);
     rowData = res.data;
+    rowData.deptId = Number(rowData.deptId);
+  } else {
+    // 如果左边部门树选择值了带过去
+    if (treeFilterValues.deptId) {
+      rowData.deptId = treeFilterValues.deptId;
+    }
+    rowData.status = "0";
   }
   const params = {
     title,
