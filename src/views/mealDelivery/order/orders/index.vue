@@ -92,8 +92,7 @@
           <el-tag v-show="scope.row.leaderStatus === '2'" disabled type="danger" size="small">已驳回</el-tag>
         </template>
       </ProTable>
-      <!-- <MdcOrderDrawer ref="drawerRef" />
-      <UserTaskInfoForm ref="userTaskInfoFormRef" /> -->
+      <!-- <MdcOrderDrawer ref="drawerRef" />-->
       <PrintTemplate ref="printTemplateRef" />
       <UserTaskListTable ref="userTaskListTableRef" />
       <UserTaskInfoForm ref="userTaskInfoFormRef" />
@@ -148,8 +147,10 @@ import {
   getAllSiteAddressDetailList,
   getAllSiteAddressList
 } from "@/api/modules/mdc/system";
-import UserTaskInfoForm from "./components/UserTaskInfoForm.vue";
-import UserTaskListTable from "./components/UserTaskListTable.vue";
+import { queryUserTaskInfo } from "@/api/modules/mdc/monitor/usertask";
+import UserTaskInfoForm from "@/components/UserTaskInfoForm/index.vue";
+// import UserTaskListTable from "./components/UserTaskListTable.vue";
+import UserTaskListTable from "@/components/UserTaskListTable/index.vue";
 import dayjs from "dayjs";
 import { MdcOrder } from "@/api/interface/mealDelivery/order";
 import { useHandleData } from "@/hooks/useHandleData";
@@ -340,16 +341,31 @@ const getSiteDetailList = async (foodType: string) => {
 };
 // 表格配置项
 const expandedRowSet = ref(new Set());
-const orderDataCache = new Map();
+// const orderDataCache = new Map();
 
-function getCachedOrderData(row) {
+/* function getCachedOrderData(row) {
   const key = row.orderNo;
   if (!orderDataCache.has(key)) {
     orderDataCache.set(key, getOrderData(row));
   }
   return orderDataCache.get(key);
-}
-
+} */
+const initDateRange = () => {
+  const now = new Date();
+  const phi = new Date();
+  phi.setHours(6, 0, 0, 0); // 设置为今天的6点
+  let start, end;
+  if (now < phi) {
+    // now < phi
+    start = dayjs().subtract(1, "day").format("YYYY-MM-DD");
+    end = dayjs().format("YYYY-MM-DD");
+  } else {
+    // phi <= now
+    start = dayjs().format("YYYY-MM-DD");
+    end = dayjs().add(1, "day").format("YYYY-MM-DD");
+  }
+  return [start, end];
+};
 const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { type: "expand", width: 30 },
@@ -383,7 +399,7 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
       span: 1,
       el: "date-picker",
       props: { type: "daterange", valueFormat: "YYYY-MM-DD" },
-      defaultValue: [dayjs().subtract(4, "day").startOf("day").format("YYYY-MM-DD"), dayjs().endOf("day").format("YYYY-MM-DD")]
+      defaultValue: initDateRange()
     }
   },
   { prop: "pNum", label: "数量", width: 60 },
@@ -461,7 +477,7 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
             }}
           >
             <el-timeline reverse={false} style="padding: 0">
-              {getCachedOrderData(scope.row).map((activity, index) => (
+              {getOrderData(scope.row).map((activity, index) => (
                 <el-timeline-item
                   key={index}
                   timestamp={activity.timestamp}
@@ -527,7 +543,7 @@ const getOrderData = (row: MdcOrder.ResMdcOrder): { timestamp: string; color: st
 const userTaskInfoFormRef = ref<InstanceType<typeof UserTaskInfoForm>>();
 // 导出结算单
 const handleBatchExportCheck = () => {
-  userTaskInfoFormRef.value?.create("报餐送餐系统-结算表" + new Date().getTime() + ".xlsx");
+  // userTaskInfoFormRef.value?.create("报餐送餐系统-结算表" + new Date().getTime() + ".xlsx");
   let totalParam: any = { ...proTable.value?.totalParam };
   delete totalParam.orderDate;
   exportCheck({
@@ -539,14 +555,26 @@ const handleBatchExportCheck = () => {
     }
   }).then(res => {
     let taskId = res.data;
-    userTaskInfoFormRef.value?.show(taskId);
+    userTaskInfoFormRef.value?.acceptParams({
+      rowData: {},
+      fileName: "报餐送餐系统-核对表" + new Date().getTime() + ".xlsx",
+      api: queryUserTaskInfo,
+      params: {
+        taskId
+      }
+    });
   });
 };
 
 // 查看核对任务列表
-const userTaskListTableRef = ref<InstanceType<typeof UserTaskListTable>>();
+const userTaskListTableRef = ref();
 const handleBatchExportCheckTaskTable = () => {
-  userTaskListTableRef.value?.create(3, 1, "报餐送餐系统-核对表" + new Date().getTime() + ".xlsx");
+  userTaskListTableRef.value.create({
+    taskCategory: 3,
+    dataOperate: 1,
+    api: queryUserTaskInfo,
+    fileName: "报餐送餐系统-核对表" + new Date().getTime() + ".xlsx"
+  });
 };
 // 提交订单
 const submitOrder = async (row: MdcOrder.ResMdcOrder) => {

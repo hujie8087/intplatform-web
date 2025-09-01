@@ -20,6 +20,7 @@
 
 <script setup lang="ts" name="WaterSettlementDrawer">
 import { ref } from "vue";
+import { exportFile } from "@/api/modules/mdc/monitor/usertask";
 const baseFile = import.meta.env.VITE_APP_BASE_FILE;
 
 interface TaskDetailForm {
@@ -102,8 +103,25 @@ const acceptParams = (params: DrawerProps): void => {
   }
 };
 // 提交数据（新增/编辑）
-const downloadFile = () => {
-  window.open(`${baseFile}${taskDetailForm.value.outputPath}`, "_blank");
+const downloadFile = async () => {
+  // window.open(`${baseFile}${taskDetailForm.value.outputPath}`, "_blank");
+  let url = `${baseFile}${taskDetailForm.value.outputPath}`;
+  let fileName = drawerProps.value.fileName; // 自定义保存的文件名
+  try {
+    let res: any = await exportFile(url);
+    const blob = new Blob([res.data], { type: "application/octet-stream" });
+    const blobUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = fileName; // 文件命名
+    document.body.appendChild(link);
+    link.click();
+    // 清理
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (err) {
+    console.error("下载失败：", err);
+  }
 };
 defineExpose({
   acceptParams
