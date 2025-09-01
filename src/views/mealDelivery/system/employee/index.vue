@@ -242,6 +242,14 @@ const batchAdd = () => {
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof EmployeeDrawer> | null>(null);
+const transformDeptList = list => {
+  return list.map(item => ({
+    ...item,
+    shortLabel: item.label, // 下拉展示用
+    label: item.deptPath, // 输入框展示用
+    children: item.children ? transformDeptList(item.children) : []
+  }));
+};
 const openDrawer = async (title: string, row: Partial<Employee.ResEmployee> = {}) => {
   let rowData = { ...row };
   if (rowData.id) {
@@ -254,7 +262,7 @@ const openDrawer = async (title: string, row: Partial<Employee.ResEmployee> = {}
     rowData: { ...rowData },
     api: title === "新增" ? addEmployee : title === "编辑" ? updateEmployee : undefined,
     getTableList: proTable.value?.getTableList,
-    deptList: treeFilterRef.value?.treeData,
+    deptList: transformDeptList(JSON.parse(JSON.stringify(treeFilterRef.value?.treeData))),
     nationOptions: nationOptions.value,
     companyOptions: companyOptions.value,
     postOptions: postOptions.value
