@@ -34,9 +34,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item :label="`${$t('employee.dept')}`" prop="deptId">
+          <el-form-item :label="`${$t('employee.dept')}`" prop="deptId" required>
             <el-tree-select
-              v-model="deptId"
+              v-model="drawerProps.rowData!.deptId"
               :data="drawerProps.deptList"
               :props="{ value: 'id', label: 'label', children: 'children' }"
               value-key="id"
@@ -157,17 +157,23 @@ import { Employee } from "@/api/interface/mealDelivery/system/employee";
 import { DictOptions } from "@/api/interface";
 
 const { t } = useI18n(); // 解构出t方法
-
+const validatePass2 = (rule: any, value: any, callback: any) => {
+  if (value) {
+    callback();
+  } else {
+    callback(new Error(t("main.selectError", { msg: t("employee.dept") })));
+  }
+};
 const rules = reactive({
   jobNumber: [{ required: true, message: t("main.inputError", { msg: t("employee.jobNumber") }) }],
   username: [{ required: true, message: t("main.inputError", { msg: t("employee.username") }) }],
   companyName: [{ required: true, message: t("main.selectError", { msg: t("employee.company") }) }],
   nationType: [{ required: true, message: t("main.selectError", { msg: t("employee.nationType") }) }],
   religion: [{ required: true, message: t("main.selectError", { msg: t("employee.religion") }) }],
-  deptId: [{ required: true, message: t("main.selectError", { msg: t("employee.dept") }) }]
+  // deptId: [{ required: true, message: t("main.selectError", { msg: t("employee.dept") }) }]
+  deptId: [{ validator: validatePass2, trigger: "blur" }]
 });
 
-const deptId = ref<number>(0);
 // 性能优化：部门数据缓存
 const deptCache = ref<Map<string, any>>(new Map());
 
@@ -210,7 +216,6 @@ const drawerProps = ref<DrawerProps>({
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
-  deptId.value = drawerProps.value.rowData!.deptId ? +drawerProps.value.rowData!.deptId : 0;
 
   // 性能优化：缓存部门数据
   if (params.deptList && params.deptList.length > 0) {
@@ -222,7 +227,7 @@ const acceptParams = (params: DrawerProps): void => {
 };
 const closeDrawer = () => {
   drawerVisible.value = false;
-  deptId.value = 0;
+  // deptId.value = "";
 };
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
@@ -230,7 +235,7 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     try {
-      await drawerProps.value.api!({ ...drawerProps.value.rowData, deptId: deptId.value });
+      await drawerProps.value.api!({ ...drawerProps.value.rowData });
       ElMessage.success({
         message: t("main.successMsg", { title: t("system.user.user"), method: `${drawerProps.value.title}` })
       });
