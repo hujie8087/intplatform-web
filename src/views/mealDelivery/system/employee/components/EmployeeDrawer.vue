@@ -38,12 +38,16 @@
             <el-tree-select
               v-model="deptId"
               :data="drawerProps.deptList"
-              :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
-              value-key="deptId"
+              :props="{ value: 'id', label: 'label', children: 'children' }"
+              value-key="id"
               :filterable="true"
               placeholder="请选择部门"
               check-strictly
-            />
+            >
+              <template #default="{ data }">
+                {{ data.shortLabel }}
+              </template>
+            </el-tree-select>
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -107,8 +111,8 @@
         <el-col :span="12">
           <el-form-item :label="`${$t('employee.status')}`" prop="status">
             <el-radio-group v-model="drawerProps.rowData!.status">
-              <el-radio :value="0">{{ $t("dict.enable") }}</el-radio>
-              <el-radio :value="1">{{ $t("dict.disable") }}</el-radio>
+              <el-radio value="0">{{ $t("dict.enable") }}</el-radio>
+              <el-radio value="1">{{ $t("dict.disable") }}</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -226,7 +230,7 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     try {
-      await drawerProps.value.api!(drawerProps.value.rowData);
+      await drawerProps.value.api!({ ...drawerProps.value.rowData, deptId: deptId.value });
       ElMessage.success({
         message: t("main.successMsg", { title: t("system.user.user"), method: `${drawerProps.value.title}` })
       });
