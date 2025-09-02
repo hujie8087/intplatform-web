@@ -6,17 +6,17 @@
           <img src="@/assets/images/form-editor/callback.svg" alt="" />
         </div>
         <div class="title-data">
-          <span class="name">Vue动态表单</span>
+          <span class="name">问卷调查</span>
           <el-text class="time" size="small">最后编辑于2024-11-03 09:12</el-text>
         </div>
         <div class="control">
           <div class="cont-item">
-            <el-button type="primary" :icon="Finished" color="#626aef" size="default">
+            <el-button type="primary" :icon="Finished" color="#1677FF" size="default">
               <span class="name"> 保存 </span>
             </el-button>
           </div>
           <div class="cont-item">
-            <el-button type="primary" :icon="Pointer" color="#626aef" size="default">
+            <el-button type="primary" :icon="Pointer" color="#1677FF" size="default">
               <span class="name"> 发布 </span>
             </el-button>
           </div>
@@ -28,16 +28,7 @@
       <div class="comps">
         <div class="comp-category-item" v-for="(compCategory, index) in compList" :key="index">
           <div class="category-title">
-            <el-text size="large" class="title">{{ compCategory.name }}</el-text>
-            <el-tooltip
-              class="box-item"
-              effect="dark"
-              v-if="compCategory.tooltip"
-              :content="compCategory.tooltip"
-              placement="top-start"
-            >
-              <el-icon><QuestionFilled /></el-icon>
-            </el-tooltip>
+            <el-text size="default" class="title">{{ compCategory.name }}</el-text>
           </div>
           <draggable
             :group="{ name: 'componentsGroup', pull: 'clone', put: false }"
@@ -412,6 +403,9 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
   min-width: 1260px;
   height: 100%;
   overflow: hidden;
+
+  /* 主色调 - 蓝色系 */
+  --el-color-primary: #409eff;
 }
 .nav-data {
   height: 56px;
@@ -571,7 +565,7 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
     width: 686px;
 
     /* background: #fff; */
-    min-height: calc(100% - 10px);
+    min-height: calc(100% - 70px);
     padding-bottom: 10px;
     margin: 10px 30px;
     margin-left: 50%;
@@ -766,5 +760,23 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
 .comp-list-content {
   position: relative;
   min-height: 130px;
+}
+
+/* 关键：强制容器内的Element组件使用容器内的CSS变量 */
+.form-editor .el-button--primary {
+  background-color: var(--el-color-primary) !important;
+  border-color: var(--el-color-primary) !important;
+}
+.form-editor .el-button--primary:hover {
+  background-color: var(--el-color-primary-light-3) !important;
+  border-color: var(--el-color-primary-light-3) !important;
+}
+.form-editor .el-input__inner:focus {
+  border-color: var(--el-color-primary) !important;
+  box-shadow: 0 0 0 2px rgb(114 46 209 / 20%) !important;
+}
+.form-editor .el-checkbox__input.is-checked .el-checkbox__inner {
+  background-color: var(--el-color-primary) !important;
+  border-color: var(--el-color-primary) !important;
 }
 </style>

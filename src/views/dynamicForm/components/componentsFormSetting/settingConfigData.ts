@@ -27,3 +27,14 @@ export const textOrButtonSizeData = [
     value: "large"
   }
 ];
+
+export const dividerBorderTypeData = [
+  {
+    label: "直线",
+    value: "solid"
+  },
+  {
+    label: "虚线",
+    value: "dashed"
+  }
+];

@@ -29,6 +29,16 @@
           ></Description>
           <!-- 通用Placeholder配置-->
           <Placeholder v-if="showParams('placeholder')" :comp="selectComp" :key="selectComp._selectedId"></Placeholder>
+          <!-- 评分-->
+          <RateConfig v-if="selectComp?.type === 'Rate'" :comp="selectComp" />
+          <!-- MPS取值范围 -->
+          <NPSConfig v-if="['NPS', 'SelectRate'].includes(selectComp?.type)" :comp="selectComp" />
+          <!--分割线文字-->
+          <DividerText v-if="showParams('dividerValue')" :comp="selectComp"></DividerText>
+          <!--分割线类型-->
+          <DividerBorderType v-if="showParams('dividerValue')" :comp="selectComp"></DividerBorderType>
+          <!--位置-->
+          <Position v-if="showParams('position')" :comp="selectComp" />
         </div>
         <div class="category-name" v-if="selectComp?.type && !JustShowCompType.includes(selectComp?.type)">表单验证</div>
         <div class="content">
@@ -67,7 +77,11 @@ import Title from "./componentsFormSetting/base/Title.vue";
 import Description from "./componentsFormSetting/base/Description.vue";
 import Placeholder from "./componentsFormSetting/base/Placeholder.vue";
 import ImageUpload from "./componentsFormSetting/base/ImageUpload.vue";
-
+import RateConfig from "./componentsFormSetting/base/RateConfig.vue";
+import NPSConfig from "./componentsFormSetting/base/NPSConfig.vue";
+import DividerText from "./componentsFormSetting/base/DividerText.vue";
+import DividerBorderType from "./componentsFormSetting/base/DividerBorderType.vue";
+import Position from "./componentsFormSetting/base/Position.vue";
 // 校验配置
 import Required from "./componentsFormSetting/validation/Required.vue";
 import ValidationCustom from "./componentsFormSetting/validation/ValidationCustom.vue";

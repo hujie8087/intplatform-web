@@ -1,20 +1,28 @@
 <template>
   <el-radio-group
     v-model="dataValue"
+    style="width: 100%"
     :style="layoutType === 'vertical' || isSelected ? radioVerticalStyle : radioStyle"
     :disabled="isDev"
     size="default"
   >
-    <el-radio :key="_index" v-for="(item, _index) of dataList" :label="item" class="list-item">
-      <span class="editor-item">
-        {{ item.label }}
-      </span>
-      <span class="other-val" v-if="item.subType === 'other'">
-        <el-input size="default" :disabled="isDev" class="item-comp" v-model="item.value" placeholder="其他选项内容自定义" />
-      </span>
-      <span class="delete" v-if="dataList.length > 1 && !isPreviewRender" @click="deleteSubItem(_index)" :title="item.label">
-        <el-icon><Close /></el-icon>
-      </span>
+    <el-radio :key="_index" v-for="(item, _index) of props.dataList" :label="item" class="list-item">
+      <div class="citem">
+        <span class="editor-item">
+          {{ item.label }}
+        </span>
+        <span class="other-val" v-if="item.subType === 'other'">
+          <el-input size="default" :disabled="isDev" class="item-comp" v-model="item.value" placeholder="其他选项内容自定义" />
+        </span>
+        <span
+          class="delete"
+          v-if="props.dataList.length > 1 && !isPreviewRender"
+          @click="deleteSubItem(_index)"
+          :title="item.label"
+        >
+          <el-icon><Delete /></el-icon>
+        </span>
+      </div>
     </el-radio>
   </el-radio-group>
 </template>
@@ -22,6 +30,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
+import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 interface Props {
   dataList: Array<any>;
   dataValue: string;
@@ -30,20 +39,18 @@ interface Props {
   isSelected: boolean;
   isPreviewRender?: boolean;
 }
+const compStore = useSelectCompStore();
 const props = defineProps<Props>();
 const _updateKey = ref("");
 const dataValue = ref(props.dataValue || null);
-const dataList = ref(props.dataList || []);
 
 const radioVerticalStyle = ref({
-  display: "flex",
-  lineHeight: "40px",
-  flexDirection: "column",
-  alignItems: "baseline"
+  minHeight: "40px",
+  lineHeight: "40px"
 });
 
 const radioStyle = ref({
-  height: "40px",
+  display: "flex",
   lineHeight: "40px"
 });
 
@@ -52,41 +59,33 @@ const updateKey = () => {
 };
 
 const deleteSubItem = (index: number) => {
-  dataList.value.splice(index, 1);
-  console.log(index, "index");
+  const newDataList = [...props.dataList];
+  newDataList.splice(index, 1);
+  // 更新
+  compStore.updateCurrentComp({
+    ["dataList"]: newDataList
+  });
   updateKey();
 };
 </script>
 
 <style lang="scss" scoped>
-::v-deep {
-  .el-radio-group {
-    .el-radio {
-      position: absolute;
-      top: 12px;
-    }
-  }
+::v-deep .el-radio-group {
+  position: relative;
+  width: 100% !important;
 }
 .editor-item {
   margin-left: 15px;
   outline: none;
 }
-::v-deep(:where(.css-dev-only-do-not-override-17yhhjv).el-radio-group) {
-  display: block;
+::v-deep .el-radio__label {
+  width: 100% !important;
+}
+.citem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   width: 100%;
-}
-::v-deep(:where(.css-dev-only-do-not-override-17yhhjv).el-radio-wrapper span.el-radio + *) {
-  color: #000000;
-}
-::v-deep(:where(.css-dev-only-do-not-override-17yhhjv).el-radio-wrapper .el-radio-input) {
-  display: inline;
-}
-.list-item {
-  position: relative;
-  width: 100%;
-  .other-val {
-    margin-left: 40px;
-  }
   .delete {
     display: none;
   }
@@ -94,12 +93,18 @@ const deleteSubItem = (index: number) => {
   &:active,
   &:focus {
     .delete {
-      position: absolute;
-      top: 0;
-      right: 0;
       display: block;
+      float: right;
+      margin-left: auto;
       cursor: pointer;
     }
+  }
+}
+.list-item {
+  position: relative;
+  width: 100%;
+  .other-val {
+    margin-left: 14px;
   }
 }
 </style>

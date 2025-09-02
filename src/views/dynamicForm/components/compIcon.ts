@@ -7,8 +7,26 @@ import Title from "/src/assets/images/form-editor/title.svg";
 import Img from "/src/assets/images/form-editor/img.svg";
 // 基础组件
 import Input from "/src/assets/images/form-editor/input.svg";
+import Textarea from "/src/assets/images/form-editor/textarea.svg";
 import Radio from "/src/assets/images/form-editor/radio.svg";
 import Checkout from "/src/assets/images/form-editor/checkout.svg";
+import Select from "/src/assets/images/form-editor/select.svg";
+import Number from "/src/assets/images/form-editor/number.svg";
+// 评分组件
+import Rate from "/src/assets/images/form-editor/score.svg";
+import NPS from "/src/assets/images/form-editor/nps.svg";
+// 布局组件
+import Divider from "/src/assets/images/form-editor/divider.svg";
+// 日期组件
+import Date from "/src/assets/images/form-editor/date.svg";
+import DateRange from "/src/assets/images/form-editor/dateRange.svg";
+import Time from "/src/assets/images/form-editor/time.svg";
+import TimeRange from "/src/assets/images/form-editor/timeRange.svg";
+// 个人组件
+import Name from "/src/assets/images/form-editor/name.svg";
+import WorkNumber from "/src/assets/images/form-editor/id.svg";
+import Phone from "/src/assets/images/form-editor/phone.svg";
+import WX from "/src/assets/images/form-editor/wx.svg";
 
 // 预览
 import preview from "/src/assets/images/form-editor/preview.svg";
@@ -20,9 +38,23 @@ export default {
   Logic,
   Title,
   Input,
+  Textarea,
   preview,
   Button,
   Img,
   Radio,
-  Checkout
+  Checkout,
+  Rate,
+  NPS,
+  Divider,
+  Date,
+  DateRange,
+  Time,
+  TimeRange,
+  Name,
+  WorkNumber,
+  Phone,
+  WX,
+  Select,
+  Number
 };

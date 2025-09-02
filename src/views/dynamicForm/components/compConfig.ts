@@ -8,6 +8,7 @@ interface CompConfig {
   description: string | null; // 描述
   dataValue: any; // 赋值，因为value和vue的绑定冲突，所以改成dataValue
   dividerValue?: string; // 分割线文本
+  dividerBorderType?: string; // 分割线类型 'none' | 'solid' | 'hidden' | 'dashed' |
   pagingValue?: string; // 分页内容
   defaultValue: string | null; // 默认值
   dataList?: any[]; // 列表数据，包括单选，多选，下拉选择
@@ -67,9 +68,22 @@ export const defaultConfig: CompConfig = {
 };
 export const isFormTitle: CompType[] = [CompType.formTitle];
 export const dataListType: CompType[] = [CompType.checkout, CompType.radio, CompType.select]; // 数组列表
-export const hasPlaceholderType: CompType[] = [CompType.input];
+export const hasPlaceholderType: CompType[] = [
+  CompType.input,
+  CompType.textarea,
+  CompType.date,
+  CompType.time,
+  CompType.name,
+  CompType.phone,
+  CompType.wx,
+  CompType.workNumber,
+  CompType.select,
+  CompType.number
+]; //有Placeholder的类型
 export const isLayoutType: CompType[] = [CompType.paging, CompType.divider];
 export const hasIgnoreRequireType: CompType[] = [CompType.img, CompType.paging, CompType.divider, CompType.button]; // 忽略类型
+export const isRate: CompType[] = [CompType.rate];
+export const isNPS: CompType[] = [CompType.nps];
 
 export const getCompConfig = (type: CompType) => {
   let compConfig: any = {};
@@ -119,7 +133,8 @@ export const getCompConfig = (type: CompType) => {
         }
       : {
           dividerValue: "分割线",
-          position: "center"
+          position: "center",
+          dividerBorderType: "solid"
         };
     compConfig = {
       ...compConfig,
@@ -160,6 +175,29 @@ export const getCompConfig = (type: CompType) => {
       value: ""
     };
   }
+
+  // 评分
+  if (isRate.includes(type)) {
+    compConfig = {
+      ...compConfig,
+      value: 0,
+      rateCount: 5,
+      rateCharacter: "",
+      rateAllowHalf: false
+    };
+  }
+
+  // NPS组件
+  if (isNPS.includes(type)) {
+    compConfig = {
+      ...compConfig,
+      defaultValue: 0,
+      startValue: 0,
+      rateCount: 10,
+      startValueList: [0, 1]
+    };
+  }
+
   return compConfig;
 };
 

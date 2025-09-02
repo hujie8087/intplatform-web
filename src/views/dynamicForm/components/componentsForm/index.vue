@@ -45,7 +45,12 @@
       </el-input>
     </div>
     <div class="component">
-      <component :key="currentComp" v-bind="component" :is="currentComp.comp"></component>
+      <component
+        :key="currentComp"
+        :is-selected="component?.id === selectedComp?.id"
+        v-bind="component"
+        :is="currentComp.comp"
+      ></component>
     </div>
     <div class="active-comp-setting" v-if="compConfig.id === selectedComp?.id && !isIgnoreEditor()">
       <div class="bottom-setting">
@@ -88,6 +93,14 @@
         <el-icon :size="16" class="control" @click="compControl('delete')"><Delete /></el-icon>
       </el-tooltip>
     </div>
+
+    <BatchOperationData
+      v-if="openBatchOperationDataBool"
+      :open="openBatchOperationDataBool"
+      :data-list="component.dataList"
+      @handle-batch-operation="handleBatchOperation"
+    >
+    </BatchOperationData>
   </div>
 </template>
 
@@ -100,8 +113,28 @@ import FormTitleComponent from "./show/FormTitle.vue";
 import ImageComponent from "./show/Image.vue";
 // 基础组件
 import InputComponent from "./base/Input.vue";
+import TextareaComponent from "./base/Textarea.vue";
 import RadioComponent from "./base/Radio.vue";
-
+import CheckoutComponent from "./base/Checkout.vue";
+import SelectComponent from "./base/Select.vue";
+import NumberComponent from "./base/Number.vue";
+// 评分组件
+import RateComponent from "./base/Rate.vue";
+import NPSComponent from "./base/NPS.vue";
+// 日期组件
+import DateComponent from "./base/Date.vue";
+import DateRangeComponent from "./base/DateRange.vue";
+import TimeComponent from "./base/Time.vue";
+import TimeRangeComponent from "./base/TimeRange.vue";
+// 布局组件
+import DividerComponent from "./base/Divider.vue";
+// 个人信息
+import NameComponent from "./personal/Name.vue";
+import WorkNumberComponent from "./personal/WorkNumber.vue";
+import PhoneComponent from "./personal/Phone.vue";
+import WxComponent from "./personal/WX.vue";
+// 批量操作
+import BatchOperationData from "./BatchOperationData.vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
@@ -154,12 +187,26 @@ function getCompConfig(type: string) {
 }
 
 function getTypeToComponent(type: string) {
-  console.log(type, "type");
   const compsObject: any = {
     FormTitle: FormTitleComponent,
     Input: InputComponent,
     Img: ImageComponent,
-    Radio: RadioComponent
+    Radio: RadioComponent,
+    Checkout: CheckoutComponent,
+    Rate: RateComponent,
+    NPS: NPSComponent,
+    Divider: DividerComponent,
+    Date: DateComponent,
+    DateRange: DateRangeComponent,
+    Time: TimeComponent,
+    TimeRange: TimeRangeComponent,
+    Textarea: TextareaComponent,
+    Name: NameComponent,
+    WorkNumber: WorkNumberComponent,
+    Phone: PhoneComponent,
+    WX: WxComponent,
+    Select: SelectComponent,
+    Number: NumberComponent
   };
   const comp = compsObject[type];
   return comp;
@@ -181,8 +228,18 @@ const handleChangeRequired = (value: boolean) => {
   compStore.updateCurrentCompKey(uuidv4());
 };
 
+// 批量操作
+const openBatchOperationDataBool = ref(false);
 const batchChangeData = () => {
-  console.log("batchChangeData");
+  openBatchOperationDataBool.value = true;
+};
+
+// 批量操作
+const handleBatchOperation = (isOk: boolean, dataList: any[]) => {
+  openBatchOperationDataBool.value = false;
+  if (isOk) {
+    updateParams("dataList", dataList);
+  }
 };
 
 const checkAddOtherClass = () => {
