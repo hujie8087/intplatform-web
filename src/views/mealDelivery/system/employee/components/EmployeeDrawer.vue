@@ -34,7 +34,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item :label="`${$t('employee.dept')}`" prop="deptId" required>
+          <el-form-item :label="`${$t('employee.dept')}`" prop="deptId">
             <el-tree-select
               v-model="drawerProps.rowData!.deptId"
               :data="drawerProps.deptList"
@@ -157,21 +157,13 @@ import { Employee } from "@/api/interface/mealDelivery/system/employee";
 import { DictOptions } from "@/api/interface";
 
 const { t } = useI18n(); // 解构出t方法
-const validatePass2 = (rule: any, value: any, callback: any) => {
-  if (value) {
-    callback();
-  } else {
-    callback(new Error(t("main.selectError", { msg: t("employee.dept") })));
-  }
-};
 const rules = reactive({
   jobNumber: [{ required: true, message: t("main.inputError", { msg: t("employee.jobNumber") }) }],
   username: [{ required: true, message: t("main.inputError", { msg: t("employee.username") }) }],
-  companyName: [{ required: true, message: t("main.selectError", { msg: t("employee.company") }) }],
+  companyId: [{ required: true, message: t("main.selectError", { msg: t("employee.company") }) }],
   nationType: [{ required: true, message: t("main.selectError", { msg: t("employee.nationType") }) }],
   religion: [{ required: true, message: t("main.selectError", { msg: t("employee.religion") }) }],
-  // deptId: [{ required: true, message: t("main.selectError", { msg: t("employee.dept") }) }]
-  deptId: [{ validator: validatePass2, trigger: "blur" }]
+  deptId: [{ required: true, message: t("main.selectError", { msg: t("employee.dept") }) }]
 });
 
 // 性能优化：部门数据缓存
