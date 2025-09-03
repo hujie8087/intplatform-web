@@ -1,15 +1,10 @@
 <template>
   <div class="comp-item">
     <div class="comp-item-title" v-if="!!displaySection">
-      <el-text class="title-value" size="large">
-        <span
-          class="number"
-          :class="{ 'title-value-isRequired': component.isRequired, number: true }"
-          v-if="formConfig?.displayNumberSort"
-        >
-          {{ component?.lineNumber }}.
-        </span>
-        <span class="title-value">
+      <div class="title-value">
+        <span class="required" v-if="component?.isRequired">*</span>
+        <div class="number" v-if="formConfig?.displayNumberSort">{{ component?.lineNumber }}.</div>
+        <div class="title_input">
           <el-input
             v-if="isDev && component?.id === selectedComp?.id"
             size="default"
@@ -24,8 +19,8 @@
           <div v-else class="description input-comp">
             {{ component.title }}
           </div>
-        </span>
-      </el-text>
+        </div>
+      </div>
     </div>
     <div class="comp-item-description" v-if="displaySection && formConfig?.displayDescription">
       <div type="secondary" v-if="(component?.id !== selectedComp?.id && isDev) || renderType">
@@ -50,6 +45,7 @@
         :is-selected="component?.id === selectedComp?.id"
         v-bind="component"
         :is="currentComp.comp"
+        :is-preview-render="isPreviewRender"
       ></component>
     </div>
     <div class="active-comp-setting" v-if="compConfig.id === selectedComp?.id && !isIgnoreEditor()">
@@ -147,6 +143,7 @@ interface Props {
   selectedComp?: any;
   isDev: boolean;
   renderType?: "preview";
+  isPreviewRender: boolean;
   previewType?: "Phone" | "PC";
 }
 const props = defineProps<Props>();
@@ -385,12 +382,23 @@ watch(
 }
 .comp-item {
   position: relative;
-
-  // padding: 20px 30px;
   .title-value {
-    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     font-weight: 400;
     color: rgb(73 96 141);
+    .required {
+      margin-right: 4px;
+      font-size: 12px;
+      color: #ff4d4f;
+    }
+    .number {
+      display: flex;
+    }
+    .title_input {
+      width: 100%;
+    }
     .description {
       &:empty::before {
         font-weight: 200;
@@ -399,16 +407,10 @@ watch(
       }
     }
   }
-  .number {
-    position: absolute;
-    top: 6px;
-    left: -40px;
-  }
   .title-value-isRequired::before {
     position: absolute;
-    top: 8px;
-    left: -9px;
-    display: inline-block;
+    top: 16px;
+    left: 49px;
     margin-inline-end: 4px;
     font-family: SimSun, sans-serif;
     font-size: 12px;

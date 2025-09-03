@@ -84,6 +84,7 @@ export const isLayoutType: CompType[] = [CompType.paging, CompType.divider];
 export const hasIgnoreRequireType: CompType[] = [CompType.img, CompType.paging, CompType.divider, CompType.button]; // 忽略类型
 export const isRate: CompType[] = [CompType.rate];
 export const isNPS: CompType[] = [CompType.nps];
+export const isButton: CompType[] = [CompType.button];
 
 export const getCompConfig = (type: CompType) => {
   let compConfig: any = {};
@@ -119,6 +120,19 @@ export const getCompConfig = (type: CompType) => {
       isRequired: false,
       isCustomErrorMessage: false,
       description: "描述"
+    };
+  }
+
+  // 按钮
+  if (isButton.includes(type)) {
+    compConfig = {
+      ...compConfig,
+      type,
+      title: "提交按钮",
+      buttonText: "提交",
+      size: "large",
+      position: "center",
+      buttonIconShowBool: true
     };
   }
 
@@ -173,6 +187,15 @@ export const getCompConfig = (type: CompType) => {
     compConfig = {
       ...compConfig,
       value: ""
+    };
+  }
+
+  // Number
+  if (CompType.number === type) {
+    compConfig = {
+      ...compConfig,
+      minValue: 0,
+      maxValue: 10
     };
   }
 

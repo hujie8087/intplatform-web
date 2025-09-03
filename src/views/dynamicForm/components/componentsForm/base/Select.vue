@@ -13,7 +13,7 @@
     <el-option v-for="(item, _index) in props.dataList" :key="_index" :label="item.label" :value="item.value">
       <div class="flex items-center">
         <span style="float: left">{{ item.label }}</span>
-        <span style="float: right" @click="delItem(_index)">
+        <span v-if="dataList.length > 1 && !isPreviewRender" style="float: right" @click="delItem(_index)">
           <el-icon><DeleteFilled /></el-icon>
         </span>
       </div>

@@ -2,6 +2,9 @@
 import Logic from "/src/assets/images/form-editor/logic.svg";
 import Theme from "/src/assets/images/form-editor/theme.svg";
 import Question from "/src/assets/images/form-editor/question.svg";
+import Sample from "/src/assets/images/form-editor/sample.svg";
+import Publish from "/src/assets/images/form-editor/publish.svg";
+import Stats from "/src/assets/images/form-editor/stats.svg";
 // 显示组件
 import Title from "/src/assets/images/form-editor/title.svg";
 import Img from "/src/assets/images/form-editor/img.svg";
@@ -27,7 +30,6 @@ import Name from "/src/assets/images/form-editor/name.svg";
 import WorkNumber from "/src/assets/images/form-editor/id.svg";
 import Phone from "/src/assets/images/form-editor/phone.svg";
 import WX from "/src/assets/images/form-editor/wx.svg";
-
 // 预览
 import preview from "/src/assets/images/form-editor/preview.svg";
 import Button from "/src/assets/images/form-editor/button.svg";
@@ -36,6 +38,9 @@ export default {
   Question,
   Theme,
   Logic,
+  Sample,
+  Publish,
+  Stats,
   Title,
   Input,
   Textarea,

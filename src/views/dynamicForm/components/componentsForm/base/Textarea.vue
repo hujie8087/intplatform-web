@@ -31,7 +31,6 @@ const value = ref(props.value || null);
 .comp,
 .el-textarea__inner {
   padding: 6px 12px !important;
-  margin-left: -10px !important;
   font-size: 16px !important;
   color: rgb(73 96 141) !important;
   background: var(--el-input-bg-color, var(--el-fill-color-blank));

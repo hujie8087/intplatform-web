@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-time-picker style="width: 100%" is-range range-separator="至" :disabled="props.isDev" v-model="value" size="default" />
+    <el-time-picker style="width: 330px" is-range range-separator="至" :disabled="props.isDev" v-model="value" size="default" />
   </div>
 </template>
 <script setup lang="ts">

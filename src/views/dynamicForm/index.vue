@@ -11,15 +11,15 @@
         </div>
         <div class="control">
           <div class="cont-item">
-            <el-button type="primary" :icon="Finished" color="#1677FF" size="default">
+            <el-button type="primary" :icon="Finished" @click="saveSurvey()" color="#1677FF" size="default">
               <span class="name"> 保存 </span>
             </el-button>
           </div>
-          <div class="cont-item">
+          <!-- <div class="cont-item">
             <el-button type="primary" :icon="Pointer" color="#1677FF" size="default">
               <span class="name"> 发布 </span>
             </el-button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -132,6 +132,30 @@
                   </draggable>
                 </div>
               </div>
+
+              <div
+                class="form-footer"
+                @click="selectComp(pageFooter)"
+                v-if="globalData && globalData.displayBtn"
+                :class="{
+                  'form-item': true,
+                  'active-comp': activeComp.id === pageFooter.id
+                }"
+                :style="{
+                  'text-align': pageFooter.position || 'left'
+                }"
+              >
+                <el-button
+                  class="submit"
+                  type="primary"
+                  :icon="pageFooter.buttonIconShowBool ? Check : null"
+                  :size="pageFooter.size"
+                  style="width: 120px"
+                  :style="{ padding: getSize(), lineHeight: getLineHeight() }"
+                >
+                  {{ pageFooter.buttonText || "提交" }}
+                </el-button>
+              </div>
             </el-watermark>
           </div>
         </div>
@@ -143,19 +167,31 @@
         :select-form="selectForm"
         :select-comp="getActiveComp()"
       ></FormSetting>
+
+      <PreviewPage
+        v-if="openDraw"
+        :select-form="selectForm"
+        :open="openDraw"
+        :page-comp-list="pageCompList"
+        :page-footer="pageFooter"
+        @on-close="onClose"
+      >
+      </PreviewPage>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
-import { Finished, Pointer } from "@element-plus/icons-vue";
+import { Finished, Check } from "@element-plus/icons-vue";
+// import {Pointer} from "@element-plus/icons-vue";
 import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
 import { getDefaultConfig } from "./components/compConfig";
 import Icon from "./components/compIcon";
 import FormSidebar from "./components/FormSidebar.vue";
 import FormSetting from "./components/FormSetting.vue";
 import ComponentsForm from "./components/componentsForm/index.vue";
+import PreviewPage from "./preview/previewPage.vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import draggable from "vuedraggable";
 import { useRoute } from "vue-router";
@@ -168,6 +204,7 @@ const selectSideItemType = (item: string) => {
   currentSideItemType.value = item;
 };
 
+const openDraw = ref(false);
 const compList = ref([...CompListData]); // 组件列表
 
 const pageCompList = ref<any[]>([]); // 页面组件内容]
@@ -230,12 +267,10 @@ const handleDragHandle = (e: any) => {
 
 // 组件选中
 const selectComp = (item: any) => {
-  console.log("惦记我");
   useCompStore.initCurrentComp({
     ...item
   });
   activeComp.value.id = item.id;
-  console.log("当前选中组件：", item);
 };
 
 const getActiveComp = () => {
@@ -243,6 +278,9 @@ const getActiveComp = () => {
   const item = _.filter(pageCompList.value, (item: any) => item.id === activeComp.value.id)?.[0];
   if (item) {
     return item;
+  }
+  if (activeComp.value.id === pageFooter.value.id) {
+    return pageFooter.value;
   }
 };
 
@@ -277,7 +315,6 @@ const updateDataListIndex = (index: number) => {
 const compControl = (controlType: string, value: any) => {
   const index = _.findIndex(pageCompList.value, (item: any) => item.id === value.id);
   if (index === -1) {
-    console.log("没有查询到组件！！！");
     return;
   }
   if (controlType === "copy") {
@@ -309,7 +346,11 @@ const deleteSuccess = (compName = "") => {
 
 // 预览
 const preview = () => {
-  console.log("预览");
+  openDraw.value = true;
+};
+
+const onClose = () => {
+  openDraw.value = false;
 };
 
 const isFormEditorDevBool = computed(() => {
@@ -344,6 +385,32 @@ const defaultFormConfig = {
   displayWaterMark: false,
   waterMarkText: "IWIP"
 };
+
+interface FooterType {
+  id: string;
+  size: string;
+  buttonText: string;
+  position: "left" | "right" | "center";
+  buttonIconShowBool: boolean;
+}
+const pageFooter = ref<FooterType>({
+  id: "",
+  size: "large",
+  position: "center",
+  buttonText: "提交",
+  buttonIconShowBool: true
+}); // 底部
+
+const getSize = () => {
+  const data = pageFooter?.value;
+  return data?.size == "large" ? "0 26px" : data?.size == "small" ? "0 10px" : "0 16px";
+};
+
+const getLineHeight = () => {
+  const data = pageFooter.value;
+  return data.size == "large" ? "40px" : data.size == "small" ? "24px" : "32px";
+};
+
 onMounted(() => {
   const data = useCompStore.initGlobalFormConfig({ ...defaultFormConfig });
   globalData.value = useCompStore.currentGlobalFormConfig;
@@ -351,14 +418,13 @@ onMounted(() => {
   // 组件初始化
   // pageHeader.value = getDefaultConfig(CompType.formTitle, true)
   // pageHeader.value.id = uuidv4()
-  // pageFooter.value = getDefaultConfig(CompType.button)
-  // pageFooter.value.id = uuidv4()
+  pageFooter.value = getDefaultConfig(CompType.button);
+  pageFooter.value.id = uuidv4();
 });
 
 const currentCompKeyData = computed(() => useCompStore.currentCompKey);
 
 watch(currentCompKeyData, newValue => {
-  console.log(newValue, "UpdateCompKey");
   updateCompKey.value = newValue;
 });
 
@@ -391,6 +457,13 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
   });
   selectForm.value = currentGlobalFormConfig;
 });
+
+// 保存问卷
+const saveSurvey = () => {
+  console.log("=====================================");
+  console.log(pageCompList, "pageCompList", selectForm, "selectForm", pageFooter, "pageFooter");
+  console.log("=====================================");
+};
 </script>
 
 <style scoped lang="scss">
@@ -405,7 +478,7 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
   overflow: hidden;
 
   /* 主色调 - 蓝色系 */
-  --el-color-primary: #409eff;
+  --el-color-primary: #1677ff;
 }
 .nav-data {
   height: 56px;
@@ -594,24 +667,8 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
   }
   .active-comp {
     position: relative;
-
-    /* background: mintcream; */
-
-    /* border-left: 6px solid red;
-    border-color: teal; */
-
-    /* background: aliceblue; */
-
-    /* border-bottom: 1px dashed #ccc;
-    border-top: 1px dashed #ccc; */
-
-    /* border: 1px dashed #1677ff; */
-
-    /* background: lightyellow; */
     background: aliceblue;
     border: 1px dashed #94b4ff;
-
-    /* darkseagreen; */
     border-radius: 5px;
     box-shadow:
       0 4px 16px 4px rgb(31 35 41 / 3%),
@@ -621,14 +678,6 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
       position: absolute;
       display: block;
       width: 4px;
-
-      /* border: 4px solid teal; */
-
-      /* background: teal; */
-
-      /* background: cornflowerblue; */
-
-      /* background: #1677ff; */
       height: 100%;
       content: "";
     }
@@ -655,7 +704,6 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
   .form-footer {
     width: 100%;
     height: 90px;
-    padding: 0 60px;
     margin-top: 20px;
     line-height: 90px;
   }

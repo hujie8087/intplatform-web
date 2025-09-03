@@ -1,13 +1,13 @@
 <template>
   <div>
     <el-date-picker
-      style="width: 100%"
+      style="width: 330px"
       type="daterange"
       range-separator="至"
       :disabled="props.isDev"
       v-model="value"
       size="default"
-    />
+    ></el-date-picker>
   </div>
 </template>
 <script setup lang="ts">
@@ -21,4 +21,4 @@ interface Props {
 const props = defineProps<Props>();
 const value = ref(props.value || null);
 </script>
-<style lang="scss"></style>
+<style lang="scss" scoped></style>

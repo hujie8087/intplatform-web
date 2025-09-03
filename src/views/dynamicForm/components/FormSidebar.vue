@@ -17,7 +17,7 @@ import { ref } from "vue";
 import Icon from "./compIcon";
 
 interface Props {
-  currentSideItemType?: "questionBank" | "theme" | "logic" | "sample" | "publish" | "stat" | string;
+  currentSideItemType?: "questionBank" | "theme" | "c" | "sample" | "publish" | "stat" | string;
 }
 
 interface ClassifyType {
@@ -46,17 +46,17 @@ const classifyList = ref<ClassifyType[]>([
   },
   {
     label: "样本",
-    icon: Icon.Logic,
+    icon: Icon.Sample,
     type: "sample"
   },
   {
     label: "发布",
-    icon: Icon.Logic,
+    icon: Icon.Publish,
     type: "publish"
   },
   {
     label: "统计",
-    icon: Icon.Logic,
+    icon: Icon.Stats,
     type: "stat"
   }
 ]);

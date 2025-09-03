@@ -30,6 +30,6 @@ const changeValue = (value: boolean) => {
   justify-content: space-between;
 }
 .comp {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 </style>

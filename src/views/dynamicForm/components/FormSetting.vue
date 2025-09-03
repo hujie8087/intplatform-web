@@ -21,6 +21,8 @@
             :comp="selectComp"
             :key="selectComp._selectedId"
           ></Title>
+          <!-- 按钮 -->
+          <ButtonText v-if="showParams('buttonText')" :comp="selectComp" :key="selectComp._selectedId" />
           <!-- 通用描述配置-->
           <Description
             v-if="showParams('description') && displayTitleAndDesc"
@@ -39,9 +41,14 @@
           <DividerBorderType v-if="showParams('dividerValue')" :comp="selectComp"></DividerBorderType>
           <!--位置-->
           <Position v-if="showParams('position')" :comp="selectComp" />
+
+          <!--按钮大小-->
+          <Size v-if="showParams('size')" :comp="selectComp" />
         </div>
         <div class="category-name" v-if="selectComp?.type && !JustShowCompType.includes(selectComp?.type)">表单验证</div>
         <div class="content">
+          <!-- 数字区间 最大值最小值控制 -->
+          <NumberConfig v-if="showParams('maxValue')" :comp="selectComp" />
           <!-- 必填 -->
           <Required v-if="showParams('isRequired')" :comp="selectComp" />
           <!-- 格式 -->
@@ -82,7 +89,10 @@ import NPSConfig from "./componentsFormSetting/base/NPSConfig.vue";
 import DividerText from "./componentsFormSetting/base/DividerText.vue";
 import DividerBorderType from "./componentsFormSetting/base/DividerBorderType.vue";
 import Position from "./componentsFormSetting/base/Position.vue";
+import Size from "./componentsFormSetting/base/Size.vue";
+import ButtonText from "./componentsFormSetting/base/ButtonText.vue";
 // 校验配置
+import NumberConfig from "./componentsFormSetting/validation/NumberConfig.vue";
 import Required from "./componentsFormSetting/validation/Required.vue";
 import ValidationCustom from "./componentsFormSetting/validation/ValidationCustom.vue";
 import ValidationSystem from "./componentsFormSetting/validation/ValidationFormat.vue";
