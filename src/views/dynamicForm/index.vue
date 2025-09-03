@@ -267,6 +267,7 @@ const handleDragHandle = (e: any) => {
 
 // 组件选中
 const selectComp = (item: any) => {
+  console.log(item, "点击的组件");
   useCompStore.initCurrentComp({
     ...item
   });

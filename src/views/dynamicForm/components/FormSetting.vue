@@ -110,7 +110,7 @@ const props = defineProps<Props>();
 const selectComp = reactive(props.selectComp);
 const selectForm = reactive(props.selectForm);
 // 是否展示标题和描述设置
-const displayTitleAndDesc = computed(() => !["FormTitle", "Img"].includes(selectComp?.type));
+const displayTitleAndDesc = computed(() => !["FormTitle", "Img", "Button"].includes(selectComp?.type));
 
 const currCompIcon = computed(() => {
   let _list: any[] = [];
