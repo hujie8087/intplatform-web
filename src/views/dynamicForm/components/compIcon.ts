@@ -5,6 +5,7 @@ import Question from "/src/assets/images/form-editor/question.svg";
 import Sample from "/src/assets/images/form-editor/sample.svg";
 import Publish from "/src/assets/images/form-editor/publish.svg";
 import Stats from "/src/assets/images/form-editor/stats.svg";
+import Setting from "/src/assets/images/form-editor/setting.svg";
 // 显示组件
 import Title from "/src/assets/images/form-editor/title.svg";
 import Img from "/src/assets/images/form-editor/img.svg";
@@ -41,6 +42,7 @@ export default {
   Sample,
   Publish,
   Stats,
+  Setting,
   Title,
   Input,
   Textarea,

@@ -17,13 +17,13 @@ import { ref } from "vue";
 import Icon from "./compIcon";
 
 interface Props {
-  currentSideItemType?: "questionBank" | "theme" | "c" | "sample" | "publish" | "stat" | string;
+  currentSideItemType?: "questionBank" | "theme" | "c" | "sample" | "publish" | "stat" | "setting" | string;
 }
 
 interface ClassifyType {
   label: string;
   icon: any;
-  type: "questionBank" | "theme" | "logic" | "sample" | "publish" | "stat";
+  type: "questionBank" | "theme" | "logic" | "sample" | "publish" | "stat" | "setting";
 }
 const emit = defineEmits(["selectSideItemType"]);
 const props = defineProps<Props>();
@@ -34,20 +34,25 @@ const classifyList = ref<ClassifyType[]>([
     icon: Icon.Question,
     type: "questionBank"
   },
-  {
-    label: "主题",
-    icon: Icon.Theme,
-    type: "theme"
-  },
-  {
-    label: "逻辑",
-    icon: Icon.Logic,
-    type: "logic"
-  },
+  // {
+  //   label: "主题",
+  //   icon: Icon.Theme,
+  //   type: "theme"
+  // },
+  // {
+  //   label: "逻辑",
+  //   icon: Icon.Logic,
+  //   type: "logic"
+  // },
   {
     label: "样本",
     icon: Icon.Sample,
     type: "sample"
+  },
+  {
+    label: "设置",
+    icon: Icon.Setting,
+    type: "setting"
   },
   {
     label: "发布",
