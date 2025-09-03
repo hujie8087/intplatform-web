@@ -17,7 +17,7 @@ import { ref } from "vue";
 import Icon from "./compIcon";
 
 interface Props {
-  currentSideItemType?: "questionBank" | "theme" | "c" | "sample" | "publish" | "stat" | "setting" | string;
+  currentSideItemType?: "questionBank" | "theme" | "logic" | "sample" | "publish" | "stat" | "setting" | string;
 }
 
 interface ClassifyType {
