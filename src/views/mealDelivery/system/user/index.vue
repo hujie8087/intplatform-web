@@ -47,7 +47,6 @@
           </template>
           <!-- 表格操作 -->
           <template #operation="scope">
-            <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
             <el-button
               type="warning"
               link
@@ -58,6 +57,9 @@
             >
               编辑
             </el-button>
+            <el-button type="danger" link :icon="Delete" v-mealAuth="['system:user:remove']" @click="deleteAccount(scope.row)"
+              >删除</el-button
+            >
             <el-dropdown v-if="scope.row.userId !== 1" style="display: inline-block; margin-left: 10px; vertical-align: middle">
               <el-button type="success" link :icon="DArrowRight">更多</el-button>
               <template #dropdown>
@@ -82,21 +84,12 @@
                       >分配角色</el-button
                     >
                   </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-button
-                      type="danger"
-                      link
-                      :icon="Delete"
-                      v-mealAuth="['system:user:remove']"
-                      @click="deleteAccount(scope.row)"
-                      >删除</el-button
-                    >
-                  </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
           </template>
         </ProTable>
+        <!-- 新增/修改用户弹窗 -->
         <UserDrawer ref="drawerRef" />
         <RoleDrawer ref="roleDrawerRef" />
         <ImportExcel ref="dialogRef" />
@@ -112,11 +105,11 @@ import { useHandleData } from "@/hooks/useHandleData";
 import { useDownload } from "@/hooks/useDownload";
 import ProTable from "@/components/ProTable/index.vue";
 import TreeFilter from "@/components/TreeFilter/index.vue";
-import ImportExcel from "@/components/ImportExcel/index.vue";
-import UserDrawer from "./components/UserDrawer.vue";
+import ImportExcel from "./components/ImoportExcel.vue";
+import UserDrawer from "./components/UserMessage.vue";
 import RoleDrawer from "./components/RoleDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, EditPen, Download, Upload, View, Refresh, CircleCheck, DArrowRight } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, EditPen, Download, Upload, Refresh, CircleCheck, DArrowRight } from "@element-plus/icons-vue";
 import {
   delUser,
   listUser,
@@ -126,7 +119,9 @@ import {
   resetUserPwd,
   deptTreeSelect,
   updateAuthRole,
-  getAuthRole
+  getAuthRole,
+  getAllAuthRole,
+  batchAddUser
 } from "@/api/modules/mdc/system/user";
 import { User } from "@/api/interface/mealDelivery/system/user";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
@@ -134,6 +129,7 @@ const { BUTTONS } = useAuthButtons();
 import { useDict } from "@/hooks/useDict";
 import { DictOptions } from "@/api/interface";
 import { Role } from "@/api/interface/mealDelivery/system/role";
+import { getConfigData } from "@/api/modules/system/config";
 
 const baseUrl = import.meta.env.VITE_API_URL;
 // ProTable 实例
@@ -158,7 +154,12 @@ useDict("sys_nationality", "sys_account_type", "sys_user_sex", "sys_normal_disab
   userSexOptions.value = res.sys_user_sex;
   userStatusOptions.value = res.sys_normal_disable;
 });
-
+const initPassword = ref("");
+const getDictData = async () => {
+  const res = await getConfigData("sys.mealuser.initPassword");
+  initPassword.value = res.msg;
+};
+getDictData();
 // 部门树形选择实例
 const treeFilterRef = ref<InstanceType<typeof TreeFilter>>();
 
@@ -292,24 +293,54 @@ const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const batchAdd = () => {
   const params = {
     title: "用户",
-    tempApi: "intplatform-stage-api/system/user/importTemplate",
-    // importApi: batchAddUser,
+    tempApi: "/system/mdc/user/importTemplate",
+    importApi: batchAddUser,
     getTableList: proTable.value?.getTableList
   };
   dialogRef.value?.acceptParams(params);
+};
+const transformDeptList = list => {
+  return list.map(item => ({
+    ...item,
+    shortLabel: item.label, // 下拉展示用
+    label: item.deptPath || item.label, // 输入框展示用
+    children: item.children ? transformDeptList(item.children) : []
+  }));
 };
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
 const openDrawer = async (title: string, row: Partial<User.ResUser> = {}) => {
   let rowData = { ...row };
+  let roleOptions = [];
+  let postOptions = [];
+  if (rowData.userId) {
+    const res: any = await getAllAuthRole(rowData.userId);
+    roleOptions = res.roles;
+    postOptions = res.posts;
+    rowData = res.data;
+    Object.assign(rowData, { postIds: res.postIds[0], roleIds: res.roleIds });
+  } else {
+    const res: any = await getAllAuthRole("");
+    roleOptions = res.roles; // 角色
+    postOptions = res.posts; // 岗位
+    // 如果左边部门树选择值了带过去
+    if (treeFilterValues.deptId) {
+      rowData.deptId = treeFilterValues.deptId;
+    }
+    rowData.status = "0";
+  }
   const params = {
     title,
     isView: title === "查看",
-    rowData: { ...rowData },
+    rowData: { ...rowData, password: initPassword.value },
     api: title === "新增" ? addUser : title === "编辑" ? updateUser : undefined,
     getTableList: proTable.value?.getTableList,
-    deptList: treeFilterRef.value?.treeData
+    deptList: transformDeptList(JSON.parse(JSON.stringify(treeFilterRef.value?.treeData))),
+    accountTypeOptions: accountTypeOptions.value,
+    roleOptions,
+    postOptions,
+    nationOptions
   };
   drawerRef.value?.acceptParams(params);
 };
