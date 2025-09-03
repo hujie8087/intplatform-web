@@ -111,7 +111,7 @@ const foodNameMap = ref<DictOptions[]>([
   { label: "夜宵", value: "3", tagType: "danger" },
   { label: "20L", value: "4", tagType: "info" },
   { label: "点心", value: "5", tagType: "warning" },
-  { label: "早茶", value: "6", tagType: "info" }
+  { label: "凌晨餐", value: "6", tagType: "info" }
 ]);
 
 // 出餐方式
