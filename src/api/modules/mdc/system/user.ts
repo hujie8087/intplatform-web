@@ -72,7 +72,17 @@ export function updateAuthRole(data) {
   return http.put(PORT1 + `/system/mdc/user/authRole?userId=${data.userId}&roleIds=${data.roleIds}`);
 }
 
+// 查询所有角色
+export function getAllAuthRole(userId) {
+  return http.get(PORT1 + "/system/mdc/user/" + `${userId ?? ""}`);
+}
+
 // 查询部门下拉树结构
 export function deptTreeSelect() {
   return http.get(PORT1 + "/system/mdc/user/deptTree");
+}
+
+// 批量添加员工
+export function batchAddUser(data, isReplace) {
+  return http.post(PORT1 + `/system/mdc/user/importData?updateSupport=${isReplace}`, data);
 }
