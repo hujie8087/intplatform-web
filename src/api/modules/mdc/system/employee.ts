@@ -43,6 +43,6 @@ export function changeEmployeeStatus(employeeId) {
 }
 
 // 批量添加员工
-export function batchAddEmployee(data) {
-  return http.post<Employee.ResEmployee>(PORT1 + "/system/mdc/employee/importData", data);
+export function batchAddEmployee(data, isReplace) {
+  return http.post<Employee.ResEmployee>(PORT1 + `/system/mdc/employee/importData?updateSupport=${isReplace}`, data);
 }

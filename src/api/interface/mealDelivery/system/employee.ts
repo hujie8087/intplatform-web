@@ -28,7 +28,7 @@ export namespace Employee {
     username: string;
     companyId: number;
     companyName: string;
-    deptId: string;
+    deptId: string | number;
     postId: number;
     postName: string;
     deptName: string;

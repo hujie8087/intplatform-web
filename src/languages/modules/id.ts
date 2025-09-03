@@ -59,7 +59,9 @@ export default {
       logoutSuccess: "Berhasil keluar!",
       confirmLogout: "Anda yakin ingin keluar?",
       tips: "Pengingat",
-      canteen: "Restoran"
+      canteen: "Restoran",
+      userChinaseEnglish: "Nama Akun",
+      accountType: "Kategori Nomor Akun"
     },
     dept: {
       deptList: "Daftar Departemen",

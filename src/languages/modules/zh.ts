@@ -59,7 +59,9 @@ export default {
       logoutSuccess: "退出登录成功！",
       confirmLogout: "您是否确认退出登录?",
       tips: "温馨提示",
-      canteen: "餐厅"
+      canteen: "餐厅",
+      userChinaseEnglish: "姓名(+拼音)",
+      accountType: "账号类别"
     },
     dept: {
       deptList: "部门列表",
