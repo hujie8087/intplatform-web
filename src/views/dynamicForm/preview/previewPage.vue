@@ -45,7 +45,7 @@
               }"
             >
               <FormComponent
-                v-if="!['Paging'].includes(item.type) || (['Paging'].includes(item.type) && formShowConfig.displayPaging)"
+                v-if="!['paging'].includes(item.type) || (['paging'].includes(item.type) && formShowConfig.displayPaging)"
                 :render-type="'preview'"
                 :key="item.id + previewType"
                 :component="item"

@@ -56,7 +56,7 @@ export const hasOwnPropertyFunction = (object: Object, key: string) => {
   return object && Object.prototype.hasOwnProperty.call(object, key);
 };
 
-export const HasSettingTypeList = ["Radio", "Checkout", "Select"];
+export const HasSettingTypeList = ["radio", "checkout", "select"];
 export const defaultConfig: CompConfig = {
   name: "",
   type: "",
@@ -226,14 +226,14 @@ export const getCompConfig = (type: CompType) => {
 
 export const getCompPlaceHolderDataByType = (type: string) => {
   const placeholderObject: any = {
-    Name: "请输入名称",
-    Gender: "请选择性别",
-    Phone: "请输入手机号",
-    TelePhone: "请输入固话",
-    IDCard: "请输入身份证",
-    Email: "请输入邮件",
-    WX: "请输入微信",
-    Select: "请选择"
+    name: "请输入名称",
+    gender: "请选择性别",
+    phone: "请输入手机号",
+    telePhone: "请输入固话",
+    workNumber: "请输入工号",
+    email: "请输入邮件",
+    wx: "请输入微信",
+    select: "请选择"
   };
   return placeholderObject[type];
 };

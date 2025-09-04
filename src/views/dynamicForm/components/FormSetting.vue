@@ -4,7 +4,7 @@
       <div class="title-val">
         <img v-if="currCompIcon" :src="currCompIcon" class="compIcon" alt="" />
         <span v-if="!currCompIcon" class="compIcon">🍋</span>
-        <span class="name"> {{ selectComp?.name || (selectComp?.type === "Button" && "提交按钮") || "表单配置" }} </span>
+        <span class="name"> {{ selectComp?.name || (selectComp?.type === "button" && "提交按钮") || "表单配置" }} </span>
       </div>
     </div>
     <div class="setting-base">
@@ -12,9 +12,9 @@
         <div class="category-name">基础设置</div>
         <div class="content m-b-0">
           <!--标题-->
-          <FormTitle v-if="selectComp.type === 'FormTitle'" :comp="selectComp" :key="selectComp._selectedId" />
+          <FormTitle v-if="selectComp.type === 'formTitle'" :comp="selectComp" :key="selectComp._selectedId" />
           <!--图片-->
-          <ImageUpload v-if="selectComp.type === 'Img'" :comp="selectComp" :key="selectComp._selectedId"> </ImageUpload>
+          <ImageUpload v-if="selectComp.type === 'img'" :comp="selectComp" :key="selectComp._selectedId"> </ImageUpload>
           <!-- 通用标题配置 -->
           <Title
             v-if="showParams('name') && !showParams('isLayoutComp') && displayTitleAndDesc"
@@ -32,9 +32,9 @@
           <!-- 通用Placeholder配置-->
           <Placeholder v-if="showParams('placeholder')" :comp="selectComp" :key="selectComp._selectedId"></Placeholder>
           <!-- 评分-->
-          <RateConfig v-if="selectComp?.type === 'Rate'" :comp="selectComp" />
+          <RateConfig v-if="selectComp?.type === 'rate'" :comp="selectComp" />
           <!-- MPS取值范围 -->
-          <NPSConfig v-if="['NPS', 'SelectRate'].includes(selectComp?.type)" :comp="selectComp" />
+          <NPSConfig v-if="['nps', 'SelectRate'].includes(selectComp?.type)" :comp="selectComp" />
           <!--分割线文字-->
           <DividerText v-if="showParams('dividerValue')" :comp="selectComp"></DividerText>
           <!--分割线类型-->
@@ -110,7 +110,7 @@ const props = defineProps<Props>();
 const selectComp = reactive(props.selectComp);
 const selectForm = reactive(props.selectForm);
 // 是否展示标题和描述设置
-const displayTitleAndDesc = computed(() => !["FormTitle", "Img", "Button"].includes(selectComp?.type));
+const displayTitleAndDesc = computed(() => !["formTitle", "img", "button"].includes(selectComp?.type));
 
 const currCompIcon = computed(() => {
   let _list: any[] = [];
@@ -121,7 +121,7 @@ const currCompIcon = computed(() => {
     type: selectComp?.type
   })?.[0]?.icon;
 
-  return comp || (selectComp?.type === "Button" && Icon.Button);
+  return comp || (selectComp?.type === "button" && Icon.Button);
 });
 
 const showParams = (params: string) => {

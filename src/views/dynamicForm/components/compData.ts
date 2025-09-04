@@ -2,32 +2,32 @@ import Icon from "./compIcon";
 // 组件类型
 export enum CompType {
   // 展示组件
-  formTitle = "FormTitle",
-  img = "Img",
+  formTitle = "formTitle",
+  img = "img",
   // 基础组件
-  input = "Input",
-  textarea = "Textarea",
-  radio = "Radio",
-  checkout = "Checkout",
-  select = "Select",
-  number = "Number",
+  input = "input",
+  textarea = "textarea",
+  radio = "radio",
+  checkout = "checkout",
+  select = "select",
+  number = "number",
   // 布局组件
-  divider = "Divider", // 分割线
-  paging = "Paging", // 分页
-  button = "Button", // 按钮
+  divider = "divider", // 分割线
+  paging = "paging", // 分页
+  button = "button", // 按钮
   // 评分组件
-  rate = "Rate",
-  nps = "NPS", // nps
+  rate = "rate",
+  nps = "nps", // nps
   // 日期
-  date = "Date",
-  dateRange = "DateRange", // 日期范围
-  time = "Time",
-  timeRange = "TimeRange", // 时间范围
+  date = "date",
+  dateRange = "dateRange", // 日期范围
+  time = "time",
+  timeRange = "timeRange", // 时间范围
   // 联系人组件
-  name = "Name", // 姓名
-  phone = "Phone", // 手机
-  wx = "WX", // 微信/wechat
-  workNumber = "WorkNumber" // 工号
+  name = "name", // 姓名
+  phone = "phone", // 手机
+  wx = "wx", // 微信/wechat
+  workNumber = "workNumber" // 工号
 }
 // 忽略行号类型组件
 export const IgnoreLineNumberTypeList = [CompType.formTitle, CompType.img, CompType.divider, CompType.paging];
@@ -76,8 +76,8 @@ const ShowComponentList: CompItemType[] = [
     icon: Icon.Title
   },
   {
-    label: "图片",
-    name: "图片",
+    label: "图片展示",
+    name: "图片展示",
     type: CompType.img,
     icon: Icon.Img
   }

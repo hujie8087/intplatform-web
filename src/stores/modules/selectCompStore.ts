@@ -14,11 +14,14 @@ export const useSelectCompStore = defineStore("compEvent", () => {
   };
   // 更新组件
   const updateCurrentComp = (updateData: any) => {
+    console.log("==================updateCurrentComp=================");
     console.log(updateData, "updateData");
     compConfig.value = {
       ...compConfig.value,
       ...updateData
     };
+    console.log(compConfig.value, "compConfig.value");
+    console.log("==================updateCurrentComp=================");
   };
   // 当前组件配置
   const currentCompConfig = computed(() => compConfig.value);

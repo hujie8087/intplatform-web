@@ -68,7 +68,7 @@ const getImageUrl = (imgUrl: string) => {
 };
 onMounted(() => {
   if (props.isDev) {
-    console.log("FormTitle mounted with props:", props);
+    console.log("formTitle mounted with props:", props);
   }
 });
 </script>

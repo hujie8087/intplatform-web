@@ -151,7 +151,7 @@ const compStore = useSelectCompStore();
 // 创建props的本地副本
 const localComponent = ref({ ...props.component });
 
-const displaySection = computed(() => !["Divider", "Paging", "FormTitle", "Img"].includes(props.type));
+const displaySection = computed(() => !["divider", "paging", "formTitle", "img"].includes(props.type));
 const compConfig = props.component; // 组件配置
 const currentComp = getCompConfig(props.type); //组件
 const emit = defineEmits(["compControl", "addItem"]);
@@ -185,25 +185,25 @@ function getCompConfig(type: string) {
 
 function getTypeToComponent(type: string) {
   const compsObject: any = {
-    FormTitle: FormTitleComponent,
-    Input: InputComponent,
-    Img: ImageComponent,
-    Radio: RadioComponent,
-    Checkout: CheckoutComponent,
-    Rate: RateComponent,
-    NPS: NPSComponent,
-    Divider: DividerComponent,
-    Date: DateComponent,
-    DateRange: DateRangeComponent,
-    Time: TimeComponent,
-    TimeRange: TimeRangeComponent,
-    Textarea: TextareaComponent,
-    Name: NameComponent,
-    WorkNumber: WorkNumberComponent,
-    Phone: PhoneComponent,
-    WX: WxComponent,
-    Select: SelectComponent,
-    Number: NumberComponent
+    formTitle: FormTitleComponent,
+    input: InputComponent,
+    img: ImageComponent,
+    radio: RadioComponent,
+    checkout: CheckoutComponent,
+    rate: RateComponent,
+    nps: NPSComponent,
+    divider: DividerComponent,
+    date: DateComponent,
+    dateRange: DateRangeComponent,
+    time: TimeComponent,
+    timeRange: TimeRangeComponent,
+    textarea: TextareaComponent,
+    name: NameComponent,
+    workNumber: WorkNumberComponent,
+    phone: PhoneComponent,
+    wx: WxComponent,
+    select: SelectComponent,
+    number: NumberComponent
   };
   const comp = compsObject[type];
   return comp;
