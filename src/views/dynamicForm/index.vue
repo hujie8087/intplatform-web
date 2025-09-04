@@ -70,7 +70,7 @@
           }"
         >
           <div class="body">
-            <el-watermark :font="{ fontSize: 20 }" :content="selectForm?.displayWaterMark ? selectForm?.waterMarkText : ''">
+            <el-watermark :font="{ fontSize: 14 }" :content="selectForm?.displayWaterMark ? selectForm?.waterMarkText : ''">
               <div class="form-body form-body-content">
                 <div class="comp-list-content">
                   <draggable
@@ -167,7 +167,6 @@
         :select-form="selectForm"
         :select-comp="getActiveComp()"
       ></FormSetting>
-
       <PreviewPage
         v-if="openDraw"
         :select-form="selectForm"
@@ -728,6 +727,7 @@ const saveSurvey = () => {
   top: 0;
   top: 66px;
   left: 50%;
+  z-index: 99;
   width: 50px;
   height: 55px;
   padding: 5px 4px;

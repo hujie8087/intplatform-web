@@ -3,7 +3,6 @@
     <div class="comp-name">
       <div class="title-val">
         <img v-if="currCompIcon" :src="currCompIcon" class="compIcon" alt="" />
-        <span v-if="!currCompIcon" class="compIcon">🍋</span>
         <span class="name"> {{ selectComp?.name || (selectComp?.type === "button" && "提交按钮") || "表单配置" }} </span>
       </div>
     </div>
