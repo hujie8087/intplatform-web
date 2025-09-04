@@ -427,6 +427,7 @@ const printOrderCallback = async (orderIds: number[]) => {
   const res = await updatePrintStatus(orderIds.join(","));
   if (res.code === 200) {
     ElMessage.success("打印成功");
+    proTable.value?.clearSelection();
     proTable.value?.getTableList();
   }
 };
