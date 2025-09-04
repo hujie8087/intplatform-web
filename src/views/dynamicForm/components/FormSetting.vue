@@ -33,17 +33,18 @@
           <Placeholder v-if="showParams('placeholder')" :comp="selectComp" :key="selectComp._selectedId"></Placeholder>
           <!-- 评分-->
           <RateConfig v-if="selectComp?.type === 'rate'" :comp="selectComp" />
-          <!-- MPS取值范围 -->
-          <NPSConfig v-if="['nps', 'SelectRate'].includes(selectComp?.type)" :comp="selectComp" />
+          <!-- NPS取值范围 -->
+          <NPSConfig v-if="['nps', 'selectRate'].includes(selectComp?.type)" :comp="selectComp" />
           <!--分割线文字-->
           <DividerText v-if="showParams('dividerValue')" :comp="selectComp"></DividerText>
           <!--分割线类型-->
           <DividerBorderType v-if="showParams('dividerValue')" :comp="selectComp"></DividerBorderType>
           <!--位置-->
           <Position v-if="showParams('position')" :comp="selectComp" />
-
           <!--按钮大小-->
           <Size v-if="showParams('size')" :comp="selectComp" />
+          <!--数据列表排序，删除，修改功能-->
+          <DataList v-if="showParams('dataList')" :comp="selectComp"> </DataList>
         </div>
         <div class="category-name" v-if="selectComp?.type && !JustShowCompType.includes(selectComp?.type)">表单验证</div>
         <div class="content">
@@ -91,6 +92,7 @@ import DividerBorderType from "./componentsFormSetting/base/DividerBorderType.vu
 import Position from "./componentsFormSetting/base/Position.vue";
 import Size from "./componentsFormSetting/base/Size.vue";
 import ButtonText from "./componentsFormSetting/base/ButtonText.vue";
+import DataList from "./componentsFormSetting/base/DataList.vue";
 // 校验配置
 import NumberConfig from "./componentsFormSetting/validation/NumberConfig.vue";
 import Required from "./componentsFormSetting/validation/Required.vue";

@@ -2,7 +2,7 @@
   <el-select
     size="default"
     class="item-comp"
-    v-model="_dataValue"
+    v-model="dataValue"
     :popper-append-to-body="false"
     style="width: 100%"
     :disabled="props.isDev && props.isSelected"
@@ -13,16 +13,13 @@
     <el-option v-for="(item, _index) in props.dataList" :key="_index" :label="item.label" :value="item.value">
       <div class="flex items-center">
         <span style="float: left">{{ item.label }}</span>
-        <span v-if="dataList.length > 1 && !isPreviewRender" style="float: right" @click="delItem(_index)">
-          <el-icon><DeleteFilled /></el-icon>
-        </span>
       </div>
     </el-option>
   </el-select>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const compStore = useSelectCompStore();
 interface Props {
@@ -35,16 +32,18 @@ interface Props {
   isPreviewRender?: boolean;
 }
 const props = defineProps<Props>();
-const _dataValue = ref(null);
-
-const delItem = (index: number) => {
-  const newDataList = [...props.dataList];
-  newDataList.splice(index, 1);
-  // 更新
-  compStore.updateCurrentComp({
-    ["dataList"]: newDataList
-  });
-};
+const dataValue = ref(props.dataValue);
+watch(
+  () => dataValue.value,
+  newValue => {
+    compStore.updateCurrentComp({
+      dataValue: newValue
+    });
+  },
+  {
+    deep: true // 因为是数组，需要深度监听
+  }
+);
 </script>
 
 <style lang="scss" scoped>

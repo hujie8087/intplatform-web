@@ -18,6 +18,8 @@ export enum CompType {
   // 评分组件
   rate = "rate",
   nps = "nps", // nps
+  selectRate = "selectRate", // 下拉评分
+
   // 日期
   date = "date",
   dateRange = "dateRange", // 日期范围
@@ -136,6 +138,12 @@ const RateComponentList: CompItemType[] = [
     name: "NPS",
     type: CompType.nps,
     icon: Icon.NPS
+  },
+  {
+    label: "下拉评分",
+    name: "下拉评分",
+    type: CompType.selectRate,
+    icon: Icon.Select
   }
 ];
 

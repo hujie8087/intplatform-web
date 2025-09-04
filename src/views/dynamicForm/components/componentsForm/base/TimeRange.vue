@@ -1,17 +1,34 @@
 <template>
   <div>
-    <el-time-picker style="width: 330px" is-range range-separator="至" :disabled="props.isDev" v-model="value" size="default" />
+    <el-time-picker
+      style="width: 330px"
+      is-range
+      range-separator="至"
+      :disabled="props.isDev"
+      v-model="dataValue"
+      size="default"
+    />
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+const compStore = useSelectCompStore();
 interface Props {
   id: string;
   placeholder: string;
-  value: string;
+  dataValue: string;
   isDev: boolean;
 }
 const props = defineProps<Props>();
-const value = ref(props.value || null);
+const dataValue = ref(props.dataValue || null);
+watch(
+  () => dataValue.value,
+  newValue => {
+    compStore.updateCurrentComp({
+      dataValue: newValue
+    });
+  }
+);
 </script>
 <style lang="scss"></style>

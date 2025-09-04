@@ -56,7 +56,6 @@ export const hasOwnPropertyFunction = (object: Object, key: string) => {
   return object && Object.prototype.hasOwnProperty.call(object, key);
 };
 
-export const HasSettingTypeList = ["radio", "checkout", "select"];
 export const defaultConfig: CompConfig = {
   name: "",
   type: "",
@@ -66,6 +65,10 @@ export const defaultConfig: CompConfig = {
   customErrorMessage: "",
   title: ""
 };
+// 有设置操作的类型
+export const HasSettingTypeList = ["radio", "checkout", "select"];
+// 没有添加其它选项的类型
+export const HasSettingTypeListAndNoOther = ["select"];
 export const isFormTitle: CompType[] = [CompType.formTitle];
 export const dataListType: CompType[] = [CompType.checkout, CompType.radio, CompType.select]; // 数组列表
 export const hasPlaceholderType: CompType[] = [
@@ -83,7 +86,7 @@ export const hasPlaceholderType: CompType[] = [
 export const isLayoutType: CompType[] = [CompType.paging, CompType.divider];
 export const hasIgnoreRequireType: CompType[] = [CompType.img, CompType.paging, CompType.divider, CompType.button]; // 忽略类型
 export const isRate: CompType[] = [CompType.rate];
-export const isNPS: CompType[] = [CompType.nps];
+export const isNPS: CompType[] = [CompType.nps, CompType.selectRate];
 export const isButton: CompType[] = [CompType.button];
 
 export const getCompConfig = (type: CompType) => {

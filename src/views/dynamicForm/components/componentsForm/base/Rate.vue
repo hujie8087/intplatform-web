@@ -2,9 +2,9 @@
   <el-rate
     size="large"
     class="item"
-    v-model:value="rateValue"
-    @change="handleChange"
+    v-model="dataValue"
     :colors="['#409eff', '#67c23a', '#FF9900']"
+    :disabled="props.isDev"
     :max="props.rateCount"
     :allow-half="props.rateAllowHalf"
   />
@@ -12,21 +12,25 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-
+import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+const compStore = useSelectCompStore();
 interface Props {
-  value: number;
+  dataValue: number;
   rateCharacter: number | string;
+  isDev: boolean;
   rateCount: number;
   rateAllowHalf: boolean;
 }
 const props = defineProps<Props>();
-const rateValue = ref(props.value);
-const handleChange = () => {
-  console.log("handleChange");
-};
+const dataValue = ref(props.dataValue);
+
 watch(
-  () => props.value,
-  newValue => (rateValue.value = newValue)
+  () => dataValue.value,
+  newValue => {
+    compStore.updateCurrentComp({
+      dataValue: newValue
+    });
+  }
 );
 </script>
 <style lang="scss" scoped>

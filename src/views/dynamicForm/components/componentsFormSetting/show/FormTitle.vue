@@ -114,7 +114,7 @@ const comp = ref(props.comp || null);
   line-height: 42px;
 }
 .m-b-10 {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .setting-item {
   display: flex;

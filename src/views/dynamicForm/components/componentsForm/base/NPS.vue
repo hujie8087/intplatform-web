@@ -13,7 +13,7 @@
         :class="{
           isDev,
           hoverChildrenIndex: hoverIndex >= index,
-          active: list.includes(0) ? props.value >= index : props.value > index
+          active: list.includes(0) ? props.dataValue >= index : props.dataValue > index
         }"
         >{{ item }}</span
       >
@@ -26,7 +26,7 @@ import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 
 interface Props {
   id: string;
-  value: number;
+  dataValue: number;
   startValue: number;
   rateCount: number;
   isDev: boolean;
@@ -48,7 +48,7 @@ const changeIndex = (index: number) => {
 
 const selectValue = (item: any) => {
   compStore.updateCurrentComp({
-    value: item
+    dataValue: item
   });
 };
 </script>

@@ -30,7 +30,7 @@ watch(imageUrl, newValue => {
   color: yellowgreen;
 }
 .mb-10 {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .setting-item-img {
   display: flex;

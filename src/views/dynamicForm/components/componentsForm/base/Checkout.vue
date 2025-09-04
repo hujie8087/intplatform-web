@@ -1,7 +1,7 @@
 <template>
   <el-checkbox-group
     size="default"
-    v-model="dataValue"
+    v-model="localDataValue"
     :disabled="isDev"
     :style="layoutType === 'vertical' || isSelected ? radioVerticalStyle : radioStyle"
     :class="{
@@ -10,7 +10,7 @@
     }"
     :key="isSelected + _updateKey"
   >
-    <el-checkbox v-for="(item, _index) in dataList" :key="_index" :label="item.value" :disabled="isDev">
+    <el-checkbox v-for="(item, _index) in props.dataList" :key="_index" :label="item.value" :disabled="isDev">
       <div class="citem">
         <span class="editor-item">
           {{ item.label }}
@@ -18,17 +18,13 @@
         <span class="other-val" v-if="item.subType === 'other'">
           <el-input size="default" :disabled="isDev" class="item-comp" v-model="item.value" placeholder="待填表者更新" />
         </span>
-        <span class="delete" v-if="dataList.length > 1 && !isPreviewRender" @click="deleteSubItem(_index)" :title="item.label">
-          <el-icon><Delete /></el-icon>
-        </span>
       </div>
     </el-checkbox>
   </el-checkbox-group>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { v4 as uuidv4 } from "uuid";
+import { ref, watch } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const compStore = useSelectCompStore();
 interface Props {
@@ -39,24 +35,23 @@ interface Props {
   isSelected: boolean;
   isPreviewRender?: boolean;
 }
-
-const props = defineProps<Props>();
-const dataValue = ref(props.dataValue || null);
-
 const _updateKey = ref("");
-const updateKey = () => {
-  _updateKey.value = uuidv4();
-};
+const props = defineProps<Props>();
+const localDataValue = ref([]);
 
-const deleteSubItem = (index: number) => {
-  const newDataList = [...props.dataList];
-  newDataList.splice(index, 1);
-  // 更新
-  compStore.updateCurrentComp({
-    ["dataList"]: newDataList
-  });
-  updateKey();
-};
+// 1. 使用watch监听（推荐，可获取新旧值）
+watch(
+  () => localDataValue.value,
+  newValue => {
+    compStore.updateCurrentComp({
+      dataValue: newValue
+    });
+  },
+  {
+    deep: true, // 因为是数组，需要深度监听
+    immediate: true // 可选：初始化时立即执行一次
+  }
+);
 
 const radioVerticalStyle = ref({
   minHeight: "40px",

@@ -197,7 +197,7 @@ const uploadLocation = async () => {
       display: flex;
       :deep(.el-form-item) {
         flex: 1;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
       }
     }
     .location-map {

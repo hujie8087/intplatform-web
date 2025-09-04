@@ -56,8 +56,12 @@
               <el-icon :style="{ fontSize: '16px', color: '#646a73' }"><Plus /></el-icon>
               <span>添加单项</span>
             </div>
-
-            <div class="item" :class="{ disabled: checkAddOtherClass() }" @click="!checkAddOtherClass() && addItem('other')">
+            <div
+              v-if="!HasSettingTypeListAndNoOther.includes(compConfig.type)"
+              class="item"
+              :class="{ disabled: checkAddOtherClass() }"
+              @click="!checkAddOtherClass() && addItem('other')"
+            >
               <el-icon :style="{ fontSize: '16px', color: '#646a73' }"><Plus /></el-icon>
               <span>添加其他</span>
             </div>
@@ -103,7 +107,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue";
 import { JustShowCompType } from "../compData";
-import { HasSettingTypeList } from "../compConfig";
+import { HasSettingTypeList, HasSettingTypeListAndNoOther } from "../compConfig";
 // 显示组件
 import FormTitleComponent from "./show/FormTitle.vue";
 import ImageComponent from "./show/Image.vue";
@@ -117,6 +121,7 @@ import NumberComponent from "./base/Number.vue";
 // 评分组件
 import RateComponent from "./base/Rate.vue";
 import NPSComponent from "./base/NPS.vue";
+import SelectRateComponent from "./base/SelectRate.vue";
 // 日期组件
 import DateComponent from "./base/Date.vue";
 import DateRangeComponent from "./base/DateRange.vue";
@@ -203,7 +208,8 @@ function getTypeToComponent(type: string) {
     phone: PhoneComponent,
     wx: WxComponent,
     select: SelectComponent,
-    number: NumberComponent
+    number: NumberComponent,
+    selectRate: SelectRateComponent
   };
   const comp = compsObject[type];
   return comp;

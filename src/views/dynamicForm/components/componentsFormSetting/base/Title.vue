@@ -36,6 +36,6 @@ const comp = ref(props.comp);
   color: yellowgreen;
 }
 .mb-10 {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 </style>

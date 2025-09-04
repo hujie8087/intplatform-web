@@ -3,7 +3,7 @@
     size="default"
     :disabled="isDev"
     class="item-comp"
-    v-model="value"
+    v-model="dataValue"
     controls-position="right"
     :placeholder="placeholder || '提示信息'"
     :min="props.minValue"
@@ -11,18 +11,30 @@
   />
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
-
+import { ref, watch } from "vue";
+import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+const compStore = useSelectCompStore();
 interface Props {
   id: string;
   placeholder: string;
-  value: string | null;
+  dataValue: string | null;
   isDev: boolean;
   minValue: number;
   maxValue: number;
 }
-
 const props = defineProps<Props>();
-const value = ref(props.value || "");
+const dataValue = ref(props.dataValue || "");
+watch(
+  () => dataValue.value,
+  newValue => {
+    compStore.updateCurrentComp({
+      dataValue: newValue
+    });
+  },
+  {
+    deep: true,
+    immediate: true
+  }
+);
 </script>
 <style lang="scss"></style>
