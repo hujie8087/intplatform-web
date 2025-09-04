@@ -613,6 +613,7 @@ const printOrderCallback = async (orderIds: number[]) => {
   console.log(res);
   if (res.code === 200) {
     ElMessage.success("打印成功");
+    proTable.value?.clearSelection();
     proTable.value?.getTableList();
   }
 };
@@ -660,15 +661,16 @@ const printTicket = async () => {
     }
   }
   console.log(fcNameList.filter(item => item.trim()).length);
-  if (fcNameList.filter(item => item.trim()).length > 1) {
+  let hadleFcNameList = fcNameList.filter(item => item.trim());
+  if ([...new Set(hadleFcNameList)].length > 1) {
     ElMessage.warning("请选择同一车号进行打印");
     return;
   }
-  if (foodTypeList.filter(item => item.trim()).length > 1) {
+  let handleFoodTypeList = foodTypeList.filter(item => item.trim());
+  if ([...new Set(handleFoodTypeList)].length > 1) {
     ElMessage.warning("请选择同一餐饮类型进行打印");
     return;
   }
-
   try {
     let res = await queryFoodOrderDeliverySummaryList(ids);
     // 获取要打印的区域
