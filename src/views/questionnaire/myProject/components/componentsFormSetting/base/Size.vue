@@ -1,0 +1,40 @@
+<template>
+  <div class="setting-item h-50">
+    <el-text size="default">大小</el-text>
+    <el-select size="default" v-model="comp.size" @change="handleChange" placeholder="Select" style="width: 120px">
+      <el-option v-for="item in orientationList" :key="item.value" :label="item.label" :value="item.value" />
+    </el-select>
+  </div>
+</template>
+<script lang="ts" setup>
+import { defineProps, ref } from "vue";
+import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+import { textOrButtonSizeData } from "../settingConfigData";
+
+const compStore = useSelectCompStore();
+const orientationList = ref([...textOrButtonSizeData]);
+
+const handleChange = (event: any) => {
+  const data = event;
+  compStore.updateCurrentComp({
+    size: data
+  });
+};
+
+interface Props {
+  comp: any;
+}
+
+const props = defineProps<Props>();
+const comp = ref(props.comp);
+</script>
+<style lang="scss" scoped>
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.comp {
+  margin-top: 20px;
+}
+</style>

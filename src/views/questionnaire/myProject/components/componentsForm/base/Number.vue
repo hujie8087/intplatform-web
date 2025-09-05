@@ -1,0 +1,40 @@
+<template>
+  <el-input-number
+    size="default"
+    :disabled="isDev"
+    class="item-comp"
+    v-model="dataValue"
+    controls-position="right"
+    :placeholder="placeholder || '提示信息'"
+    :min="props.minValue"
+    :max="props.maxValue"
+  />
+</template>
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+const compStore = useSelectCompStore();
+interface Props {
+  id: string;
+  placeholder: string;
+  dataValue: string | null;
+  isDev: boolean;
+  minValue: number;
+  maxValue: number;
+}
+const props = defineProps<Props>();
+const dataValue = ref(props.dataValue || "");
+watch(
+  () => dataValue.value,
+  newValue => {
+    compStore.updateCurrentComp({
+      dataValue: newValue
+    });
+  },
+  {
+    deep: true,
+    immediate: true
+  }
+);
+</script>
+<style lang="scss"></style>
