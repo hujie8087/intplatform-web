@@ -38,7 +38,7 @@
 // reactive
 import { ref, shallowRef, onMounted } from "vue";
 import { Finished } from "@element-plus/icons-vue";
-import FormSidebar from "./components/FormSidebar.vue";
+import FormSidebar from "./components/dynamicForm/FormSidebar.vue";
 import questionBank from "./components/questionBank.vue"; //题库
 import sample from "./components/sample.vue"; //样本
 import setting from "./components/setting.vue"; //设置
@@ -170,10 +170,10 @@ onMounted(() => {
 }
 .editor-content {
   display: flex;
-
-  // grid-template-columns: 56px 270px 1fr 260px;
   height: calc(100% - 86px);
   padding: 0;
+
+  // grid-template-columns: 56px 270px 1fr 260px;
 
   // @media (width <= 1400px) {
   //   grid-template-columns: 56px 220px 1fr 220px;
