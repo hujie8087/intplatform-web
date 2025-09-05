@@ -39,7 +39,7 @@
 import { ref, shallowRef, onMounted } from "vue";
 import { Finished } from "@element-plus/icons-vue";
 import FormSidebar from "./components/FormSidebar.vue";
-import questionBank from "./components/dynamicForm/index.vue";
+import questionBank from "../dynamicForm/index.vue";
 import sample from "./components/sample.vue"; //样本
 import setting from "./components/setting.vue"; //设置
 import publish from "./components/publish.vue"; // 发布

@@ -14,7 +14,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import Icon from "./dynamicForm/components/compIcon";
+import Icon from "../../dynamicForm/components/compIcon";
 
 interface Props {
   currentSideItemType?: "questionBank" | "theme" | "logic" | "sample" | "publish" | "stat" | "setting" | string;
