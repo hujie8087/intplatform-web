@@ -73,6 +73,7 @@ const selectSideItemType = (type: string) => {
 
 <style scoped lang="scss">
 .sidebar {
+  width: 56px;
   font-size: 12px;
   color: #314666;
   border-right: 1px solid rgb(232 235 238);
