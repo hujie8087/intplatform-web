@@ -194,7 +194,7 @@ onMounted(() => {
   //   font-size: 14px;
   // }
   .right-content-container {
-    width: calc(100% - 45px);
+    flex: 1;
     height: 100%;
     overflow: scroll;
   }
