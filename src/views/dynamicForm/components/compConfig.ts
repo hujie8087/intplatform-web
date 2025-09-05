@@ -229,7 +229,7 @@ export const getCompConfig = (type: CompType) => {
 
 export const getCompPlaceHolderDataByType = (type: string) => {
   const placeholderObject: any = {
-    name: "请输入名称",
+    name: "请输入姓名",
     gender: "请选择性别",
     phone: "请输入手机号",
     telePhone: "请输入固话",

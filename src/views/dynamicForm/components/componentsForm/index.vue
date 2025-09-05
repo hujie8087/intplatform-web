@@ -47,6 +47,7 @@
         :is="currentComp.comp"
         :is-preview-render="isPreviewRender"
       ></component>
+      <!-- <div class="required" v-if="component?.isRequired && !component?.dataValue">此字段为必填项</div> -->
     </div>
     <div class="active-comp-setting" v-if="compConfig.id === selectedComp?.id && !isIgnoreEditor()">
       <div class="bottom-setting">
@@ -134,6 +135,7 @@ import NameComponent from "./personal/Name.vue";
 import WorkNumberComponent from "./personal/WorkNumber.vue";
 import PhoneComponent from "./personal/Phone.vue";
 import WxComponent from "./personal/WX.vue";
+import EmailComponent from "./personal/Email.vue";
 // 批量操作
 import BatchOperationData from "./BatchOperationData.vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
@@ -209,7 +211,8 @@ function getTypeToComponent(type: string) {
     wx: WxComponent,
     select: SelectComponent,
     number: NumberComponent,
-    selectRate: SelectRateComponent
+    selectRate: SelectRateComponent,
+    email: EmailComponent
   };
   const comp = compsObject[type];
   return comp;
@@ -349,27 +352,6 @@ watch(
 ::v-deep(textarea[disabled]) {
   background: #ffffff !important;
 }
-::v-deep(.ant-picker-disabled) {
-  background: #ffffff !important;
-}
-::v-deep(.ant-time-disabled) {
-  background: #ffffff !important;
-}
-::v-deep(.ant-input-affix-wrapper-disabled) {
-  background: #ffffff !important;
-}
-::v-deep(
-    .ant-select-disabled:where(.css-dev-only-do-not-override-17yhhjv).ant-select:not(.ant-select-customize-input)
-      .ant-select-selector
-  ) {
-  background: #ffffff;
-}
-::v-deep(.ant-divider-horizontal.ant-divider-with-text::before) {
-  transform: translateY(100%) !important;
-}
-::v-deep(.ant-divider-horizontal.ant-divider-with-text::after) {
-  transform: translateY(100%) !important;
-}
 .control {
   &:active,
   &:hover {
@@ -500,29 +482,16 @@ watch(
     margin-right: 5px;
   }
 }
-::v-deep(:where(.comp-item-description .css-dev-only-do-not-override-17yhhjv).ant-input-affix-wrapper-textarea-with-clear-btn) {
-  left: -10px;
-  background: transparent !important;
-  .anticon-close-circle {
-    display: none;
-    &:hover,
-    &:active,
-    &:focus {
-      display: block;
-    }
-  }
-  :where(.comp-item-description .css-dev-only-do-not-override-17yhhjv).ant-input {
-    color: rgb(0 0 0 / 45%);
-    background: transparent !important;
-    border-style: none;
-    &:active,
-    &:hover,
-    &:focus {
-      // border-style: solid;
-      // border-color: #e0e0e0;
-      outline: none;
-      box-shadow: none;
-    }
+.component {
+  position: relative;
+  .required {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding-top: 6px;
+    font-size: 12px;
+    line-height: 1;
+    color: var(--el-color-danger);
   }
 }
 </style>

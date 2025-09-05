@@ -15,11 +15,11 @@
               <span class="name"> 保存 </span>
             </el-button>
           </div>
-          <!-- <div class="cont-item">
-            <el-button type="primary" :icon="Pointer" color="#1677FF" size="default">
+          <div class="cont-item">
+            <el-button type="primary" :icon="Promotion" color="#1677FF" size="default">
               <span class="name"> 发布 </span>
             </el-button>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
@@ -70,7 +70,7 @@
           }"
         >
           <div class="body">
-            <el-watermark :font="{ fontSize: 20 }" :content="selectForm?.displayWaterMark ? selectForm?.waterMarkText : ''">
+            <el-watermark :font="{ fontSize: 14 }" :content="selectForm?.displayWaterMark ? selectForm?.waterMarkText : ''">
               <div class="form-body form-body-content">
                 <div class="comp-list-content">
                   <draggable
@@ -167,7 +167,6 @@
         :select-form="selectForm"
         :select-comp="getActiveComp()"
       ></FormSetting>
-
       <PreviewPage
         v-if="openDraw"
         :select-form="selectForm"
@@ -183,7 +182,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
-import { Finished, Check } from "@element-plus/icons-vue";
+import { Finished, Check, Promotion } from "@element-plus/icons-vue";
 // import {Pointer} from "@element-plus/icons-vue";
 import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
 import { getDefaultConfig } from "./components/compConfig";
@@ -728,6 +727,7 @@ const saveSurvey = () => {
   top: 0;
   top: 66px;
   left: 50%;
+  z-index: 99;
   width: 50px;
   height: 55px;
   padding: 5px 4px;
