@@ -25,11 +25,16 @@ export enum CompType {
   dateRange = "dateRange", // 日期范围
   time = "time",
   timeRange = "timeRange", // 时间范围
+
   // 联系人组件
   name = "name", // 姓名
   phone = "phone", // 手机
   wx = "wx", // 微信/wechat
-  workNumber = "workNumber" // 工号
+  workNumber = "workNumber", // 工号
+  email = "email", // 电子邮箱
+
+  // 高级组件
+  electronicSignature = "ElectronicSignature" // 电子签名
 }
 // 忽略行号类型组件
 export const IgnoreLineNumberTypeList = [CompType.formTitle, CompType.img, CompType.divider, CompType.paging];
@@ -209,6 +214,12 @@ const PersonalComponentList: CompItemType[] = [
     name: "微信号",
     type: CompType.wx,
     icon: Icon.WX
+  },
+  {
+    label: "邮箱",
+    name: "邮箱",
+    type: CompType.email,
+    icon: Icon.email
   }
 ];
 

@@ -3,7 +3,7 @@
     <div class="header-img" v-if="props.titleImageShow">
       <img :src="getImageUrl(props.titleImageUrl)" />
     </div>
-    <section class="title-section" :style="computedStyle">
+    <div class="title-section" :style="computedStyle">
       <div
         class="title"
         :style="{
@@ -32,7 +32,7 @@
           {{ props.titleDescription }}
         </div>
       </div>
-    </section>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
