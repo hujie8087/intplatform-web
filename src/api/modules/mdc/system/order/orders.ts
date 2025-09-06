@@ -111,7 +111,7 @@ export function exportWaterSettlement(data: any) {
 
 //导出核对
 export function exportCheck(data: any) {
-  return http.post<any>(PORT1 + "/order/orders/exportCheck", data);
+  return http.post<any>(PORT1 + "/order/orders/exportCheck2", data);
 }
 
 //部门批量提交
@@ -148,4 +148,9 @@ export function queryFoodOrderDeliverySummaryList(data: any) {
   return http.post<MdcOrder.ResFoodOrderDeliverySummary[]>(
     PORT1 + "/order/orders/queryfoodorderdeliverysummarylist?oIds=" + data
   );
+}
+
+// 送达功能
+export function orderDelivered(ordersId) {
+  return http.put<any>(PORT1 + "/order/orders/completeOrder3/" + ordersId);
 }
