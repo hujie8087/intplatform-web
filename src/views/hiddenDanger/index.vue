@@ -39,7 +39,6 @@
 </template>
 <script setup lang="tsx" name="HiddenDanger">
 import { ref, reactive } from "vue";
-import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import HiddenDangerDrawer from "./components/HiddenDangerDrawer.vue";
 import HiddenDangerHandleDrawer from "./components/HiddenDangerHandleDrawer.vue";
@@ -47,11 +46,9 @@ import { ProTableInstance, ColumnProps, RenderScope } from "@/components/ProTabl
 import { Download, View } from "@element-plus/icons-vue";
 import { getHiddenDangerList, editHiddenDanger, getHiddenDangerDetail } from "@/api/modules/hiddenDanger";
 import { HiddenDanger } from "@/api/interface/hiddenDanger";
-import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
-
-const { t } = useI18n(); // 解构出t方法
-
+import { useDownload } from "@/hooks/useDownload";
+import { ElMessageBox } from "element-plus";
 const fileUrl = import.meta.env.VITE_APP_BASE_FILE;
 // 字典数据
 const hiddenDangerStateOptions = ref<DictOptions[]>([
@@ -115,7 +112,10 @@ const columns = reactive<ColumnProps<HiddenDanger.ResHiddenDanger>[]>([
 
 // 导出
 const exportHiddenDanger = async () => {
-  await useHandleData(exportHiddenDanger, [], t("main.deleteBatchMsg", { title: "隐患记录" }));
+  const baseUrl = import.meta.env.VITE_API_URL;
+  ElMessageBox.confirm("确认导出隐患数据?", "温馨提示", { type: "warning" }).then(() =>
+    useDownload(`${baseUrl}maintenance/hidden/danger/export`, "隐患列表", true, ".xlsx", "post", proTable.value?.searchParam)
+  );
 };
 
 const hiddenDangerDrawerRef = ref<InstanceType<typeof HiddenDangerDrawer> | null>(null);
