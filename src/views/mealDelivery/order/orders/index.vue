@@ -37,6 +37,14 @@
             @click="editOrderInfo"
             >修改订单信息</el-button
           >
+          <el-button
+            type="success"
+            :icon="Select"
+            :disabled="!proTable?.isSelected"
+            @click="handleCompleteOrder"
+            v-mealAuth="['order:orders:confirmOrder']"
+            >送达
+          </el-button>
           <!-- 导出结算单 -->
           <el-button type="danger" v-mealAuth="['order:orders:export']" :icon="Download" @click="handleBatchExportCheck"
             >导出核对</el-button
@@ -130,7 +138,7 @@ import { ref, reactive, computed } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
 // import MdcOrderDrawer from "./components/MdcOrderDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { Check, Download, Edit, Printer } from "@element-plus/icons-vue";
+import { Check, Download, Edit, Printer, Select } from "@element-plus/icons-vue";
 import {
   confirmOrdersStatus,
   exportCheck,
@@ -138,7 +146,8 @@ import {
   orderReject,
   queryFoodOrderDeliverySummaryList,
   updateOrders,
-  updatePrintStatus
+  updatePrintStatus,
+  orderDelivered
 } from "@/api/modules/mdc/system/order/orders";
 import { DictOptions } from "@/api/interface";
 import {
@@ -203,6 +212,7 @@ const submitEditForm = () => {
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
+  proTable.value?.clearSelection();
   return {
     list: data.rows,
     total: data.total,
@@ -775,6 +785,15 @@ const printA4 = async () => {
     console.error("打印失败:", error);
     ElMessage.error("打印失败，请重试");
   }
+};
+const handleCompleteOrder = async (row: any = {}) => {
+  const siteIds = row.oId || selectedList.value.map(item => item.oId);
+  if (!siteIds.length) {
+    ElMessage.warning("请选择要送达的订单!");
+    return;
+  }
+  await useHandleData(orderDelivered, siteIds, "是否送达" + siteIds.length + "项订单数据");
+  proTable.value?.getTableList();
 };
 </script>
 <style lang="scss" scoped>
