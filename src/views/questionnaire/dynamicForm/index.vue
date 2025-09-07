@@ -1,30 +1,6 @@
 <template>
   <div class="form-editor">
-    <div class="nav-data">
-      <div class="header">
-        <div class="callback" @click="callback()">
-          <img src="@/assets/images/form-editor/callback.svg" alt="" />
-        </div>
-        <div class="title-data">
-          <span class="name">问卷调查</span>
-          <el-text class="time" size="small">最后编辑于2024-11-03 09:12</el-text>
-        </div>
-        <div class="control">
-          <div class="cont-item">
-            <el-button type="primary" :icon="Finished" @click="saveSurvey()" color="#1677FF" size="default">
-              <span class="name"> 保存 </span>
-            </el-button>
-          </div>
-          <div class="cont-item">
-            <el-button type="primary" :icon="Promotion" color="#1677FF" size="default">
-              <span class="name"> 发布 </span>
-            </el-button>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="content editor-content">
-      <FormSidebar @select-side-item-type="selectSideItemType" :current-side-item-type="currentSideItemType"></FormSidebar>
       <div class="comps">
         <div class="comp-category-item" v-for="(compCategory, index) in compList" :key="index">
           <div class="category-title">
@@ -182,12 +158,9 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
-import { Finished, Check, Promotion } from "@element-plus/icons-vue";
-// import {Pointer} from "@element-plus/icons-vue";
 import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
 import { getDefaultConfig } from "./components/compConfig";
 import Icon from "./components/compIcon";
-import FormSidebar from "./components/FormSidebar.vue";
 import FormSetting from "./components/FormSetting.vue";
 import ComponentsForm from "./components/componentsForm/index.vue";
 import PreviewPage from "./preview/previewPage.vue";
@@ -197,11 +170,6 @@ import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
-
-const currentSideItemType = ref("questionBank"); // 当前侧边栏选中类型
-const selectSideItemType = (item: string) => {
-  currentSideItemType.value = item;
-};
 
 const openDraw = ref(false);
 const compList = ref([...CompListData]); // 组件列表
@@ -358,11 +326,6 @@ const isFormEditorDevBool = computed(() => {
   return bool;
 });
 
-const callback = () => {
-  console.log("callback");
-  // router.push("/workspace/product");
-};
-
 // 更新选中组件数据
 const updateCompByChange = (compConfig: any) => {
   currentComp.value = compConfig;
@@ -457,13 +420,6 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
   });
   selectForm.value = currentGlobalFormConfig;
 });
-
-// 保存问卷
-const saveSurvey = () => {
-  console.log("=====================================");
-  console.log(pageCompList, "pageCompList", selectForm, "selectForm", pageFooter, "pageFooter");
-  console.log("=====================================");
-};
 </script>
 
 <style scoped lang="scss">
@@ -473,6 +429,7 @@ const saveSurvey = () => {
   margin-top: -4px;
 }
 .form-editor {
+  width: 100%;
   min-width: 1260px;
   height: 100%;
   overflow: hidden;
@@ -499,12 +456,12 @@ const saveSurvey = () => {
 }
 .editor-content {
   display: grid;
-  grid-template-columns: 56px 270px 1fr 260px;
-  height: calc(100% - 86px);
+  grid-template-columns: 270px 1fr 260px;
+  height: 100%;
   padding: 0;
 
   @media (width <= 1400px) {
-    grid-template-columns: 56px 220px 1fr 220px;
+    grid-template-columns: 220px 1fr 220px;
     overflow-x: auto;
     .form {
       width: auto;
@@ -512,7 +469,7 @@ const saveSurvey = () => {
   }
 
   @media (width <= 1400px) {
-    grid-template-columns: 56px 260px 1fr 250px;
+    grid-template-columns: 260px 1fr 250px;
     overflow-x: auto;
     .form {
       width: auto;

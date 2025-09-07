@@ -10,14 +10,6 @@ export const staticRouter: RouteRecordRaw[] = [
     redirect: HOME_URL
   },
   {
-    path: "/dynamicForm/form-editor",
-    name: "form-editor",
-    component: () => import("@/views/dynamicForm/index.vue"),
-    meta: {
-      title: "动态表单"
-    }
-  },
-  {
     path: "/locationCollection",
     name: "locationCollection",
     component: () => import("@/views/locationCollection/index.vue"),

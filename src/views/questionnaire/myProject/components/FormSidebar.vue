@@ -14,7 +14,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import Icon from "./compIcon";
+import Icon from "../../dynamicForm/components/compIcon";
 
 interface Props {
   currentSideItemType?: "questionBank" | "theme" | "logic" | "sample" | "publish" | "stat" | "setting" | string;
@@ -73,6 +73,7 @@ const selectSideItemType = (type: string) => {
 
 <style scoped lang="scss">
 .sidebar {
+  width: 55px;
   font-size: 12px;
   color: #314666;
   border-right: 1px solid rgb(232 235 238);
