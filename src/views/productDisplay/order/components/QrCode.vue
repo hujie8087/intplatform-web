@@ -41,6 +41,11 @@ const generateQR = async text => {
     console.error(err);
   }
 };
+
+// 暴露qrBase64，使父组件能通过ref获取
+defineExpose({
+  qrBase64
+});
 </script>
 
 <style lang="scss" scoped>

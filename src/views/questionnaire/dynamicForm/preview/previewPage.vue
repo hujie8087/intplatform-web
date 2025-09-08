@@ -134,6 +134,9 @@ const getLineheight = () => {
 ::v-deep .el-drawer__body {
   background-image: url("./bg.png");
 }
+::v-deep .el-radio-button.is-active .el-radio-button__original-radio:not(:disabled) + .el-radio-button__inner {
+  color: #ffffff !important;
+}
 .body-content {
   position: absolute;
   left: 50%;
