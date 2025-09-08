@@ -13,31 +13,34 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
-          <el-button type="primary" v-auth="['system:user:add']" :icon="CirclePlus" @click="dialogVisible = true">
+          <el-button type="primary" v-auth="['system:user:add']" :icon="CirclePlus" @click="editPorjectName">
             新建问卷
           </el-button>
-          <!-- <el-button type="primary" v-auth="['system:user:import']" :icon="Upload" plain @click="batchAdd">
-            批量添加用户
-          </el-button>
-          <el-button type="warning" v-auth="['system:user:export']" :icon="Download" plain @click="downloadFile">
-            导出用户数据
-          </el-button> -->
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <!-- <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button> -->
-
+          <el-tooltip placement="top" effect="dark" content="编辑问卷名称">
+            <el-button
+              class="btn-edit-pen"
+              link
+              v-if="scope.row.userId !== 1"
+              :icon="EditPen"
+              v-auth="['system:user:edit']"
+              @click="editPorjectName(scope.row)"
+            >
+            </el-button>
+          </el-tooltip>
           <el-tooltip placement="top" effect="dark" content="编辑答卷">
             <el-button
               type="warning"
               link
               v-if="scope.row.userId !== 1"
-              :icon="EditPen"
+              :icon="Edit"
               v-auth="['system:user:edit']"
               @click="editSurvey(scope.row.projectKey)"
             >
-            </el-button>
-          </el-tooltip>
+            </el-button
+          ></el-tooltip>
           <el-tooltip placement="top" effect="dark" content="答卷数据">
             <el-button
               type="success"
@@ -140,25 +143,15 @@
 <script setup lang="tsx" name="myProject">
 import { ref, reactive } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
-import { getProjectList, deleteProject, addProject } from "@/api/modules/questionnaire/myProject";
+import { getProjectList, deleteProject, addProject, editProject, getProjectDetail } from "@/api/modules/questionnaire/myProject";
 import { surveyType } from "@/utils/questionnaire";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import {
-  CirclePlus,
-  Delete,
-  EditPen,
-  Share,
-  DataLine,
-  View,
-  CopyDocument
-  //  Download, Upload, View, Refresh, CircleCheck, DArrowRight
-} from "@element-plus/icons-vue";
+import { CirclePlus, Delete, EditPen, Share, DataLine, View, CopyDocument, Edit } from "@element-plus/icons-vue";
 const router = useRouter();
 const proTable = ref();
 const columns = reactive([
-  // const columns = reactive<ColumnProps<Account.ResAccountList>[]>([
   { type: "selection", label: "", width: 80 },
   { type: "index", label: "序号", width: 80 },
   { prop: "projectName", label: "问卷名称", search: { el: "input" }, align: "left" },
@@ -190,10 +183,24 @@ const dataCallback = (data: any) => {
 const dialogVisible = ref(false);
 const ruleFormRef = ref();
 // 弹窗
-const dialogForm = reactive({
+interface dialogFormType {
+  projectName: string;
+  projectKey?: string;
+}
+const dialogForm = reactive<dialogFormType>({
   projectName: ""
 });
 const rules = reactive({ projectName: [{ required: true, message: "请输入项目名称", trigger: "blur" }] });
+// 编辑问卷名称
+const editPorjectName = async row => {
+  if (row?.projectKey) {
+    let res: any = await getProjectDetail(row?.projectKey);
+    dialogForm.projectKey = res?.data?.projectKey;
+    dialogForm.projectName = res?.data?.projectName;
+  }
+  dialogVisible.value = true;
+};
+// 编辑问卷
 const editSurvey = (projectKey?: any) => {
   let path = "AddSurvery";
   router.push({
@@ -217,12 +224,19 @@ const handleClose = () => {
 const updatePage = () => {
   ruleFormRef.value.validate(async (valid, fields) => {
     if (valid) {
-      let res: any = await addProject(dialogForm);
-      ElMessage.success(`新增项目${res.msg}`);
-      editSurvey(res.data);
-      dialogVisible.value = false;
+      let res: any = {};
+      if (dialogForm.projectKey) {
+        res = await editProject(dialogForm);
+        ElMessage.success(`修改项目${res.msg}`);
+      } else {
+        res = await addProject(dialogForm);
+        ElMessage.success(`新增项目${res.msg}`);
+        editSurvey(res.data);
+      }
       dialogForm.projectName = "";
+      delete dialogForm.projectKey;
       proTable.value?.getTableList();
+      dialogVisible.value = false;
     } else {
       console.log("error submit!", fields);
     }
@@ -230,7 +244,7 @@ const updatePage = () => {
 };
 const deleteSurvey = async row => {
   // let msg = params.length > 1 ? "批量删除区域" : "删除该区域";
-  await useHandleData(deleteProject, row.projectKey, "删除该区域");
+  await useHandleData(deleteProject, row.projectKey, "删除该问卷");
   proTable.value?.getTableList();
 };
 </script>
@@ -247,5 +261,11 @@ const deleteSurvey = async row => {
 }
 .btn-copySurvey.is-link:hover {
   color: #cfc0ed; /* hover 效果 */
+}
+.btn-edit-pen.is-link {
+  color: #607d8b;
+}
+.btn-edit-pen.is-link:hover {
+  color: #b1c6d1;
 }
 </style>

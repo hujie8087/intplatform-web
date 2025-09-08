@@ -13,5 +13,11 @@ export const saveTemplate = (params: { projectKey: string }) => {
 export const addProject = params => {
   return http.post<MyProject.SaveTemplate>(PORT1 + `/survey/project`, params);
 };
+export const editProject = params => {
+  return http.put<MyProject.SaveTemplate>(PORT1 + `/survey/project`, params);
+};
+export const getProjectDetail = projectKey => {
+  return http.get<MyProject.SaveTemplate>(PORT1 + `/survey/project/detail/${projectKey}`);
+};
 
 // /survey/project/saveAs/tpl/{projectKey}
