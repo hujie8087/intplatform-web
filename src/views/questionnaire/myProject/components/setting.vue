@@ -1,160 +1,165 @@
 <template>
   <div class="setting-page">
-    <el-card class="content-card">
-      <!-- 卡片头部：统一使用 Element Plus 组件样式 -->
-      <template #header>
+    <div class="content-card">
+      <div class="survey-container">
+        <!-- 卡片头部：统一使用 Element Plus 组件样式 -->
         <div class="card-header">
           <h3 class="header-title">问卷属性设置</h3>
           <p class="header-desc">配置问卷答卷时的收集规则</p>
         </div>
-      </template>
+        <!-- 表单：补充校验、优化布局结构 -->
+        <el-form ref="settingFormRef" :model="form" label-width="120px" class="setting-form" size="default">
+          <!-- 提交设置区域 -->
+          <el-divider border-style="dashed" content-position="left">
+            <h4>提交设置</h4>
+          </el-divider>
+          <div class="submit-setting-layout">
+            <!-- 左侧表单组 -->
+            <div class="submit-setting-left">
+              <!-- 显示提示文字 -->
+              <el-form-item class="checkbox-input-group">
+                <el-checkbox v-model="setting.showPromptText" label="显示提示文字">
+                  <el-text>显示提示文字</el-text>
+                  <el-input
+                    v-model="form.submitPromptText"
+                    placeholder="请填写提交成功反馈文字"
+                    :disabled="!setting.showPromptText"
+                    class="inline-input"
+                    maxlength="100"
+                    show-word-limit
+                  />
+                </el-checkbox>
+              </el-form-item>
 
-      <!-- 表单：补充校验、优化布局结构 -->
-      <el-form ref="settingFormRef" :model="form" label-width="120px" class="setting-form" size="default">
-        <!-- 提交设置区域 -->
-        <el-divider border-style="dashed" content-position="left">提交设置</el-divider>
-        <div class="submit-setting-layout">
-          <!-- 左侧表单组 -->
-          <div class="submit-setting-left">
-            <!-- 显示提示文字 -->
-            <el-form-item class="checkbox-input-group">
-              <el-checkbox v-model="setting.showPromptText" label="显示提示文字">
-                <el-text>显示提示文字</el-text>
-                <el-input
-                  v-model="form.submitPromptText"
-                  placeholder="请填写提交成功反馈文字"
-                  :disabled="!setting.showPromptText"
-                  class="inline-input"
-                  maxlength="100"
-                  show-word-limit
-                />
-              </el-checkbox>
-            </el-form-item>
+              <!-- 跳转网页地址 -->
+              <el-form-item class="checkbox-input-group">
+                <el-checkbox v-model="setting.showSubmitJumpUrl" label="跳转网页地址">
+                  <el-text>跳转网页地址</el-text>
+                  <el-input
+                    v-model="form.submitJumpUrl"
+                    placeholder="请输入提交后跳转的网页地址"
+                    :disabled="!setting.showSubmitJumpUrl"
+                    class="inline-input"
+                    maxlength="255"
+                    show-word-limit
+                    :rules="[{ type: 'url', message: '请输入合法的URL', trigger: 'blur' }]"
+                  />
+                </el-checkbox>
+              </el-form-item>
 
-            <!-- 跳转网页地址 -->
-            <el-form-item class="checkbox-input-group">
-              <el-checkbox v-model="setting.showSubmitJumpUrl" label="跳转网页地址">
-                <el-text>跳转网页地址</el-text>
-                <el-input
-                  v-model="form.submitJumpUrl"
-                  placeholder="请输入提交后跳转的网页地址"
-                  :disabled="!setting.showSubmitJumpUrl"
-                  class="inline-input"
-                  maxlength="255"
-                  show-word-limit
-                  :rules="[{ type: 'url', message: '请输入合法的URL', trigger: 'blur' }]"
-                />
-              </el-checkbox>
-            </el-form-item>
+              <!-- 校验工号姓名 -->
+              <el-form-item class="checkbox-input-group">
+                <el-checkbox v-model="form.isValidEmployeeNo" label="校验工号姓名">
+                  <el-text>校验工号姓名</el-text>
+                  <el-input
+                    v-model="form.validEmployeeNoPromptText"
+                    placeholder="请输入工号姓名验证失败提示"
+                    :disabled="!form.isValidEmployeeNo"
+                    class="inline-input"
+                    maxlength="100"
+                    show-word-limit
+                  />
+                </el-checkbox>
+              </el-form-item>
+            </div>
 
-            <!-- 校验工号姓名 -->
-            <el-form-item class="checkbox-input-group">
-              <el-checkbox v-model="form.isValidEmployeeNo" label="校验工号姓名">
-                <el-text>校验工号姓名</el-text>
-                <el-input
-                  v-model="form.validEmployeeNoPromptText"
-                  placeholder="请输入工号姓名验证失败提示"
-                  :disabled="!form.isValidEmployeeNo"
-                  class="inline-input"
-                  maxlength="100"
-                  show-word-limit
-                />
-              </el-checkbox>
-            </el-form-item>
+            <!-- 右侧表单组 -->
+            <div class="submit-setting-right">
+              <el-form-item>
+                <el-checkbox v-model="form.isPublicResult" label="公开反馈结果" />
+              </el-form-item>
+              <el-form-item>
+                <el-checkbox v-model="form.isEveryoneWriteOnce" label="每人限填写一次" />
+              </el-form-item>
+              <el-form-item>
+                <el-checkbox v-model="form.isEveryoneDayWriteOnce" label="每人每天限填写一次" />
+              </el-form-item>
+            </div>
           </div>
 
-          <!-- 右侧表单组 -->
-          <div class="submit-setting-right">
-            <el-form-item>
-              <el-checkbox v-model="form.isPublicResult" label="公开反馈结果" />
-            </el-form-item>
-            <el-form-item>
-              <el-checkbox v-model="form.isEveryoneWriteOnce" label="每人限填写一次" />
-            </el-form-item>
-            <el-form-item>
-              <el-checkbox v-model="form.isEveryoneDayWriteOnce" label="每人每天限填写一次" />
-            </el-form-item>
-          </div>
-        </div>
+          <!-- 回收设置区域 -->
+          <el-divider border-style="dashed" content-position="left">
+            <h4>回收设置</h4>
+          </el-divider>
+          <el-form-item>
+            <div class="recycle-setting">
+              <!-- 定时收集开关 -->
+              <el-checkbox v-model="setting.timingCollectForm" label="定时/定量收集表单" class="timing-switch" />
+              <!-- 定时收集配置（条件渲染） -->
+              <el-form v-if="setting.timingCollectForm" class="timing-config-form" :model="form">
+                <!-- 收集时间范围 -->
+                <el-form-item label="收集时间" class="timing-form-item">
+                  &nbsp; &nbsp; &nbsp; &nbsp;
+                  <el-date-picker
+                    v-model="timingTime"
+                    type="datetimerange"
+                    range-separator="至"
+                    start-placeholder="开始时间"
+                    end-placeholder="结束时间"
+                    :disabled="!setting.timingCollectForm"
+                    value-format="YYYY-MM-DD HH:mm:ss"
+                    required
+                  />
+                </el-form-item>
 
-        <!-- 回收设置区域 -->
-        <el-divider border-style="dashed" content-position="left">回收设置</el-divider>
-        <el-form-item>
-          <div class="recycle-setting">
-            <!-- 定时收集开关 -->
-            <el-checkbox v-model="setting.timingCollectForm" label="定时/定量收集表单" class="timing-switch" />
-            <!-- 定时收集配置（条件渲染） -->
-            <el-form v-if="setting.timingCollectForm" class="timing-config-form" :model="form">
-              <!-- 收集时间范围 -->
-              <el-form-item label="收集时间" class="timing-form-item">
-                &nbsp; &nbsp; &nbsp; &nbsp;
-                <el-date-picker
-                  v-model="timingTime"
-                  type="datetimerange"
-                  range-separator="至"
-                  start-placeholder="开始时间"
-                  end-placeholder="结束时间"
-                  :disabled="!setting.timingCollectForm"
-                  value-format="YYYY-MM-DD HH:mm:ss"
-                  required
-                />
-              </el-form-item>
+                <!-- 未启用提示语 -->
+                <el-form-item label="未启用提示语" class="timing-form-item">
+                  <el-input
+                    v-model="form.timedNotEnabledPromptText"
+                    :disabled="!setting.timingCollectForm"
+                    maxlength="100"
+                    show-word-limit
+                  />
+                </el-form-item>
 
-              <!-- 未启用提示语 -->
-              <el-form-item label="未启用提示语" class="timing-form-item">
-                <el-input
-                  v-model="form.timedNotEnabledPromptText"
-                  :disabled="!setting.timingCollectForm"
-                  maxlength="100"
-                  show-word-limit
-                />
-              </el-form-item>
+                <!-- 停用后提示语 -->
+                <el-form-item label="停用后提示语" class="timing-form-item">
+                  <el-input
+                    v-model="form.timedDeactivatePromptText"
+                    :disabled="!setting.timingCollectForm"
+                    maxlength="100"
+                    show-word-limit
+                  />
+                </el-form-item>
 
-              <!-- 停用后提示语 -->
-              <el-form-item label="停用后提示语" class="timing-form-item">
-                <el-input
-                  v-model="form.timedDeactivatePromptText"
-                  :disabled="!setting.timingCollectForm"
-                  maxlength="100"
-                  show-word-limit
-                />
-              </el-form-item>
+                <!-- 定量收集开关 -->
+                <el-form-item label="定量收集" class="timing-form-item">
+                  <el-switch v-model="setting.timingQuantitativeForm" :disabled="!setting.timingCollectForm" />
+                </el-form-item>
 
-              <!-- 定量收集开关 -->
-              <el-form-item label="定量收集" class="timing-form-item">
-                <el-switch v-model="setting.timingQuantitativeForm" :disabled="!setting.timingCollectForm" />
-              </el-form-item>
+                <!-- 定量配置（条件渲染） -->
+                <el-form-item v-if="setting.timingQuantitativeForm" label="定量填写数量" class="timing-form-item">
+                  <el-input-number
+                    v-model="form.timedQuantitativeQuantity"
+                    :min="0"
+                    :max="99999"
+                    :disabled="!setting.timingQuantitativeForm"
+                    placeholder="请输入数量"
+                  />
+                </el-form-item>
 
-              <!-- 定量配置（条件渲染） -->
-              <el-form-item v-if="setting.timingQuantitativeForm" label="定量填写数量" class="timing-form-item">
-                <el-input-number
-                  v-model="form.timedQuantitativeQuantity"
-                  :min="0"
-                  :max="99999"
-                  :disabled="!setting.timingQuantitativeForm"
-                  placeholder="请输入数量"
-                />
-              </el-form-item>
+                <!-- 收集完成提示语 -->
+                <el-form-item v-if="setting.timingQuantitativeForm" label="收集完成提示语" class="timing-form-item">
+                  <el-input
+                    v-model="form.timedEndPromptText"
+                    :disabled="!setting.timingQuantitativeForm"
+                    maxlength="100"
+                    show-word-limit
+                  />
+                </el-form-item>
+              </el-form>
+            </div>
+          </el-form-item>
 
-              <!-- 收集完成提示语 -->
-              <el-form-item v-if="setting.timingQuantitativeForm" label="收集完成提示语" class="timing-form-item">
-                <el-input
-                  v-model="form.timedEndPromptText"
-                  :disabled="!setting.timingQuantitativeForm"
-                  maxlength="100"
-                  show-word-limit
-                />
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-form-item>
-
-        <!-- 提交按钮：统一位置、添加加载状态 -->
-        <el-form-item class="form-actions">
-          <el-button type="primary" @click="handleUpdateSetting" :loading="isSubmitting"> 提交 </el-button>
-        </el-form-item>
-      </el-form>
-    </el-card>
+          <!-- 提交按钮：统一位置、添加加载状态 -->
+          <el-form-item class="form-actions">
+            <el-button style="width: 120px" size="large" :icon="Check" @click="handleUpdateSetting" :loading="isSubmitting">
+              提交
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -162,6 +167,7 @@
 import { reactive, ref, watch, onMounted, UnwrapRef } from "vue";
 import { ElForm, ElMessage } from "element-plus";
 import { getSurveySetting, save } from "@/api/modules/questionnaire/surveySetting";
+import { Check } from "@element-plus/icons-vue";
 
 // -------------------------- 1. 类型定义（提升类型安全） --------------------------
 /** 后端返回的问卷设置类型 */
@@ -204,7 +210,6 @@ interface SettingSwitch {
   timingQuantitativeForm: boolean;
 }
 
-// -------------------------- 2. 响应式数据（规范初始化） --------------------------
 /** 表单数据（reactive 用于复杂对象，初始化默认值） */
 const form: UnwrapRef<FormData> = reactive({
   submitPromptText: "提交成功",
@@ -365,21 +370,30 @@ $spacing-lg: 24px;
 }
 .content-card {
   width: 94%;
-  max-width: 1200px; // 限制最大宽度，避免大屏下布局过宽
   min-height: 80%;
   margin-top: $spacing-lg;
   overflow: hidden;
-  border-radius: 8px; // 补充圆角，提升美观度
-  box-shadow: $card-shadow;
+  background: #ffffff;
+}
+.survey-container {
+  max-width: 1200px;
+  padding: 10px 40px;
+  .address-group,
+  .qr-code-group {
+    margin-bottom: 30px;
+  }
+  h3 {
+    font-size: 18px;
+    color: #333333;
+  }
+  p {
+    font-size: 14px;
+    color: #666666;
+  }
 }
 
 // 卡片头部样式
 .card-header {
-  .header-title {
-    margin: 0 0 $spacing-sm 0;
-    font-size: 18px;
-    font-weight: 500;
-  }
   .header-desc {
     margin: 0;
     font-size: 14px;
@@ -391,6 +405,29 @@ $spacing-lg: 24px;
 .setting-form {
   padding: 0 $spacing-md; // 补充内边距，避免内容贴边
   margin-top: $spacing-lg;
+  button {
+    padding: 8px 15px;
+    color: #ffffff;
+    cursor: pointer;
+    background-color: #1677ff;
+    border: none;
+    border-radius: 4px;
+    &:hover {
+      background-color: #0f62d9;
+    }
+  }
+  ::v-deep .el-checkbox__input.is-checked + .el-checkbox__label {
+    color: #1677ff !important;
+  }
+  ::v-deep .el-checkbox__input.is-checked .el-checkbox__inner {
+    background-color: #1677ff;
+    border-color: #1677ff;
+  }
+  ::v-deep .el-input__wrapper.is-focus,
+  .el-range-editor.is-active,
+  .el-range-editor.is-active:hover {
+    box-shadow: 0 0 0 1px #1677ff inset;
+  }
 }
 
 // 提交设置布局
