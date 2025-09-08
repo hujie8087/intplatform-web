@@ -11,7 +11,7 @@ export const addSample = params => {
 };
 // 修改项目样本
 export const editSample = params => {
-  return http.put<SampleType.EditSample>(PORT1 + `/survey/project/recycle/restore/`, params);
+  return http.put<SampleType.EditSample>(PORT1 + `/survey/project/sample`, params);
 };
 // 项目样本详情
 export const sampleDeatil = (ids: string) => {
