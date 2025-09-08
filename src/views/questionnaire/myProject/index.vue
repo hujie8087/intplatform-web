@@ -27,7 +27,7 @@
         <template #operation="scope">
           <!-- <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button> -->
 
-          <el-tooltip placement="top" effect="dark" content="编辑">
+          <el-tooltip placement="top" effect="dark" content="编辑答卷">
             <el-button
               type="warning"
               link
