@@ -36,7 +36,7 @@
 
 <script setup lang="ts" name="addSurvery">
 // reactive
-import { ref, shallowRef, onMounted } from "vue";
+import { ref, shallowRef, onMounted, provide } from "vue";
 import { Finished } from "@element-plus/icons-vue";
 import FormSidebar from "./components/FormSidebar.vue";
 import questionBank from "../dynamicForm/index.vue";
@@ -44,26 +44,10 @@ import sample from "./components/sample.vue"; //样本
 import setting from "./components/setting.vue"; //设置
 import publish from "./components/publish.vue"; // 发布
 import stat from "./components/stat.vue"; // 发布
-// import {
-//   Back,
-//   View,
-//   DocumentChecked,
-//   Edit,
-//   Menu,
-//   Setting,
-//   User,
-//   VideoPlay,
-//   DataLine,
-//   DArrowLeft,
-//   DArrowRight
-// } from "@element-plus/icons-vue";
-// // useRouter
-import { useRouter } from "vue-router";
-// import { saveTemplate } from "@/api/modules/questionnaire/myProject";
-// import EditComponents from "./from/editor/index.vue";
-
-// const $route = useRoute(); // 路由
-// const id = $route.query.id;
+import { useRouter, useRoute } from "vue-router";
+const $route = useRoute(); // 路由
+const projectKey = $route.query.key;
+provide("projectKey", projectKey);
 // let isCollapse = ref(false);
 const router = useRouter(); // 路由器
 // default-active 需要字符串类型的当前激活路由
@@ -80,11 +64,6 @@ const selectSideItemType = (item: string) => {
   currentSideItemType.value = item;
   defaultActiveMenu.value = menuItemList[item]; // 动态组件
 };
-
-// // 保存为模板功能
-// const saveProjectAsTemplateHandle = async () => {
-//   await saveTemplate({ projectKey: id });
-// };
 // const menuSelectHandle = () => {
 //   // router.replace({ path: index, query: { key: id } });
 // };

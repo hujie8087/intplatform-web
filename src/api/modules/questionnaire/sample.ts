@@ -10,12 +10,12 @@ export const addSample = params => {
   return http.post<SampleType.AddSample>(PORT1 + `/survey/project/sample`, params);
 };
 // 修改项目样本
-export const editSample = (projectKey: string) => {
-  return http.put<SampleType.EditSample>(PORT1 + `/survey/project/recycle/restore/${projectKey}`);
+export const editSample = params => {
+  return http.put<SampleType.EditSample>(PORT1 + `/survey/project/recycle/restore/`, params);
 };
-// 修改项目样本
-export const sampleDeatil = (id: string) => {
-  return http.get<SampleType.SampleDetail>(PORT1 + `/survey/project/sample/${id}`);
+// 项目样本详情
+export const sampleDeatil = (ids: string) => {
+  return http.get<SampleType.SampleDetail>(PORT1 + `/survey/project/sample/${ids}`);
 };
 // 删除项目样本
 export const deleteSample = (ids: string) => {
