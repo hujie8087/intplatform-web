@@ -123,7 +123,7 @@
           </el-dropdown> -->
         </template>
       </ProTable>
-      <el-dialog v-model="dialogVisible" title="新建项目" width="500" :before-close="handleClose">
+      <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500" :before-close="handleClose">
         <el-form ref="ruleFormRef" :model="dialogForm" :rules="rules" label-width="70">
           <el-form-item label="项目名称" prop="projectName">
             <el-input v-model="dialogForm.projectName" placeholder="请输入项目名称" clearable />
@@ -180,6 +180,7 @@ const dataCallback = (data: any) => {
     total: data.total
   };
 };
+const dialogTitle = ref("新增问卷");
 const dialogVisible = ref(false);
 const ruleFormRef = ref();
 // 弹窗
@@ -194,9 +195,12 @@ const rules = reactive({ projectName: [{ required: true, message: "请输入项�
 // 编辑问卷名称
 const editPorjectName = async row => {
   if (row?.projectKey) {
+    dialogTitle.value = "修改问卷";
     let res: any = await getProjectDetail(row?.projectKey);
     dialogForm.projectKey = res?.data?.projectKey;
     dialogForm.projectName = res?.data?.projectName;
+  } else {
+    dialogTitle.value = "新增问卷";
   }
   dialogVisible.value = true;
 };
@@ -227,10 +231,10 @@ const updatePage = () => {
       let res: any = {};
       if (dialogForm.projectKey) {
         res = await editProject(dialogForm);
-        ElMessage.success(`修改项目${res.msg}`);
+        ElMessage.success(`修改问卷${res.msg}`);
       } else {
         res = await addProject(dialogForm);
-        ElMessage.success(`新增项目${res.msg}`);
+        ElMessage.success(`新增问卷${res.msg}`);
         editSurvey(res.data);
       }
       dialogForm.projectName = "";
