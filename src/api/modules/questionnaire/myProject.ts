@@ -10,5 +10,8 @@ export const deleteProject = (projectKey: string) => {
 export const saveTemplate = (params: { projectKey: string }) => {
   return http.post<MyProject.SaveTemplate>(PORT1 + `/survey/project/saveAs/tpl`, params);
 };
+export const addProject = params => {
+  return http.post<MyProject.SaveTemplate>(PORT1 + `/survey/project`, params);
+};
 
 // /survey/project/saveAs/tpl/{projectKey}

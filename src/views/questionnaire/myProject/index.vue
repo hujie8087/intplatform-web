@@ -13,7 +13,7 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
-          <el-button type="primary" v-auth="['system:user:add']" :icon="CirclePlus" @click="addSurvey('新增')">
+          <el-button type="primary" v-auth="['system:user:add']" :icon="CirclePlus" @click="dialogVisible = true">
             新建问卷
           </el-button>
           <!-- <el-button type="primary" v-auth="['system:user:import']" :icon="Upload" plain @click="batchAdd">
@@ -34,7 +34,7 @@
               v-if="scope.row.userId !== 1"
               :icon="EditPen"
               v-auth="['system:user:edit']"
-              @click="addSurvey('编辑', scope.row.projectKey)"
+              @click="editSurvey(scope.row.projectKey)"
             >
             </el-button>
           </el-tooltip>
@@ -120,6 +120,19 @@
           </el-dropdown> -->
         </template>
       </ProTable>
+      <el-dialog v-model="dialogVisible" title="新建项目" width="500" :before-close="handleClose">
+        <el-form ref="ruleFormRef" :model="dialogForm" :rules="rules" label-width="70">
+          <el-form-item label="项目名称" prop="projectName">
+            <el-input v-model="dialogForm.projectName" placeholder="请输入项目名称" clearable />
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="handleClose">取消</el-button>
+            <el-button type="primary" @click="updatePage">确定</el-button>
+          </div>
+        </template>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -127,10 +140,11 @@
 <script setup lang="tsx" name="myProject">
 import { ref, reactive } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
-import { getProjectList, deleteProject } from "@/api/modules/questionnaire/myProject";
+import { getProjectList, deleteProject, addProject } from "@/api/modules/questionnaire/myProject";
 import { surveyType } from "@/utils/questionnaire";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 import {
   CirclePlus,
   Delete,
@@ -173,18 +187,45 @@ const dataCallback = (data: any) => {
     total: data.total
   };
 };
-const addSurvey = (type: string, projectKey?: any) => {
-  let path = "";
-  if (type == "新增") {
-  }
-  path = "AddSurvery";
+const dialogVisible = ref(false);
+const ruleFormRef = ref();
+// 弹窗
+const dialogForm = reactive({
+  projectName: ""
+});
+const rules = reactive({ projectName: [{ required: true, message: "请输入项目名称", trigger: "blur" }] });
+const editSurvey = (projectKey?: any) => {
+  let path = "AddSurvery";
   router.push({
     path,
     query: projectKey
-      ? { id: projectKey, type: "Edit" }
+      ? { key: projectKey, type: "Edit" }
       : {
           type: "Add"
         }
+  });
+};
+const addSurvey = (type, row) => {
+  console.log(type, row);
+};
+// 取消弹窗
+const handleClose = () => {
+  dialogVisible.value = false;
+  ruleFormRef.value.resetFields();
+};
+// 弹窗确认
+const updatePage = () => {
+  ruleFormRef.value.validate(async (valid, fields) => {
+    if (valid) {
+      let res: any = await addProject(dialogForm);
+      ElMessage.success(`新增项目${res.msg}`);
+      editSurvey(res.data);
+      dialogVisible.value = false;
+      dialogForm.projectName = "";
+      proTable.value?.getTableList();
+    } else {
+      console.log("error submit!", fields);
+    }
   });
 };
 const deleteSurvey = async row => {
