@@ -12,6 +12,7 @@
             :list="compCategory.children"
             :sort="false"
             :clone="onClone"
+            item-key="index"
           >
             <!-- 使用item插槽来定义可拖拽项 -->
             <template #item="{ element, index }">
@@ -56,6 +57,7 @@
                     handle=".handle"
                     :list="pageCompList"
                     class="flex flex-col gap-2 p-4 w-300px max-h-350px m-auto bg-gray-500/5 rounded overflow-auto form-body"
+                    item-key="id"
                   >
                     <!-- 空状态显示 - 使用footer插槽放置非拖拽内容 -->
                     <template #footer>
@@ -161,6 +163,7 @@ import { ref, computed, watch, onMounted } from "vue";
 import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
 import { getDefaultConfig } from "./components/compConfig";
 import Icon from "./components/compIcon";
+import { Check } from "@element-plus/icons-vue";
 import FormSetting from "./components/FormSetting.vue";
 import ComponentsForm from "./components/componentsForm/index.vue";
 import PreviewPage from "./preview/previewPage.vue";
@@ -279,7 +282,7 @@ const updateDataListIndex = (index: number) => {
     });
   }
 };
-
+// 这个地方有复制/逻辑/删除的处理方法
 const compControl = (controlType: string, value: any) => {
   const index = _.findIndex(pageCompList.value, (item: any) => item.id === value.id);
   if (index === -1) {
@@ -294,7 +297,11 @@ const compControl = (controlType: string, value: any) => {
   }
   if (controlType === "delete") {
     const deleteComp = pageCompList.value.splice(index, 1);
-    activeComp.value.id = pageCompList.value[index - 1]?.id;
+    if (pageCompList.value.length > 1) {
+      activeComp.value.id = pageCompList.value[index - 1]?.id;
+    } else {
+      activeComp.value.id = "";
+    }
     deleteSuccess(deleteComp?.[0]?.name);
   }
   initDataState();
@@ -306,9 +313,13 @@ const initDataState = () => {
 };
 
 const deleteSuccess = (compName = "") => {
+  // ElMessage({
+  //   message: `【${compName}】删除成功！`,
+  //   grouping: true
+  // });
   ElMessage({
     message: `【${compName}】删除成功！`,
-    grouping: true
+    type: "success"
   });
 };
 
