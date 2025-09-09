@@ -12,20 +12,20 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
-          <el-button type="primary" :icon="Download" v-auth="['commonality:repair:remove']" @click="exportHiddenDanger">
+          <el-button type="primary" :icon="Download" v-auth="['hidden:danger:export']" @click="exportHiddenDanger">
             导出
           </el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="primary" link :icon="View" v-auth="['commonality:repair:view']" @click="openDrawer(scope.row)">
+          <el-button type="primary" link :icon="View" v-auth="['hidden:danger:edit']" @click="openDrawer(scope.row)">
             查看
           </el-button>
           <el-button
             type="warning"
             v-if="scope.row.progress !== 2"
             link
-            v-auth="['commonality:repair:edit']"
+            v-auth="['hidden:danger:handle']"
             @click="openHandleDrawer('办理', scope.row)"
           >
             处理
