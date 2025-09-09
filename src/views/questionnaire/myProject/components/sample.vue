@@ -14,7 +14,7 @@
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
           <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增样本</el-button>
-          <el-button type="danger" :icon="Delete" @click="deleteDeptHandle">批量删除</el-button>
+          <el-button type="danger" :icon="Delete" @click="deleteDeptHandle" :disabled="isAllDelete">批量删除</el-button>
           <el-button type="success" :icon="Upload" @click="importFile">导入</el-button>
           <el-button type="warning" :icon="Download" @click="exportFile">导出</el-button>
         </template>
@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts" name="sample">
-import { ref, reactive, inject } from "vue";
+import { ref, reactive, inject, computed } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
 import { CirclePlus, Delete, EditPen, Upload, Download } from "@element-plus/icons-vue";
 import {
@@ -100,6 +100,9 @@ const searchParams = reactive({
 });
 const dialogVisible = ref(false);
 const dialogTitle = ref("");
+const isAllDelete = computed(() => {
+  return !proTable.value?.selectedListIds.length;
+});
 const dialogForm = reactive<dialogFormType>({
   employeeNo: "",
   name: "",
