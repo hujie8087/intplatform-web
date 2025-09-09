@@ -11,6 +11,7 @@
       :sort="true"
       ghost-class="ghost"
       handle=".handle"
+      item-key="id"
     >
       <!-- 使用item插槽来定义可拖拽项 -->
       <template #item="{ element, index }">

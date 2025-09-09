@@ -7,15 +7,15 @@
       <div
         class="title"
         :style="{
-          'margin-top': props.titleSize === 'large' ? '16px' : props.titleSize === 'middle' ? '10px' : '6px',
-          'margin-bottom': props.titleSize === 'large' ? '16px' : props.titleSize === 'middle' ? '10px' : '6px'
+          marginTop: props.titleSize === 'large' ? '16px' : props.titleSize === 'middle' ? '10px' : '6px',
+          marginBottom: props.titleSize === 'large' ? '16px' : props.titleSize === 'middle' ? '10px' : '6px'
         }"
       >
         <div
           class="title-val"
           :style="{
-            'font-size': props.titleSize === 'large' ? '36px' : props.titleSize === 'middle' ? '24px' : '18px',
-            'line-height': props.titleSize === 'large' ? '40px' : props.titleSize === 'middle' ? '28px' : '22px'
+            fontSize: props.titleSize === 'large' ? '36px' : props.titleSize === 'middle' ? '24px' : '18px',
+            lineHeight: props.titleSize === 'large' ? '40px' : props.titleSize === 'middle' ? '28px' : '22px'
           }"
         >
           {{ props.titleValue }}
@@ -26,7 +26,7 @@
           class="description-value"
           :style="{
             ...computedStyle,
-            'font-size': props.titleSize === 'large' ? '16px' : props.titleSize === 'middle' ? '14px' : '12px'
+            fontSize: props.titleSize === 'large' ? '16px' : props.titleSize === 'middle' ? '14px' : '12px'
           }"
         >
           {{ props.titleDescription }}
@@ -37,6 +37,7 @@
 </template>
 <script setup lang="ts">
 import { onMounted, computed } from "vue";
+import type { CSSProperties } from "vue";
 interface Props {
   id: string;
   placeholder: string;
@@ -55,9 +56,11 @@ interface Props {
   isDev: boolean;
 }
 const props = defineProps<Props>();
-const computedStyle = computed(() => ({
-  "text-align": props.titleDescriptionPosition || "center"
-}));
+const computedStyle = computed(() => {
+  return {
+    textAlign: props.titleDescriptionPosition || "center"
+  } as CSSProperties;
+});
 const getImageUrl = (imgUrl: string) => {
   try {
     return new URL(`/src/assets/images/form-editor/${imgUrl}`, import.meta.url).href;
