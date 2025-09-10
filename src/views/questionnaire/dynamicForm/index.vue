@@ -359,10 +359,16 @@ const compControl = (controlType: string, value: any) => {
     dialogTitle.value = nowItem.title + "逻辑设置";
     logicTopicSelect.value = nowItem.dataList;
     let otherArr = pageCompList.value.filter(item => item.id !== nowItem.id);
-    topicArr.value = otherArr.map(item => ({
-      label: item.title,
-      value: item.id
-    }));
+    if (otherArr.length) {
+      topicArr.value = otherArr.map(item => ({
+        label: item.title,
+        value: item.id
+      }));
+    }
+    // 如果有配置项需要反显，那个时候是编辑
+    if (nowItem?.expresson) {
+      logicArr.value = nowItem?.expresson;
+    }
     dialogVisible.value = true;
   }
   initDataState();
