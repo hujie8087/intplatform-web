@@ -60,7 +60,7 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-::v-deep .el-radio-group {
+:deep .el-radio-group {
   position: relative;
   width: 100% !important;
 }
@@ -68,7 +68,7 @@ watch(
   margin-left: 15px;
   outline: none;
 }
-::v-deep .el-radio__label {
+:deep .el-radio__label {
   width: 100% !important;
 }
 .citem {

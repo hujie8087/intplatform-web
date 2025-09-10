@@ -65,7 +65,7 @@ const radioStyle = ref({
 </script>
 
 <style lang="scss" scoped>
-::v-deep {
+:deep {
   .el-checkbox {
     position: relative;
     width: 100%;
@@ -112,12 +112,12 @@ const radioStyle = ref({
 }
 
 /* 禁用状态下的文本颜色 */
-::v-deep .el-checkbox.is-disabled .el-checkbox__label {
+:deep .el-checkbox.is-disabled .el-checkbox__label {
   color: #000000 !important;
 }
 
 /* 复选框输入框显示 */
-::v-deep .el-checkbox__input .el-checkbox__inner {
+:deep .el-checkbox__input .el-checkbox__inner {
   display: inline-block;
 }
 </style>
