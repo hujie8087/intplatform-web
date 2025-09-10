@@ -15,9 +15,9 @@
             item-key="index"
           >
             <!-- 使用item插槽来定义可拖拽项 -->
-            <template #item="{ element, index }">
+            <template #item="{ element, indexs }">
               <div
-                :key="index"
+                :key="indexs"
                 class="cursor-move h-50px bg-gray-500/5 item"
                 :class="{
                   person: element.type === 'Personal Component',
@@ -154,6 +154,46 @@
         @on-close="onClose"
       >
       </PreviewPage>
+      <!-- 逻辑弹窗 -->
+      <el-dialog v-model="dialogVisible" :title="dialogTitle" width="550" @close="logicDialogCancel">
+        <div class="dialog-form">
+          <div v-for="(item, index) in logicArr" :key="index" class="logic-row">
+            <span class="label">如果本题回答</span>
+            <el-select v-model="item.optionValue" placeholder="请选择选项">
+              <el-option :label="elItem?.label" :value="elItem?.value" v-for="elItem in logicTopicSelect" :key="elItem?.value" />
+            </el-select>
+            <span class="label">则</span>
+            <el-select v-model="item.expression">
+              <el-option label="显示" value="eq" />
+            </el-select>
+            <el-select v-model="item.formItemId">
+              <el-option :label="elItem.label" :value="elItem.value" v-for="elItem in topicArr" :key="elItem.value" />
+            </el-select>
+            <el-button
+              link
+              class="is-link"
+              type="danger"
+              :icon="Delete"
+              :disabled="index == 0"
+              @click="removeLogicItem(index)"
+            ></el-button>
+            <el-button
+              link
+              class="is-link"
+              type="success"
+              :icon="CirclePlus"
+              @click="addLogicItem"
+              style="margin-left: -8px"
+            ></el-button>
+          </div>
+        </div>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="logicDialogCancel">取消</el-button>
+            <el-button type="primary" @click="logicDialogSure"> 保存</el-button>
+          </div>
+        </template>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -161,9 +201,9 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
 import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
-import { getDefaultConfig } from "./components/compConfig";
+import { getDefaultConfig, optionalType, cleanData } from "./components/compConfig";
 import Icon from "./components/compIcon";
-import { Check } from "@element-plus/icons-vue";
+import { Check, Delete, CirclePlus } from "@element-plus/icons-vue";
 import FormSetting from "./components/FormSetting.vue";
 import ComponentsForm from "./components/componentsForm/index.vue";
 import PreviewPage from "./preview/previewPage.vue";
@@ -173,12 +213,19 @@ import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
+import { topicSaves } from "@/api/modules/questionnaire/surveySetting";
 
 const openDraw = ref(false);
 const compList = ref([...CompListData]); // 组件列表
 
 const pageCompList = ref<any[]>([]); // 页面组件内容]
-
+const dialogVisible = ref(false); // 逻辑弹窗
+const dialogTitle = ref("");
+const logicArr = ref([{ optionValue: "", expression: "eq", formItemId: "" }]);
+const logicTopicSelect = ref([]);
+const topicArr = ref([]);
+const currentSettingLogicTopic = ref({});
+const setTopicIndex = ref(0);
 watch(
   pageCompList,
   newValue => {
@@ -237,7 +284,6 @@ const handleDragHandle = (e: any) => {
 
 // 组件选中
 const selectComp = (item: any) => {
-  console.log(item, "点击的组件");
   useCompStore.initCurrentComp({
     ...item
   });
@@ -286,16 +332,18 @@ const updateDataListIndex = (index: number) => {
 const compControl = (controlType: string, value: any) => {
   const index = _.findIndex(pageCompList.value, (item: any) => item.id === value.id);
   if (index === -1) {
-    return;
+    return false;
   }
+  setTopicIndex.value = index;
   if (controlType === "copy") {
+    // 复制逻辑
     const newComp: any = {
       ...value,
       id: uuidv4()
     };
     pageCompList.value.splice(index + 1, 0, { ...newComp });
-  }
-  if (controlType === "delete") {
+  } else if (controlType === "delete") {
+    // 删除逻辑
     const deleteComp = pageCompList.value.splice(index, 1);
     if (pageCompList.value.length > 1) {
       activeComp.value.id = pageCompList.value[index - 1]?.id;
@@ -303,9 +351,52 @@ const compControl = (controlType: string, value: any) => {
       activeComp.value.id = "";
     }
     deleteSuccess(deleteComp?.[0]?.name);
+  } else {
+    // 逻辑处理
+    // logic
+    const nowItem = pageCompList.value[index];
+    currentSettingLogicTopic.value = nowItem;
+    dialogTitle.value = nowItem.title + "逻辑设置";
+    logicTopicSelect.value = nowItem.dataList;
+    let otherArr = pageCompList.value.filter(item => item.id !== nowItem.id);
+    topicArr.value = otherArr.map(item => ({
+      label: item.title,
+      value: item.id
+    }));
+    dialogVisible.value = true;
   }
   initDataState();
   updateCompLineNumber();
+};
+// 删除逻辑规则
+const removeLogicItem = index => {
+  logicArr.value.splice(index, 1);
+};
+// 增加逻辑规则
+const addLogicItem = () => {
+  logicArr.value.push({ optionValue: "", expression: "eq", formItemId: "" });
+};
+// 弹窗逻辑取消
+const logicDialogCancel = () => {
+  dialogVisible.value = false;
+  logicArr.value = [{ optionValue: "", expression: "eq", formItemId: "" }];
+  logicTopicSelect.value = [];
+  topicArr.value = [];
+};
+// 弹窗逻辑提交
+const logicDialogSure = () => {
+  const invalid = logicArr.value.some(item => !item.optionValue || !item.expression || !item.formItemId);
+  if (invalid) {
+    ElMessage.warning("请填写所有逻辑规则后再保存!");
+    return false;
+  }
+  dialogVisible.value = false;
+  currentSettingLogicTopic.value = {
+    ...currentSettingLogicTopic.value,
+    expresson: logicArr.value
+  };
+  pageCompList.value[setTopicIndex.value] = currentSettingLogicTopic.value;
+  logicDialogCancel();
 };
 
 const initDataState = () => {
@@ -313,10 +404,6 @@ const initDataState = () => {
 };
 
 const deleteSuccess = (compName = "") => {
-  // ElMessage({
-  //   message: `【${compName}】删除成功！`,
-  //   grouping: true
-  // });
   ElMessage({
     message: `【${compName}】删除成功！`,
     type: "success"
@@ -432,6 +519,45 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
   });
   selectForm.value = currentGlobalFormConfig;
 });
+// 保存问卷答题
+const saveSurveryFun = async projectKey => {
+  const listTopic = pageCompList.value;
+  console.log(listTopic);
+  let setRequestParams = {
+    project: {
+      projectKey,
+      selectForm: cleanData(selectForm.value),
+      pageFooter: cleanData(pageFooter.value)
+    },
+    projectItemSaveVo: []
+  };
+  let projectItemSaveVo = [];
+  listTopic.forEach(item => {
+    let obj = {
+      projectKey,
+      formItemId: item.id,
+      type: item.type,
+      title: item.title,
+      isDisplayType: optionalType.includes(item.type),
+      required: item?.isRequired ?? false,
+      expand: cleanData(item)
+    };
+    projectItemSaveVo.push(obj);
+  });
+  setRequestParams["projectItemSaveVo"] = projectItemSaveVo;
+  const res = await topicSaves(setRequestParams, projectKey);
+  if (res.code == 200) {
+    ElMessage({
+      message: `答卷保存成功！`,
+      type: "success"
+    });
+  } else {
+    console.error("保存文件失败");
+  }
+};
+defineExpose({
+  saveSurveryFun
+});
 </script>
 
 <style scoped lang="scss">
@@ -487,7 +613,7 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
       width: auto;
     }
   }
-  ::v-deep(.content .compList .item) {
+  :deep(.content .compList .item) {
     font-size: 14px;
   }
 }
@@ -676,7 +802,7 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
     margin-top: 20px;
     line-height: 90px;
   }
-  ::v-deep(.form-footer) {
+  :deep(.form-footer) {
     .submit {
       max-width: 100%;
 
@@ -722,7 +848,7 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
     background: #fafafa;
   }
 }
-::v-deep(.ant-drawer-bottom > .ant-drawer-content-wrapper) {
+:deep(.ant-drawer-bottom > .ant-drawer-content-wrapper) {
   height: calc(100% - 50px) !important;
 }
 .callback {
@@ -796,5 +922,24 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
 .form-editor .el-checkbox__input.is-checked .el-checkbox__inner {
   background-color: var(--el-color-primary) !important;
   border-color: var(--el-color-primary) !important;
+}
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* 每行的间距 */
+}
+.logic-row {
+  display: flex;
+  gap: 8px; /* 控制每个元素之间的间隔 */
+  align-items: center;
+}
+.logic-row .label {
+  font-size: 14px;
+  color: #606266;
+  white-space: nowrap; /* 避免换行 */
+}
+.logic-row .el-button.is-link {
+  padding: 6px; /* 增加点击区域 */
+  font-size: 15px; /* 调整图标大小 */
 }
 </style>
