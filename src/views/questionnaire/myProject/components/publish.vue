@@ -65,7 +65,7 @@ import { ElMessage } from "element-plus";
 
 // 地址数据
 const intranetAddress = ref("http://10.46.236.8080/static/diaowen/answer-p.html?sid=en854serc");
-const extranetAddress = ref("http://36.92.27.251:34040/static/diaowen/answer-p.html?sid=en854serc");
+const extranetAddress = ref("http://10.46.236.8080/static/diaowen/answer-p.html?sid=en854serc");
 const intranetQrCodeRef = ref(null);
 const extranetQrCodeRef = ref(null);
 // 复制地址方法

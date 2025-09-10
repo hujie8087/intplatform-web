@@ -454,6 +454,7 @@ interface FooterType {
   position: "left" | "right" | "center";
   buttonIconShowBool: boolean;
 }
+
 const pageFooter = ref<FooterType>({
   id: "",
   size: "large",
