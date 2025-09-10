@@ -108,8 +108,8 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const selectComp = reactive(props.selectComp);
-const selectForm = reactive(props.selectForm);
+const selectComp = reactive(props.selectComp || {});
+const selectForm = reactive(props.selectForm || {});
 // 是否展示标题和描述设置
 const displayTitleAndDesc = computed(() => !["formTitle", "img", "button"].includes(selectComp?.type));
 
