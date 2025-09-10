@@ -28,7 +28,7 @@
       <FormSidebar @select-side-item-type="selectSideItemType" :current-side-item-type="currentSideItemType"></FormSidebar>
       <!-- 内容栏 -->
       <div class="right-content-container">
-        <component :is="defaultActiveMenu" />
+        <component :is="defaultActiveMenu" ref="dynamicRef" />
       </div>
     </div>
   </div>
@@ -48,6 +48,7 @@ import { useRouter, useRoute } from "vue-router";
 const $route = useRoute(); // 路由
 const projectKey = $route.query.key;
 provide("projectKey", projectKey);
+const dynamicRef = ref();
 // let isCollapse = ref(false);
 const router = useRouter(); // 路由器
 // default-active 需要字符串类型的当前激活路由
@@ -75,9 +76,11 @@ const backButton = () => {
 };
 // 保存问卷
 const saveSurvey = () => {
-  console.log("=====================================");
-  // console.log(pageCompList, "pageCompList", selectForm, "selectForm", pageFooter, "pageFooter");
-  console.log("=====================================");
+  if (dynamicRef.value?.saveSurveryFun) {
+    dynamicRef.value.saveSurveryFun(projectKey); // 保存文件方法
+  } else {
+    console.warn("子组件没有暴露 sayHello 方法");
+  }
 };
 onMounted(() => {
   console.log("789");
