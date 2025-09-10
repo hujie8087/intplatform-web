@@ -18,7 +18,7 @@ const props = defineProps<Props>();
 </script>
 
 <style lang="scss" scoped>
-::v-deep {
+:deep {
   .el-divider__text {
     font-size: 14px !important;
     font-weight: 400 !important;
