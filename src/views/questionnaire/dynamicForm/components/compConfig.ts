@@ -1,5 +1,6 @@
 import { CompType } from "./compData";
-
+import _ from "lodash";
+import { isRef, isReactive, toRaw } from "vue";
 type ClassifyList = "personal";
 interface CompConfig {
   name: string;
@@ -270,3 +271,42 @@ export const getDefaultConfig = (type: CompType | CompType[], ignoreDefault: boo
 export const verifyRegularityCompList = () => {
   return [CompType.input];
 };
+// 不需要填的标识
+export const optionalType = ["formTitle", "img", "divider"];
+
+export function cleanData<T>(obj: T, seen = new WeakSet()): T {
+  // 处理 ref / reactive
+  if (isRef(obj)) return cleanData(obj.value, seen) as T;
+  if (isReactive(obj)) return cleanData(toRaw(obj), seen) as T;
+
+  // 处理基础类型
+  if (obj === null || typeof obj !== "object") {
+    return obj;
+  }
+
+  // 避免循环引用
+  if (seen.has(obj as object)) {
+    return undefined as T; // 或者直接跳过该字段
+  }
+  seen.add(obj as object);
+
+  // 处理数组
+  if (Array.isArray(obj)) {
+    return obj.map(item => cleanData(item, seen)) as T;
+  }
+
+  // 处理普通对象
+  if (_.isPlainObject(obj)) {
+    const result: Record<string, any> = {};
+    Object.keys(obj).forEach(key => {
+      const value = (obj as any)[key];
+      if (typeof value !== "function") {
+        result[key] = cleanData(value, seen);
+      }
+    });
+    return result as T;
+  }
+
+  // 其他情况直接返回
+  return obj;
+}
