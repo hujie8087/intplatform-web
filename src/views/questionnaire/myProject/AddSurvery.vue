@@ -43,7 +43,7 @@ import questionBank from "../dynamicForm/index.vue";
 import sample from "./components/sample.vue"; //样本
 import setting from "./components/setting.vue"; //设置
 import publish from "./components/publish.vue"; // 发布
-import stat from "./components/stat.vue"; // 发布
+import stat from "../stat/index.vue"; // 发布
 import { useRouter, useRoute } from "vue-router";
 const $route = useRoute(); // 路由
 const projectKey = $route.query.key;
