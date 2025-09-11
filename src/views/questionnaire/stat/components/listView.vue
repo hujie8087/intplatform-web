@@ -25,7 +25,7 @@ import { View } from "@element-plus/icons-vue";
 // import { Delete } from "@element-plus/icons-vue";
 const columns = reactive([
   { type: "selection", label: "", width: 80 },
-  { prop: "serialNumber", label: "回答排序", align: "center", width: 120 },
+  { type: "index", label: "序号", width: 80 },
   { prop: "submitRequestIp", label: "回答IP", align: "left" },
   {
     prop: "completeTime",

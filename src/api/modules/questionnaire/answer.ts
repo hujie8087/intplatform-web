@@ -3,7 +3,6 @@ import { AnswerType } from "@/api/interface/questionnaire/answer";
 import http from "@/api";
 // 获取回答列表
 export const getAnswerList = (params: AnswerType.ReqAnswerParams) => {
-  console.log(params, "params");
   return http.get(PORT1 + `/survey/answer/list`, { ...params });
 };
 // 删除回答

@@ -71,7 +71,7 @@ export const HasSettingTypeList = ["radio", "checkout", "select"];
 // 没有添加其它选项的类型
 export const HasSettingTypeListAndNoOther = ["select"];
 export const isFormTitle: CompType[] = [CompType.formTitle];
-export const dataListType: CompType[] = [CompType.checkout, CompType.radio, CompType.select]; // 数组列表
+export const dataListType: CompType[] = [CompType.checkout, CompType.radio, CompType.select, CompType.imgMultiSelect]; // 数组列表
 export const hasPlaceholderType: CompType[] = [
   CompType.input,
   CompType.textarea,

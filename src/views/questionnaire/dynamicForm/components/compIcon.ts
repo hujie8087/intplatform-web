@@ -31,10 +31,11 @@ import Name from "/src/assets/images/form-editor/name.svg";
 import WorkNumber from "/src/assets/images/form-editor/id.svg";
 import Phone from "/src/assets/images/form-editor/phone.svg";
 import WX from "/src/assets/images/form-editor/wx.svg";
-import email from "/src/assets/images/form-editor/email.svg";
+import Email from "/src/assets/images/form-editor/email.svg";
 // 预览
 import preview from "/src/assets/images/form-editor/preview.svg";
 import Button from "/src/assets/images/form-editor/button.svg";
+import ImgMultiSelect from "/src/assets/images/form-editor/imgMultiSelect.svg";
 
 export default {
   Question,
@@ -65,5 +66,6 @@ export default {
   WX,
   Select,
   Number,
-  email
+  Email,
+  ImgMultiSelect
 };

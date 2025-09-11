@@ -119,6 +119,7 @@ import RadioComponent from "./base/Radio.vue";
 import CheckoutComponent from "./base/Checkout.vue";
 import SelectComponent from "./base/Select.vue";
 import NumberComponent from "./base/Number.vue";
+import ImageMultiSelect from "./base/ImageMultiSelect.vue";
 // 评分组件
 import RateComponent from "./base/Rate.vue";
 import NPSComponent from "./base/NPS.vue";
@@ -212,7 +213,8 @@ function getTypeToComponent(type: string) {
     select: SelectComponent,
     number: NumberComponent,
     selectRate: SelectRateComponent,
-    email: EmailComponent
+    email: EmailComponent,
+    imgMultiSelect: ImageMultiSelect
   };
   const comp = compsObject[type];
   return comp;

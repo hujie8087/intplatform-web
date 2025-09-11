@@ -34,6 +34,8 @@
           <RateConfig v-if="selectComp?.type === 'rate'" :comp="selectComp" />
           <!-- NPS取值范围 -->
           <NPSConfig v-if="['nps', 'selectRate'].includes(selectComp?.type)" :comp="selectComp" />
+          <!-- 图片多选 -->
+          <ImageMultiSelectConfig v-if="selectComp?.type === 'imgMultiSelect'" :comp="selectComp" />
           <!--分割线文字-->
           <DividerText v-if="showParams('dividerValue')" :comp="selectComp"></DividerText>
           <!--分割线类型-->
@@ -92,6 +94,7 @@ import Position from "./componentsFormSetting/base/Position.vue";
 import Size from "./componentsFormSetting/base/Size.vue";
 import ButtonText from "./componentsFormSetting/base/ButtonText.vue";
 import DataList from "./componentsFormSetting/base/DataList.vue";
+import ImageMultiSelectConfig from "./componentsFormSetting/base/ImageMultiSelectConfig.vue";
 // 校验配置
 import NumberConfig from "./componentsFormSetting/validation/NumberConfig.vue";
 import Required from "./componentsFormSetting/validation/Required.vue";
