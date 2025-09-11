@@ -271,7 +271,7 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-::v-deep {
+:deep {
   .el-textarea__inner {
     padding: 6px 12px !important;
     margin-left: -10px !important;
@@ -338,7 +338,7 @@ watch(
 .disabled {
   color: #dddddd !important;
 }
-::v-deep(.ant-typography.ant-typography-warning) {
+:deep(.ant-typography.ant-typography-warning) {
   padding: 2px 0;
   font-size: 14px;
   color: #646a73;
@@ -348,10 +348,10 @@ watch(
   margin: 0 12px;
   border-left: 1px solid #e0e0e0;
 }
-::v-deep(input[disabled]) {
+:deep(input[disabled]) {
   background: #ffffff !important;
 }
-::v-deep(textarea[disabled]) {
+:deep(textarea[disabled]) {
   background: #ffffff !important;
 }
 .control {

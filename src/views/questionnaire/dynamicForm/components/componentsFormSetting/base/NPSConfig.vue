@@ -77,7 +77,7 @@ const changeEndValue = (event: any) => {
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
 }
-::v-deep(:where(.css-dev-only-do-not-override-17yhhjv).ant-radio-button-wrapper) {
+:deep(:where(.css-dev-only-do-not-override-17yhhjv).ant-radio-button-wrapper) {
   width: 42px;
 }
 </style>
