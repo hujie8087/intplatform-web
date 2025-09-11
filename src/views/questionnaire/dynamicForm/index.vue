@@ -350,6 +350,23 @@ const compControl = (controlType: string, value: any) => {
     } else {
       activeComp.value.id = "";
     }
+    // 如果删除当前的题目，需要检查历史跟他的关联的逻辑规则需要删掉
+    if (deleteComp.length) {
+      let nowId = deleteComp?.[0]?.id;
+      pageCompList.value.forEach(item => {
+        let i = null;
+        if (item.expresson) {
+          item.expresson.forEach((el, cIndex) => {
+            if (el.formItemId == nowId) {
+              i = cIndex;
+            }
+          });
+          if (i != null) {
+            item.expresson.splice(i, 1);
+          }
+        }
+      });
+    }
     deleteSuccess(deleteComp?.[0]?.name);
   } else {
     // 逻辑处理
