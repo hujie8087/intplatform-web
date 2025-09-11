@@ -272,7 +272,7 @@ export const verifyRegularityCompList = () => {
   return [CompType.input];
 };
 // 不需要填的标识
-export const optionalType = ["formTitle", "img", "divider"];
+export const optionalType = ["formTitle", "img", "divider", "paging"];
 
 export function cleanData<T>(obj: T, seen = new WeakSet()): T {
   // 处理 ref / reactive

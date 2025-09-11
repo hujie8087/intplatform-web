@@ -199,7 +199,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, inject } from "vue";
 import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
 import { getDefaultConfig, optionalType, cleanData } from "./components/compConfig";
 import Icon from "./components/compIcon";
@@ -213,7 +213,7 @@ import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
-import { topicSaves } from "@/api/modules/questionnaire/surveySetting";
+import { topicSaves, editSurverTopic } from "@/api/modules/questionnaire/surveySetting";
 
 const openDraw = ref(false);
 const compList = ref([...CompListData]); // 组件列表
@@ -226,6 +226,7 @@ const logicTopicSelect = ref([]);
 const topicArr = ref([]);
 const currentSettingLogicTopic = ref({});
 const setTopicIndex = ref(0);
+const projectKey = inject("projectKey");
 watch(
   pageCompList,
   newValue => {
@@ -496,7 +497,7 @@ const getLineHeight = () => {
   return data.size == "large" ? "40px" : data.size == "small" ? "24px" : "32px";
 };
 
-onMounted(() => {
+onMounted(async () => {
   const data = useCompStore.initGlobalFormConfig({ ...defaultFormConfig });
   globalData.value = useCompStore.currentGlobalFormConfig;
   console.log(data, "data");
@@ -505,6 +506,9 @@ onMounted(() => {
   // pageHeader.value.id = uuidv4()
   pageFooter.value = getDefaultConfig(CompType.button);
   pageFooter.value.id = uuidv4();
+  let topicList = await editSurverTopic(projectKey);
+  console.log(topicList.data);
+  pageCompList.value = topicList.data;
 });
 
 const currentCompKeyData = computed(() => useCompStore.currentCompKey);
@@ -561,6 +565,7 @@ const saveSurveryFun = async projectKey => {
       formItemId: item.id,
       type: item.type,
       title: item.title,
+      // 是否显示类型，不需要用户操作的组件，单纯为了展示的组件
       isDisplayType: optionalType.includes(item.type),
       required: item?.isRequired ?? false,
       expand: cleanData(item)

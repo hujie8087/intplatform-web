@@ -1,6 +1,7 @@
 <template>
   <div class="comp-item">
-    <div class="comp-item-title" v-if="!!displaySection">
+    <!-- 这个是除了不需要用户操作的组件 -->
+    <div class="comp-item-title" v-if="displaySection">
       <div class="title-value">
         <span class="required" v-if="component?.isRequired">*</span>
         <div class="number" v-if="formConfig?.displayNumberSort">{{ component?.lineNumber }}.</div>
@@ -142,6 +143,7 @@ import BatchOperationData from "./BatchOperationData.vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
+import { optionalType } from "../compConfig";
 
 interface Props {
   component: any;
@@ -159,7 +161,7 @@ const compStore = useSelectCompStore();
 // 创建props的本地副本
 const localComponent = ref({ ...props.component });
 
-const displaySection = computed(() => !["divider", "paging", "formTitle", "img"].includes(props.type));
+const displaySection = computed(() => !optionalType.includes(props.type)); // 不需要用户操作的组件，单纯为了展示的组件
 const compConfig = props.component; // 组件配置
 const currentComp = getCompConfig(props.type); //组件
 const emit = defineEmits(["compControl", "addItem"]);

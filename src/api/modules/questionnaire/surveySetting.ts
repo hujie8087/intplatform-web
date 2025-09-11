@@ -13,3 +13,8 @@ export const save = params => {
 export const topicSaves = (params, projectKey) => {
   return http.post<SurveySetting.save>(PORT1 + `/survey/project/autoSave?projectKey=${projectKey}`, params);
 };
+
+// 问卷题目编辑
+export const editSurverTopic = projectKey => {
+  return http.get<SurveySetting.getInfo>(PORT1 + `/survey/project/item/list`, { projectKey });
+};
