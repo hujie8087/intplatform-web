@@ -507,8 +507,9 @@ onMounted(async () => {
   pageFooter.value = getDefaultConfig(CompType.button);
   pageFooter.value.id = uuidv4();
   let topicList = await editSurverTopic(projectKey);
-  console.log(topicList.data);
-  pageCompList.value = topicList.data;
+  topicList.data.forEach(el => {
+    pageCompList.value.push(el.expand);
+  });
 });
 
 const currentCompKeyData = computed(() => useCompStore.currentCompKey);
