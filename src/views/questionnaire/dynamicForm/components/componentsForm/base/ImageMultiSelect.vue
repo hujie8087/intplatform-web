@@ -1,16 +1,37 @@
 <template>
   <div class="imageMultiSelect">
     <div v-for="(item, index) in props.dataList" :key="index" class="image-block">
-      <span class="demonstration">{{ item.label }}</span>
-      <el-image style="width: 100px; height: 100px" :src="url" fit="scale-down" />
+      <div class="title">{{ item.label }}</div>
+      <el-text size="small" class="desc">
+        {{ item.desc }}
+      </el-text>
+      <el-image class="img" :src="getImageUrl(item.imageUrl)" fit="cover" />
+      <div class="btn">
+        <el-button
+          v-if="dataValue != item.value"
+          @click="voting(item)"
+          style="width: 100%"
+          size="default"
+          icon="Star"
+          color="#1677FF"
+          type="primary"
+          >Voting / 为TA投票</el-button
+        >
+        <div class="btn_group" v-else>
+          <el-button style="width: 60%" size="default" disabled icon="Star" color="#1677FF" type="primary"> 您已投票 </el-button>
+          <el-button @click="cancelVoting(item)" size="default" style="width: 30%" icon="Remove" type="danger">取消</el-button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
+import { ref, watch } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const compStore = useSelectCompStore();
+const filePath = import.meta.env.VITE_APP_BASE_FILE;
+
 interface Props {
   dataList: Array<any>;
   dataValue: string;
@@ -22,11 +43,29 @@ interface Props {
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue);
-const url = "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg";
 
-onMounted(() => {
-  console.log(dataValue, "dataValue");
-});
+const defUrl = "/image/2025/09/01/640 (11).jpg";
+const getImageUrl = (imgUrl: string) => {
+  try {
+    if (imgUrl != "") {
+      return filePath + imgUrl;
+    }
+    return filePath + defUrl;
+  } catch (e) {
+    return filePath + defUrl;
+  }
+};
+
+// 投票
+const voting = item => {
+  console.log(item, "item");
+  dataValue.value = item.value;
+};
+
+const cancelVoting = item => {
+  console.log(item, "item");
+  dataValue.value = "";
+};
 
 watch(
   () => dataValue.value,
@@ -41,4 +80,34 @@ watch(
 );
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.imageMultiSelect {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.image-block {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: calc(50% - 8px);
+  .title {
+    min-height: 24px;
+  }
+  .desc {
+    align-self: first baseline !important;
+    min-height: 20px;
+    margin-top: 4px;
+    line-height: 24px;
+  }
+  .img {
+    width: 100%;
+    height: 180px;
+  }
+  .btn {
+    margin-top: 10px;
+    text-align: center;
+  }
+}
+</style>

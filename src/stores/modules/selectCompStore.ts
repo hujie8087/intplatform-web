@@ -33,9 +33,11 @@ export const useSelectCompStore = defineStore("compEvent", () => {
   // 初始化全局配置
   const initGlobalFormConfig = (config: any) => {
     globalFormConfig.value = { ...config };
+    console.log("初始化全局配置", globalFormConfig.value);
   };
 
   const updateGlobalFormConfig = (updateData: any) => {
+    console.log(updateData, "更新我");
     globalFormConfig.value = {
       ...globalFormConfig.value,
       ...updateData

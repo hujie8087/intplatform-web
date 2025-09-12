@@ -1,6 +1,7 @@
 <template>
   <div class="setting-item h-42">
     <el-text class="mx-1" size="default">组件序号</el-text>
+    {{ form }}
     <el-switch size="default" v-model="form.displayNumberSort" @change="val => changeValue(val as boolean)" />
   </div>
 </template>
@@ -17,6 +18,8 @@ const form = ref(props.form);
 
 const compStore = useSelectCompStore();
 const changeValue = (value: boolean) => {
+  console.log(form, "form");
+  debugger;
   compStore.updateGlobalFormConfig({
     displayNumberSort: value
   });

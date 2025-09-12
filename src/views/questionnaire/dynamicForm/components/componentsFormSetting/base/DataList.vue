@@ -24,9 +24,7 @@
         >
           <div class="active-drag handle">
             <img src="/src/assets/images/form-editor/drag.svg" alt="" />
-            <span class="label">
-              {{ element?.value }}
-            </span>
+            <span class="label"> {{ element?.value }} </span>
           </div>
         </div>
       </template>
@@ -47,6 +45,7 @@ const dataList = ref(props);
 watch(
   () => props.comp.dataList,
   (newValue: any) => {
+    console.log(newValue, "newValue");
     dataList.value = newValue;
   }
 );

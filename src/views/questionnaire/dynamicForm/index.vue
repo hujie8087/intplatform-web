@@ -126,6 +126,7 @@
                 <el-button
                   class="submit"
                   type="primary"
+                  color="#1677FF"
                   :icon="pageFooter.buttonIconShowBool ? Check : null"
                   :size="pageFooter.size"
                   style="width: 120px"
@@ -500,7 +501,7 @@ const getLineHeight = () => {
 onMounted(async () => {
   const data = useCompStore.initGlobalFormConfig({ ...defaultFormConfig });
   globalData.value = useCompStore.currentGlobalFormConfig;
-  console.log(data, "data");
+  console.log(data, "初始化全局数据");
   // 组件初始化
   // pageHeader.value = getDefaultConfig(CompType.formTitle, true)
   // pageHeader.value.id = uuidv4()
@@ -546,6 +547,7 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
     ...compConfig
   });
   selectForm.value = currentGlobalFormConfig;
+  console.log(selectForm.value, "selectForm.value");
 });
 // 保存问卷答题
 const saveSurveryFun = async projectKey => {
