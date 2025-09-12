@@ -100,6 +100,7 @@ import ImageMultiSelectConfig from "./componentsFormSetting/base/ImageMultiSelec
 // 校验配置
 import NumberConfig from "./componentsFormSetting/validation/NumberConfig.vue";
 import MaxMinConfig from "./componentsFormSetting/validation/MaxMinConfig.vue";
+
 import Required from "./componentsFormSetting/validation/Required.vue";
 import ValidationCustom from "./componentsFormSetting/validation/ValidationCustom.vue";
 import ValidationSystem from "./componentsFormSetting/validation/ValidationFormat.vue";
@@ -127,7 +128,6 @@ const currCompIcon = computed(() => {
   const comp = _.filter(_list, {
     type: selectComp?.type
   })?.[0]?.icon;
-
   return comp || (selectComp?.type === "button" && Icon.Button);
 });
 
@@ -145,8 +145,8 @@ watch([() => props.selectComp, () => props.selectForm], ([newValue, newFormConfi
   if (!selectComp) {
     return;
   }
-  selectComp.value = newValue;
-  selectForm.value = newFormConfig;
+  Object.assign(selectComp, newValue);
+  Object.assign(selectForm, newFormConfig);
 });
 </script>
 

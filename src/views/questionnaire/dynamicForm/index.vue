@@ -499,9 +499,9 @@ const getLineHeight = () => {
 };
 
 onMounted(async () => {
-  const data = useCompStore.initGlobalFormConfig({ ...defaultFormConfig });
+  useCompStore.initGlobalFormConfig({ ...defaultFormConfig });
   globalData.value = useCompStore.currentGlobalFormConfig;
-  console.log(data, "初始化全局数据");
+  // console.log(data, "初始化全局数据");
   // 组件初始化
   // pageHeader.value = getDefaultConfig(CompType.formTitle, true)
   // pageHeader.value.id = uuidv4()
@@ -519,7 +519,9 @@ onMounted(async () => {
       pageFooter.value = pageFooter;
     }
     if (Object.keys(selectForm).length > 0) {
+      selectForm.value = selectForm;
       useCompStore.updateGlobalFormConfig(selectForm);
+      console.log(selectForm.value, "selectForm.value");
     }
   }
 });
@@ -558,7 +560,7 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
     ...compConfig
   });
   selectForm.value = currentGlobalFormConfig;
-  console.log(selectForm.value, "selectForm.value");
+  console.log("更新我----！");
 });
 // 保存问卷答题
 const saveSurveryFun = async projectKey => {
