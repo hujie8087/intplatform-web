@@ -131,10 +131,10 @@ const getLineheight = () => {
 .alert {
   margin: 0 10px;
 }
-::v-deep .el-drawer__body {
+:deep(.el-drawer__body) {
   background-image: url("./bg.png");
 }
-::v-deep .el-radio-button.is-active .el-radio-button__original-radio:not(:disabled) + .el-radio-button__inner {
+:deep(.el-radio-button.is-active .el-radio-button__original-radio:not(:disabled) + .el-radio-button__inner) {
   color: #ffffff !important;
 }
 .body-content {
@@ -157,7 +157,7 @@ const getLineheight = () => {
       width: 390px;
       margin-top: 15px;
     }
-    ::v-deep(.comp-item .number) {
+    :deep(.comp-item .number) {
       left: 5px;
     }
   }
@@ -172,7 +172,7 @@ const getLineheight = () => {
   margin-top: 30px;
   line-height: 90px;
 }
-::v-deep(.form-footer) {
+:deep(.form-footer) {
   .submit {
     max-width: 100%;
 

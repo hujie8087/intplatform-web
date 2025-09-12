@@ -18,3 +18,8 @@ export const topicSaves = (params, projectKey) => {
 export const editSurverTopic = projectKey => {
   return http.get<SurveySetting.getInfo>(PORT1 + `/survey/project/item/list`, { projectKey });
 };
+
+// 问卷题目编辑
+export const getSurverDetail = projectKey => {
+  return http.get<SurveySetting.getInfo>(PORT1 + `/survey/project/detail/${projectKey}`);
+};
