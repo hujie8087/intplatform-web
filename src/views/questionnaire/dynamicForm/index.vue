@@ -213,7 +213,7 @@ import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
-import { topicSaves, editSurverTopic } from "@/api/modules/questionnaire/surveySetting";
+import { topicSaves, editSurverTopic, getSurverDetail } from "@/api/modules/questionnaire/surveySetting";
 
 const openDraw = ref(false);
 const compList = ref([...CompListData]); // 组件列表
@@ -444,7 +444,7 @@ const onClose = () => {
 };
 
 const isFormEditorDevBool = computed(() => {
-  const bool = useRoute().path.includes("form-editor");
+  const bool = useRoute().path.includes("form-editor") || useRoute().path.includes("AddSurvery");
   return bool;
 });
 
@@ -506,10 +506,21 @@ onMounted(async () => {
   // pageHeader.value.id = uuidv4()
   pageFooter.value = getDefaultConfig(CompType.button);
   pageFooter.value.id = uuidv4();
-  let topicList = await editSurverTopic(projectKey);
+  let topicList: any = await editSurverTopic(projectKey);
   topicList.data.forEach(el => {
     pageCompList.value.push(el.expand);
   });
+  let sureryDeatil: any = await getSurverDetail(projectKey);
+  if (sureryDeatil.code == 200) {
+    let pageFooter = sureryDeatil?.data?.pageFooter ?? {};
+    let selectForm = sureryDeatil?.data?.selectForm ?? {};
+    if (Object.keys(pageFooter).length > 0) {
+      pageFooter.value = pageFooter;
+    }
+    if (Object.keys(selectForm).length > 0) {
+      useCompStore.updateGlobalFormConfig(selectForm);
+    }
+  }
 });
 
 const currentCompKeyData = computed(() => useCompStore.currentCompKey);
@@ -561,6 +572,7 @@ const saveSurveryFun = async projectKey => {
   };
   let projectItemSaveVo = [];
   listTopic.forEach(item => {
+    item.dataValue = "";
     let obj = {
       projectKey,
       formItemId: item.id,
