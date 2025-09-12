@@ -317,7 +317,7 @@ const columns = reactive<ColumnProps<Settlement.ResSettlement>[]>([
     search: { el: "select", props: { filterable: true } }
   },
   { prop: "packageType", label: "打包类型", width: 70, enum: packageTypeMap, tag: true, search: { el: "select" } },
-  { prop: "deliveryType", label: "配送方式", width: 70, enum: deliveryTypeOptions, tag: true, search: { el: "select" } },
+  // { prop: "deliveryType", label: "配送方式", width: 70, enum: deliveryTypeOptions, tag: true, search: { el: "select" } },
   {
     prop: "fcName",
     label: "车号",
