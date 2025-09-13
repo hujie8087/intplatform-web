@@ -202,7 +202,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, inject } from "vue";
 import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
-import { getDefaultConfig, optionalType, cleanData } from "./components/compConfig";
+import { getDefaultConfig, optionalType } from "./components/compConfig";
 import Icon from "./components/compIcon";
 import { Check, Delete, CirclePlus } from "@element-plus/icons-vue";
 import FormSetting from "./components/FormSetting.vue";
@@ -559,7 +559,6 @@ watch([() => useCompStore.compConfig, () => useCompStore.currentGlobalFormConfig
     ...compConfig
   });
   selectForm.value = currentGlobalFormConfig;
-  console.log("更新我----！");
 });
 // 保存问卷答题
 const saveSurveryFun = async projectKey => {
@@ -568,8 +567,8 @@ const saveSurveryFun = async projectKey => {
   let setRequestParams = {
     project: {
       projectKey,
-      selectForm: cleanData(selectForm.value),
-      pageFooter: cleanData(pageFooter.value)
+      selectForm: selectForm.value,
+      pageFooter: pageFooter.value
     },
     projectItemSaveVo: []
   };
@@ -584,7 +583,7 @@ const saveSurveryFun = async projectKey => {
       // 是否显示类型，不需要用户操作的组件，单纯为了展示的组件
       isDisplayType: optionalType.includes(item.type),
       required: item?.isRequired ?? false,
-      expand: cleanData(item)
+      expand: item
     };
     projectItemSaveVo.push(obj);
   });
