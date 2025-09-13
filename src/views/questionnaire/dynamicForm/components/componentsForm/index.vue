@@ -47,7 +47,7 @@
         :is="currentComp.comp"
         :is-preview-render="isPreviewRender"
       ></component>
-      <!-- <div class="required" v-if="component?.isRequired && !component?.dataValue">此字段为必填项</div> -->
+      <div class="required" v-if="component?.isRequired && !component?.errir">此字段为必填项</div>
     </div>
     <div class="active-comp-setting" v-if="compConfig.id === selectedComp?.id && !isIgnoreEditor()">
       <div class="bottom-setting">
@@ -98,6 +98,7 @@
       v-if="openBatchOperationDataBool"
       :open="openBatchOperationDataBool"
       :data-list="component.dataList"
+      :editor-scroll-info="editorScrollInfo"
       @handle-batch-operation="handleBatchOperation"
     >
     </BatchOperationData>
@@ -152,6 +153,7 @@ interface Props {
   renderType?: "preview";
   isPreviewRender: boolean;
   previewType?: "Phone" | "PC";
+  editorScrollInfo: any;
 }
 const props = defineProps<Props>();
 const compStore = useSelectCompStore();

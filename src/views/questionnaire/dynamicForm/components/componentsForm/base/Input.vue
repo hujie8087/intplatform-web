@@ -26,13 +26,10 @@ const dataValue = ref(props.dataValue || null);
 watch(
   () => dataValue.value,
   newValue => {
+    console.log("======");
     compStore.updateCurrentComp({
       dataValue: newValue
     });
-  },
-  {
-    deep: true, // 因为是数组，需要深度监听
-    immediate: true
   }
 );
 </script>
