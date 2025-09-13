@@ -67,7 +67,7 @@ import { useHandleData } from "@/hooks/useHandleData";
 import { useDownload } from "@/hooks/useDownload";
 import ProTable from "@/components/ProTable/index.vue";
 import TreeFilter from "@/components/TreeFilter/index.vue";
-import ImportExcel from "@/components/ImportExcel/index.vue";
+import ImportExcel from "./components/ImoportExcel.vue";
 import EmployeeDrawer from "./components/EmployeeDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, EditPen, Download, Upload, View } from "@element-plus/icons-vue";
@@ -227,13 +227,12 @@ const downloadFile = async () => {
     useDownload(`${baseUrl}/system/mdc/employee/export`, "员工列表", true, ".xlsx", "post", proTable.value?.searchParam)
   );
 };
-
 // 批量添加员工
 const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const batchAdd = () => {
   const params = {
     title: "员工",
-    tempApi: "intplatform-stage-api/system/user/importTemplate",
+    tempApi: "/system/mdc/employee/downloadTemplate",
     importApi: batchAddEmployee,
     getTableList: proTable.value?.getTableList
   };
@@ -242,11 +241,26 @@ const batchAdd = () => {
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof EmployeeDrawer> | null>(null);
+const transformDeptList = list => {
+  return list.map(item => ({
+    ...item,
+    shortLabel: item.label, // 下拉展示用
+    label: item.deptPath || item.label, // 输入框展示用
+    children: item.children ? transformDeptList(item.children) : []
+  }));
+};
 const openDrawer = async (title: string, row: Partial<Employee.ResEmployee> = {}) => {
   let rowData = { ...row };
   if (rowData.id) {
     const res = await getEmployee(rowData.id);
     rowData = res.data;
+    rowData.deptId = Number(rowData.deptId);
+  } else {
+    // 如果左边部门树选择值了带过去
+    if (treeFilterValues.deptId) {
+      rowData.deptId = treeFilterValues.deptId;
+    }
+    rowData.status = "0";
   }
   const params = {
     title,
@@ -254,7 +268,7 @@ const openDrawer = async (title: string, row: Partial<Employee.ResEmployee> = {}
     rowData: { ...rowData },
     api: title === "新增" ? addEmployee : title === "编辑" ? updateEmployee : undefined,
     getTableList: proTable.value?.getTableList,
-    deptList: treeFilterRef.value?.treeData,
+    deptList: transformDeptList(JSON.parse(JSON.stringify(treeFilterRef.value?.treeData))),
     nationOptions: nationOptions.value,
     companyOptions: companyOptions.value,
     postOptions: postOptions.value

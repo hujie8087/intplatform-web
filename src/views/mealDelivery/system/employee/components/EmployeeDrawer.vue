@@ -36,14 +36,18 @@
         <el-col :span="24">
           <el-form-item :label="`${$t('employee.dept')}`" prop="deptId">
             <el-tree-select
-              v-model="deptId"
+              v-model="drawerProps.rowData!.deptId"
               :data="drawerProps.deptList"
-              :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
-              value-key="deptId"
+              :props="{ value: 'id', label: 'label', children: 'children' }"
+              value-key="id"
               :filterable="true"
               placeholder="请选择部门"
               check-strictly
-            />
+            >
+              <template #default="{ data }">
+                {{ data.shortLabel }}
+              </template>
+            </el-tree-select>
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -107,8 +111,8 @@
         <el-col :span="12">
           <el-form-item :label="`${$t('employee.status')}`" prop="status">
             <el-radio-group v-model="drawerProps.rowData!.status">
-              <el-radio :value="0">{{ $t("dict.enable") }}</el-radio>
-              <el-radio :value="1">{{ $t("dict.disable") }}</el-radio>
+              <el-radio value="0">{{ $t("dict.enable") }}</el-radio>
+              <el-radio value="1">{{ $t("dict.disable") }}</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -153,17 +157,15 @@ import { Employee } from "@/api/interface/mealDelivery/system/employee";
 import { DictOptions } from "@/api/interface";
 
 const { t } = useI18n(); // 解构出t方法
-
 const rules = reactive({
   jobNumber: [{ required: true, message: t("main.inputError", { msg: t("employee.jobNumber") }) }],
   username: [{ required: true, message: t("main.inputError", { msg: t("employee.username") }) }],
-  companyName: [{ required: true, message: t("main.selectError", { msg: t("employee.company") }) }],
+  companyId: [{ required: true, message: t("main.selectError", { msg: t("employee.company") }) }],
   nationType: [{ required: true, message: t("main.selectError", { msg: t("employee.nationType") }) }],
   religion: [{ required: true, message: t("main.selectError", { msg: t("employee.religion") }) }],
   deptId: [{ required: true, message: t("main.selectError", { msg: t("employee.dept") }) }]
 });
 
-const deptId = ref<number>(0);
 // 性能优化：部门数据缓存
 const deptCache = ref<Map<string, any>>(new Map());
 
@@ -206,7 +208,6 @@ const drawerProps = ref<DrawerProps>({
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
-  deptId.value = drawerProps.value.rowData!.deptId ? +drawerProps.value.rowData!.deptId : 0;
 
   // 性能优化：缓存部门数据
   if (params.deptList && params.deptList.length > 0) {
@@ -218,7 +219,7 @@ const acceptParams = (params: DrawerProps): void => {
 };
 const closeDrawer = () => {
   drawerVisible.value = false;
-  deptId.value = 0;
+  // deptId.value = "";
 };
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
@@ -226,7 +227,7 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     try {
-      await drawerProps.value.api!(drawerProps.value.rowData);
+      await drawerProps.value.api!({ ...drawerProps.value.rowData });
       ElMessage.success({
         message: t("main.successMsg", { title: t("system.user.user"), method: `${drawerProps.value.title}` })
       });
