@@ -519,7 +519,6 @@ onMounted(async () => {
       pageFooter.value = footer;
     }
     if (Object.keys(form).length > 0) {
-      selectForm.value = form;
       useCompStore.updateGlobalFormConfig(form);
     }
   }
