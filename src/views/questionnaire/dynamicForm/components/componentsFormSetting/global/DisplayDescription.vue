@@ -5,7 +5,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 interface Props {
   form: any;
@@ -18,13 +18,6 @@ const changeValue = (val: boolean) => {
     displayDescription: val
   });
 };
-watch(
-  () => props.form,
-  newVal => {
-    form.value = newVal.value;
-  },
-  { deep: true }
-);
 </script>
 <style lang="scss" scoped>
 .setting-item {

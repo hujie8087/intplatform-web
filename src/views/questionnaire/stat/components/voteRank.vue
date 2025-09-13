@@ -58,6 +58,7 @@ const getReportRank = async (projectKey: string = "58593f09145c49fa903950438e692
   if (res.data) {
     // options设置
     currentSelect.value = res.data[0]?.label;
+    options.value = [];
     res.data.forEach(element => {
       options.value.push({
         label: element.label,
@@ -81,6 +82,7 @@ const getReportRank = async (projectKey: string = "58593f09145c49fa903950438e692
 
 watch(currentSelect, newVal => {
   let data = resultData.value.filter(item => item.label == newVal);
+  rankingData.value = [];
   rankingData.value = data[0]?.result;
   console.log(rankingData.value);
 });

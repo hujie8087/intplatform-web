@@ -5,28 +5,19 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, watch, defineProps } from "vue";
+import { reactive, defineProps } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
-
 interface Props {
   form: any;
 }
-
 const props = defineProps<Props>();
-const form = ref(props.form);
+const form = reactive(props.form);
 const compStore = useSelectCompStore();
 const changeValue = (value: boolean) => {
   compStore.updateGlobalFormConfig({
     displayNumberSort: value
   });
 };
-watch(
-  () => props.form,
-  newVal => {
-    form.value = newVal.value;
-  },
-  { deep: true }
-);
 </script>
 <style lang="scss" scoped>
 .setting-item {

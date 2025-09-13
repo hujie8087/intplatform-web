@@ -1,7 +1,6 @@
 <template>
   <div class="comp-item">
-    <!-- 这个是除了不需要用户操作的组件 -->
-    <div class="comp-item-title" v-if="displaySection">
+    <div class="comp-item-title" v-if="!!displaySection">
       <div class="title-value">
         <span class="required" v-if="component?.isRequired">*</span>
         <div class="number" v-if="formConfig?.displayNumberSort">{{ component?.lineNumber }}.</div>
@@ -67,7 +66,6 @@
               <el-icon :style="{ fontSize: '16px', color: '#646a73' }"><Plus /></el-icon>
               <span>添加其他</span>
             </div>
-
             <div class="item" @click="batchChangeData">
               <el-icon :style="{ fontSize: '16px', color: '#646a73' }"><Operation /></el-icon>
               <span>批量操作</span>
@@ -120,6 +118,7 @@ import RadioComponent from "./base/Radio.vue";
 import CheckoutComponent from "./base/Checkout.vue";
 import SelectComponent from "./base/Select.vue";
 import NumberComponent from "./base/Number.vue";
+import ImageMultiSelect from "./base/ImageMultiSelect.vue";
 // 评分组件
 import RateComponent from "./base/Rate.vue";
 import NPSComponent from "./base/NPS.vue";
@@ -142,7 +141,6 @@ import BatchOperationData from "./BatchOperationData.vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
-import { optionalType } from "../compConfig";
 
 interface Props {
   component: any;
@@ -160,7 +158,7 @@ const compStore = useSelectCompStore();
 // 创建props的本地副本
 const localComponent = ref({ ...props.component });
 
-const displaySection = computed(() => !optionalType.includes(props.type)); // 不需要用户操作的组件，单纯为了展示的组件
+const displaySection = computed(() => !["divider", "paging", "formTitle", "img"].includes(props.type));
 const compConfig = props.component; // 组件配置
 const currentComp = getCompConfig(props.type); //组件
 const emit = defineEmits(["compControl", "addItem"]);
@@ -214,7 +212,8 @@ function getTypeToComponent(type: string) {
     select: SelectComponent,
     number: NumberComponent,
     selectRate: SelectRateComponent,
-    email: EmailComponent
+    email: EmailComponent,
+    imgMultiSelect: ImageMultiSelect
   };
   const comp = compsObject[type];
   return comp;
@@ -271,7 +270,7 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-:deep {
+::v-deep {
   .el-textarea__inner {
     padding: 6px 12px !important;
     margin-left: -10px !important;
@@ -338,7 +337,7 @@ watch(
 .disabled {
   color: #dddddd !important;
 }
-:deep(.ant-typography.ant-typography-warning) {
+::v-deep(.ant-typography.ant-typography-warning) {
   padding: 2px 0;
   font-size: 14px;
   color: #646a73;
@@ -348,10 +347,10 @@ watch(
   margin: 0 12px;
   border-left: 1px solid #e0e0e0;
 }
-:deep(input[disabled]) {
+::v-deep(input[disabled]) {
   background: #ffffff !important;
 }
-:deep(textarea[disabled]) {
+::v-deep(textarea[disabled]) {
   background: #ffffff !important;
 }
 .control {

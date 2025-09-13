@@ -11,6 +11,8 @@ export enum CompType {
   checkout = "checkout",
   select = "select",
   number = "number",
+  imgMultiSelect = "imgMultiSelect",
+
   // 布局组件
   divider = "divider", // 分割线
   paging = "paging", // 分页
@@ -127,6 +129,12 @@ const BasicComponentList: CompItemType[] = [
     name: "数字",
     type: CompType.number,
     icon: Icon.Number
+  },
+  {
+    label: "多图选择",
+    name: "多图选择",
+    type: CompType.imgMultiSelect,
+    icon: Icon.ImgMultiSelect
   }
 ];
 
@@ -219,7 +227,7 @@ const PersonalComponentList: CompItemType[] = [
     label: "邮箱",
     name: "邮箱",
     type: CompType.email,
-    icon: Icon.email
+    icon: Icon.Email
   }
 ];
 

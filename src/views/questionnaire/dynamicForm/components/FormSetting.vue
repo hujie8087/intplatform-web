@@ -34,6 +34,8 @@
           <RateConfig v-if="selectComp?.type === 'rate'" :comp="selectComp" />
           <!-- NPS取值范围 -->
           <NPSConfig v-if="['nps', 'selectRate'].includes(selectComp?.type)" :comp="selectComp" />
+          <!-- 图片多选 -->
+          <ImageMultiSelectConfig v-if="selectComp?.type === 'imgMultiSelect'" :comp="selectComp" />
           <!--分割线文字-->
           <DividerText v-if="showParams('dividerValue')" :comp="selectComp"></DividerText>
           <!--分割线类型-->
@@ -49,6 +51,8 @@
         <div class="content">
           <!-- 数字区间 最大值最小值控制 -->
           <NumberConfig v-if="showParams('maxValue')" :comp="selectComp" />
+          <!-- 多选控制，最少应该选择，最多应该选择-->
+          <MaxMinConfig v-if="selectComp?.type === 'imgMultiSelect'" :comp="selectComp" />
           <!-- 必填 -->
           <Required v-if="showParams('isRequired')" :comp="selectComp" />
           <!-- 格式 -->
@@ -92,8 +96,11 @@ import Position from "./componentsFormSetting/base/Position.vue";
 import Size from "./componentsFormSetting/base/Size.vue";
 import ButtonText from "./componentsFormSetting/base/ButtonText.vue";
 import DataList from "./componentsFormSetting/base/DataList.vue";
+import ImageMultiSelectConfig from "./componentsFormSetting/base/ImageMultiSelectConfig.vue";
 // 校验配置
 import NumberConfig from "./componentsFormSetting/validation/NumberConfig.vue";
+import MaxMinConfig from "./componentsFormSetting/validation/MaxMinConfig.vue";
+
 import Required from "./componentsFormSetting/validation/Required.vue";
 import ValidationCustom from "./componentsFormSetting/validation/ValidationCustom.vue";
 import ValidationSystem from "./componentsFormSetting/validation/ValidationFormat.vue";
@@ -121,7 +128,6 @@ const currCompIcon = computed(() => {
   const comp = _.filter(_list, {
     type: selectComp?.type
   })?.[0]?.icon;
-
   return comp || (selectComp?.type === "button" && Icon.Button);
 });
 
@@ -139,8 +145,8 @@ watch([() => props.selectComp, () => props.selectForm], ([newValue, newFormConfi
   if (!selectComp) {
     return;
   }
-  selectComp.value = newValue;
-  selectForm.value = newFormConfig;
+  Object.assign(selectComp, newValue);
+  Object.assign(selectForm, newFormConfig);
 });
 </script>
 

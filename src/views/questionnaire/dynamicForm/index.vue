@@ -126,6 +126,7 @@
                 <el-button
                   class="submit"
                   type="primary"
+                  color="#1677FF"
                   :icon="pageFooter.buttonIconShowBool ? Check : null"
                   :size="pageFooter.size"
                   style="width: 120px"
@@ -201,7 +202,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, inject } from "vue";
 import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
-import { getDefaultConfig, optionalType, cleanData } from "./components/compConfig";
+import { getDefaultConfig, optionalType } from "./components/compConfig";
 import Icon from "./components/compIcon";
 import { Check, Delete, CirclePlus } from "@element-plus/icons-vue";
 import FormSetting from "./components/FormSetting.vue";
@@ -498,9 +499,9 @@ const getLineHeight = () => {
 };
 
 onMounted(async () => {
-  const data = useCompStore.initGlobalFormConfig({ ...defaultFormConfig });
+  useCompStore.initGlobalFormConfig({ ...defaultFormConfig });
   globalData.value = useCompStore.currentGlobalFormConfig;
-  console.log(data, "data");
+  // console.log(data, "初始化全局数据");
   // 组件初始化
   // pageHeader.value = getDefaultConfig(CompType.formTitle, true)
   // pageHeader.value.id = uuidv4()
@@ -512,13 +513,14 @@ onMounted(async () => {
   });
   let sureryDeatil: any = await getSurverDetail(projectKey);
   if (sureryDeatil.code == 200) {
-    let pageFooter = sureryDeatil?.data?.pageFooter ?? {};
-    let selectForm = sureryDeatil?.data?.selectForm ?? {};
-    if (Object.keys(pageFooter).length > 0) {
-      pageFooter.value = pageFooter;
+    let footer = sureryDeatil?.data?.pageFooter ?? {};
+    let form = sureryDeatil?.data?.selectForm ?? {};
+    if (Object.keys(footer).length > 0) {
+      pageFooter.value = footer;
     }
-    if (Object.keys(selectForm).length > 0) {
-      useCompStore.updateGlobalFormConfig(selectForm);
+    if (Object.keys(form).length > 0) {
+      selectForm.value = form;
+      useCompStore.updateGlobalFormConfig(form);
     }
   }
 });
@@ -565,8 +567,8 @@ const saveSurveryFun = async projectKey => {
   let setRequestParams = {
     project: {
       projectKey,
-      selectForm: cleanData(selectForm.value),
-      pageFooter: cleanData(pageFooter.value)
+      selectForm: selectForm.value,
+      pageFooter: pageFooter.value
     },
     projectItemSaveVo: []
   };
@@ -581,7 +583,7 @@ const saveSurveryFun = async projectKey => {
       // 是否显示类型，不需要用户操作的组件，单纯为了展示的组件
       isDisplayType: optionalType.includes(item.type),
       required: item?.isRequired ?? false,
-      expand: cleanData(item)
+      expand: item
     };
     projectItemSaveVo.push(obj);
   });

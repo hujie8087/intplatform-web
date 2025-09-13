@@ -1,6 +1,7 @@
 import { CompType } from "./compData";
 import _ from "lodash";
 import { isRef, isReactive, toRaw } from "vue";
+import { v4 as uuidv4 } from "uuid";
 type ClassifyList = "personal";
 interface CompConfig {
   name: string;
@@ -71,7 +72,7 @@ export const HasSettingTypeList = ["radio", "checkout", "select"];
 // 没有添加其它选项的类型
 export const HasSettingTypeListAndNoOther = ["select"];
 export const isFormTitle: CompType[] = [CompType.formTitle];
-export const dataListType: CompType[] = [CompType.checkout, CompType.radio, CompType.select]; // 数组列表
+export const dataListType: CompType[] = [CompType.checkout, CompType.radio, CompType.select, CompType.imgMultiSelect]; // 数组列表
 export const hasPlaceholderType: CompType[] = [
   CompType.input,
   CompType.textarea,
@@ -94,27 +95,43 @@ export const getCompConfig = (type: CompType) => {
   let compConfig: any = {};
 
   if (dataListType.includes(type)) {
-    compConfig = {
-      ...compConfig,
-      layoutType: "vertical",
-      dataList: [
-        {
-          label: "选项一",
-          value: "选项一",
-          _index: 0
-        },
-        {
-          label: "选项二",
-          value: "选项二",
-          _index: 1
-        },
-        {
-          label: "选项三",
-          value: "选项三",
-          _index: 2
-        }
-      ]
-    };
+    if (type !== CompType.imgMultiSelect) {
+      compConfig = {
+        ...compConfig,
+        layoutType: "vertical",
+        dataList: [
+          {
+            label: "选项一",
+            value: "选项一",
+            _index: 0
+          },
+          {
+            label: "选项二",
+            value: "选项二",
+            _index: 1
+          },
+          {
+            label: "选项三",
+            value: "选项三",
+            _index: 2
+          }
+        ]
+      };
+    } else {
+      compConfig = {
+        ...compConfig,
+        layoutType: "vertical",
+        dataList: [
+          {
+            label: "标题",
+            value: "标题",
+            desc: "描述",
+            imageUrl: "",
+            id: uuidv4()
+          }
+        ]
+      };
+    }
   }
 
   // 忽略必填组件
