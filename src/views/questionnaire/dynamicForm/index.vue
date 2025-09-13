@@ -530,8 +530,6 @@ const updateBodyScrollInfo = () => {
   editorScrollInfo.scrollTop = scrollTop;
   // 4. 可选：判断是否滚动到底部（留 1px 误差，避免精度问题）
   editorScrollInfo.isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-  // （可选）打印日志调试，查看实时数据
-  console.log("Body 滚动信息：", editorScrollInfo);
 };
 
 const scrollToBottom = async () => {
@@ -573,7 +571,6 @@ onMounted(async () => {
       useCompStore.updateGlobalFormConfig(form);
     }
   }
-
   nextTick(() => {
     const scrollContainer = editorRef.value;
     if (!scrollContainer) return;
