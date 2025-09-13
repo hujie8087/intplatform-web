@@ -513,15 +513,14 @@ onMounted(async () => {
   });
   let sureryDeatil: any = await getSurverDetail(projectKey);
   if (sureryDeatil.code == 200) {
-    let pageFooter = sureryDeatil?.data?.pageFooter ?? {};
-    let selectForm = sureryDeatil?.data?.selectForm ?? {};
-    if (Object.keys(pageFooter).length > 0) {
-      pageFooter.value = pageFooter;
+    let footer = sureryDeatil?.data?.pageFooter ?? {};
+    let form = sureryDeatil?.data?.selectForm ?? {};
+    if (Object.keys(footer).length > 0) {
+      pageFooter.value = footer;
     }
-    if (Object.keys(selectForm).length > 0) {
-      selectForm.value = selectForm;
-      useCompStore.updateGlobalFormConfig(selectForm);
-      console.log(selectForm.value, "selectForm.value");
+    if (Object.keys(form).length > 0) {
+      selectForm.value = form;
+      useCompStore.updateGlobalFormConfig(form);
     }
   }
 });
