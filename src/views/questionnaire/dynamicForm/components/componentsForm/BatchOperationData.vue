@@ -71,7 +71,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 // 保持对话框居中的基础样式
-::v-deep .dialog-wrapper {
+:deep(.dialog-wrapper) {
   left: 50% !important;
   margin: 0 !important;
   transform: translateX(-50%) !important;

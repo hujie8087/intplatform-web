@@ -947,9 +947,6 @@ defineExpose({
     background: #fafafa;
   }
 }
-:deep(.ant-drawer-bottom > .ant-drawer-content-wrapper) {
-  height: calc(100% - 50px) !important;
-}
 .callback {
   position: absolute;
   left: 12px;

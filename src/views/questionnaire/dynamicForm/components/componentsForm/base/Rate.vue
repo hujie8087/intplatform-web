@@ -38,8 +38,4 @@ watch(
   margin-left: -2px;
   text-align: left;
 }
-.ant-rate-star-zero {
-  color: rgb(0 0 0 / 100%) !important;
-  filter: grayscale(0);
-}
 </style>
