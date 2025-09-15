@@ -112,12 +112,12 @@ const radioStyle = ref({
 }
 
 /* 禁用状态下的文本颜色 */
-:deep .el-checkbox.is-disabled .el-checkbox__label {
+:deep(.el-checkbox.is-disabled .el-checkbox__label) {
   color: #000000 !important;
 }
 
 /* 复选框输入框显示 */
-:deep .el-checkbox__input .el-checkbox__inner {
+:deep(.el-checkbox__input .el-checkbox__inner) {
   display: inline-block;
 }
 </style>

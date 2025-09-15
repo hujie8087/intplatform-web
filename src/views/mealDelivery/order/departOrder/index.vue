@@ -83,8 +83,10 @@ import { getAllCarNameList, getAllMessHallNameList, getAllSiteAddressList } from
 import dayjs from "dayjs";
 import { MdcOrder } from "@/api/interface/mealDelivery/order";
 import { useDict } from "@/hooks/useDict";
-import UserTaskInfoForm from "../orders/components/UserTaskInfoForm.vue";
-import UserTaskListTable from "../orders/components/UserTaskListTable.vue";
+// import UserTaskInfoForm from "../orders/components/UserTaskInfoForm.vue";
+import UserTaskInfoForm from "@/components/UserTaskInfoForm/index.vue";
+import UserTaskListTable from "@/components/UserTaskListTable/index.vue";
+import { queryUserTaskInfo } from "@/api/modules/mdc/monitor/usertask";
 import { useHandleData } from "@/hooks/useHandleData";
 
 // ProTable 实例
@@ -109,7 +111,7 @@ const foodNameMap = ref<DictOptions[]>([
   { label: "夜宵", value: "3", tagType: "danger" },
   { label: "20L", value: "4", tagType: "info" },
   { label: "点心", value: "5", tagType: "warning" },
-  { label: "早茶", value: "6", tagType: "info" }
+  { label: "凌晨餐", value: "6", tagType: "info" }
 ]);
 
 // 出餐方式
@@ -225,15 +227,34 @@ getSiteAddressList();
 
 // 表格配置项
 const expandedRowSet = ref(new Set());
-const orderDataCache = new Map();
+// const orderDataCache = new Map();
 
-function getCachedOrderData(row) {
-  const key = row.orderNo;
-  if (!orderDataCache.has(key)) {
-    orderDataCache.set(key, getOrderData(row));
+// function getCachedOrderData(row) {
+//   const key = row.orderNo;
+//   if (!orderDataCache.has(key)) {
+//     orderDataCache.set(key, getOrderData(row));
+//   }
+//   return orderDataCache.get(key);
+// }
+
+const initDateRange = () => {
+  // defaultValue: [dayjs().subtract(4, "day").startOf("day").format("YYYY-MM-DD"), dayjs().endOf("day").format("YYYY-MM-DD")]
+  const now = new Date();
+  const phi = new Date();
+  phi.setHours(6, 0, 0, 0); // 设置为今天的6点
+
+  let start, end;
+  if (now < phi) {
+    // now < phi
+    start = dayjs().subtract(1, "day").format("YYYY-MM-DD");
+    end = dayjs().format("YYYY-MM-DD");
+  } else {
+    // phi <= now
+    start = dayjs().format("YYYY-MM-DD");
+    end = dayjs().add(1, "day").format("YYYY-MM-DD");
   }
-  return orderDataCache.get(key);
-}
+  return [start, end];
+};
 
 const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
   { type: "selection", fixed: "left", width: 50 },
@@ -268,7 +289,8 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
       span: 1,
       el: "date-picker",
       props: { type: "daterange", valueFormat: "YYYY-MM-DD" },
-      defaultValue: [dayjs().subtract(4, "day").startOf("day").format("YYYY-MM-DD"), dayjs().endOf("day").format("YYYY-MM-DD")]
+      // defaultValue: [dayjs().subtract(4, "day").startOf("day").format("YYYY-MM-DD"), dayjs().endOf("day").format("YYYY-MM-DD")]
+      defaultValue: initDateRange()
     }
   },
   { prop: "pNum", label: "数量", width: 60 },
@@ -302,7 +324,7 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
       }
     }
   },
-  { prop: "deliveryType", label: "配送方式", width: 70, enum: deliveryTypeOptions, tag: true, search: { el: "select" } },
+  // { prop: "deliveryType", label: "配送方式", width: 70, enum: deliveryTypeOptions, tag: true, search: { el: "select" } },
   {
     prop: "fcName",
     label: "车号",
@@ -346,7 +368,7 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
             }}
           >
             <el-timeline reverse={false} style="padding: 0">
-              {getCachedOrderData(scope.row).map((activity, index) => (
+              {getOrderData(scope.row).map((activity, index) => (
                 <el-timeline-item
                   key={index}
                   timestamp={activity.timestamp}
@@ -412,27 +434,39 @@ const getOrderData = (row: MdcOrder.ResMdcOrder): { timestamp: string; color: st
 // 导出结算单
 const userTaskInfoFormRef = ref<InstanceType<typeof UserTaskInfoForm>>();
 const handleBatchExportCheck = () => {
-  userTaskInfoFormRef.value?.create("报餐送餐系统-部门订单核对表" + new Date().getTime() + ".xlsx");
   let totalParam = {
     ...proTable.value?.totalParam
   };
   delete totalParam.orderDate;
   exportDeptOrderCheck({
-    totalParam,
+    ...totalParam,
     params: {
-      beginTime: proTable.value?.searchParam.orderDate[0],
-      endTime: proTable.value?.searchParam.orderDate[1]
+      beginTime: proTable.value?.searchParam.orderDate[0] + " 06:00:00",
+      endTime: proTable.value?.searchParam.orderDate[1] + " 06:00:00"
     }
   }).then(res => {
     let taskId = res.data;
-    userTaskInfoFormRef.value?.show(taskId);
+    userTaskInfoFormRef.value?.acceptParams({
+      rowData: {},
+      fileName: "报餐送餐系统-部门订单核对表" + new Date().getTime() + ".xlsx",
+      api: queryUserTaskInfo,
+      params: {
+        taskId
+      }
+    });
   });
 };
 
 // 查看核对任务列表
-const userTaskListTableRef = ref<InstanceType<typeof UserTaskListTable>>();
+const userTaskListTableRef = ref();
 const handleBatchExportCheckTaskTable = () => {
-  userTaskListTableRef.value?.create(3, 1, "报餐送餐系统-部门订单核对表" + new Date().getTime() + ".xlsx");
+  // userTaskListTableRef.value?.create(3, 1, "报餐送餐系统-部门订单核对表" + new Date().getTime() + ".xlsx");
+  userTaskListTableRef.value.create({
+    taskCategory: 5,
+    dataOperate: 1,
+    api: queryUserTaskInfo,
+    fileName: "报餐送餐系统-部门订单核对表" + new Date().getTime() + ".xlsx"
+  });
 };
 
 // 批量确认

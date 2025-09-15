@@ -39,3 +39,8 @@ export const exportConfig = (params: Config.ReqConfigParams) => {
 export const refreshCache = () => {
   return http.delete(PORT1 + `/system/config/refreshCache`);
 };
+
+// * 获取系统设置初始密码
+export const getConfigData = params => {
+  return http.get(PORT1 + `/system/config/configKey/${params}`);
+};

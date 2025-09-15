@@ -59,7 +59,9 @@ export default {
       logoutSuccess: "Logout successfully!",
       confirmLogout: "Are you sure you want to logout?",
       tips: "Tips",
-      canteen: "Canteen"
+      canteen: "Canteen",
+      userChinaseEnglish: "Username",
+      accountType: "Account Type"
     },
     dept: {
       deptList: "Department List",

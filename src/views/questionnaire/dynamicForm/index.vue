@@ -229,6 +229,7 @@ const topicArr = ref([]);
 const currentSettingLogicTopic = ref({});
 const setTopicIndex = ref(0);
 const projectKey = inject("projectKey");
+const emit = defineEmits(["updateTime"]);
 watch(
   pageCompList,
   newValue => {
@@ -563,6 +564,7 @@ onMounted(async () => {
   });
   let sureryDeatil: any = await getSurverDetail(projectKey);
   if (sureryDeatil.code == 200) {
+    let updateTime = sureryDeatil?.data?.updateTime;
     let footer = sureryDeatil?.data?.pageFooter ?? {};
     let form = sureryDeatil?.data?.selectForm ?? {};
     if (Object.keys(footer).length > 0) {
@@ -571,6 +573,8 @@ onMounted(async () => {
     if (Object.keys(form).length > 0) {
       useCompStore.updateGlobalFormConfig(form);
     }
+
+    emit("updateTime", updateTime);
   }
   nextTick(() => {
     const scrollContainer = editorRef.value;

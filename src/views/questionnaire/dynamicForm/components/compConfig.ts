@@ -327,3 +327,20 @@ export function cleanData<T>(obj: T, seen = new WeakSet()): T {
   // 其他情况直接返回
   return obj;
 }
+// 正则表达式对象
+export const regexRule = {
+  phone: /^\+?[0-9]{8,15}$/,
+  number: /^\d+(\.\d+)?$/,
+  website: /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/,
+  idCard: /(^\d{15}$)|(^\d{17}(\d|X|x)$)/,
+  email: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
+  // regular: ""
+};
+export const regexRuleMesg = {
+  phone: "手机号格式不正确",
+  number: "请输入数字类型数据",
+  website: "网站类型不正确",
+  idCard: "身份证类型不正确",
+  email: "邮箱类型不正确"
+  // regular: ""
+};

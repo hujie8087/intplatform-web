@@ -9,3 +9,7 @@ export const getSurveyTopicList = (projectKey?: string) => {
 export const getSurveySetting = params => {
   return http.get(PORT1 + `/survey/answer/setting/status`, params);
 };
+// 提交问卷
+export const submitSurvey = params => {
+  return http.post(PORT1 + `/survey/answer`, params);
+};

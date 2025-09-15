@@ -104,9 +104,13 @@ const foodNameMap = ref<DictOptions[]>([
   { label: "夜宵", value: "3", tagType: "danger" },
   { label: "20L", value: "4", tagType: "info" },
   { label: "点心", value: "5", tagType: "warning" },
-  { label: "早茶", value: "6", tagType: "info" }
+  { label: "凌晨餐", value: "6", tagType: "info" }
 ]);
-
+const packageTypeMap = ref<DictOptions[]>([
+  { label: "打包袋", value: "0", tagType: "warning" },
+  { label: "餐盒", value: "1", tagType: "success" },
+  { label: "桶装", value: "2", tagType: "primary" }
+]);
 // 出餐方式
 const foodTypeOptions = ref<DictOptions[]>([
   { label: "中国餐", value: "0", tagType: "primary" },
@@ -218,15 +222,15 @@ getSiteAddressList();
 
 // 表格配置项
 const expandedRowSet = ref(new Set());
-const orderDataCache = new Map();
+// const orderDataCache = new Map();
 
-function getCachedOrderData(row) {
-  const key = row.orderNo;
-  if (!orderDataCache.has(key)) {
-    orderDataCache.set(key, getOrderData(row));
-  }
-  return orderDataCache.get(key);
-}
+// function getCachedOrderData(row) {
+//   const key = row.orderNo;
+//   if (!orderDataCache.has(key)) {
+//     orderDataCache.set(key, getOrderData(row));
+//   }
+//   return orderDataCache.get(key);
+// }
 
 const columns = reactive<ColumnProps<Settlement.ResSettlement>[]>([
   { type: "selection", fixed: "left", width: 50 },
@@ -312,8 +316,8 @@ const columns = reactive<ColumnProps<Settlement.ResSettlement>[]>([
     },
     search: { el: "select", props: { filterable: true } }
   },
-  { prop: "packageType", label: "打包类型", width: 70, enum: deliveryTypeOptions, tag: true, search: { el: "select" } },
-  { prop: "deliveryType", label: "配送方式", width: 70, enum: deliveryTypeOptions, tag: true, search: { el: "select" } },
+  { prop: "packageType", label: "打包类型", width: 70, enum: packageTypeMap, tag: true, search: { el: "select" } },
+  // { prop: "deliveryType", label: "配送方式", width: 70, enum: deliveryTypeOptions, tag: true, search: { el: "select" } },
   {
     prop: "fcName",
     label: "车号",
@@ -358,7 +362,7 @@ const columns = reactive<ColumnProps<Settlement.ResSettlement>[]>([
             }}
           >
             <el-timeline reverse={false} style="padding: 0">
-              {getCachedOrderData(scope.row).map((activity, index) => (
+              {getOrderData(scope.row).map((activity, index) => (
                 <el-timeline-item
                   key={index}
                   timestamp={activity.timestamp}
