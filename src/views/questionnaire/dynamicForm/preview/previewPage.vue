@@ -54,6 +54,7 @@
                 :form-config="selectForm"
                 :preview-type="previewType"
                 :is-preview-render="true"
+                :editor-scroll-info="editorScrollInfo"
               >
               </FormComponent>
             </div>
@@ -108,6 +109,7 @@ interface Props {
   selectForm: any;
   pageFooter: any;
   pageCompList: any[];
+  editorScrollInfo: any;
 }
 
 const props = defineProps<Props>();

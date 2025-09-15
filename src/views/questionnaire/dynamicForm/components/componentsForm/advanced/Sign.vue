@@ -1,26 +1,35 @@
 <template>
-  <div class="sign" ref="signRef" :id="currId" :tabindex="!props.isPreviewRender ? 0 : -1" @blur="handleSignBlur">
+  <div class="sign">
+    <el-button color="#1677ff" size="default" @click="signVisible = true" type="primary">手写电子签名</el-button>
     <el-image
-      v-if="props.isPreviewRender"
+      v-if="props.dataValue"
       :src="getImgUrl"
       fit="cover"
-      style="width: 100%; height: 200px; border: 1px dashed #dcdfe6"
+      style="width: 100%; margin-top: 5px; border: 1px dashed #dcdfe6"
     />
-    <div v-else>
-      <canvas style="display: block; border: 1px dashed #dcdfe6" :tabindex="0" />
-      <div class="control-btns">
-        <el-radio-group v-model="radio1">
-          <el-radio-button
-            :key="index"
-            v-for="(item, index) in contList"
-            :label="item.name"
-            size="default"
-            @click="control(item.type)"
-            >{{ item.name }}</el-radio-button
-          >
-        </el-radio-group>
+    <el-dialog :top="editorScrollInfo.scrollTop + 120 + 'px'" v-if="signVisible" title="签名" v-model="signVisible" width="360px">
+      <div class="sign_box" ref="signRef" :id="currId" :tabindex="!props.isPreviewRender ? 0 : -1">
+        <canvas style="display: block; border: 1px dashed #dcdfe6" />
+        <div class="control-btns">
+          <el-radio-group v-model="radio1">
+            <el-radio-button
+              :key="index"
+              v-for="(item, index) in contList"
+              :label="item.name"
+              size="default"
+              @click="control(item.type)"
+              >{{ item.name }}</el-radio-button
+            >
+          </el-radio-group>
+        </div>
       </div>
-    </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="handleSubmit('cancel')">取消</el-button>
+          <el-button type="primary" @click="handleSubmit('ok')"> 确定 </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -41,11 +50,13 @@ interface Props {
   isPreviewRender?: boolean;
   previewType?: string;
   dataValue: string;
+  editorScrollInfo: any;
 }
 const props = defineProps<Props>();
 const currId = ref(props.isPreviewRender ? `preview_${props.id}` : `${props.id}`);
 const signature: any = ref(null);
 const localDataValue = ref(null);
+const signVisible = ref(false);
 const getImgUrl = computed(() => {
   return filePath + props.dataValue;
 });
@@ -101,6 +112,16 @@ const initData = () => {
     color: "#333",
     bgColor: "#f6f8fa"
   });
+};
+
+const handleSubmit = (state: string) => {
+  const isOk = state === "ok";
+  if (isOk) {
+    uploadSignatureToServer();
+    signVisible.value = false;
+  } else {
+    signVisible.value = false;
+  }
 };
 
 // ------------------------------
@@ -193,14 +214,18 @@ const uploadSignatureToServer = async () => {
   await handleHttpUpload(uploadOptions);
 };
 
-const handleSignBlur = () => {
-  console.log("触发blur事件");
-  // uploadSignatureToServer();
-  console.log(uploadSignatureToServer);
-};
-
 onMounted(() => {
-  initData();
+  // 初始时不立即初始化，因为对话框可能未显示
+  watch(
+    () => signVisible.value,
+    newVal => {
+      if (newVal) {
+        // 对话框显示时再初始化签名组件
+        setTimeout(initData, 0); // 加个延迟确保DOM已渲染
+      }
+    },
+    { immediate: false }
+  );
 });
 
 watch([props.previewType], () => {
@@ -229,5 +254,9 @@ watch(
   width: 100%;
   margin: 10px;
   text-align: center;
+}
+.sign_box {
+  display: flex;
+  flex-direction: column;
 }
 </style>

@@ -149,6 +149,7 @@
       ></FormSetting>
       <PreviewPage
         v-if="openDraw"
+        :editor-scroll-info="editorScrollInfo"
         :select-form="selectForm"
         :open="openDraw"
         :page-comp-list="pageCompList"
@@ -219,7 +220,7 @@ import { topicSaves, editSurverTopic, getSurverDetail } from "@/api/modules/ques
 
 const openDraw = ref(false);
 const compList = ref([...CompListData]); // 组件列表
-
+const route = useRoute(); // 先获取路由实例
 const pageCompList = ref<any[]>([]); // 页面组件内容
 const dialogVisible = ref(false); // 逻辑弹窗
 const dialogTitle = ref("");
@@ -449,8 +450,9 @@ const onClose = () => {
 };
 
 const isFormEditorDevBool = computed(() => {
-  const bool = useRoute().path.includes("form-editor") || useRoute().path.includes("AddSurvery");
-  return bool;
+  // 先检查 route 是否存在，避免报错
+  if (!route) return false;
+  return route.path.includes("form-editor") || route.path.includes("AddSurvery");
 });
 
 // 更新选中组件数据
@@ -573,7 +575,6 @@ onMounted(async () => {
     if (Object.keys(form).length > 0) {
       useCompStore.updateGlobalFormConfig(form);
     }
-
     emit("updateTime", updateTime);
   }
   nextTick(() => {
