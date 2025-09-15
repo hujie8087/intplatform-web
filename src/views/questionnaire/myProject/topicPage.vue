@@ -27,6 +27,7 @@
                 'cursor-move': true,
                 'form-item': true
               }"
+              @click="selectComp(item)"
             >
               <FormComponent
                 v-if="!['paging'].includes(item.type) || (['paging'].includes(item.type) && formShowConfig.displayPaging)"
@@ -71,13 +72,17 @@
 <script setup lang="ts">
 /* eslint-disable */
 type PreviewType = "Phone" | "PC";
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { CloseBold, Check } from "@element-plus/icons-vue";
 import FormComponent from "../dynamicForm/components/componentsForm/index.vue";
 import SupportComp from "../dynamicForm/preview/component/SupportComp.vue";
-import { getSurveyTopicList, getSurveySetting } from "@/api/modules/questionnaire/topicPage";
+import { getSurveyTopicList, getSurveySetting, submitSurvey } from "@/api/modules/questionnaire/topicPage";
 import { v4 as uuidv4 } from "uuid";
+import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+import { regexRule, regexRuleMesg } from "../dynamicForm/components/compConfig";
+import { ElMessage } from "element-plus";
+import _ from "lodash";
 const route = useRoute();
 const router = useRouter();
 const rulesObj = reactive({});
@@ -105,6 +110,14 @@ const pageFooter = ref<FooterType>({
 }); // 底部
 
 const previewType = ref<PreviewType>("Phone");
+const compStore = useSelectCompStore();
+
+const showRulesObj = reactive({});
+const activeComp = ref({
+  type: "component",
+  id: ""
+}); // 当前选中组件
+const startTime = ref<number>(0); // 进入页面的时间戳
 // 关闭页面
 const closeTopicBtn = () => {
   router.replace({ path: "/" }); // 跳转到根路径
@@ -123,18 +136,40 @@ const getLineheight = () => {
 const initTopicList = async projectKey => {
   let response: any = await getSurveyTopicList(projectKey); // 获得问卷题目
   if (response.code == 200) {
-    let { projectItems = [], pageFooter = {}, selectForm = {} } = response.data;
+    startTime.value = Date.now();
+    let { projectItems = [] } = response.data;
+    let hideenIdArr = [];
+    let tempTopicArr = [];
+    let displayRulesObj = {};
     projectItems.forEach(el => {
-      pageCompList.value.push(el.expand);
+      if (el?.expand?.expresson) {
+        displayRulesObj[el.formItemId] = {};
+        el.expand.expresson.forEach(item => {
+          hideenIdArr.push(item.formItemId);
+          displayRulesObj[el.formItemId][item.optionValue] = item.formItemId;
+        });
+      }
+      tempTopicArr.push(el.expand);
     });
-    pageFooter.value = pageFooter;
-    selectForm.value = selectForm;
+
+    // 比如要设置显示规则
+    Object.assign(showRulesObj, displayRulesObj);
+    console.log("*********", showRulesObj);
+
+    tempTopicArr.forEach(item => {
+      if (hideenIdArr.includes(item.id)) {
+        item.hideen = true;
+      }
+    });
+    pageCompList.value = tempTopicArr;
+    pageFooter.value = response.data.project.pageFooter;
+    selectForm.value = response.data.project.selectForm;
   }
 };
 // 获得问卷设置
 const setRulesObj = async projectKey => {
   try {
-    let deviceId = localStorage.getItem("device_id")!;
+    let deviceId = localStorage.getItem("device_id");
     let response = await getSurveySetting({ projectKey, fingerprint: deviceId });
     if (response.code == 200) {
       Object.assign(rulesObj, response.data);
@@ -145,17 +180,231 @@ const setRulesObj = async projectKey => {
     erroryText.value = error.msg;
   }
 };
+// 值改了看是否有逻辑关系导致的显示隐藏
+const childrenCompValueChange = value => {
+  if (!showRulesObj[value.id]) return false;
+  let showArr = [];
+  let hiddenArr = [];
+  Object.keys(showRulesObj[value.id]).forEach(key => {
+    if (Array.isArray(value.value)) {
+      value.value.forEach(element => {
+        if (element == key) {
+          showArr.push(showRulesObj[value.id][key]);
+        } else {
+          hiddenArr.push(showRulesObj[value.id][key]);
+        }
+      });
+    } else {
+      if (key == value.value) {
+        showArr.push(showRulesObj[value.id][key]);
+      } else {
+        hiddenArr.push(showRulesObj[value.id][key]);
+      }
+    }
+  });
+  // let copyPageCompList = _.cloneDeep(pageCompList.value);
+  debugger;
+  pageCompList.value.forEach(el => {
+    if (showArr.includes(el.id)) {
+      el.hideen = false;
+      // compStore.updateCurrentComp({
+      //   dataValue: ""
+      // });
+      // el.dataValue = "";
+    } else if (hiddenArr.includes(el.id)) {
+      el.hideen = true;
+      // el.dataValue = "";
+      // compStore.updateCurrentComp({
+      //   dataValue: ""
+      // });
+    } else {
+      el.hideen = false;
+    }
+  });
+  // Object.assign(pageCompList.value, copyPageCompList);
+  // pageCompList.value = copyPageCompList;
+  console.log("------------", pageCompList.value);
+  debugger;
+};
+watch([() => compStore.compConfig, () => compStore.currentGlobalFormConfig], ([compConfig, currentGlobalFormConfig]) => {
+  updateCompByChange({
+    ...compConfig
+  });
+  // selectForm.value = currentGlobalFormConfig;
+});
+// 先初步校验规则，如果适合再往后走,更新选中组件数据
+const updateCompByChange = (compConfig: any) => {
+  const index = getActiveCompIndex();
+  if (index > -1 && pageCompList.value.length) {
+    // console.log("///////////", compConfig);
+    // customErrorMessage 自定义校验规则
+    // let nowItem = pageCompList.value[index];
+    // if (nowItem["formValidationFormat"]) {
+    //   let ruleTest = regexRule[nowItem["formValidationFormat"]];
+    //   let tag = testNumber(nowItem, compConfig.dataValue);
+    //   console.log("***********", tag);
+    // }
+    debugger;
+    if (activeComp.value.id == pageCompList.value[index].id) {
+      pageCompList.value[index] = { ...pageCompList.value[index], ...compConfig };
+      childrenCompValueChange({ id: activeComp.value.id, value: compConfig.dataValue });
+    }
+  }
+};
+const getActiveCompIndex = () => {
+  return _.findIndex(pageCompList.value, (item: any) => item.id === activeComp.value.id);
+};
+// 组件选中
+const selectComp = (item: any) => {
+  activeComp.value.id = item.id;
+};
+const testNumber = (nowItem, phone: string) => {
+  let str: any = phone;
+  if (nowItem["formValidationFormat"] == "phone" || nowItem["formValidationFormat"] == "idCard") {
+    str = Number(str);
+  }
+  const isValid = regexRule[nowItem["formValidationFormat"]].test(str);
+  return isValid;
+};
 const submitAnswerSheet = () => {
-  console.log("*************");
+  // 先校验是否是必填项，校验完看是填写是否错误
+  console.log("///////", pageCompList.value);
+  debugger;
+  let tempArr = pageCompList.value;
+  let isNext = true;
+  for (let index = 0; index < tempArr.length; index++) {
+    const element = tempArr[index];
+    // 增加代码校验，如果有值是否符合校验规则的
+    if (element.dataValue) {
+      // 设置了校验类型的
+      if (element["formValidationFormat"]) {
+        isNext = testNumber(element, element.dataValue);
+        if (!isNext) {
+          let msg = regexRuleMesg[element["formValidationFormat"]];
+          element.errorMsg = msg;
+        }
+      } else if (element["customErrorMessage"]) {
+        // 设置自定义校验类型的
+      }
+    } else {
+      isNext = false;
+      element.errorMsg = "此数据不能为空";
+    }
+  }
+  if (isNext) {
+    const endTime = Date.now();
+    const duration = Math.floor((endTime - startTime.value) / 1000); // 秒
+    let obj = {
+      projectKey: route.query?.projectKey ?? "6b1ae12f51ab40f39605808cab614054",
+      completeTime: duration,
+      fingerprint: localStorage.getItem("device_id"),
+      submitUa: getClientInfo(),
+      submitOs: getOS(),
+      submitBrowser: getBrowser(),
+      answerList: setTopicList()
+    };
+  }
+};
+const submitFun = async params => {
+  let result = await submitSurvey(params);
+  if (result.code == 200) {
+    ElMessage.success(`答卷提交成功`);
+  }
 };
 onMounted(async () => {
-  const projectKey = route.query?.projectKey ?? "40d90ea8cfe24966b5b0cfefaab61990";
+  // 40d90ea8cfe24966b5b0cfefaab61990
+  const projectKey = route.query?.projectKey ?? "6b1ae12f51ab40f39605808cab614054";
   if (!localStorage.getItem("device_id")) {
     localStorage.setItem("device_id", uuidv4());
   }
   //   setRulesObj(projectKey);
   initTopicList(projectKey);
 });
+// 设置题目列表
+const setTopicList = () => {
+  let arr: any = [];
+  pageCompList.value.forEach(el => {
+    arr.push({
+      questionId: "102",
+      questionName: "姓名",
+      questionType: "INPUT",
+      originalValue: "WALONG",
+      processValue: "WALONG",
+      sort: 32768
+    });
+  });
+};
+// 获取操作系统
+const getOS = () => {
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  if (userAgent.indexOf("windows") !== -1) return "windows";
+  if (userAgent.indexOf("mac os") !== -1) return "mac";
+  if (userAgent.indexOf("android") !== -1) return "android";
+  if (userAgent.indexOf("iphone") !== -1 || userAgent.indexOf("ipad") !== -1) return "ios";
+  if (userAgent.indexOf("linux") !== -1) return "linux";
+  return "unknown";
+};
+// 获取浏览器
+const getBrowser = () => {
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  if (userAgent.indexOf("edg") !== -1) return "edge";
+  if (userAgent.indexOf("chrome") !== -1 && userAgent.indexOf("safari") !== -1) return "chrome";
+  if (userAgent.indexOf("firefox") !== -1) return "firefox";
+  if (userAgent.indexOf("safari") !== -1) return "safari";
+  if (userAgent.indexOf("trident") !== -1 || userAgent.indexOf("msie") !== -1) return "ie";
+  return "unknown";
+};
+
+const getClientInfo = () => {
+  const ua = navigator.userAgent || "";
+  // 操作系统
+  let os = { name: "Unknown", version: "" };
+  if (/Windows NT 10/.test(ua)) os = { name: "Windows", version: "10" };
+  else if (/Windows NT 6\.3/.test(ua)) os = { name: "Windows", version: "8.1" };
+  else if (/Windows NT 6\.2/.test(ua)) os = { name: "Windows", version: "8" };
+  else if (/Windows NT 6\.1/.test(ua)) os = { name: "Windows", version: "7" };
+  else if (/Mac OS X/.test(ua)) os = { name: "MacOS", version: ua.match(/Mac OS X ([\d_]+)/)?.[1].replace(/_/g, ".") || "" };
+  else if (/Android/.test(ua)) os = { name: "Android", version: ua.match(/Android\s([\d.]+)/)?.[1] || "" };
+  else if (/iPhone|iPad/.test(ua)) os = { name: "iOS", version: ua.match(/OS ([\d_]+)/)?.[1].replace(/_/g, ".") || "" };
+  else if (/HarmonyOS/.test(ua)) os = { name: "HarmonyOS", version: "" };
+
+  // 浏览器
+  let browser = { name: "Unknown", version: "", major: "" };
+  if (/Chrome\/([\d.]+)/.test(ua)) {
+    const ver = ua.match(/Chrome\/([\d.]+)/)[1];
+    browser = { name: "Chrome", version: ver, major: ver.split(".")[0] };
+  } else if (/Safari\/([\d.]+)/.test(ua) && /Version\/([\d.]+)/.test(ua)) {
+    const ver = ua.match(/Version\/([\d.]+)/)[1];
+    browser = { name: "Safari", version: ver, major: ver.split(".")[0] };
+  } else if (/Firefox\/([\d.]+)/.test(ua)) {
+    const ver = ua.match(/Firefox\/([\d.]+)/)[1];
+    browser = { name: "Firefox", version: ver, major: ver.split(".")[0] };
+  }
+
+  // 引擎
+  let engine = { name: "Unknown", version: "" };
+  if (/AppleWebKit\/([\d.]+)/.test(ua)) {
+    engine = { name: "WebKit", version: ua.match(/AppleWebKit\/([\d.]+)/)[1] };
+  }
+  if (/Chrome\/([\d.]+)/.test(ua)) {
+    engine = { name: "Blink", version: browser.version };
+  }
+
+  // CPU
+  let cpu = { architecture: "" };
+  if (/x64|Win64|amd64|x86_64/.test(ua)) cpu.architecture = "amd64";
+  else if (/i686|x86/.test(ua)) cpu.architecture = "x86";
+  else if (/arm|aarch64/.test(ua)) cpu.architecture = "arm";
+
+  return {
+    os,
+    ua,
+    cpu,
+    device: {}, // 前端拿不到设备型号，只能空
+    engine,
+    browser
+  };
+};
 </script>
 
 <style lang="scss" scoped>

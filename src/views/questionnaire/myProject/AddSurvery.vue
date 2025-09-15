@@ -7,7 +7,7 @@
         </div>
         <div class="title-data">
           <span class="name">问卷调查</span>
-          <el-text class="time" size="small">最后编辑于2024-11-03 09:12</el-text>
+          <el-text class="time" size="small">最后编辑于{{ updateTime }}</el-text>
         </div>
         <div class="control">
           <div class="cont-item">
@@ -28,7 +28,7 @@
       <FormSidebar @select-side-item-type="selectSideItemType" :current-side-item-type="currentSideItemType"></FormSidebar>
       <!-- 内容栏 -->
       <div class="right-content-container">
-        <component :is="defaultActiveMenu" ref="dynamicRef" />
+        <component :is="defaultActiveMenu" ref="dynamicRef" @update-time="handleUpdateTime" />
       </div>
     </div>
   </div>
@@ -74,6 +74,7 @@ const selectSideItemType = (item: string) => {
 const backButton = () => {
   router.replace({ path: "/questionnaire/myProject" });
 };
+let updateTime = ref("--");
 // 保存问卷
 const saveSurvey = () => {
   if (dynamicRef.value?.saveSurveryFun) {
@@ -81,6 +82,9 @@ const saveSurvey = () => {
   } else {
     console.warn("子组件没有暴露 sayHello 方法");
   }
+};
+const handleUpdateTime = value => {
+  updateTime.value = value;
 };
 onMounted(() => {
   console.log("789");

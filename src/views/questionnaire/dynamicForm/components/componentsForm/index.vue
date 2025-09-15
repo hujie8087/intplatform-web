@@ -1,5 +1,5 @@
 <template>
-  <div class="comp-item">
+  <div class="comp-item" v-if="!compConfig?.hideen">
     <div class="comp-item-title" v-if="!!displaySection">
       <div class="title-value">
         <span class="required" v-if="component?.isRequired">*</span>
@@ -47,7 +47,8 @@
         :is="currentComp.comp"
         :is-preview-render="isPreviewRender"
       ></component>
-      <!-- <div class="required" v-if="component?.isRequired && !component?.dataValue">此字段为必填项</div> -->
+      <!-- 错误提示 -->
+      <div class="required" v-if="component?.isRequired && component?.errorMsg">{{ component?.errorMsg }}</div>
     </div>
     <div class="active-comp-setting" v-if="compConfig.id === selectedComp?.id && !isIgnoreEditor()">
       <div class="bottom-setting">
