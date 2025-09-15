@@ -292,6 +292,7 @@ const selectComp = (item: any) => {
     ...item
   });
   activeComp.value.id = item.id;
+  console.log(item);
 };
 
 const getActiveComp = () => {

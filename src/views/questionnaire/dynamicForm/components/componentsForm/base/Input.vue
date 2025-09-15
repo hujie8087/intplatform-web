@@ -26,7 +26,6 @@ const dataValue = ref(props.dataValue || null);
 watch(
   () => dataValue.value,
   newValue => {
-    console.log("======");
     compStore.updateCurrentComp({
       dataValue: newValue
     });

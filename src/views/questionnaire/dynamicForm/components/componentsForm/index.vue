@@ -46,6 +46,8 @@
         v-bind="component"
         :is="currentComp.comp"
         :is-preview-render="isPreviewRender"
+        :preview-type="previewType"
+        :editor-scroll-info="editorScrollInfo"
       ></component>
       <div class="required" v-if="component?.isRequired && !component?.errir">此字段为必填项</div>
     </div>
@@ -137,6 +139,9 @@ import WorkNumberComponent from "./personal/WorkNumber.vue";
 import PhoneComponent from "./personal/Phone.vue";
 import WxComponent from "./personal/WX.vue";
 import EmailComponent from "./personal/Email.vue";
+// 高级组件
+import UploadComponent from "./advanced/Upload.vue";
+import SignComponent from "./advanced/Sign.vue";
 // 批量操作
 import BatchOperationData from "./BatchOperationData.vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
@@ -215,7 +220,9 @@ function getTypeToComponent(type: string) {
     number: NumberComponent,
     selectRate: SelectRateComponent,
     email: EmailComponent,
-    imgMultiSelect: ImageMultiSelect
+    imgMultiSelect: ImageMultiSelect,
+    upload: UploadComponent,
+    sign: SignComponent
   };
   const comp = compsObject[type];
   return comp;
@@ -257,7 +264,6 @@ const checkAddOtherClass = () => {
 
 // 操作
 const compControl = (type: string) => {
-  console.log(event, type, "compControl child");
   emit("compControl", type, props.component);
 };
 

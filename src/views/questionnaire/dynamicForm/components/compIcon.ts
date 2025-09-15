@@ -36,6 +36,9 @@ import Email from "/src/assets/images/form-editor/email.svg";
 import preview from "/src/assets/images/form-editor/preview.svg";
 import Button from "/src/assets/images/form-editor/button.svg";
 import ImgMultiSelect from "/src/assets/images/form-editor/imgMultiSelect.svg";
+// 高级
+import Sign from "/src/assets/images/form-editor/sign.svg";
+import Upload from "/src/assets/images/form-editor/upload.svg";
 
 export default {
   Question,
@@ -67,5 +70,7 @@ export default {
   Select,
   Number,
   Email,
-  ImgMultiSelect
+  ImgMultiSelect,
+  Sign,
+  Upload
 };

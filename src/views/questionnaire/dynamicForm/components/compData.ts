@@ -36,7 +36,8 @@ export enum CompType {
   email = "email", // 电子邮箱
 
   // 高级组件
-  electronicSignature = "ElectronicSignature" // 电子签名
+  sign = "sign", // 电子签名
+  upload = "upload"
 }
 // 忽略行号类型组件
 export const IgnoreLineNumberTypeList = [CompType.formTitle, CompType.img, CompType.divider, CompType.paging];
@@ -61,7 +62,9 @@ enum CompListType {
   // 布局类型
   layout = "layout Component",
   // 个人信息类型
-  personal = "layout Componet"
+  personal = "layout Componet",
+  // 高级组件
+  advanced = "advanced Component"
 }
 
 // 组件分类列表类型
@@ -198,6 +201,7 @@ const LayoutComponentList: CompItemType[] = [
   }
 ];
 
+// 个人组件
 const PersonalComponentList: CompItemType[] = [
   {
     label: "姓名",
@@ -228,6 +232,22 @@ const PersonalComponentList: CompItemType[] = [
     name: "邮箱",
     type: CompType.email,
     icon: Icon.Email
+  }
+];
+
+// 高级组件
+const AdvancedComponentList: CompItemType[] = [
+  {
+    label: "电子签名",
+    name: "电子签名",
+    type: CompType.sign,
+    icon: Icon.Sign
+  },
+  {
+    label: "上传图片",
+    name: "上传图片",
+    type: CompType.upload,
+    icon: Icon.Upload
   }
 ];
 
@@ -268,5 +288,11 @@ export const CompListData: CompCategoryType[] = [
     label: "个人信息",
     type: CompListType.personal,
     children: [...PersonalComponentList]
+  },
+  {
+    name: "高级组件",
+    label: "高级组件",
+    type: CompListType.advanced,
+    children: [...AdvancedComponentList]
   }
 ];
