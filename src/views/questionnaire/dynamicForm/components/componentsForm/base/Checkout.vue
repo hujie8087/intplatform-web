@@ -48,8 +48,7 @@ watch(
     });
   },
   {
-    deep: true, // 因为是数组，需要深度监听
-    immediate: true // 可选：初始化时立即执行一次
+    deep: true // 因为是数组，需要深度监听
   }
 );
 

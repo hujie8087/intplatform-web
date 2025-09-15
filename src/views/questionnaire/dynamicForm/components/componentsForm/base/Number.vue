@@ -32,8 +32,7 @@ watch(
     });
   },
   {
-    deep: true,
-    immediate: true
+    deep: true
   }
 );
 </script>
