@@ -13,6 +13,7 @@ export namespace MarketCanteen {
     updateTime: string;
     remark: string;
     id: number;
+    tel: number;
     name: string;
     image: string;
     status: number;

@@ -11,7 +11,7 @@
               <h3>
                 订单号: <span>{{ order.no }}</span>
               </h3>
-              <h3>配送联系电话：081231055894</h3>
+              <h3>配送联系电话：{{ order.statusName }}</h3>
               <h3>
                 姓名: <span>{{ order.name }}</span>
               </h3>

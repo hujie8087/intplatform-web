@@ -60,7 +60,7 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-:deep .el-radio-group {
+:deep(.el-radio-group) {
   position: relative;
   width: 100% !important;
 }

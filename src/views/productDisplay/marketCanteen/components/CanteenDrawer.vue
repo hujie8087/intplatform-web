@@ -98,10 +98,16 @@
             <el-switch v-model="drawerProps.rowData.status" :active-value="1" :inactive-value="0" />
           </el-form-item>
         </el-col>
+        <!-- 联系电话 -->
+        <el-col :span="12">
+          <el-form-item label="配送电话" prop="tel">
+            <el-input v-model="drawerProps.rowData.tel" />
+          </el-form-item>
+        </el-col>
         <!-- 备注 -->
         <el-col :span="24">
           <el-form-item label="备注" prop="remark">
-            <el-input v-model="drawerProps.rowData.remark" type="textarea" rows="6" />
+            <el-input v-model="drawerProps.rowData.remark" type="textarea" :rows="6" />
           </el-form-item>
         </el-col>
       </el-row>

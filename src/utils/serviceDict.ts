@@ -48,8 +48,8 @@ export const visibleType = [
  * @description：是否
  */
 export const yesOrNoOptions = [
-  { label: computed(() => I18n.global.t("dict.yes")).value, value: "1", tagType: "success" },
-  { label: computed(() => I18n.global.t("dict.no")).value, value: "0", tagType: "danger" }
+  { label: computed(() => I18n.global.t("dict.yes")).value, value: "Y", tagType: "success" },
+  { label: computed(() => I18n.global.t("dict.no")).value, value: "N", tagType: "danger" }
 ];
 
 /**
