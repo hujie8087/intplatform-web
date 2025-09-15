@@ -18,11 +18,9 @@ const props = defineProps<Props>();
 </script>
 
 <style lang="scss" scoped>
-:deep {
-  .el-divider__text {
-    font-size: 14px !important;
-    font-weight: 400 !important;
-    color: #666666 !important;
-  }
+:deep(.el-divider__text) {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #666666 !important;
 }
 </style>

@@ -35,7 +35,7 @@
           </draggable>
         </div>
       </div>
-      <div class="editor">
+      <div class="editor" ref="editorRef">
         <div class="preview-control" title="预览" @click="preview">
           <img :src="Icon.preview" alt="" />
           <div class="label">预览</div>
@@ -103,6 +103,7 @@
                           :type="element?.type"
                           :is-dev="isFormEditorDevBool"
                           :selected-comp="getActiveComp()"
+                          :editor-scroll-info="editorScrollInfo"
                         >
                         </ComponentsForm>
                       </div>
@@ -200,7 +201,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, inject } from "vue";
+import { ref, computed, watch, onMounted, inject, nextTick, reactive } from "vue";
 import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
 import { getDefaultConfig, optionalType } from "./components/compConfig";
 import Icon from "./components/compIcon";
@@ -219,7 +220,7 @@ import { topicSaves, editSurverTopic, getSurverDetail } from "@/api/modules/ques
 const openDraw = ref(false);
 const compList = ref([...CompListData]); // 组件列表
 
-const pageCompList = ref<any[]>([]); // 页面组件内容]
+const pageCompList = ref<any[]>([]); // 页面组件内容
 const dialogVisible = ref(false); // 逻辑弹窗
 const dialogTitle = ref("");
 const logicArr = ref([{ optionValue: "", expression: "eq", formItemId: "" }]);
@@ -246,6 +247,7 @@ const createCompByClick = (item: any) => {
   const createElement = createByClickOrClone(item);
   pageCompList.value.splice(pageCompList.value.length, 0, { ...createElement });
   updateCompLineNumber();
+  scrollToBottom();
 };
 
 const createByClickOrClone = (element: any) => {
@@ -499,13 +501,60 @@ const getLineHeight = () => {
   return data.size == "large" ? "40px" : data.size == "small" ? "24px" : "32px";
 };
 
+// 滚动
+// 1. 定义滚动信息的 TypeScript 接口（类型安全）
+interface ScrollInfo {
+  scrollHeight: number; // 内容总高度
+  clientHeight: number; // 可视区域高度
+  scrollTop: number; // 已滚动距离
+  isAtBottom: boolean; // 额外判断：是否滚动到底部（可选）
+}
+// 2. 获取 .body 元素的 DOM 引用（初始为 null）
+const editorRef = ref<HTMLDivElement | null>(null);
+// 3. 响应式变量存储滚动信息（初始值为 0）
+const editorScrollInfo = reactive<ScrollInfo>({
+  scrollHeight: 0,
+  clientHeight: 0,
+  scrollTop: 0,
+  isAtBottom: false // 可选：用于快速判断是否到底部
+});
+
+/**
+ * 更新元素的滚动信息
+ */
+const updateBodyScrollInfo = () => {
+  const scrollContainer = editorRef.value;
+  if (!scrollContainer) return;
+  const { scrollHeight, clientHeight, scrollTop } = scrollContainer;
+  editorScrollInfo.scrollHeight = scrollHeight;
+  editorScrollInfo.clientHeight = clientHeight;
+  editorScrollInfo.scrollTop = scrollTop;
+  // 4. 可选：判断是否滚动到底部（留 1px 误差，避免精度问题）
+  editorScrollInfo.isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+};
+
+const scrollToBottom = async () => {
+  try {
+    // 1. 等待 DOM 完全更新（确保新组件已渲染，滚动高度已变化）
+    await nextTick();
+    // 2. 获取滚动容器 DOM 实例
+    const scrollContainer = editorRef.value;
+    if (!scrollContainer) {
+      console.warn("滚动容器 .body 未找到");
+      return;
+    }
+    scrollContainer.scrollTo({
+      top: scrollContainer.scrollHeight, // 滚动到最底部
+      behavior: "smooth" // 平滑滚动（移除则为瞬间滚动）
+    });
+  } catch (error) {
+    console.error("滚动到底部失败：", error);
+  }
+};
+
 onMounted(async () => {
   useCompStore.initGlobalFormConfig({ ...defaultFormConfig });
   globalData.value = useCompStore.currentGlobalFormConfig;
-  // console.log(data, "初始化全局数据");
-  // 组件初始化
-  // pageHeader.value = getDefaultConfig(CompType.formTitle, true)
-  // pageHeader.value.id = uuidv4()
   pageFooter.value = getDefaultConfig(CompType.button);
   pageFooter.value.id = uuidv4();
   let topicList: any = await editSurverTopic(projectKey);
@@ -526,6 +575,14 @@ onMounted(async () => {
 
     emit("updateTime", updateTime);
   }
+  nextTick(() => {
+    const scrollContainer = editorRef.value;
+    if (!scrollContainer) return;
+    // 2. 初始时主动更新一次滚动信息（获取初始状态）
+    updateBodyScrollInfo();
+    // 3. 绑定 scroll 事件：滚动时实时更新
+    scrollContainer.addEventListener("scroll", updateBodyScrollInfo);
+  });
 });
 
 const currentCompKeyData = computed(() => useCompStore.currentCompKey);
@@ -893,9 +950,6 @@ defineExpose({
     color: #1677ff;
     background: #fafafa;
   }
-}
-:deep(.ant-drawer-bottom > .ant-drawer-content-wrapper) {
-  height: calc(100% - 50px) !important;
 }
 .callback {
   position: absolute;

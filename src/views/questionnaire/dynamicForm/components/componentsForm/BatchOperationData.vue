@@ -1,5 +1,12 @@
 <template>
-  <el-dialog v-model="open" title="批次操作数据">
+  <el-dialog
+    v-model="open"
+    :top="editorScrollInfo.scrollTop + 120 + 'px'"
+    :show-close="false"
+    :close-on-click-modal="false"
+    class="dialog-wrapper-center"
+    title="批次操作数据"
+  >
     <template #footer>
       <div class="content">
         <el-input
@@ -25,6 +32,7 @@ const emit = defineEmits(["handleBatchOperation"]);
 interface Props {
   open: boolean;
   dataList: any[];
+  editorScrollInfo: any;
 }
 const props = defineProps<Props>();
 const open = ref(props.open || null);
@@ -61,4 +69,11 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+// 保持对话框居中的基础样式
+:deep(.dialog-wrapper) {
+  left: 50% !important;
+  margin: 0 !important;
+  transform: translateX(-50%) !important;
+}
+</style>

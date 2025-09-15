@@ -99,6 +99,7 @@
       v-if="openBatchOperationDataBool"
       :open="openBatchOperationDataBool"
       :data-list="component.dataList"
+      :editor-scroll-info="editorScrollInfo"
       @handle-batch-operation="handleBatchOperation"
     >
     </BatchOperationData>
@@ -153,6 +154,7 @@ interface Props {
   renderType?: "preview";
   isPreviewRender: boolean;
   previewType?: "Phone" | "PC";
+  editorScrollInfo: any;
 }
 const props = defineProps<Props>();
 const compStore = useSelectCompStore();
@@ -271,28 +273,29 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-::v-deep {
-  .el-textarea__inner {
-    padding: 6px 12px !important;
-    margin-left: -10px !important;
-    font-size: 16px !important;
-    color: rgb(73 96 141) !important;
-    background: transparent;
-    border: none !important;
-    box-shadow: none !important;
-    &:focus {
-      outline: none;
-      box-shadow: none;
-    }
+:deep(.el-textarea__inner) {
+  padding: 6px 12px !important;
+  margin-left: -10px !important;
+  font-size: 16px !important;
+  color: rgb(73 96 141) !important;
+  background: transparent;
+  border: none !important;
+  box-shadow: none !important;
+  &:focus {
+    outline: none;
+    box-shadow: none;
   }
-  textarea.input-comp,
-  span.input-comp {
-    background: aliceblue;
-  }
-  .desc_input .el-textarea__inner {
-    font-size: 14px !important;
-    color: rgb(0 0 0 / 45%) !important;
-  }
+}
+
+/* 多个选择器用逗号分隔，整体包裹在 :deep() 内 */
+:deep(textarea.input-comp, span.input-comp) {
+  background: aliceblue;
+}
+
+/* 嵌套选择器同样包裹内层 */
+:deep(.desc_input .el-textarea__inner) {
+  font-size: 14px !important;
+  color: rgb(0 0 0 / 45%) !important;
 }
 .description {
   /* 超出部分显示省略号 */
@@ -338,20 +341,15 @@ watch(
 .disabled {
   color: #dddddd !important;
 }
-::v-deep(.ant-typography.ant-typography-warning) {
-  padding: 2px 0;
-  font-size: 14px;
-  color: #646a73;
-}
 .line {
   height: 10px;
   margin: 0 12px;
   border-left: 1px solid #e0e0e0;
 }
-::v-deep(input[disabled]) {
+:deep(input[disabled]) {
   background: #ffffff !important;
 }
-::v-deep(textarea[disabled]) {
+:deep(textarea[disabled]) {
   background: #ffffff !important;
 }
 .control {
