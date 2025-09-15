@@ -45,6 +45,7 @@
         :is-selected="component?.id === selectedComp?.id"
         v-bind="component"
         :is="currentComp.comp"
+        :is-dev="isDev"
         :is-preview-render="isPreviewRender"
         :preview-type="previewType"
         :editor-scroll-info="editorScrollInfo"

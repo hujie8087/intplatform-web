@@ -5,7 +5,6 @@
     class="item-comp"
     v-model="dataValue"
     controls-position="right"
-    :placeholder="placeholder || '提示信息'"
     :min="props.minValue"
     :max="props.maxValue"
   />

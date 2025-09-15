@@ -4,7 +4,9 @@
     class="item"
     v-model="dataValue"
     :colors="['#409eff', '#67c23a', '#FF9900']"
-    :disabled="props.isDev"
+    :disabled="isDev"
+    show-score
+    score-template="{value} 分"
     :max="props.rateCount"
     :allow-half="props.rateAllowHalf"
   />

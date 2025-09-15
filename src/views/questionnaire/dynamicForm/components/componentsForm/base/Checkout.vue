@@ -112,7 +112,7 @@ const radioStyle = ref({
 
 /* 禁用状态下的文本颜色 */
 :deep(.el-checkbox.is-disabled .el-checkbox__label) {
-  color: #000000 !important;
+  color: #a8abb2 !important;
 }
 
 /* 复选框输入框显示 */

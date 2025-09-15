@@ -1,6 +1,8 @@
 <template>
   <div class="sign">
-    <el-button color="#1677ff" size="default" @click="signVisible = true" type="primary">手写电子签名</el-button>
+    <el-button :disabled="isDev" color="#1677ff" size="default" @click="signVisible = true" type="primary"
+      >手写电子签名</el-button
+    >
     <el-image
       v-if="props.dataValue"
       :src="getImgUrl"
@@ -51,6 +53,7 @@ interface Props {
   previewType?: string;
   dataValue: string;
   editorScrollInfo: any;
+  isDev: boolean;
 }
 const props = defineProps<Props>();
 const currId = ref(props.isPreviewRender ? `preview_${props.id}` : `${props.id}`);

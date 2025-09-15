@@ -4,13 +4,14 @@
     style="width: 100%"
     :disabled="props.isDev"
     v-model="dataValue"
-    :placeholder="placeholder"
+    :placeholder="isDev ? disableInputByDev : placeholder || '提示信息'"
     value-format="YYYY-MM-DD"
     size="default"
   />
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { disableInputByDev } from "../../compConfig";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const compStore = useSelectCompStore();
 interface Props {

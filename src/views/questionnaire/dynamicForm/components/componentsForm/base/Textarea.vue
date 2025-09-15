@@ -5,10 +5,9 @@
       type="textarea"
       :rows="3"
       :disabled="isDev"
-      :title="isDev ? disableInputByDev : placeholder"
       v-model="dataValue"
       class="item-comp"
-      :placeholder="placeholder || '提示信息'"
+      :placeholder="isDev ? disableInputByDev : placeholder || '提示信息'"
     ></el-input>
   </div>
 </template>
