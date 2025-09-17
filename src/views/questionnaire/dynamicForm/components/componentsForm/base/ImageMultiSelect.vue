@@ -19,7 +19,7 @@
         >
         <div class="btn_group" v-else>
           <el-button style="width: 60%" size="default" disabled icon="Star" color="#1677FF" type="primary"> 您已投票 </el-button>
-          <el-button @click="cancelVoting(item)" size="default" style="width: 30%" icon="Remove" type="danger">取消</el-button>
+          <el-button @click="cancelVoting(item)" size="default" style="width: 30%" type="danger">取消</el-button>
         </div>
       </div>
     </div>
@@ -40,6 +40,8 @@ interface Props {
   isDev: boolean;
   isSelected: boolean;
   isPreviewRender?: boolean;
+  minValue: Number;
+  maxValue: Number;
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue);

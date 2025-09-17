@@ -283,7 +283,7 @@ watch(
 :deep(.el-textarea__inner) {
   padding: 6px 12px !important;
   margin-left: -10px !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
   color: rgb(73 96 141) !important;
   background: transparent;
   border: none !important;
@@ -292,11 +292,6 @@ watch(
     outline: none;
     box-shadow: none;
   }
-}
-
-/* 多个选择器用逗号分隔，整体包裹在 :deep() 内 */
-:deep(textarea.input-comp, span.input-comp) {
-  background: aliceblue;
 }
 
 /* 嵌套选择器同样包裹内层 */
@@ -353,12 +348,13 @@ watch(
   margin: 0 12px;
   border-left: 1px solid #e0e0e0;
 }
-:deep(input[disabled]) {
-  background: #ffffff !important;
-}
-:deep(textarea[disabled]) {
-  background: #ffffff !important;
-}
+
+// :deep(input[disabled]) {
+//   background: #ffffff !important;
+// }
+// :deep(textarea[disabled]) {
+//   background: #ffffff !important;
+// }
 .control {
   &:active,
   &:hover {

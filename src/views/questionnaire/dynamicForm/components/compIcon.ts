@@ -36,6 +36,8 @@ import Email from "/src/assets/images/form-editor/email.svg";
 import preview from "/src/assets/images/form-editor/preview.svg";
 import Button from "/src/assets/images/form-editor/button.svg";
 import ImgMultiSelect from "/src/assets/images/form-editor/imgMultiSelect.svg";
+import TopFill from "/src/assets/images/form-editor/top-fill.svg";
+
 // 高级
 import Sign from "/src/assets/images/form-editor/sign.svg";
 import Upload from "/src/assets/images/form-editor/upload.svg";
@@ -72,5 +74,6 @@ export default {
   Email,
   ImgMultiSelect,
   Sign,
-  Upload
+  Upload,
+  TopFill
 };

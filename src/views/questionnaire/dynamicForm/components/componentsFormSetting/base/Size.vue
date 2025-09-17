@@ -7,7 +7,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { defineProps, ref } from "vue";
+import { ref } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { textOrButtonSizeData } from "../settingConfigData";
 

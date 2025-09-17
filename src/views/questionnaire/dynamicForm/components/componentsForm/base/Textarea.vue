@@ -42,7 +42,7 @@ watch(
 .comp,
 .el-textarea__inner {
   padding: 6px 12px !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
   color: rgb(73 96 141) !important;
   background: var(--el-input-bg-color, var(--el-fill-color-blank));
   border: none !important;

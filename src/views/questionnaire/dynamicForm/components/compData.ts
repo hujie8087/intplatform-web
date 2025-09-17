@@ -260,6 +260,12 @@ export const CompListData: CompCategoryType[] = [
     children: [...ShowComponentList]
   },
   {
+    name: "个人信息",
+    label: "个人信息",
+    type: CompListType.personal,
+    children: [...PersonalComponentList]
+  },
+  {
     name: "基础",
     label: "基础",
     type: CompListType.basic,
@@ -282,12 +288,6 @@ export const CompListData: CompCategoryType[] = [
     label: "布局",
     type: CompListType.layout,
     children: [...LayoutComponentList]
-  },
-  {
-    name: "个人信息",
-    label: "个人信息",
-    type: CompListType.personal,
-    children: [...PersonalComponentList]
   },
   {
     name: "高级组件",

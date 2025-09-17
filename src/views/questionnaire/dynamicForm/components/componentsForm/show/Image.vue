@@ -1,8 +1,19 @@
 <template>
-  <div class="comp-img"><img :src="getImageUrl(props.value)" :alt="props.alt" /></div>
+  <div class="comp-img">
+    <el-image :src="getImageUrl(props.value)">
+      <template #error>
+        <div class="image-slot">
+          <el-icon><icon-picture /></el-icon>
+          <el-text size="small">请先上传图片</el-text>
+        </div>
+      </template>
+    </el-image>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { Picture as IconPicture } from "@element-plus/icons-vue";
+
 const filePath = import.meta.env.VITE_APP_BASE_FILE;
 interface Props {
   id: string;
@@ -10,7 +21,7 @@ interface Props {
   alt?: string;
   isDev: boolean;
 }
-const defUrl = "/image/2025/09/01/640 (11).jpg";
+const defUrl = "";
 const getImageUrl = (imgUrl: string) => {
   try {
     if (imgUrl != "") {
@@ -26,8 +37,29 @@ const props = defineProps<Props>();
 
 <style lang="scss" scoped>
 .comp-img {
-  img {
-    width: 100%;
-  }
+  box-sizing: border-box;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  vertical-align: top;
+}
+.comp-img .el-image {
+  width: 100%;
+  padding: 0 5px;
+}
+.comp-img .image-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 10px 0;
+  font-size: 30px;
+  color: var(--el-text-color-secondary);
+  background: var(--el-fill-color-light);
+}
+.comp-img .image-slot .el-icon {
+  font-size: 30px;
 }
 </style>

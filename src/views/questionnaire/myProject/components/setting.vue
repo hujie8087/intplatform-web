@@ -416,16 +416,14 @@ $spacing-lg: 24px;
       background-color: #0f62d9;
     }
   }
-  ::v-deep .el-checkbox__input.is-checked + .el-checkbox__label {
+  :deep(.el-checkbox__input.is-checked + .el-checkbox__label) {
     color: #1677ff !important;
   }
-  ::v-deep .el-checkbox__input.is-checked .el-checkbox__inner {
+  :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
     background-color: #1677ff;
     border-color: #1677ff;
   }
-  ::v-deep .el-input__wrapper.is-focus,
-  .el-range-editor.is-active,
-  .el-range-editor.is-active:hover {
+  :deep(.el-input__wrapper.is-focus, .el-range-editor.is-active, .el-range-editor.is-active:hover) {
     box-shadow: 0 0 0 1px #1677ff inset;
   }
 }

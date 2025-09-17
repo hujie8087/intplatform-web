@@ -9,7 +9,7 @@
       fit="cover"
       style="width: 100%; margin-top: 5px; border: 1px dashed #dcdfe6"
     />
-    <el-dialog :top="editorScrollInfo.scrollTop + 120 + 'px'" v-if="signVisible" title="签名" v-model="signVisible" width="360px">
+    <el-dialog :top="editorScrollInfo.scrollTop + 120 + 'px'" v-if="signVisible" title="签名" v-model="signVisible" width="98%">
       <div class="sign_box" ref="signRef" :id="currId" :tabindex="!props.isPreviewRender ? 0 : -1">
         <canvas style="display: block; border: 1px dashed #dcdfe6" />
         <div class="control-btns">
@@ -97,18 +97,11 @@ const control = (type: "clear" | "undo" | "redo" | string) => {
 };
 const initData = () => {
   const signDOM = document.getElementById(currId.value);
-  const rect = signDOM?.getBoundingClientRect();
   const canvas: HTMLCanvasElement | null | undefined = signDOM?.querySelector("canvas");
   if (!canvas) {
     return;
   }
-  let _width = rect?.width;
-  if (props.isPreviewRender) {
-    _width = props.previewType === "PC" ? 566 : 350;
-  }
   signature.value = new SmoothSignature(canvas, {
-    width: _width || 300,
-    height: 200,
     scale: 2,
     minWidth: 4,
     maxWidth: 10,
@@ -261,5 +254,6 @@ watch(
 .sign_box {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 </style>

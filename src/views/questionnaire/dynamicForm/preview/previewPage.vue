@@ -55,6 +55,7 @@
                 :preview-type="previewType"
                 :is-preview-render="true"
                 :editor-scroll-info="editorScrollInfo"
+                @click="selectComp(item)"
               >
               </FormComponent>
             </div>
@@ -95,6 +96,9 @@ import { ref } from "vue";
 import { Check } from "@element-plus/icons-vue";
 import FormComponent from "../components/componentsForm/index.vue";
 import SupportComp from "./component/SupportComp.vue";
+// import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+// const useCompStore = useSelectCompStore();
+
 const formShowConfig = ref({
   formTitle: "表单预览",
   waterMarkBool: true,
@@ -126,6 +130,11 @@ const getSize = () => {
 const getLineheight = () => {
   const data = props?.pageFooter?.value;
   return data?.size == "large" ? "40px" : data?.size == "small" ? "24px" : "32px";
+};
+
+// 组件选中
+const selectComp = (item: any) => {
+  console.log(item, "item-->");
 };
 </script>
 

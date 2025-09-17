@@ -86,10 +86,10 @@ const showDetail = (data: any) => {
     justify-content: space-between;
     margin: 20px;
   }
-  ::v-deep .table-search {
+  :deep(.table-search) {
     border: none;
   }
-  ::v-deep .table-main {
+  :deep(.table-main) {
     padding-top: 0;
     border: none;
     box-shadow: none;

@@ -45,7 +45,6 @@ const dataList = ref(props);
 watch(
   () => props.comp.dataList,
   (newValue: any) => {
-    console.log(newValue, "newValue");
     dataList.value = newValue;
   }
 );
