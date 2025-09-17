@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "2.3.1",
+    "@kjgl77/datav-vue3": "^1.7.4",
     "@types/node": "20.14.11",
     "@vueuse/core": "10.9.0",
     "@wangeditor/editor": "5.1.23",
@@ -39,6 +40,7 @@
     "element-plus": "2.8.8",
     "firebase": "^11.2.0",
     "jsbarcode": "^3.12.1",
+    "leaflet-draw": "^1.0.4",
     "lodash": "4.17.21",
     "md5": "2.3.0",
     "mitt": "3.0.1",
