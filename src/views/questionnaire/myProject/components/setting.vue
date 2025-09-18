@@ -8,7 +8,7 @@
           <p class="header-desc">配置问卷答卷时的收集规则</p>
         </div>
         <!-- 表单：补充校验、优化布局结构 -->
-        <el-form ref="settingFormRef" :model="form" label-width="120px" class="setting-form" size="default">
+        <el-form ref="settingFormRef" :model="form" label-width="120px" class="setting-form">
           <!-- 提交设置区域 -->
           <el-divider border-style="dashed" content-position="left">
             <h4>提交设置</h4>
@@ -153,7 +153,7 @@
 
           <!-- 提交按钮：统一位置、添加加载状态 -->
           <el-form-item class="form-actions">
-            <el-button style="width: 120px" size="large" :icon="Check" @click="handleUpdateSetting" :loading="isSubmitting">
+            <el-button type="primary" style="width: 120px" :icon="Check" @click="handleUpdateSetting" :loading="isSubmitting">
               保存
             </el-button>
           </el-form-item>
@@ -405,27 +405,6 @@ $spacing-lg: 24px;
 .setting-form {
   padding: 0 $spacing-md; // 补充内边距，避免内容贴边
   margin-top: $spacing-lg;
-  button {
-    padding: 8px 15px;
-    color: #ffffff;
-    cursor: pointer;
-    background-color: #1677ff;
-    border: none;
-    border-radius: 4px;
-    &:hover {
-      background-color: #0f62d9;
-    }
-  }
-  :deep(.el-checkbox__input.is-checked + .el-checkbox__label) {
-    color: #1677ff !important;
-  }
-  :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
-    background-color: #1677ff;
-    border-color: #1677ff;
-  }
-  :deep(.el-input__wrapper.is-focus, .el-range-editor.is-active, .el-range-editor.is-active:hover) {
-    box-shadow: 0 0 0 1px #1677ff inset;
-  }
 }
 
 // 提交设置布局

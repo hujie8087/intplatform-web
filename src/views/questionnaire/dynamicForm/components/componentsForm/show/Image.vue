@@ -4,7 +4,7 @@
       <template #error>
         <div class="image-slot">
           <el-icon><icon-picture /></el-icon>
-          <el-text size="small">请先上传图片</el-text>
+          <el-text>请先上传图片</el-text>
         </div>
       </template>
     </el-image>

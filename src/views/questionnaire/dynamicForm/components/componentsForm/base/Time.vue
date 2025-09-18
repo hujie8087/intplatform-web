@@ -7,7 +7,6 @@
       v-model="dataValue"
       type="date"
       :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
-      size="default"
     />
   </div>
 </template>

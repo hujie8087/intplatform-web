@@ -1,6 +1,5 @@
 <template>
   <el-select
-    size="default"
     class="item-comp"
     v-model="dataValue"
     :popper-append-to-body="false"

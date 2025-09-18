@@ -1,6 +1,5 @@
 <template>
   <el-input-number
-    size="default"
     :disabled="isDev && isSelected"
     class="item-comp"
     v-model="dataValue"

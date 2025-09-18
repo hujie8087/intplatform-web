@@ -1,7 +1,6 @@
 <template>
   <el-input
     :disabled="isDev && isSelected"
-    size="default"
     clearable
     v-model="dataValue"
     :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"

@@ -6,7 +6,6 @@
     v-model="dataValue"
     :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
     value-format="YYYY-MM-DD"
-    size="default"
   />
 </template>
 <script setup lang="ts">

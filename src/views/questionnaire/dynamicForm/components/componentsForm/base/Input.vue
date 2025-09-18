@@ -1,6 +1,5 @@
 <template>
   <el-input
-    size="default"
     :disabled="isDev && props.isSelected"
     v-model="dataValue"
     class="item-comp"

@@ -8,7 +8,6 @@
       v-model="dataValue"
       :start-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '开始时间'"
       :end-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '结束时间'"
-      size="default"
     />
   </div>
 </template>

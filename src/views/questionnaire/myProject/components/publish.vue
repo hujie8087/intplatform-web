@@ -7,11 +7,11 @@
           <h3>内网答卷地址</h3>
           <p>复制下面的问卷链接到QQ、Email等工具中直接发给被用户</p>
           <div class="address-input-group">
-            <el-input style="width: 520px" size="large" v-model="intranetUrl" readonly></el-input>
-            <el-button style="margin: 0 20px" size="large" @click="copyAddress('intranet')" :icon="Connection"
+            <el-input style="width: 520px" v-model="intranetUrl" readonly></el-input>
+            <el-button type="primary" style="margin: 0 20px" @click="copyAddress('intranet')" :icon="Connection"
               >复制地址</el-button
             >
-            <el-button style="margin: 0 20px 0 0" size="large" @click="openSurvey('intranet')" :icon="Link">打开问卷</el-button>
+            <el-button type="primary" style="margin: 0 20px 0 0" @click="openSurvey('intranet')" :icon="Link">打开问卷</el-button>
           </div>
         </div>
         <!-- 外网答卷地址 -->
@@ -33,7 +33,11 @@
             <p>通过手机扫一扫，或下载二维码，即可进行问卷数据收集。</p>
             <div class="qr-code-wrapper">
               <QrCode v-if="intranetUrl" :value="intranetUrl" :size="240" class="qr-code" ref="intranetQrCodeRef" />
-              <el-button style="width: 120px; margin-left: 10px" size="large" @click="downloadQrCode('intranet')" :icon="Download"
+              <el-button
+                type="primary"
+                style="width: 120px; margin-left: 10px"
+                @click="downloadQrCode('intranet')"
+                :icon="Download"
                 >下载二维码</el-button
               >
             </div>
@@ -193,9 +197,6 @@ $spacing-lg: 24px;
   margin-top: $spacing-lg;
   overflow: hidden;
   background: #ffffff;
-  :deep(.el-input__wrapper.is-focus) {
-    box-shadow: 0 0 0 1px #1677ff inset;
-  }
 }
 
 // 卡片头部样式
@@ -229,17 +230,6 @@ $spacing-lg: 24px;
   .address-input-group {
     display: flex;
     align-items: center;
-    button {
-      padding: 8px 15px;
-      color: #ffffff;
-      cursor: pointer;
-      background-color: #1677ff;
-      border: none;
-      border-radius: 4px;
-      &:hover {
-        background-color: #0f62d9;
-      }
-    }
   }
   .qr-code-box {
     display: flex;
@@ -253,17 +243,6 @@ $spacing-lg: 24px;
       .qr-code-wrapper {
         display: flex;
         align-items: center;
-        button {
-          padding: 8px 15px;
-          color: #ffffff;
-          cursor: pointer;
-          background-color: #1677ff;
-          border: none;
-          border-radius: 4px;
-          &:hover {
-            background-color: #0f62d9;
-          }
-        }
       }
     }
   }

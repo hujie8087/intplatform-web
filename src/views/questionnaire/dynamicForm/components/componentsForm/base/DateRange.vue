@@ -9,7 +9,6 @@
       value-format="YYYY-MM-DD"
       :start-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '开始日期'"
       :end-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '结束日期'"
-      size="default"
     ></el-date-picker>
   </div>
 </template>

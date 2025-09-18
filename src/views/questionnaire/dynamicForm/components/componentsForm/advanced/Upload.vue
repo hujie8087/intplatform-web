@@ -12,7 +12,7 @@
     :limit="3"
     :on-exceed="handleExceed"
   >
-    <el-button color="#1677FF" :disabled="isDev" type="primary" size="default">点击上传图片</el-button>
+    <el-button color="#1677FF" :disabled="isDev" type="primary">点击上传图片</el-button>
     <template #tip>
       <div class="el-upload__tip">上传图片最大为 5M</div>
     </template>

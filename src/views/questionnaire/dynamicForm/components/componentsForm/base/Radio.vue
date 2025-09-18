@@ -4,7 +4,6 @@
     style="width: 100%"
     :style="layoutType === 'vertical' || isSelected ? radioVerticalStyle : radioStyle"
     :disabled="isDev && isSelected"
-    size="default"
   >
     <el-radio :key="_index" v-for="(item, _index) of props.dataList" :label="item.value" class="list-item">
       <div class="citem">
@@ -12,7 +11,7 @@
           {{ item.label }}
         </span>
         <span class="other-val" v-if="item.subType === 'other'">
-          <el-input size="default" :disabled="isDev" class="item-comp" v-model="item.value" placeholder="其他选项内容自定义" />
+          <el-input :disabled="isDev" class="item-comp" v-model="item.value" placeholder="其他选项内容自定义" />
         </span>
       </div>
     </el-radio>

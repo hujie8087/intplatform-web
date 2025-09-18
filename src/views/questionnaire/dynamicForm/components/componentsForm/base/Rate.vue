@@ -1,9 +1,7 @@
 <template>
   <el-rate
-    size="large"
     class="item"
     v-model="dataValue"
-    :colors="['#409eff', '#67c23a', '#FF9900']"
     :disabled="isDev"
     show-score
     score-template="{value} 分"

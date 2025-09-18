@@ -7,7 +7,6 @@
         <div class="title_input">
           <el-input
             v-if="isDev && component?.id === selectedComp?.id"
-            size="default"
             v-model="localComponent.title"
             :autosize="{ minRows: 1, maxRows: 1 }"
             maxlength="50"
@@ -28,7 +27,6 @@
       </div>
       <el-input
         v-else
-        size="default"
         type="textarea"
         class="desc_input"
         :autosize="{ minRows: 1, maxRows: 5 }"
@@ -77,8 +75,7 @@
           </div>
         </div>
         <span class="setting-item">
-          <el-switch size="default" class="switch" v-model="localComponent.isRequired" @change="handleChangeRequired">
-          </el-switch>
+          <el-switch class="switch" v-model="localComponent.isRequired" @change="handleChangeRequired"> </el-switch>
           <label for="">必填</label>
         </span>
       </div>

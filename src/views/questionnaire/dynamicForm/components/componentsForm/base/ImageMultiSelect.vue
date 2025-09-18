@@ -12,15 +12,13 @@
           v-if="dataValue != item.value"
           @click="voting(item)"
           style="width: 100%"
-          size="default"
           icon="Star"
-          color="#1677FF"
           type="primary"
           >Voting / 为TA投票</el-button
         >
         <div class="btn_group" v-else>
-          <el-button style="width: 60%" size="default" disabled icon="Star" color="#1677FF" type="primary"> 您已投票 </el-button>
-          <el-button @click="cancelVoting(item)" size="default" style="width: 30%" type="danger">取消</el-button>
+          <el-button style="width: 60%" disabled icon="Star" type="primary"> 您已投票 </el-button>
+          <el-button @click="cancelVoting(item)" style="width: 30%" type="danger">取消</el-button>
         </div>
       </div>
     </div>

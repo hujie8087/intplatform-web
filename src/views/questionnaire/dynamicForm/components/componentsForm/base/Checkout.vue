@@ -1,6 +1,5 @@
 <template>
   <el-checkbox-group
-    size="default"
     v-model="localDataValue"
     :style="layoutType === 'vertical' || isSelected ? radioVerticalStyle : radioStyle"
     :class="{
@@ -15,7 +14,7 @@
           {{ item.label }}
         </span>
         <span class="other-val" v-if="item.subType === 'other'">
-          <el-input size="default" :disabled="isDev" class="item-comp" v-model="item.value" placeholder="待填表者更新" />
+          <el-input :disabled="isDev" class="item-comp" v-model="item.value" placeholder="待填表者更新" />
         </span>
       </div>
     </el-checkbox>

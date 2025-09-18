@@ -28,6 +28,7 @@
       </template>
 
       <div
+        ref="previewRef"
         class="body-content"
         :class="{
           phone: previewType === 'Phone'
@@ -54,7 +55,7 @@
                 :form-config="selectForm"
                 :preview-type="previewType"
                 :is-preview-render="true"
-                :editor-scroll-info="editorScrollInfo"
+                :editor-scroll-info="scrollInfo"
                 @click="selectComp(item)"
               >
               </FormComponent>
@@ -92,7 +93,7 @@
 </template>
 <script setup lang="ts">
 type PreviewType = "Phone" | "PC";
-import { ref } from "vue";
+import { ref, watch, reactive, nextTick } from "vue";
 import { Check } from "@element-plus/icons-vue";
 import FormComponent from "../components/componentsForm/index.vue";
 import SupportComp from "./component/SupportComp.vue";
@@ -113,10 +114,55 @@ interface Props {
   selectForm: any;
   pageFooter: any;
   pageCompList: any[];
-  editorScrollInfo: any;
 }
 
 const props = defineProps<Props>();
+// 滚动
+// 1. 定义滚动信息的 TypeScript 接口（类型安全）
+interface ScrollInfo {
+  scrollHeight: number; // 内容总高度
+  clientHeight: number; // 可视区域高度
+  scrollTop: number; // 已滚动距离
+  isAtBottom: boolean; // 额外判断：是否滚动到底部（可选）
+}
+// 2. 获取 .body 元素的 DOM 引用（初始为 null）
+const previewRef = ref<HTMLDivElement | null>(null);
+// 3. 响应式变量存储滚动信息（初始值为 0）
+const scrollInfo = reactive<ScrollInfo>({
+  scrollHeight: 0,
+  clientHeight: 0,
+  scrollTop: 0,
+  isAtBottom: false // 可选：用于快速判断是否到底部
+});
+
+const updateBodyScrollInfo = () => {
+  const scrollContainer = previewRef.value;
+  if (!scrollContainer) return;
+  const { scrollHeight, clientHeight, scrollTop } = scrollContainer;
+  scrollInfo.scrollHeight = scrollHeight;
+  scrollInfo.clientHeight = clientHeight;
+  scrollInfo.scrollTop = scrollTop;
+  // 4. 可选：判断是否滚动到底部（留 1px 误差，避免精度问题）
+  scrollInfo.isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+};
+
+watch(
+  () => props.open,
+  async newValue => {
+    if (newValue) {
+      await nextTick();
+      const scrollContainer = previewRef.value;
+      if (!scrollContainer) return;
+      // 2. 初始时主动更新一次滚动信息（获取初始状态）
+      updateBodyScrollInfo();
+      // 3. 绑定 scroll 事件：滚动时实时更新
+      scrollContainer.addEventListener("scroll", updateBodyScrollInfo);
+    }
+  },
+  {
+    immediate: true
+  }
+);
 
 const onClose = () => {
   emit("onClose");
@@ -149,7 +195,7 @@ const selectComp = (item: any) => {
   color: #ffffff !important;
 }
 .body-content {
-  position: absolute;
+  position: relative;
   left: 50%;
   width: 686px;
   height: calc(100% - 110px);

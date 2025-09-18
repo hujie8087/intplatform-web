@@ -131,7 +131,6 @@
                 <el-button
                   class="submit"
                   type="primary"
-                  color="#1677FF"
                   :icon="pageFooter.buttonIconShowBool ? Check : null"
                   :size="pageFooter.size"
                   style="width: 120px"
@@ -151,9 +150,9 @@
         :select-form="selectForm"
         :select-comp="getActiveComp()"
       ></FormSetting>
+
       <PreviewPage
         v-if="openDraw"
-        :editor-scroll-info="editorScrollInfo"
         :select-form="selectForm"
         :open="openDraw"
         :page-comp-list="pageCompList"
@@ -161,6 +160,7 @@
         @on-close="onClose"
       >
       </PreviewPage>
+
       <!-- 逻辑弹窗 -->
       <el-dialog v-model="dialogVisible" :title="dialogTitle" width="550" @close="logicDialogCancel">
         <div class="dialog-form">
@@ -692,9 +692,6 @@ defineExpose({
   min-width: 1260px;
   height: 100%;
   overflow: hidden;
-
-  /* 主色调 - 蓝色系 */
-  --el-color-primary: #1677ff;
 }
 .nav-data {
   height: 56px;
@@ -1041,24 +1038,6 @@ defineExpose({
 .comp-list-content {
   position: relative;
   min-height: 130px;
-}
-
-/* 关键：强制容器内的Element组件使用容器内的CSS变量 */
-.form-editor .el-button--primary {
-  background-color: var(--el-color-primary) !important;
-  border-color: var(--el-color-primary) !important;
-}
-.form-editor .el-button--primary:hover {
-  background-color: var(--el-color-primary-light-3) !important;
-  border-color: var(--el-color-primary-light-3) !important;
-}
-.form-editor .el-input__inner:focus {
-  border-color: var(--el-color-primary) !important;
-  box-shadow: 0 0 0 2px rgb(114 46 209 / 20%) !important;
-}
-.form-editor .el-checkbox__input.is-checked .el-checkbox__inner {
-  background-color: var(--el-color-primary) !important;
-  border-color: var(--el-color-primary) !important;
 }
 .dialog-form {
   display: flex;
