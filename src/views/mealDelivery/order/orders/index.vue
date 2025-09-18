@@ -252,8 +252,8 @@ const printStatusOptions = ref<DictOptions[]>([
 const orderStatusOptions = ref<DictOptions[]>([
   { label: "已下单", value: "0", tagType: "danger" },
   { label: "配餐中", value: "1", tagType: "success" },
-  { label: "送餐中", value: "2", tagType: "warning" },
-  { label: "已送达", value: "3", tagType: "info" }
+  { label: "送餐中", value: "3", tagType: "warning" },
+  { label: "已送达", value: "4", tagType: "info" }
 ]);
 
 const orderStatusMapping = (row: MdcOrder.ResMdcOrder): { text: string; color: string } => {
@@ -294,7 +294,7 @@ const orderDateTime = (row: MdcOrder.ResMdcOrder) => {
 const initParam = reactive({
   pageNum: 1,
   pageSize: 300,
-  orderArrays: [],
+  // orderArrays: [],
   sourceType: 0,
   statusArrays: [2, 3]
 });

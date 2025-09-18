@@ -324,7 +324,7 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
       }
     }
   },
-  { prop: "deliveryType", label: "配送方式", width: 70, enum: deliveryTypeOptions, tag: true, search: { el: "select" } },
+  // { prop: "deliveryType", label: "配送方式", width: 70, enum: deliveryTypeOptions, tag: true, search: { el: "select" } },
   {
     prop: "fcName",
     label: "车号",
