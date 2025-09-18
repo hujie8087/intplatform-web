@@ -8,6 +8,7 @@
       <el-image class="img" :src="getImageUrl(item.imageUrl)" fit="cover" />
       <div class="btn">
         <el-button
+          :disabled="isDev && isSelected"
           v-if="dataValue != item.value"
           @click="voting(item)"
           style="width: 100%"

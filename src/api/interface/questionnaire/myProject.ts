@@ -13,6 +13,10 @@ export namespace MyProject {
     code: number;
     data: string;
   }
+  export interface PublishItem {
+    msg: string;
+    code: number;
+  }
 }
 
 interface ProjectItem {

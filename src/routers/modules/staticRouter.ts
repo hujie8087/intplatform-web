@@ -18,6 +18,14 @@ export const staticRouter: RouteRecordRaw[] = [
     }
   },
   {
+    path: "/survey/answer",
+    name: "surveyAnswer",
+    component: () => import("@/views/questionnaire/myProject/topicPage.vue"),
+    meta: {
+      title: "问卷收集"
+    }
+  },
+  {
     path: LOGIN_URL,
     name: "login",
     component: () => import("@/views/login/index.vue"),

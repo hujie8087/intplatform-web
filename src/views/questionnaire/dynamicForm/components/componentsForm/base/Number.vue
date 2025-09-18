@@ -1,7 +1,7 @@
 <template>
   <el-input-number
     size="default"
-    :disabled="isDev"
+    :disabled="isDev && isSelected"
     class="item-comp"
     v-model="dataValue"
     controls-position="right"
@@ -18,6 +18,7 @@ interface Props {
   placeholder: string;
   dataValue: string | null;
   isDev: boolean;
+  isSelected: boolean;
   minValue: number;
   maxValue: number;
 }

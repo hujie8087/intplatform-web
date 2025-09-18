@@ -4,10 +4,10 @@
       style="width: 330px"
       is-range
       range-separator="至"
-      :disabled="props.isDev"
+      :disabled="isDev && isSelected"
       v-model="dataValue"
-      :start-placeholder="isDev ? disableInputByDev : placeholder || '开始日期'"
-      :end-placeholder="isDev ? disableInputByDev : placeholder || '结束日期'"
+      :start-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '开始时间'"
+      :end-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '结束时间'"
       size="default"
     />
   </div>
@@ -22,6 +22,7 @@ interface Props {
   placeholder: string;
   dataValue: string;
   isDev: boolean;
+  isSelected: boolean;
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || null);

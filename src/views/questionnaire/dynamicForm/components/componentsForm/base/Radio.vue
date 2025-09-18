@@ -3,7 +3,7 @@
     v-model="dataValue"
     style="width: 100%"
     :style="layoutType === 'vertical' || isSelected ? radioVerticalStyle : radioStyle"
-    :disabled="isDev"
+    :disabled="isDev && isSelected"
     size="default"
   >
     <el-radio :key="_index" v-for="(item, _index) of props.dataList" :label="item.value" class="list-item">

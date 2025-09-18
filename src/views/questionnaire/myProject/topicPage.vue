@@ -312,6 +312,7 @@ const submitFun = async params => {
   }
 };
 onMounted(async () => {
+  console.log(route.query, "执行我");
   // 40d90ea8cfe24966b5b0cfefaab61990
   const projectKey = route.query?.projectKey ?? "6b1ae12f51ab40f39605808cab614054";
   if (!localStorage.getItem("device_id")) {
@@ -441,7 +442,7 @@ const getClientInfo = () => {
     inset: 0;
     z-index: -2; // 保证文字在上面
     content: "";
-    background: url("../dynamicForm/preview/bg.png") center center;
+    background: url("../dynamicForm/bg.jpg") center center;
     filter: blur(8px); // 只模糊背景图
     background-size: cover; /* 铺满容器，保持比例 */
   }

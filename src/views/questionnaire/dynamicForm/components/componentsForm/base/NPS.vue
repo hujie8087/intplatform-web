@@ -30,6 +30,7 @@ interface Props {
   startValue: number;
   rateCount: number;
   isDev: boolean;
+  isSelected: boolean;
 }
 const compStore = useSelectCompStore();
 const props = defineProps<Props>();

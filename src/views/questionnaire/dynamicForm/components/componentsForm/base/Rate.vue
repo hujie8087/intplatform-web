@@ -20,6 +20,7 @@ interface Props {
   dataValue: number;
   rateCharacter: number | string;
   isDev: boolean;
+  isSelected: boolean;
   rateCount: number;
   rateAllowHalf: boolean;
 }

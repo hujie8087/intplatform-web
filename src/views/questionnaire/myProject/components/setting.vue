@@ -154,7 +154,7 @@
           <!-- 提交按钮：统一位置、添加加载状态 -->
           <el-form-item class="form-actions">
             <el-button style="width: 120px" size="large" :icon="Check" @click="handleUpdateSetting" :loading="isSubmitting">
-              提交
+              保存
             </el-button>
           </el-form-item>
         </el-form>
@@ -365,7 +365,7 @@ $spacing-lg: 24px;
   min-height: 100%; // 使用最小高度，避免内容不足时背景异常
   margin: 0;
   overflow: hidden;
-  background-image: url("./images/bg.png");
+  background-image: url("./images/bg.jpg");
   background-repeat: round;
 }
 .content-card {

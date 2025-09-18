@@ -814,7 +814,7 @@ defineExpose({
     padding: 0;
     margin: 0;
     overflow-y: auto;
-    background-image: url("./bg.png");
+    background-image: url("./bg.jpg");
     background-repeat: round;
   }
   .body {

@@ -2,7 +2,6 @@
   <el-checkbox-group
     size="default"
     v-model="localDataValue"
-    :disabled="isDev"
     :style="layoutType === 'vertical' || isSelected ? radioVerticalStyle : radioStyle"
     :class="{
       'group-item': true,

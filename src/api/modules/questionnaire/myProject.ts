@@ -19,5 +19,8 @@ export const editProject = params => {
 export const getProjectDetail = projectKey => {
   return http.get<MyProject.SaveTemplate>(PORT1 + `/survey/project/detail/${projectKey}`);
 };
+export const publishProject = projectKey => {
+  return http.put<MyProject.PublishItem>(PORT1 + `/survey/project/publish/${projectKey}`);
+};
 
 // /survey/project/saveAs/tpl/{projectKey}

@@ -2,9 +2,9 @@
   <el-date-picker
     type="date"
     style="width: 100%"
-    :disabled="props.isDev"
+    :disabled="isDev && isSelected"
     v-model="dataValue"
-    :placeholder="isDev ? disableInputByDev : placeholder || '提示信息'"
+    :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
     value-format="YYYY-MM-DD"
     size="default"
   />
@@ -19,6 +19,7 @@ interface Props {
   placeholder: string;
   dataValue: string;
   isDev: boolean;
+  isSelected: boolean;
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || null);

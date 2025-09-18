@@ -54,6 +54,9 @@ interface CompConfig {
   isLayoutComp?: boolean; // 布局组件
 }
 export const disableInputByDev = "编辑模式不支持输入";
+export const publishIntranetAddress = "http://localhost:8848/#/survey/answer";
+export const publishExtranetAddress = "http://localhost:8848/#/survey/answer";
+
 export const hasOwnPropertyFunction = (object: Object, key: string) => {
   return object && Object.prototype.hasOwnProperty.call(object, key);
 };
@@ -81,6 +84,7 @@ export const hasPlaceholderType: CompType[] = [
   CompType.name,
   CompType.phone,
   CompType.wx,
+  CompType.email,
   CompType.workNumber,
   CompType.select,
   CompType.number

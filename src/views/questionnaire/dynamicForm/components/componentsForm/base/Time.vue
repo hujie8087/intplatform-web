@@ -3,10 +3,10 @@
     <el-time-picker
       class="item-comp"
       style="width: 100%"
-      :disabled="props.isDev"
+      :disabled="isDev && isSelected"
       v-model="dataValue"
       type="date"
-      :placeholder="isDev ? disableInputByDev : placeholder || '提示信息'"
+      :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
       size="default"
     />
   </div>
@@ -21,6 +21,7 @@ interface Props {
   placeholder: string;
   dataValue: string;
   isDev: boolean;
+  isSelected: boolean;
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || null);

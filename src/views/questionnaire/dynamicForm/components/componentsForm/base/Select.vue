@@ -7,7 +7,7 @@
     style="width: 100%"
     :disabled="props.isDev && props.isSelected"
     :placeholder="
-      props.isDev && props.isSelected ? (props.placeholder || '请选择') + ' - 编辑状态无法选则' : props.placeholder || '请选择'
+      props.isDev && props.isSelected ? (props.placeholder || '请选择') + ' - 编辑状态无法选择' : props.placeholder || '请选择'
     "
   >
     <el-option v-for="(item, _index) in props.dataList" :key="_index" :label="item.label" :value="item.value">

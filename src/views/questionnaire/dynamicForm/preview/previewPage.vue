@@ -143,7 +143,7 @@ const selectComp = (item: any) => {
   margin: 0 10px;
 }
 :deep(.el-drawer__body) {
-  background-image: url("./bg.png");
+  background-image: url("../../dynamicForm/bg.jpg");
 }
 :deep(.el-radio-button.is-active .el-radio-button__original-radio:not(:disabled) + .el-radio-button__inner) {
   color: #ffffff !important;

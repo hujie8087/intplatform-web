@@ -1,10 +1,10 @@
 <template>
   <el-input
     size="default"
-    :disabled="isDev"
+    :disabled="isDev && props.isSelected"
     v-model="dataValue"
     class="item-comp"
-    :placeholder="isDev ? disableInputByDev : placeholder || '提示信息'"
+    :placeholder="isDev && props.isSelected ? disableInputByDev : placeholder || '提示信息'"
   ></el-input>
 </template>
 
@@ -19,6 +19,7 @@ interface Props {
   value: string | null;
   dataValue: string;
   isDev: boolean;
+  isSelected: boolean;
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || null);

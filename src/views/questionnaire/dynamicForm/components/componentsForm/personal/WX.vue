@@ -1,10 +1,10 @@
 <template>
   <el-input
-    :disabled="isDev"
+    :disabled="isDev && isSelected"
     size="default"
     clearable
     v-model="dataValue"
-    :placeholder="isDev ? disableInputByDev : placeholder || '提示信息'"
+    :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
   >
     <template #prefix>
       <img class="icon" :src="WX" alt="" />
@@ -22,6 +22,7 @@ interface Props {
   placeholder: string;
   dataValue: string;
   isDev: boolean;
+  isSelected: boolean;
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || null);
