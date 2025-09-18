@@ -51,6 +51,9 @@ import {
   getProjectReportSource
 } from "@/api/modules/questionnaire/stat";
 import { StatType } from "@/api/interface/questionnaire/stat";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const key = route.query.key as string | undefined;
 
 const statData = ref<StatType.ReportStatsEntity | null>(null);
 const lineChartRef = ref<InstanceType<typeof ECharts> | null>(null);
@@ -58,8 +61,8 @@ const deviceChartRef = ref<InstanceType<typeof ECharts> | null>(null);
 const sourceChartRef = ref<InstanceType<typeof ECharts> | null>(null);
 
 // 获取回收状态
-const getProjectReportStatsData = async (projectKey: string = "58593f09145c49fa903950438e692c48") => {
-  const res = await getProjectReportStats(projectKey);
+const getProjectReportStatsData = async () => {
+  const res = await getProjectReportStats(key);
   const data = res.data; // 明确类型断言，避免 any
   if (data) {
     statData.value = data;
@@ -67,8 +70,8 @@ const getProjectReportStatsData = async (projectKey: string = "58593f09145c49fa9
 };
 
 // 获取项目周回收数量
-const getProjectSituationData = async (projectKey: string = "58593f09145c49fa903950438e692c48") => {
-  const res = await getProjectReportSituation(projectKey);
+const getProjectSituationData = async () => {
+  const res = await getProjectReportSituation(key);
   const data = res.data; // 明确类型断言，避免 any
   // situationData.value = data;
   if (data) {
@@ -136,8 +139,8 @@ const lineChartOption: ECOption = {
 };
 
 // 获取项目设备数据
-const getProjectDeviceData = async (projectKey: string = "58593f09145c49fa903950438e692c48") => {
-  const res = await getProjectReportDevice(projectKey);
+const getProjectDeviceData = async () => {
+  const res = await getProjectReportDevice(key);
   const data = res.data;
   if (data) {
     deviceOption.series[0].data = data.map(item => {
@@ -188,8 +191,8 @@ const deviceOption: ECOption = {
 };
 
 // 获取来源数据
-const getSourceData = async (projectKey: string = "58593f09145c49fa903950438e692c48") => {
-  const res = await getProjectReportSource(projectKey);
+const getSourceData = async () => {
+  const res = await getProjectReportSource(key);
   const data = res.data;
   if (data) {
     sourceOption.yAxis.data = data.map(item => {

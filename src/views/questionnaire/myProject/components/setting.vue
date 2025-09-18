@@ -168,7 +168,9 @@ import { reactive, ref, watch, onMounted, UnwrapRef } from "vue";
 import { ElForm, ElMessage } from "element-plus";
 import { getSurveySetting, save } from "@/api/modules/questionnaire/surveySetting";
 import { Check } from "@element-plus/icons-vue";
-
+import { useRoute } from "vue-router";
+const route = useRoute();
+const key = route.query.key as string | undefined;
 // -------------------------- 1. 类型定义（提升类型安全） --------------------------
 /** 后端返回的问卷设置类型 */
 interface SurveySettingResponse {
@@ -251,9 +253,9 @@ const resetFormField = <T extends keyof FormData>(fieldName: T): void => {
 };
 
 /** 获取问卷设置（添加错误处理、类型断言优化） */
-const getSurveySettingData = async (surveyId: string = "4406777d0a3d407ab0a5ec9a41afb5e9") => {
+const getSurveySettingData = async () => {
   try {
-    const res = await getSurveySetting(surveyId);
+    const res = await getSurveySetting(key);
     const data = res.data as SurveySettingResponse; // 明确类型断言，避免 any
     if (data) {
       // 1. 合并表单数据（保留响应式）
@@ -283,7 +285,7 @@ const handleUpdateSetting = async () => {
   // 2. 构造提交数据（补充时间范围）
   const submitData = {
     ...form,
-    projectKey: "4406777d0a3d407ab0a5ec9a41afb5e9",
+    projectKey: key,
     timedCollectionBeginTime: timingTime.value[0] || undefined,
     timedCollectionEndTime: timingTime.value[1] || undefined
   };

@@ -19,9 +19,9 @@
       <div class="select">
         <el-text>{{ item.label }} ({{ item.type }})</el-text>
         <el-radio-group v-model="item.chartType" size="default">
-          <el-radio-button label="饼图" value="pie" />
           <el-radio-button label="柱状图" value="column" />
           <el-radio-button label="折线图" value="line" />
+          <el-radio-button label="饼图" value="pie" />
         </el-radio-group>
       </div>
       <div class="chart">
@@ -36,6 +36,9 @@ import { ref, onMounted, watch } from "vue";
 import ECharts from "@/components/ECharts/index.vue";
 import { ECOption } from "@/components/ECharts/config";
 import { getProjectReportAnalysis } from "@/api/modules/questionnaire/stat";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const key = route.query.key as string | undefined;
 
 const chartRefs = ref<(InstanceType<typeof ECharts> | null)[]>([]);
 const dataList = ref<any>([]);
@@ -209,8 +212,8 @@ const getOption = (item): ECOption => {
   }
 };
 
-const getReportAnalysis = async (projectKey: string = "58593f09145c49fa903950438e692c48") => {
-  const res = await getProjectReportAnalysis(projectKey);
+const getReportAnalysis = async () => {
+  const res = await getProjectReportAnalysis(key);
   if (res.data) {
     dataList.value = res.data.map((item: any) => ({
       ...item,

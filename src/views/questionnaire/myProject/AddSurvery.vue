@@ -11,7 +11,7 @@
         </div>
         <div class="control">
           <div class="cont-item">
-            <el-button type="primary" :icon="Finished" color="#1677FF" size="default" @click="saveSurvey">
+            <el-button type="primary" :icon="Finished" @click="saveSurvey">
               <span class="name">保存</span>
             </el-button>
           </div>
@@ -130,7 +130,7 @@ onMounted(() => {
   }
   .control {
     position: absolute;
-    top: 12px;
+    top: 8px;
     right: 6px;
     display: flex;
     flex-grow: 2;

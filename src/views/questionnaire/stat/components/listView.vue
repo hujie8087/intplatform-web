@@ -23,6 +23,10 @@ import ProTable from "@/components/ProTable/index.vue";
 import { getAnswerList } from "@/api/modules/questionnaire/answer";
 import { View } from "@element-plus/icons-vue";
 // import { Delete } from "@element-plus/icons-vue";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const key = route.query.key as string | undefined;
+
 const columns = reactive([
   { type: "selection", label: "", width: 80 },
   { type: "index", label: "序号", width: 80 },
@@ -64,6 +68,7 @@ const dataCallback = (data: any) => {
 };
 
 const getTableList = (params: any) => {
+  params.projectKey = key;
   const newParams = JSON.parse(JSON.stringify(params)); // 深拷贝（可选）
   if (Array.isArray(newParams.createTime) && newParams.createTime.length === 2) {
     newParams.beginDateTime = newParams.createTime[0];
@@ -90,7 +95,9 @@ const showDetail = (data: any) => {
     border: none;
   }
   :deep(.table-main) {
+    height: 560px;
     padding-top: 0;
+    overflow-y: auto;
     border: none;
     box-shadow: none;
   }

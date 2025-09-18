@@ -47,14 +47,17 @@
 <script setup lang="ts" name="voteRank">
 import { ref, onMounted, watch } from "vue";
 import { getProjectReportRank } from "@/api/modules/questionnaire/stat";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const key = route.query.key as string | undefined;
 
 const currentSelect = ref<any>(null);
 const options = ref<any>([]);
 const resultData = ref<any>([]);
 const rankingData = ref([]);
 
-const getReportRank = async (projectKey: string = "58593f09145c49fa903950438e692c48") => {
-  const res = await getProjectReportRank(projectKey);
+const getReportRank = async () => {
+  const res = await getProjectReportRank(key);
   if (res.data) {
     // options设置
     currentSelect.value = res.data[0]?.label;
