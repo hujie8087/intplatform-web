@@ -417,16 +417,3 @@ const cancelUnbind = () => {
   unbindDialogVisible.value = false;
 };
 </script>
-<style scoped lang="scss">
-.unbind-dialog-poupop-tips {
-  display: flex;
-  align-items: center;
-  .unbind-dialog-icon {
-    margin-right: 8px;
-  }
-}
-.unbind-dialog-poupop-text {
-  margin-top: 15px;
-  font-size: 13px;
-}
-</style>
