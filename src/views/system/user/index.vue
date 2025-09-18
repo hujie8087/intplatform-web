@@ -63,6 +63,11 @@
                   >
                 </el-dropdown-item>
                 <el-dropdown-item>
+                  <el-button type="success" link :icon="Lock" v-auth="['system:user:edit']" @click="getUserInfo(scope.row)"
+                    >关联账号</el-button
+                  >
+                </el-dropdown-item>
+                <el-dropdown-item>
                   <el-button type="danger" link :icon="Delete" v-auth="['system:user:remove']" @click="deleteAccount(scope.row)"
                     >删除</el-button
                   >
@@ -75,6 +80,65 @@
       <UserDrawer ref="drawerRef" />
       <RoleDrawer ref="roleDrawerRef" />
       <ImportExcel ref="dialogRef" />
+      <!-- 🔔 解绑原因弹窗 -->
+      <el-dialog v-model="unbindDialogVisible" :title="isAuthorize ? '用户授权' : '解除绑定'" width="600px" @close="cancelUnbind">
+        <div v-if="isAuthorize">
+          <el-form ref="authorizeFormRef" :model="authorizeForm" :rules="rules" label-width="60">
+            <el-form-item label="用户名" prop="username">
+              <el-input v-model.trim="authorizeForm.username" placeholder="请输入用户名" clearable />
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input type="password" v-model="authorizeForm.password" placeholder="请输入密码" show-password />
+            </el-form-item>
+          </el-form>
+        </div>
+        <div v-else>
+          <el-descriptions class="margin-top" title="" :column="2" border>
+            <el-descriptions-item :span="2">
+              <template #label>
+                <div class="cell-item">
+                  <el-icon>
+                    <office-building />
+                  </el-icon>
+                  部门
+                </div>
+              </template>
+              {{ userInfo.deptName }}
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template #label>
+                <div class="cell-item">
+                  <el-icon>
+                    <user />
+                  </el-icon>
+                  用户姓名
+                </div>
+              </template>
+              {{ userInfo?.nickName }}
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template #label>
+                <div class="cell-item">
+                  <el-icon>
+                    <user />
+                  </el-icon>
+                  用户帐号
+                </div>
+              </template>
+              {{ userInfo?.userName }}
+            </el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <template #footer>
+          <el-button @click="cancelUnbind">取消</el-button>
+          <template v-if="isAuthorize">
+            <el-button type="danger" @click="submitUnbind"> 账户授权</el-button>
+          </template>
+          <template v-else>
+            <el-button type="danger" @click="submitUnbind"> 解除绑定</el-button>
+          </template>
+        </template>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -89,7 +153,19 @@ import ImportExcel from "@/components/ImportExcel/index.vue";
 import UserDrawer from "./components/UserDrawer.vue";
 import RoleDrawer from "./components/RoleDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, EditPen, Download, Upload, View, Refresh, CircleCheck, DArrowRight } from "@element-plus/icons-vue";
+import {
+  CirclePlus,
+  Delete,
+  EditPen,
+  Download,
+  Upload,
+  View,
+  Refresh,
+  CircleCheck,
+  DArrowRight,
+  Lock,
+  OfficeBuilding
+} from "@element-plus/icons-vue";
 import {
   getUserList,
   deleteUser,
@@ -100,12 +176,13 @@ import {
   getUserDepartment
 } from "@/api/modules/user";
 import { Account, Role } from "@/api/interface/system";
-import { getUserRole, updateRole, changeUserStatus } from "@/api/modules/system/user";
+import { getUserRole, updateRole, changeUserStatus, revokeAuthorization, userAuthorization } from "@/api/modules/system/user";
 import { genderType, userStatus, userType } from "@/utils/serviceDict";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { getRoleList } from "@/api/modules/system/role";
 import { getCanteenListOptions } from "@/api/modules/productDisplay/marketCanteen";
 import { DictOptions } from "@/api/interface";
+import { getConfigData } from "@/api/modules/system/config";
 const { BUTTONS } = useAuthButtons();
 const baseUrl = import.meta.env.VITE_API_URL;
 // ProTable 实例
@@ -264,5 +341,79 @@ const handleAuthRole = async (params: Account.ResAccountList) => {
     rowData: res.user,
     roleList: res.roles
   });
+};
+const userInfo = reactive({
+  deptName: "",
+  nickName: "",
+  userName: ""
+});
+let authorizationID = 0; // 当前选中的ID
+const unbindDialogVisible = ref(false);
+const isAuthorize = ref(true);
+const authorizeFormRef = ref();
+const authorizeForm = reactive({
+  username: "",
+  password: ""
+});
+const rules = {
+  username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+  password: [
+    {
+      required: true,
+      message: "请输入密码",
+      trigger: "change"
+    }
+  ]
+};
+
+const getUserInfo = async params => {
+  authorizationID = params.userId;
+  // mealId有值证明是历史用户，走解绑逻辑，没值则走授权逻辑
+  if (params.mealId) {
+    isAuthorize.value = false;
+    const res: any = await getUserRole(authorizationID);
+    let user = res?.mealRole?.user ?? {};
+    userInfo.nickName = user.nickName;
+    userInfo.userName = user.userName;
+    userInfo.deptName = user?.dept?.deptName ?? "--";
+  } else {
+    isAuthorize.value = true;
+    const res = await getConfigData("sys.mealuser.initPassword");
+    authorizeForm.username = userInfo.userName;
+    authorizeForm.password = res.msg;
+  }
+  unbindDialogVisible.value = true;
+};
+
+const submitUnbind = async () => {
+  if (isAuthorize.value) {
+    // 授权
+    authorizeFormRef.value.validate(async (valid, fields) => {
+      if (valid) {
+        await userAuthorization({ userId: authorizationID, username: authorizeForm.username, password: authorizeForm.password });
+        unbindDialogVisible.value = false;
+        ElMessage.success("授权成功");
+        authorizeForm.username = "";
+        authorizeForm.password = "";
+        proTable.value?.getTableList();
+      } else {
+        console.log("error submit!", fields);
+      }
+    });
+  } else {
+    // 解绑
+    await revokeAuthorization(authorizationID);
+    unbindDialogVisible.value = false;
+    ElMessage.success("解绑成功");
+    proTable.value?.getTableList();
+  }
+};
+const cancelUnbind = () => {
+  if (isAuthorize.value) {
+    authorizeFormRef.value.resetFields();
+    authorizeForm.username = "";
+    authorizeForm.password = "";
+  }
+  unbindDialogVisible.value = false;
 };
 </script>
