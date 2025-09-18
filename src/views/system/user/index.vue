@@ -368,18 +368,20 @@ const rules = {
 
 const getUserInfo = async params => {
   authorizationID = params.userId;
+  const response: any = await getUserRole(authorizationID);
+  let mealRole = response.mealRole;
   // mealId有值证明是历史用户，走解绑逻辑，没值则走授权逻辑
-  if (params.mealId) {
+  if (mealRole) {
+    let user = mealRole?.user ?? {};
     isAuthorize.value = false;
-    const res: any = await getUserRole(authorizationID);
-    let user = res?.mealRole?.user ?? {};
     userInfo.nickName = user.nickName;
     userInfo.userName = user.userName;
     userInfo.deptName = user?.dept?.deptName ?? "--";
   } else {
     isAuthorize.value = true;
     const res = await getConfigData("sys.mealuser.initPassword");
-    authorizeForm.username = userInfo.userName;
+    let userMesg = response.user;
+    authorizeForm.username = userMesg.userName;
     authorizeForm.password = res.msg;
   }
   unbindDialogVisible.value = true;
