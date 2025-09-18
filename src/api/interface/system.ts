@@ -95,6 +95,11 @@ export namespace Account {
     user: ResAccountList;
     roles: ResRole[];
   }
+  export interface RevokeAuthorizationMsg {
+    data: string;
+    code: number;
+    msg: string;
+  }
 }
 
 // 部门管理模块
