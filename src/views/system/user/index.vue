@@ -371,8 +371,8 @@ const getUserInfo = async params => {
   // mealId有值证明是历史用户，走解绑逻辑，没值则走授权逻辑
   if (params.mealId) {
     isAuthorize.value = false;
-    const res = await getUserRole(authorizationID);
-    let user = res?.user;
+    const res: any = await getUserRole(authorizationID);
+    let user = res?.mealRole?.user ?? {};
     userInfo.nickName = user.nickName;
     userInfo.userName = user.userName;
     userInfo.deptName = user?.dept?.deptName ?? "--";
