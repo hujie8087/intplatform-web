@@ -8,7 +8,6 @@
           <div class="person-info-top-item-bottom">
             <img src="../images/big1.png" alt="" style="width: 21px; height: 19px" />
             <dv-digital-flop :config="config.totalCount" style="width: 75%; height: 25px" />
-            <!-- <span>3034</span> -->
           </div>
         </li>
         <li class="person-info-top-item">
@@ -46,7 +45,7 @@
           </div>
         </div>
         <div style="height: 73%">
-          <ECharts :option="barOption" />
+          <ECharts :option="barOption" ref="pieChartRef" />
         </div>
       </div>
     </div>
@@ -117,6 +116,7 @@ const dateType = [
     value: "year"
   }
 ];
+const pieChartRef = ref();
 const barOption = reactive<ECOption>({});
 const initPage = async () => {
   const res = await getCheckHiddenDanger({});
@@ -260,16 +260,12 @@ const initPieChart = data => {
   };
   Object.assign(barOption, option);
 };
-// const formatPercent = value => {
-//   let num = 0;
-//   if (value.includes("%")) {
-//     num = value.replace("%", "");
-//   }
-//   return num;
-// };
 const changeData = type => {
   activeType.value = type;
   initChartData(type);
+};
+const zoomResize = () => {
+  pieChartRef.value?.resize();
 };
 onMounted(() => {
   initPage();
@@ -282,6 +278,7 @@ function formatter(number) {
   while (numbers.length) segs.push(numbers.splice(0, 3).join(""));
   return segs.join(",").split("").reverse().join("");
 }
+defineExpose({ zoomResize });
 </script>
 
 <style scoped>
