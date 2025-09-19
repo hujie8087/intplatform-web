@@ -6,7 +6,7 @@
         ref="proTable"
         :init-param="searchParams"
         :columns="columns"
-        :request-api="getSampleList"
+        :request-api="getTableList"
         :data-callback="dataCallback"
         :search-col="{ xs: 1, sm: 1, md: 3, lg: 4, xl: 4 }"
         row-key="id"
@@ -20,9 +20,6 @@
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <!-- <el-button type="primary" v-auth="['system:dept:add']" link :icon="Plus" @click="openDrawer('新增', scope.row)"
-            >新增</el-button
-          > -->
           <el-button type="warning" v-auth="['system:dept:edit']" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"
             >编辑</el-button
           >
@@ -75,10 +72,14 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import ImportExcel from "./ImoportExcel.vue";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useDownload } from "@/hooks/useDownload";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const key = route.query.key as string | undefined;
+
 const proTable = ref();
 const columns = reactive([
   { type: "selection", label: "", width: 80 },
-  { prop: "employeeNo", label: "用户帐号", search: { el: "input" } },
+  { prop: "employeeNo", label: "用户工号", search: { el: "input" } },
   { prop: "name", label: "用户姓名", search: { el: "input" } },
   { prop: "createTime", label: "创建时间" },
   { prop: "updateTime", label: "最后更新时间" },
@@ -98,6 +99,13 @@ const searchParams = reactive({
   pageNum: 1,
   pageSize: 20
 });
+
+const getTableList = (params: any) => {
+  params.projectKey = key;
+  const newParams = JSON.parse(JSON.stringify(params)); // 深拷贝（可选）
+  return getSampleList(newParams);
+};
+
 const dialogVisible = ref(false);
 const dialogTitle = ref("");
 const isAllDelete = computed(() => {
@@ -178,15 +186,20 @@ const importFile = () => {
     tempApi: "/survey/project/sample/template",
     importApi: importSample,
     getTableList: proTable.value?.getTableList,
-    projectKey
+    projectKey: key
   };
   dialogRef.value?.acceptParams(params);
 };
 // 导出文件
 const exportFile = () => {
   const baseUrl = import.meta.env.VITE_API_URL;
+  let params = {
+    ...proTable.value?.searchParam,
+    projectKey: key
+  };
+  console.log(params, "params");
   ElMessageBox.confirm("确认导出样本数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload(`${baseUrl}/survey/project/sample/export`, "样本列表", true, ".xlsx", "post", proTable.value?.searchParam)
+    useDownload(`${baseUrl}/survey/project/sample/export`, "样本列表", true, ".xlsx", "post", params)
   );
 };
 </script>

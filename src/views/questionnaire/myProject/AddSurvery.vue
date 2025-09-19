@@ -7,7 +7,6 @@
         </div>
         <div class="title-data">
           <span class="name">问卷调查</span>
-          <el-text class="time" size="small">最后编辑于{{ updateTime }}</el-text>
         </div>
         <div class="control">
           <div class="cont-item">
@@ -28,7 +27,7 @@
       <FormSidebar @select-side-item-type="selectSideItemType" :current-side-item-type="currentSideItemType"></FormSidebar>
       <!-- 内容栏 -->
       <div class="right-content-container">
-        <component :is="defaultActiveMenu" ref="dynamicRef" @update-time="handleUpdateTime" />
+        <component :is="defaultActiveMenu" ref="dynamicRef" />
       </div>
     </div>
   </div>
@@ -36,17 +35,19 @@
 
 <script setup lang="ts" name="addSurvery">
 // reactive
-import { ref, shallowRef, onMounted, provide } from "vue";
+import { ref, shallowRef, reactive, onMounted, provide } from "vue";
+import { getProjectDetail } from "@/api/modules/questionnaire/myProject";
 import { Finished } from "@element-plus/icons-vue";
 import FormSidebar from "./components/FormSidebar.vue";
 import questionBank from "../dynamicForm/index.vue";
 import sample from "./components/sample.vue"; //样本
 import setting from "./components/setting.vue"; //设置
 import publish from "./components/publish.vue"; // 发布
-import stat from "../stat/index.vue"; // 发布
+import stat from "../stat/index.vue"; // 统计
 import { useRouter, useRoute } from "vue-router";
 const $route = useRoute(); // 路由
 const projectKey = $route.query.key;
+
 provide("projectKey", projectKey);
 const dynamicRef = ref();
 // let isCollapse = ref(false);
@@ -61,33 +62,61 @@ const menuItemList = {
 };
 const defaultActiveMenu = shallowRef(menuItemList["questionBank"]); // 默认激活第一个菜单
 const currentSideItemType = ref("questionBank"); // 当前侧边栏选中类型
-const selectSideItemType = (item: string) => {
+
+const selectSideItemType = async (item: string) => {
+  await queryProjectDetail();
+  if (projectDetail.status === 1) {
+    saveSurvey();
+  }
   currentSideItemType.value = item;
   defaultActiveMenu.value = menuItemList[item]; // 动态组件
 };
-// const menuSelectHandle = () => {
-//   // router.replace({ path: index, query: { key: id } });
-// };
-// const collapseHandle = () => {
-//   isCollapse.value = !isCollapse.value;
-// };
+
 const backButton = () => {
   router.replace({ path: "/questionnaire/myProject" });
 };
-let updateTime = ref("--");
 // 保存问卷
-const saveSurvey = () => {
+const saveSurvey = async () => {
   if (dynamicRef.value?.saveSurveryFun) {
-    dynamicRef.value.saveSurveryFun(projectKey); // 保存文件方法
+    try {
+      await dynamicRef.value.saveSurveryFun(projectKey);
+      updateTime.value = formatTime();
+    } catch (error) {
+      console.log("保存失败");
+    }
+    // 保存成功后更新时间（根据实际需求判断是否需要加成功判断）
   } else {
-    console.warn("子组件没有暴露 sayHello 方法");
+    console.warn("子组件没有暴露 saveSurveryFun  方法");
   }
 };
-const handleUpdateTime = value => {
-  updateTime.value = value;
+
+let updateTime = ref<string>(); // 初始为空，显示"暂未保存"
+
+// 格式化时间为 "YYYY-MM-DD HH:mm:ss"（工具函数）
+const formatTime = (): string => {
+  const now = new Date();
+  const padZero = (num: number) => num.toString().padStart(2, "0");
+  return `${now.getFullYear()}-${padZero(now.getMonth() + 1)}-${padZero(now.getDate())} ${padZero(now.getHours())}:${padZero(now.getMinutes())}:${padZero(now.getSeconds())}`;
 };
+
+// 弹窗
+interface projectDetailType {
+  updateTime: string;
+  status?: any;
+}
+const projectDetail = reactive<projectDetailType>({
+  updateTime: "",
+  status: null
+});
+
+const queryProjectDetail = async () => {
+  let res: any = await getProjectDetail(projectKey);
+  projectDetail.status = res?.data?.status;
+  updateTime.value = res?.data?.updateTime;
+};
+
 onMounted(() => {
-  console.log("789");
+  queryProjectDetail();
 });
 </script>
 
@@ -110,12 +139,8 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 56px;
+    height: 60px;
     font-size: 16px;
-    .time {
-      align-self: auto;
-      margin-top: 6px;
-    }
   }
   .callback {
     position: absolute;

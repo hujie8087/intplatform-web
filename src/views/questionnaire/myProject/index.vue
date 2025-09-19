@@ -37,7 +37,7 @@
               v-if="scope.row.userId !== 1"
               :icon="Edit"
               v-auth="['system:user:edit']"
-              @click="editSurvey(scope.row.projectKey)"
+              @click="editSurvey(scope.row)"
             >
             </el-button
           ></el-tooltip>
@@ -124,7 +124,7 @@
         </template>
       </ProTable>
       <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500" :before-close="handleClose">
-        <el-form ref="ruleFormRef" :model="dialogForm" :rules="rules" label-width="70">
+        <el-form ref="ruleFormRef" :model="dialogForm" :rules="rules" label-width="90">
           <el-form-item label="项目名称" prop="projectName">
             <el-input v-model="dialogForm.projectName" placeholder="请输入项目名称" clearable />
           </el-form-item>
@@ -187,9 +187,11 @@ const ruleFormRef = ref();
 interface dialogFormType {
   projectName: string;
   projectKey?: string;
+  status?: any;
 }
 const dialogForm = reactive<dialogFormType>({
-  projectName: ""
+  projectName: "",
+  status: null
 });
 const rules = reactive({ projectName: [{ required: true, message: "请输入项目名称", trigger: "blur" }] });
 // 编辑问卷名称
@@ -205,15 +207,12 @@ const editPorjectName = async row => {
   dialogVisible.value = true;
 };
 // 编辑问卷
-const editSurvey = (projectKey?: any) => {
+const editSurvey = (data: any) => {
+  let projectKey = data.projectKey;
   let path = "AddSurvery";
   router.push({
     path,
-    query: projectKey
-      ? { key: projectKey, type: "Edit" }
-      : {
-          type: "Add"
-        }
+    query: { key: projectKey }
   });
 };
 const addSurvey = (type, row) => {
@@ -235,7 +234,7 @@ const updatePage = () => {
       } else {
         res = await addProject(dialogForm);
         ElMessage.success(`新增问卷${res.msg}`);
-        editSurvey(res.data);
+        editSurvey({ projectKey: res.data });
       }
       dialogForm.projectName = "";
       delete dialogForm.projectKey;

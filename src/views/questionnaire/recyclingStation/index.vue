@@ -24,7 +24,12 @@
               <el-button type="primary" link :icon="DataLine">恢复</el-button>
             </template>
           </el-popconfirm>
-          <el-popconfirm class="box-item" title="确认删除该问卷" placement="bottom" @confirm="deleteSurvey(scope.row)">
+          <el-popconfirm
+            class="box-item"
+            title="确认删除该问卷吗?删除后将无法恢复"
+            placement="bottom"
+            @confirm="deleteSurvey(scope.row)"
+          >
             <template #reference>
               <el-button type="danger" link :icon="Delete" v-auth="['system:user:edit']"> 删除 </el-button>
             </template>
@@ -61,16 +66,11 @@ const columns = reactive([
   {
     prop: "createTime",
     label: "创建时间",
-    search: {
-      el: "date-picker",
-      props: { type: "datetime", valueFormat: "YYYY-MM-DD HH:mm:ss" }
-    },
     align: "left"
   },
   {
-    prop: "endQueryTime",
+    prop: "updateTime",
     label: "删除时间",
-    search: { el: "date-picker", props: { type: "datetime", valueFormat: "YYYY-MM-DD HH:mm:ss" } },
     align: "left"
   },
   {
@@ -78,7 +78,6 @@ const columns = reactive([
     prop: "status",
     label: "问卷状态",
     tag: true,
-    search: { el: "select" },
     enum: surveyType,
     render: scope => {
       let status = scope.row.status;
