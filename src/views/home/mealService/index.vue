@@ -5,7 +5,7 @@
       <div class="maintenance-report-meau" @click="showSearchCriteria">
         <img src="../images/collapseExpand.png" alt="" />
       </div>
-      <div class="date-picker-wrapper" v-show="isShow">
+      <div class="date-picker-wrapper" v-show="isShow" :style="datePickerStyle">
         <el-date-picker
           v-model="seachParams.date"
           type="date"
@@ -16,18 +16,21 @@
           popper-class="maintenance-date-picker"
         />
       </div>
-      <div class="meal-type" v-show="isShow">
+      <div class="meal-type" v-show="isShow" :style="selectStyle">
         <el-select v-model="seachParams.foodName" placeholder="请选择">
           <el-option v-for="item in foodNameMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </div>
-      <div class="meal-type" v-show="isShow">
+      <div class="meal-type" v-show="isShow" :style="selectStyle">
         <el-select v-model="seachParams.fcId" placeholder="请选择" filterable>
           <el-option v-for="item in carList" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </div>
-      <div class="meal-search-btn" v-show="isShow">
+      <div class="meal-search-btn" v-show="isShow" :style="buttonStyle">
         <el-button type="primary" :icon="Search" @click="searchAllData">查询</el-button>
+      </div>
+      <div class="meal-search-btn" v-show="isShow" :style="buttonStyle">
+        <el-button type="primary" :icon="Refresh" @click="resetSearch">重置</el-button>
       </div>
     </div>
     <div class="maintenance-report-top">
@@ -62,13 +65,19 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from "@element-plus/icons-vue";
-import { ref, reactive, onMounted, useAttrs } from "vue";
-// import { getCheckHiddenDanger } from "@/api/modules/dashboard";
+import { Search, Refresh } from "@element-plus/icons-vue";
+import { ref, reactive, computed, onMounted, useAttrs } from "vue";
 import { getMealService, getSiteInformation, getCarLine } from "@/api/modules/dashboard";
 import { getAllCarNameList } from "@/api/modules/mdc/system";
 import InfiniteScrollList from "./components/InfiniteScrollList.vue";
 import dayjs from "dayjs";
+const formatter = number => {
+  if (number === null || number === undefined) return "--";
+  const numbers = number.toString().split("").reverse();
+  const segs = [];
+  while (numbers.length) segs.push(numbers.splice(0, 3).join(""));
+  return segs.join(",").split("").reverse().join("");
+};
 const config = reactive({
   foodCount: {
     number: [0],
@@ -136,9 +145,6 @@ const getCarList = async () => {
     label: item.fcName,
     value: item.fcName
   }));
-  // if (carList.value.length) {
-  //   seachParams.fcId = carList.value[10]?.value as string;
-  // }
 };
 getCarList();
 const showSearchCriteria = () => {
@@ -162,12 +168,13 @@ const siteInformation = async () => {
     setMarker([]);
   }
 };
+const carLineArr = ref([]);
 // 车辆路线
 const carLine = async () => {
   const res = await getCarLine({ date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcId });
   let { data = [] } = res;
-  let handleArr = data.filter(item => item.line.length > 0);
-  setTrucks(handleArr, { date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcId });
+  carLineArr.value = data.filter(item => item.line.length > 0);
+  setTrucks(carLineArr.value, { date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcId });
 };
 const searchAllData = () => {
   siteInformation();
@@ -175,23 +182,39 @@ const searchAllData = () => {
 };
 // 左边车牌滚动组件change 事件
 const handleChange = () => {
-  carLine();
+  // 切换单辆车，要把那个车的行驶轨迹给标红
+  setTrucks(carLineArr.value, { date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcId });
 };
+const resetSearch = () => {
+  Object.assign(seachParams, {
+    date: dayjs().format("YYYY-MM-DD"),
+    foodName: "0",
+    fcId: ""
+  });
+  searchAllData();
+};
+// 改为基于缩放状态的管理
+const isZoomed = ref(false); // 缩放状态：true=放大/全屏，false=正常
 onMounted(() => {
   initPage();
   searchAllData();
 });
-function formatter(number) {
-  if (number === null || number === undefined) return "--";
-  const numbers = number.toString().split("").reverse();
-  const segs = [];
-  while (numbers.length) segs.push(numbers.splice(0, 3).join(""));
-  return segs.join(",").split("").reverse().join("");
-}
-const zoomResize = () => {
-  console.log("缩放了");
-};
+const datePickerStyle = computed(() => {
+  const width = isZoomed.value ? "140px" : "110px";
+  return { width };
+});
+const selectStyle = computed(() => {
+  const width = isZoomed.value ? "100px" : "75px";
+  return { width };
+});
+const buttonStyle = computed(() => {
+  const width = isZoomed.value ? "80px" : "65px";
+  return { width };
+});
 
+const zoomResize = value => {
+  isZoomed.value = value;
+};
 defineExpose({ zoomResize });
 </script>
 
@@ -211,9 +234,10 @@ defineExpose({ zoomResize });
   left: 11px;
   display: flex;
   align-items: center;
-  width: 23%;
+  width: 28%;
   height: 32px;
   pointer-events: auto;
+  transition: width 0.3s ease;
 }
 .maintenance-report-meau {
   display: flex;
@@ -221,53 +245,56 @@ defineExpose({ zoomResize });
   cursor: pointer;
 }
 .date-picker-wrapper {
-  width: 110px;
+  /* width: 110px; */
   margin-left: 14px;
   background: linear-gradient(180deg, #01023c 0%, #0e3047 100%);
   border-radius: 8px;
+  transition: width 0.3s ease;
 }
-.date-picker-wrapper ::v-deep(.el-input) {
+.date-picker-wrapper :deep(.el-input) {
   width: 100%;
   height: 100%;
   color: #ffffff;
   border: none;
 }
-.date-picker-wrapper ::v-deep(.el-input__wrapper) {
+.date-picker-wrapper :deep(.el-input__wrapper) {
   background: rgb(0 0 0 / 0%);
   border: none !important;
   box-shadow: none !important;
 }
-.date-picker-wrapper ::v-deep(.el-input__prefix) {
+.date-picker-wrapper :deep(.el-input__prefix) {
   color: #ffffff;
 }
-.date-picker-wrapper ::v-deep(.el-input__inner) {
+.date-picker-wrapper :deep(.el-input__inner) {
   height: 32px;
   color: #ffffff;
 }
 .meal-type {
-  width: 71px;
+  /* width: 71px; */
   margin-left: 8px;
   background: linear-gradient(180deg, #01023c 0%, #0e3047 100%);
   border-radius: 8px;
+  transition: width 0.3s ease;
 }
-.meal-type ::v-deep(.el-select__wrapper) {
+.meal-type :deep(.el-select__wrapper) {
   height: 32px;
   background: transparent;
-  border: none !important; /* 部分版本需要加上 */
-  box-shadow: none !important; /* 去掉边框 */
+  border: none !important;
+  box-shadow: none !important;
 }
-.meal-type ::v-deep(.el-icon),
-.meal-type ::v-deep(.el-select__placeholder) {
+.meal-type :deep(.el-icon),
+.meal-type :deep(.el-select__placeholder) {
   color: #ffffff;
 }
 .meal-search-btn {
-  width: 84px;
+  /* width: 60px; */
   height: 32px;
   margin-left: 12px;
   background: linear-gradient(180deg, #01023c 0%, #0e3047 100%);
   border-radius: 8px;
+  transition: width 0.3s ease;
 }
-.meal-search-btn ::v-deep(.el-button) {
+.meal-search-btn :deep(.el-button) {
   width: 100%;
   height: 100%;
   font-size: 14px;
@@ -337,68 +364,4 @@ defineExpose({ zoomResize });
 .maintenance-report-bottom ::-webkit-scrollbar {
   display: none;
 }
-
-/* .car-item {
-  height: 40px;
-  line-height: 40px;
-  text-align: left;
-  color: #999;
-  cursor: pointer;
-  transition: color 0.3s;
-  font-size: 16px;
-  text-align: center;
-}
-.car-item.active {
-  color: #fff;
-  font-weight: bold;
-} */
-
-/* 黄色指针容器 */
-
-/* .pointer {
-  position: absolute;
-  top: 50%;
-  right: 6px;
-  transform: translateY(-50%) rotate(180deg);
-  width: 0;
-  height: 0;
-  border-top: 8px solid transparent;
-  border-bottom: 8px solid transparent;
-  border-left: 12px solid yellow;
-  filter: drop-shadow(0 0 7px #00fff7);
-} */
-
-/* 左边圆点 */
-
-/* .glow-circle {
-  position: absolute;
-  top: 50%;
-  left: 6px;
-  width: 18px;
-  height: 18px;
-  transform: translateY(-50%);
-  box-sizing: border-box;
-  border: 1px solid #00d2ff;
-  border-radius: 50%;
-  filter: drop-shadow(0 0 5px #00fff7);
-  box-shadow: inset 0px 0px 3px 0px #00fff7;
-} */
-
-/* .outer-circle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(255, 255, 255, 0.7) 50%,
-    rgba(255, 255, 255, 0.3) 80%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.5); 
-} */
 </style>
