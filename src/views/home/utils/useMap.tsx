@@ -11,6 +11,8 @@ import iconImg_1 from "../images/icon_1.png";
 import iconImg_2 from "../images/icon_2.png";
 import iconImg_3 from "../images/icon_3.png";
 import truckImg from "../images/truckImg.png";
+import { CarListItem } from "@/api/interface/dashboard";
+type ParamsType = { date: string; foodName: string; fcName: string };
 const isHttps = window.location.protocol === "https:";
 const convertToLatLng = polygons => {
   return polygons.map(
@@ -288,7 +290,7 @@ export const mealMap = (regionList = []) => {
       zoomControl: false,
       attributionControl: false,
       scrollWheelZoom: { smooth: true, debounceTimeout: 200 },
-      maxZoom: 19
+      maxZoom: 20
     });
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
     /*   L.FeatureGroup()：Leaflet 提供的一种 图层组（Layer Group）。
@@ -358,11 +360,11 @@ export const mealMap = (regionList = []) => {
         </div>
         <div class="site-popup-second">
           <span>货物总数</span>
-          <b>${formatNumber(item.goodsCount, 0)}</b>
+          <b>${formatNumber(item.goodsCount)}</b>
         </div>
         <div class="site-popup-third">
           <span>剩余货物</span>
-          <b>${formatNumber(item.remainingGoodsCount, 0)}</b>
+          <b>${formatNumber(item.remainingGoodsCount)}</b>
         </div>
       </div>`;
     }
@@ -371,10 +373,9 @@ export const mealMap = (regionList = []) => {
     // map.setView([0.47969, 127.9831427], 15);
   };
   /** 行驶轨迹 + 卡车 */
-  const setTrucks = (data = [], obj = {}) => {
+  const setTrucks = (data: CarListItem[], obj: ParamsType) => {
     layers.lines.clearLayers();
     layers.trucks.clearLayers();
-
     const truckIcon = L.icon({
       iconUrl: truckImg,
       iconSize: [50, 30],
@@ -384,22 +385,25 @@ export const mealMap = (regionList = []) => {
     let allLatLngs: L.LatLngExpression[] = [];
     data.forEach(item => {
       if (!item.line || item.line.length < 2) return;
-
       // 1. 添加路线
-      const polyline = L.polyline(item.line, {
-        color: "blue",
-        weight: 3
-      });
-      layers.lines.addLayer(polyline);
-      if (obj.fcName == item.fcName) {
+      let polyline = {};
+      if (obj.fcName == item.fcName && item.line.length > 0) {
+        polyline = L.polyline(item.line, {
+          // color: "#00E5FF",
+          color: "#e30dbe",
+          weight: 3
+        });
         // 如果有值则证明选择了某辆车，需要聚焦到那辆车，否则是聚焦所有
         allLatLngs = allLatLngs.concat(item.line);
-      }
-      if (!obj.fcName) {
+      } else {
+        polyline = L.polyline(item.line, {
+          color: "blue",
+          weight: 3
+        });
         // 累加坐标用于 fitBounds
         allLatLngs = allLatLngs.concat(item.line);
       }
-
+      layers.lines.addLayer(polyline);
       // 2. 小车平滑移动
       const latlngs = item.line.map(([lat, lng]) => L.latLng(lat, lng));
       const carMarker = L.marker(latlngs[latlngs.length - 1], { icon: truckIcon, zIndexOffset: 1000 }).addTo(layers.trucks);
@@ -409,7 +413,6 @@ export const mealMap = (regionList = []) => {
 
       function animate() {
         if (currentSegment >= latlngs.length - 1) return; // 已经到终点
-
         const start = latlngs[currentSegment];
         const end = latlngs[currentSegment + 1];
 
@@ -423,20 +426,16 @@ export const mealMap = (regionList = []) => {
         carMarker.off("click"); // 先解绑之前的
         //  给小车 marker 加点击事件
         carMarker.on("click", async () => {
-          console.log("点击了小车", item);
           //  每次点击先移除 popup，避免立刻显示上一次的内容
           carMarker.unbindPopup();
           try {
-            let res = await getCarMessge({ date: obj.date, foodName: obj.foodName, fcName: item.fcName });
+            let res: any = await getCarMessge({
+              date: obj.date,
+              foodName: obj.foodName,
+              fcName: item.fcName
+            });
             const truckData = res.data;
-            const now = new Date();
-            const pad = n => String(n).padStart(2, "0");
-            const hh = pad(now.getHours());
-            const mm = pad(now.getMinutes());
-            const ss = pad(now.getSeconds());
-            let time = `${hh}: ${mm}: ${ss}`;
-
-            // item.fcName
+            let time = getNowTime();
             // 拼接内容
             const content = `<div class="site-popup">
               <div class="site-popup-first">
@@ -445,15 +444,15 @@ export const mealMap = (regionList = []) => {
               </div>
               <div class="site-popup-second">
                 <span>货物总数</span>
-                <b>${formatNumber(truckData.foodCount, 0)}</b>
+                <b>${formatNumber(truckData.foodCount)}</b>
               </div>
               <div class="site-popup-second sit-popup-margin">
                 <span>剩余货物</span>
-                <b>${formatNumber(truckData.deliveryCount, 0)}</b>
+                <b>${formatNumber(truckData.deliveryCount)}</b>
               </div>
               <div class="site-popup-third">
                 <span>已完成</span>
-                <b>${formatNumber(truckData.deliveredCount, 0)}</b>
+                <b>${formatNumber(truckData.deliveredCount)}</b>
               </div>
             </div>`;
             // 弹出 popup
@@ -467,17 +466,13 @@ export const mealMap = (regionList = []) => {
             carMarker.bindPopup("<b>加载失败，请重试</b>").openPopup();
           }
         });
-
         progress += speed;
-
         if (progress >= 1) {
           progress = 0;
           currentSegment++;
         }
-
         requestAnimationFrame(animate);
       }
-
       animate();
     });
 
@@ -498,10 +493,18 @@ export const mealMap = (regionList = []) => {
     mealZoom
   };
 };
-function formatNumber(number) {
+const formatNumber = number => {
   if (number === null || number === undefined) return "--";
   const numbers = number.toString().split("").reverse();
   const segs = [];
   while (numbers.length) segs.push(numbers.splice(0, 3).join(""));
   return segs.join(",").split("").reverse().join("");
-}
+};
+const getNowTime = () => {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, "0");
+  const hh = pad(now.getHours());
+  const mm = pad(now.getMinutes());
+  const ss = pad(now.getSeconds());
+  return `${hh}: ${mm}: ${ss}`;
+};
