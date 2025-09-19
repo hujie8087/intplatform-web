@@ -114,3 +114,5 @@ export interface ResponseType {
     yearData: YearDataItem[];
   };
 }
+
+export type { CarListItem };
