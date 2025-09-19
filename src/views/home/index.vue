@@ -21,7 +21,6 @@
       </div>
       <div class="logistics-dashboard-header-btn">
         <div class="logistics-dashboard-header-btn-left">
-          <!-- @click="activePage = 'person'" -->
           <div
             :class="['logistics-dashboard-header-menu-btn', activePage == 'person' ? 'active' : '']"
             @click="clickTab('person')"
@@ -113,7 +112,7 @@ const isFullScreen = () => {
     el?.classList.remove("full-screen");
   }
   zoomMethodObj[activePage.value](); // 地图缩放
-  childCompRef.value?.zoomResize(); // 各个页图表缩放
+  childCompRef.value?.zoomResize(isFull.value); // 各个页图表缩放
 };
 onMounted(() => {
   let el = document.querySelector(".el-main");
