@@ -20,10 +20,6 @@ const convertToLatLng = polygons => {
 // 人员信息函数
 export const useMap = (regionList = []) => {
   let map = {};
-  let mapInstance: L.Map | null = null;
-  // if (map != null) {
-  //   map.remove(); // 先移除旧地图
-  // }
   const initializeMap = () => {
     map = L.map("map", {
       center: [0.471591392971324, 127.98038005828859],
@@ -47,26 +43,22 @@ export const useMap = (regionList = []) => {
         attribution: "© Custom Tiles"
       }
     ).addTo(map);
-    invalidateSize();
+    personZoom();
     // layer.imageOverlay = customTileLayer;
     // L.imageOverlay(image3, bounds, { opacity: 1 }).addTo(map);
   };
-  const invalidateSize = () => {
-    map.invalidateSize();
+  const personZoom = () => {
+    map.invalidateSize && map.invalidateSize();
   };
   return {
     initializeMap,
-    invalidateSize
+    personZoom
   };
 };
 // 维修统计函数
 export const maintainMap = () => {
   let map = {};
-  let mapInstance: L.Map | null = null;
   let drawnItems: L.FeatureGroup | null = null;
-  // if (map != null) {
-  //   map.remove(); // 先移除旧地图
-  // }
   const initMaintainMap = (regionList = []) => {
     map = L.map("maintenance", {
       center: [0.471591392971324, 127.98038005828859],
@@ -213,8 +205,12 @@ export const maintainMap = () => {
       return segs.join(",").split("").reverse().join("");
     }
   };
+  const maintainZoom = () => {
+    map.invalidateSize && map.invalidateSize();
+  };
   return {
-    initMaintainMap
+    initMaintainMap,
+    maintainZoom
   };
 };
 //隐患排查
@@ -266,14 +262,17 @@ export const riskMap = () => {
     };
     // createMaskLayer();
   };
+  const riskZoom = () => {
+    map.invalidateSize && map.invalidateSize();
+  };
   return {
-    initRsikMap
+    initRsikMap,
+    riskZoom
   };
 };
 // 报餐送餐
 export const mealMap = (regionList = []) => {
   let map = {};
-  let mapInstance: L.Map | null = null;
   let drawnItems: L.FeatureGroup | null = null;
   // 🔹不同类型的图层单独管理
   let layers = {
@@ -488,11 +487,15 @@ export const mealMap = (regionList = []) => {
       map!.fitBounds(bounds, { padding: [50, 50] });
     }
   };
+  const mealZoom = () => {
+    map.invalidateSize && map.invalidateSize();
+  };
 
   return {
     initMealMap,
     setMarker,
-    setTrucks
+    setTrucks,
+    mealZoom
   };
 };
 function formatNumber(number) {

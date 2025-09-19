@@ -46,10 +46,7 @@
       </div>
     </div>
     <!-- 主体区域：动态组件 -->
-    <!-- <keep-alive> -->
-    <component :is="pages[activePage]" :set-function="setMapFun" />
-    <!-- </keep-alive> -->
-    <!-- </full-screen-container> -->
+    <component ref="childCompRef" :is="pages[activePage]" :set-function="setMapFun" />
   </div>
 </template>
 
@@ -71,11 +68,12 @@ const pages = {
   risk: RiskInspection, // 排查隐患
   meal: mealService // 报餐送餐
 };
-const { initializeMap } = useMap(); // 人员信息的地图
-const { initMaintainMap } = maintainMap(); // 维修统计的地图
-const { initRsikMap } = riskMap(); // 排查隐患地图
-const { initMealMap, setMarker, setTrucks } = mealMap(); // 报餐送餐
+const { initializeMap, personZoom } = useMap(); // 人员信息的地图
+const { initMaintainMap, maintainZoom } = maintainMap(); // 维修统计的地图
+const { initRsikMap, riskZoom } = riskMap(); // 排查隐患地图
+const { initMealMap, setMarker, setTrucks, mealZoom } = mealMap(); // 报餐送餐
 let setMapFun = { setMarker, setTrucks };
+// 各个页面地图初始化方法
 const objFun = {
   person: initializeMap,
   maintenance: initMaintainMap,
@@ -97,27 +95,30 @@ const getRegionList = async () => {
   Object.assign(regionList, data);
   clickTab("person");
 };
+const childCompRef = ref();
 const isFullScreen = () => {
   let el = document.querySelector(".el-main");
   isFull.value = !isFull.value;
+  let zoomMethodObj = {
+    person: personZoom,
+    maintenance: maintainZoom,
+    risk: riskZoom,
+    meal: mealZoom
+  };
   if (isFull.value) {
     imgUrl.value = narrowImg;
     el?.classList.add("full-screen");
-    // activePage == 'person'
-    // if() {
-
-    // }
   } else {
     imgUrl.value = enlargeImg;
     el?.classList.remove("full-screen");
   }
+  zoomMethodObj[activePage.value](); // 地图缩放
+  childCompRef.value?.zoomResize(); // 各个页图表缩放
 };
 onMounted(() => {
   let el = document.querySelector(".el-main");
   el?.classList.add("no-padding");
   getRegionList();
-
-  //   initializeMap();
 });
 onBeforeUnmount(() => {
   const el = document.querySelector(".el-main");
