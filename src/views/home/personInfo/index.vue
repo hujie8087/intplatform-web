@@ -7,7 +7,6 @@
           <div class="person-info-top-item-bottom">
             <img src="../images/big1.png" alt="" style="width: 21px; height: 19px" />
             <dv-digital-flop :config="config.allCount" style="width: 75%; height: 25px" />
-            <!-- <span>{{ personInfo.allCount }}</span> -->
           </div>
         </li>
         <li class="person-info-top-item">
@@ -15,8 +14,6 @@
           <div class="person-info-top-item-bottom">
             <img src="../images/big2.png" alt="" style="width: 19px; height: 22px" />
             <dv-digital-flop :config="config.todayLoginCount" style="width: 75%; height: 25px; text-align: left" />
-
-            <!-- <span>{{ personInfo.todayLoginCount }}</span> -->
           </div>
         </li>
         <li class="person-info-top-item">
@@ -24,8 +21,6 @@
           <div class="person-info-top-item-bottom">
             <img src="../images/big3.png" alt="" style="width: 18px; height: 19px" />
             <dv-digital-flop :config="config.onlineCount" style="width: 75%; height: 25px; text-align: left" />
-            {{}}
-            <!-- <span>{{ personInfo.onlineCount }}</span> -->
           </div>
         </li>
         <li class="person-info-top-item">
@@ -33,33 +28,25 @@
           <div class="person-info-top-item-bottom">
             <img src="../images/big4.png" alt="" style="width: 20px; height: 20px" />
             <dv-digital-flop :config="config.todayRegisterCount" style="width: 75%; height: 25px; text-align: left" />
-            <!-- <span>{{ personInfo.todayRegisterCount }}</span> -->
           </div>
         </li>
       </ul>
     </div>
     <div class="person-info-bottom">
       <div class="person-info-bottom-chart">
-        <lineECharts :option="option" />
+        <lineECharts :option="option" ref="lineChartRef" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import echarts from "@/components/ECharts/config";
 import lineECharts from "@/components/ECharts/index.vue";
 import { ECOption } from "@/components/ECharts/config";
 import { getPersonnelStatistics } from "@/api/modules/dashboard";
 import { chartOptionType, ResponseType } from "@/api/interface/dashboard";
-
-// const personInfo = reactive({
-//   allCount: "--", // 总人数
-//   todayLoginCount: "--",
-//   onlineCount: "--",
-//   todayRegisterCount: "--"
-// });
 const config = reactive({
   allCount: {
     number: [0],
@@ -106,17 +93,14 @@ const config = reactive({
     }
   }
 });
+const lineChartRef = ref();
 const option = reactive<ECOption>({});
 const initPage = async () => {
   const res = (await getPersonnelStatistics({})) as ResponseType;
   let data = res.data;
-  // personInfo.allCount = formatter(data.allCount);
   config.allCount.number[0] = data.allCount as number;
-  // personInfo.todayLoginCount = formatter(data.todayLoginCount);
   config.todayLoginCount.number[0] = data.todayLoginCount as number;
-  // personInfo.onlineCount = formatter(data.onlineCount);
   config.onlineCount.number[0] = data.onlineCount as number;
-  // personInfo.todayRegisterCount = formatter(data.todayRegisterCount);
   config.todayRegisterCount.number[0] = data.todayRegisterCount as number;
   setChartData(data.yearData ?? []);
 };
@@ -315,6 +299,9 @@ const setOptions = obj => {
 onMounted(() => {
   initPage();
 });
+const zoomResize = () => {
+  lineChartRef.value?.resize();
+};
 function formatter(number) {
   if (number === null || number === undefined) return "--";
   const numbers = number.toString().split("").reverse();
@@ -322,6 +309,7 @@ function formatter(number) {
   while (numbers.length) segs.push(numbers.splice(0, 3).join(""));
   return segs.join(",").split("").reverse().join("");
 }
+defineExpose({ zoomResize });
 </script>
 
 <style scoped>
