@@ -188,6 +188,11 @@ function formatter(number) {
   while (numbers.length) segs.push(numbers.splice(0, 3).join(""));
   return segs.join(",").split("").reverse().join("");
 }
+const zoomResize = () => {
+  console.log("缩放了");
+};
+
+defineExpose({ zoomResize });
 </script>
 
 <style scoped>
