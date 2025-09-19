@@ -53,11 +53,11 @@
           </div>
         </div>
         <div style="height: 73%">
-          <ECharts :option="barOption" />
+          <ECharts ref="barChartRef" :option="barOption" />
         </div>
       </div>
       <div class="maintenance-report-bottom-pie">
-        <ECharts :option="gaugeChart" />
+        <ECharts ref="spendChartRef" :option="gaugeChart" />
       </div>
     </div>
   </div>
@@ -140,6 +140,8 @@ const dateType = [
     value: "year"
   }
 ];
+const barChartRef = ref();
+const spendChartRef = ref();
 const barOption = reactive<ECOption>({});
 const gaugeChart = reactive<ECOption>({});
 const initPage = async () => {
@@ -367,6 +369,10 @@ const initGaugeChart = data => {
 
   Object.assign(gaugeChart, option);
 };
+const zoomResize = () => {
+  barChartRef.value?.resize();
+  spendChartRef.value?.resize();
+};
 const formatPercent = value => {
   let num = 0;
   if (value.includes("%")) {
@@ -389,6 +395,7 @@ function formatter(number) {
   while (numbers.length) segs.push(numbers.splice(0, 3).join(""));
   return segs.join(",").split("").reverse().join("");
 }
+defineExpose({ zoomResize });
 </script>
 
 <style scoped>
