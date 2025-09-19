@@ -78,3 +78,12 @@ export const updatePassWord = (params: Account.ReqUpdatePassWord) => {
 export const getUserInfoByUsername = (username: string) => {
   return http.get<Account.ResAccountList>(PORT1 + `/system/user/getSenderId/${username}`);
 };
+
+// * 撤销用户授权
+export const revokeAuthorization = (userId: string) => {
+  return http.put<Account.RevokeAuthorizationMsg>(PORT1 + `/system/user/revokeUserAuthorizeWithMeal?userId=${userId}`);
+};
+// * 用户授权
+export const userAuthorization = params => {
+  return http.put<Account.RevokeAuthorizationMsg>(PORT1 + `/system/user/userAuthorizeWithMeal`, params);
+};
