@@ -6,7 +6,7 @@
           <img src="@/assets/images/form-editor/callback.svg" alt="" />
         </div>
         <div class="title-data">
-          <span class="name">问卷调查</span>
+          <span class="name"><el-text>问卷编辑：</el-text>《{{ projectName }}》</span>
         </div>
         <div class="control">
           <div class="cont-item">
@@ -35,8 +35,7 @@
 
 <script setup lang="ts" name="addSurvery">
 // reactive
-import { ref, shallowRef, reactive, onMounted, provide } from "vue";
-import { getProjectDetail } from "@/api/modules/questionnaire/myProject";
+import { ref, shallowRef, onMounted, provide } from "vue";
 import { Finished } from "@element-plus/icons-vue";
 import FormSidebar from "./components/FormSidebar.vue";
 import questionBank from "../dynamicForm/index.vue";
@@ -47,6 +46,8 @@ import stat from "../stat/index.vue"; // 统计
 import { useRouter, useRoute } from "vue-router";
 const $route = useRoute(); // 路由
 const projectKey = $route.query.key;
+const current = $route.query.current;
+const projectName = $route.query.projectName;
 
 provide("projectKey", projectKey);
 const dynamicRef = ref();
@@ -60,14 +61,10 @@ const menuItemList = {
   publish, // 发布
   stat // 统计
 };
-const defaultActiveMenu = shallowRef(menuItemList["questionBank"]); // 默认激活第一个菜单
-const currentSideItemType = ref("questionBank"); // 当前侧边栏选中类型
+const defaultActiveMenu = shallowRef(menuItemList[current]); // 默认激活第一个菜单
+const currentSideItemType = ref(current); // 当前侧边栏选中类型
 
 const selectSideItemType = async (item: string) => {
-  await queryProjectDetail();
-  if (projectDetail.status === 1) {
-    saveSurvey();
-  }
   currentSideItemType.value = item;
   defaultActiveMenu.value = menuItemList[item]; // 动态组件
 };
@@ -80,43 +77,16 @@ const saveSurvey = async () => {
   if (dynamicRef.value?.saveSurveryFun) {
     try {
       await dynamicRef.value.saveSurveryFun(projectKey);
-      updateTime.value = formatTime();
     } catch (error) {
       console.log("保存失败");
     }
-    // 保存成功后更新时间（根据实际需求判断是否需要加成功判断）
   } else {
     console.warn("子组件没有暴露 saveSurveryFun  方法");
   }
 };
 
-let updateTime = ref<string>(); // 初始为空，显示"暂未保存"
-
-// 格式化时间为 "YYYY-MM-DD HH:mm:ss"（工具函数）
-const formatTime = (): string => {
-  const now = new Date();
-  const padZero = (num: number) => num.toString().padStart(2, "0");
-  return `${now.getFullYear()}-${padZero(now.getMonth() + 1)}-${padZero(now.getDate())} ${padZero(now.getHours())}:${padZero(now.getMinutes())}:${padZero(now.getSeconds())}`;
-};
-
-// 弹窗
-interface projectDetailType {
-  updateTime: string;
-  status?: any;
-}
-const projectDetail = reactive<projectDetailType>({
-  updateTime: "",
-  status: null
-});
-
-const queryProjectDetail = async () => {
-  let res: any = await getProjectDetail(projectKey);
-  projectDetail.status = res?.data?.status;
-  updateTime.value = res?.data?.updateTime;
-};
-
 onMounted(() => {
-  queryProjectDetail();
+  console.log("mounted");
 });
 </script>
 

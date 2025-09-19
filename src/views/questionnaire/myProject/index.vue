@@ -19,7 +19,7 @@
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-tooltip placement="top" effect="dark" content="编辑问卷名称">
+          <!-- <el-tooltip placement="top" effect="dark" content="编辑问卷名称">
             <el-button
               class="btn-edit-pen"
               link
@@ -29,15 +29,15 @@
               @click="editPorjectName(scope.row)"
             >
             </el-button>
-          </el-tooltip>
-          <el-tooltip placement="top" effect="dark" content="编辑答卷">
+          </el-tooltip> -->
+          <el-tooltip placement="top" effect="dark" content="编辑问卷">
             <el-button
               type="warning"
               link
               v-if="scope.row.userId !== 1"
               :icon="Edit"
               v-auth="['system:user:edit']"
-              @click="editSurvey(scope.row)"
+              @click="rediectPage('questionBank', scope.row)"
             >
             </el-button
           ></el-tooltip>
@@ -48,18 +48,18 @@
               v-if="scope.row.userId !== 1"
               :icon="DataLine"
               v-auth="['system:user:edit']"
-              @click="addSurvey('编辑', scope.row)"
+              @click="rediectPage('stat', scope.row)"
             >
             </el-button>
           </el-tooltip>
-          <el-tooltip placement="top" effect="dark" content="预览问卷">
+          <el-tooltip placement="top" effect="dark" content="问卷设置">
             <el-button
               type="primary"
               link
               v-if="scope.row.userId !== 1"
-              :icon="View"
+              :icon="Setting"
               v-auth="['system:user:edit']"
-              @click="addSurvey('编辑', scope.row)"
+              @click="rediectPage('setting', scope.row)"
             >
             </el-button>
           </el-tooltip>
@@ -71,7 +71,7 @@
               v-if="scope.row.userId !== 1"
               :icon="Share"
               v-auth="['system:user:edit']"
-              @click="addSurvey('编辑', scope.row)"
+              @click="rediectPage('publish', scope.row)"
             >
             </el-button>
           </el-tooltip>
@@ -141,20 +141,52 @@
 </template>
 
 <script setup lang="tsx" name="myProject">
-import { ref, reactive } from "vue";
+import { ref, reactive, h } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
 import { getProjectList, deleteProject, addProject, editProject, getProjectDetail } from "@/api/modules/questionnaire/myProject";
 import { surveyType } from "@/utils/questionnaire";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import { CirclePlus, Delete, EditPen, Share, DataLine, View, CopyDocument, Edit } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, Share, DataLine, CopyDocument, Edit, Setting } from "@element-plus/icons-vue";
+import { ElInput } from "element-plus";
+
 const router = useRouter();
 const proTable = ref();
 const columns = reactive([
   { type: "selection", label: "", width: 80 },
   { type: "index", label: "序号", width: 80 },
-  { prop: "projectName", label: "问卷名称", search: { el: "input" }, align: "left" },
+  {
+    prop: "projectName",
+    label: "问卷名称",
+    search: { el: "input" },
+    align: "left",
+    render: scope => {
+      // 导入ElInput组件（确保已全局注册或在此处导入）
+      // 输入事件处理函数
+      const handleInput = async value => {
+        // 更新行数据
+        scope.row.projectName = value;
+        dialogForm.projectKey = scope.row.projectKey;
+        dialogForm.projectName = value;
+        await editProject(dialogForm);
+      };
+      // 使用h函数创建ElInput组件
+      return h(ElInput, {
+        // 绑定值
+        modelValue: scope.row.projectName || "",
+        // 输入事件（v-model的更新事件）
+        "onUpdate:modelValue": handleInput,
+        // 输入框尺寸
+        size: "large",
+        disabled: scope.row.status === 1 ? false : true,
+        // 占位符
+        placeholder: "请输入问卷名称",
+        // 样式
+        style: { width: "100%", height: "100%" }
+      });
+    }
+  },
   { prop: "collectCount", label: "答卷数(份)", width: 180 },
   {
     width: 180,
@@ -170,7 +202,7 @@ const columns = reactive([
     }
   },
   { prop: "createTime", label: "创建时间", width: 200, sortable: true },
-  { prop: "operation", label: "操作", fixed: "right" }
+  { prop: "operation", label: "操作", width: 260, fixed: "right" }
   //   { prop: "dept.deptName", label: "部门", width: 120 }
 ]);
 const treeFilterValues = reactive({ pageNum: 1, pageSize: 20 });
@@ -206,15 +238,18 @@ const editPorjectName = async row => {
   }
   dialogVisible.value = true;
 };
-// 编辑问卷
-const editSurvey = (data: any) => {
+
+// 跳转页面
+const rediectPage = (current, data: any) => {
   let projectKey = data.projectKey;
+  let projectName = data.projectName;
   let path = "AddSurvery";
   router.push({
     path,
-    query: { key: projectKey }
+    query: { key: projectKey, projectName: projectName, current: current }
   });
 };
+
 const addSurvey = (type, row) => {
   console.log(type, row);
 };
@@ -234,7 +269,7 @@ const updatePage = () => {
       } else {
         res = await addProject(dialogForm);
         ElMessage.success(`新增问卷${res.msg}`);
-        editSurvey({ projectKey: res.data });
+        rediectPage("questionBank", { projectKey: res.data });
       }
       dialogForm.projectName = "";
       delete dialogForm.projectKey;

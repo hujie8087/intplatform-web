@@ -34,16 +34,6 @@ const classifyList = ref<ClassifyType[]>([
     icon: Icon.Question,
     type: "questionBank"
   },
-  // {
-  //   label: "主题",
-  //   icon: Icon.Theme,
-  //   type: "theme"
-  // },
-  // {
-  //   label: "逻辑",
-  //   icon: Icon.Logic,
-  //   type: "logic"
-  // },
   {
     label: "样本",
     icon: Icon.Sample,
