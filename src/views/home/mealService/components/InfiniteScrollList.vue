@@ -97,7 +97,13 @@ const scrollIndexToCenter = async (idx: number, behavior: ScrollBehavior = "smoo
     setTimeout(() => resolve(), behavior === "smooth" ? 420 : 50);
   });
 };
-
+// 🔥 新增：滚动到中间位置（没有选中项时使用）
+const scrollToMiddle = async (behavior: ScrollBehavior = "smooth") => {
+  if (!props.carList.length) return;
+  const middleIndex = Math.floor(props.carList.length / 2);
+  await scrollIndexToCenter(middleIndex, behavior);
+  previewIndex.value = middleIndex;
+};
 let scrollTimer: number | null = null;
 let snapping = false;
 
@@ -146,25 +152,46 @@ const clickItem = (idx: number) => {
     }, 120);
   });
 };
+// 🔥 修复：重置选中状态的函数
+const resetSelection = () => {
+  selectedIndex.value = -1;
+  scrollToMiddle("smooth");
+};
 
 watch(
   () => props.modelValue,
-  v => {
-    if (v == null) return;
-    const idx = props.carList.findIndex(c => c.value === v);
+  (newValue, oldValue) => {
+    // 🔥 关键修复：当 modelValue 从有值变为空字符串或 null 时，重置选中状态
+    if (newValue === "" || newValue === null || newValue === undefined) {
+      resetSelection();
+      return;
+    }
+    const idx = props.carList.findIndex(c => c.value === newValue);
     if (idx !== -1) {
       selectedIndex.value = idx;
       scrollIndexToCenter(idx, "auto").then(() => {
         previewIndex.value = idx;
       });
+    } else {
+      // 如果找不到对应的值，也重置选中状态
+      resetSelection();
     }
+    console.log(oldValue);
   },
   { immediate: true }
 );
 
 watch(
   () => [props.carList.length, props.itemHeight],
-  () => updateSpacer()
+  () => {
+    updateSpacer();
+    // 🔥 当车辆列表变化时，如果没有选中项，滚动到中间
+    nextTick(() => {
+      if (selectedIndex.value === -1 && props.carList.length > 0) {
+        scrollToMiddle("auto");
+      }
+    });
+  }
 );
 
 let ro: ResizeObserver | null = null;
@@ -180,6 +207,12 @@ onMounted(() => {
       scrollIndexToCenter(0, "auto").then(() => {
         previewIndex.value = 0;
       });
+    }
+    // 🔥 修复：初始化时根据 modelValue 决定显示位置
+    if (props.modelValue == null || props.modelValue === "") {
+      if (props.carList.length > 0) {
+        scrollToMiddle("auto");
+      }
     }
   });
 });
