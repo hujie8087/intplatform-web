@@ -286,8 +286,8 @@ const handleUpdateSetting = async () => {
   const submitData = {
     ...form,
     projectKey: key,
-    timedCollectionBeginTime: timingTime.value[0] || undefined,
-    timedCollectionEndTime: timingTime.value[1] || undefined
+    timedCollectionBeginTime: timingTime.value[0] || null,
+    timedCollectionEndTime: timingTime.value[1] || null
   };
   // 3. 提交请求
   try {
@@ -335,6 +335,7 @@ watch(
     if (!showSubmitJumpUrl) resetFormField("submitJumpUrl");
     // 3. 定时收集开关
     if (!timingCollectForm) {
+      timingTime.value = [];
       resetFormField("timedNotEnabledPromptText");
       resetFormField("timedDeactivatePromptText");
       setting.value.timingQuantitativeForm = false; // 联动关闭定量开关
