@@ -173,7 +173,6 @@ const childrenCompValueChange = value => {
   let hiddenArr = [];
   Object.keys(showRulesObj[value.id]).forEach(key => {
     if (Array.isArray(value.value)) {
-      debugger;
       value.value.forEach(element => {
         if (element == key) {
           showArr.push(showRulesObj[value.id][key]);
