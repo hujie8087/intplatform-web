@@ -56,6 +56,14 @@
         </div>
       </div>
     </div>
+    <el-dialog v-model="dialogTableVisible" :close-on-click-modal="false" width="78%">
+      <div class="popup-icon">
+        <el-icon :size="80">
+          <CircleCheck />
+        </el-icon>
+      </div>
+      <div class="popup-text">{{ popupText }}</div>
+    </el-dialog>
   </div>
 </template>
 
@@ -64,7 +72,7 @@
 type PreviewType = "Phone" | "PC";
 import { ref, reactive, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { Check } from "@element-plus/icons-vue";
+import { Check, CircleCheck } from "@element-plus/icons-vue";
 import FormComponent from "../dynamicForm/components/componentsForm/index.vue";
 import SupportComp from "../dynamicForm/preview/component/SupportComp.vue";
 import { getSurveyTopicList, getSurveySetting, submitSurvey } from "@/api/modules/questionnaire/topicPage";
@@ -74,6 +82,8 @@ import { regexRule, regexRuleMesg } from "../dynamicForm/components/compConfig";
 import { ElMessage } from "element-plus";
 import _ from "lodash";
 const route = useRoute();
+const dialogTableVisible = ref(false);
+const popupText = ref("");
 const router = useRouter();
 const rulesObj = reactive({
   submitPromptText: "",
@@ -296,7 +306,13 @@ const submitFun = async params => {
     let jumpUrl = rulesObj?.submitJumpUrl;
     ElMessage.success(`${resText}`);
     if (jumpUrl) {
-      location.href = jumpUrl;
+      ElMessage.success(`${resText}`);
+      setTimeout(() => {
+        location.href = jumpUrl;
+      }, 200);
+    } else {
+      dialogTableVisible.value = true;
+      popupText.value = resText;
     }
   }
 };
@@ -512,5 +528,21 @@ function getDeviceType() {
 .survery-topic-page,
 .topic-page-container {
   overflow-x: hidden; // 防止 body-content 溢出撑开
+}
+:deep(.el-dialog__header) {
+  display: none !important;
+}
+.popup-icon {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  .el-icon {
+    color: var(--el-color-primary);
+  }
+}
+.popup-text {
+  margin-bottom: 15px;
+  text-align: center;
 }
 </style>
