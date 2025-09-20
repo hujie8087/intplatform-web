@@ -20,7 +20,7 @@ export const staticRouter: RouteRecordRaw[] = [
   {
     path: "/survey/answer",
     name: "surveyAnswer",
-    component: () => import("@/views/questionnaire/myProject/topicPage.vue"),
+    component: () => import("@/views/questionnaire/myProject/surveyAnswer.vue"),
     meta: {
       title: "问卷收集"
     }
