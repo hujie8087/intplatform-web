@@ -429,7 +429,7 @@ function getDeviceType() {
 .topic-page-container {
   position: relative;
   flex: 1;
-  height: calc(100vh - 68px);
+  height: 100%;
   overflow: auto;
   &::before {
     position: absolute;
@@ -442,6 +442,7 @@ function getDeviceType() {
   }
   .body-content {
     position: absolute;
+    top: 2%;
     left: 50%;
     z-index: 2;
     width: 686px;
