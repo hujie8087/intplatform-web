@@ -264,9 +264,10 @@ const getSurveySettingData = async () => {
       setting.value = {
         showPromptText: !!data.submitPromptText,
         showSubmitJumpUrl: !!data.submitJumpUrl,
-        timingCollectForm: !!data.timedCollectionBeginTime && !!data.timedCollectionEndTime,
+        timingCollectForm: (!!data.timedCollectionBeginTime && !!data.timedCollectionEndTime) || !!data.timedQuantitativeQuantity,
         timingQuantitativeForm: !!data.timedQuantitativeQuantity
       };
+      console.log(setting.value, "setting.value");
       // 3. 初始化时间范围
       timingTime.value = [data.timedCollectionBeginTime || "", data.timedCollectionEndTime || ""];
     }

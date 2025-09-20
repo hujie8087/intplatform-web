@@ -19,7 +19,7 @@
         <span>{{ statData?.viewCount }}</span>
       </div>
       <div class="menu-item">
-        <el-text>平均完成时间</el-text>
+        <el-text>平均完成时间/秒</el-text>
         <span>{{ statData?.avgCompleteTime }}</span>
       </div>
     </div>

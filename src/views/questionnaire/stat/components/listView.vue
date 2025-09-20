@@ -33,7 +33,7 @@ const columns = reactive([
   { prop: "submitRequestIp", label: "回答IP", align: "left" },
   {
     prop: "completeTime",
-    label: "完成时间/毫秒",
+    label: "完成时间/秒",
     align: "left"
   },
   {
