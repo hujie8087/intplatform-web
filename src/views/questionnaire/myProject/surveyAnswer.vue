@@ -320,8 +320,8 @@ const setTopicList = setRespans => {
       questionId: el.id,
       questionName: el.title,
       questionType: el.type,
-      originalValue: el.dataValue,
-      processValue: el.dataValue
+      originalValue: JSON.stringify(el.dataValue),
+      processValue: JSON.stringify(el.dataValue)
     });
   });
   return arr;

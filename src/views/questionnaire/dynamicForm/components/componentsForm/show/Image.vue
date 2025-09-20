@@ -3,8 +3,7 @@
     <el-image :src="getImageUrl(props.value)">
       <template #error>
         <div class="image-slot">
-          <el-icon><icon-picture /></el-icon>
-          <el-text>请先上传图片</el-text>
+          <el-icon style="font-size: 80px"><icon-picture /></el-icon>
         </div>
       </template>
     </el-image>
