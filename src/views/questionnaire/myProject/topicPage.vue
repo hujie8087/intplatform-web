@@ -1,16 +1,6 @@
 <template>
   <!-- 答卷页面 -->
   <div class="survery-topic-page">
-    <div class="drawer-header">
-      <span>问卷答题</span>
-      <!-- <div class="controls">
-        <el-radio-group size="default" v-model="previewType">
-          <el-radio-button value="Phone">移动端</el-radio-button>
-          <el-radio-button value="PC">桌面端</el-radio-button>
-        </el-radio-group>
-      </div> -->
-      <el-button type="primary" :icon="CloseBold" link class="close-topic-btn" @click="closeTopicBtn"></el-button>
-    </div>
     <div class="topic-page-container">
       <div :class="['body-content', previewType === 'Phone' ? 'phone' : '']">
         <!-- 没有权限啥的 -->
@@ -74,7 +64,7 @@
 type PreviewType = "Phone" | "PC";
 import { ref, reactive, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { CloseBold, Check } from "@element-plus/icons-vue";
+import { Check } from "@element-plus/icons-vue";
 import FormComponent from "../dynamicForm/components/componentsForm/index.vue";
 import SupportComp from "../dynamicForm/preview/component/SupportComp.vue";
 import { getSurveyTopicList, getSurveySetting, submitSurvey } from "@/api/modules/questionnaire/topicPage";
@@ -118,10 +108,6 @@ const activeComp = ref({
   id: ""
 }); // 当前选中组件
 const startTime = ref<number>(0); // 进入页面的时间戳
-// 关闭页面
-const closeTopicBtn = () => {
-  router.replace({ path: "/" }); // 跳转到根路径
-};
 
 const getSize = () => {
   const data = pageFooter?.value;
@@ -253,6 +239,7 @@ const testNumber = (nowItem, phone: string) => {
   return isValid;
 };
 const submitAnswerSheet = () => {
+  debugger;
   // 先校验是否是必填项，校验完看是填写是否错误
   let setRespans = getCheckoutList();
   let isNext = true;
@@ -289,13 +276,13 @@ const submitAnswerSheet = () => {
         if (element["customErrorMessage"]) {
           element.errorMsg = element["customErrorMessage"];
         }
-        // break;
       }
+    } else {
+      hasErroyArr.push(isNext);
     }
   }
   if (isAllTrue(hasErroyArr)) {
     console.log("///////", setRespans);
-
     const endTime = Date.now();
     const duration = Math.floor((endTime - startTime.value) / 1000); // 秒
     let obj = {
@@ -442,23 +429,6 @@ function getDeviceType() {
   inset: 0;
   z-index: 4;
   background: #ffffff;
-}
-.drawer-header {
-  display: flex;
-  justify-content: space-between;
-  padding: 16px 20px;
-  margin-bottom: 0;
-  border-bottom: 1px solid var(--el-border-color-lighter);
-  .controls {
-    .cont-item {
-      padding: 2px 5px;
-    }
-  }
-  .close-topic-btn {
-    :deep(.el-icon) {
-      font-size: 20px;
-    }
-  }
 }
 .topic-page-container {
   position: relative;
