@@ -1,5 +1,11 @@
 <template>
-  <el-input :disabled="isDev" size="default" clearable v-model="dataValue" :placeholder="placeholder">
+  <el-input
+    :disabled="isDev"
+    size="default"
+    clearable
+    v-model="dataValue"
+    :placeholder="isDev ? disableInputByDev : placeholder || '提示信息'"
+  >
     <template #prefix>
       <img class="icon" :src="Id" alt="" />
     </template>
@@ -9,6 +15,7 @@
 import { ref, watch } from "vue";
 import Id from "@/assets/images/form-editor/id.svg";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+import { disableInputByDev } from "../../compConfig";
 const compStore = useSelectCompStore();
 interface Props {
   id: string;

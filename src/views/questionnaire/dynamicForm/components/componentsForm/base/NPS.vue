@@ -47,6 +47,7 @@ const changeIndex = (index: number) => {
 };
 
 const selectValue = (item: any) => {
+  console.log(item, "item--->");
   compStore.updateCurrentComp({
     dataValue: item
   });
@@ -83,6 +84,9 @@ const selectValue = (item: any) => {
     &.active:not(.isDev) {
       background: #1677ff;
     }
+  }
+  .isDev {
+    cursor: no-drop;
   }
 }
 </style>

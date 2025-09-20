@@ -38,7 +38,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 $spacing-sm: 8px;
 $spacing-md: 16px;
 $spacing-lg: 24px;
-.stat-page ::v-deep .el-tabs--border-card > .el-tabs__content {
+.stat-page :deep(.el-tabs--border-card > .el-tabs__content) {
   padding: 0;
 }
 .stat-page {

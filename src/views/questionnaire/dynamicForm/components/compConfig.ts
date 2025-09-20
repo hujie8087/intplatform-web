@@ -242,6 +242,15 @@ export const getCompConfig = (type: CompType) => {
     };
   }
 
+  // 图片多选
+  if (CompType.imgMultiSelect === type) {
+    compConfig = {
+      ...compConfig,
+      minValue: 1,
+      maxValue: 1
+    };
+  }
+
   return compConfig;
 };
 

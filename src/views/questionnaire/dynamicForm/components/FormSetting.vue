@@ -50,7 +50,7 @@
         <div class="category-name" v-if="selectComp?.type && !JustShowCompType.includes(selectComp?.type)">表单验证</div>
         <div class="content">
           <!-- 数字区间 最大值最小值控制 -->
-          <NumberConfig v-if="showParams('maxValue')" :comp="selectComp" />
+          <NumberConfig v-if="selectComp?.type === 'number'" :comp="selectComp" />
           <!-- 多选控制，最少应该选择，最多应该选择-->
           <MaxMinConfig v-if="selectComp?.type === 'imgMultiSelect'" :comp="selectComp" />
           <!-- 必填 -->

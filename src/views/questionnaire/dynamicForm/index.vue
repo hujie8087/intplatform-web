@@ -40,6 +40,10 @@
           <img :src="Icon.preview" alt="" />
           <div class="label">预览</div>
         </div>
+        <div class="back2Top-control" title="返回" @click="back2Top">
+          <img :src="Icon.TopFill" alt="" />
+        </div>
+
         <div
           class="form"
           :class="{
@@ -149,6 +153,7 @@
       ></FormSetting>
       <PreviewPage
         v-if="openDraw"
+        :editor-scroll-info="editorScrollInfo"
         :select-form="selectForm"
         :open="openDraw"
         :page-comp-list="pageCompList"
@@ -217,9 +222,11 @@ import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
 import { topicSaves, editSurverTopic, getSurverDetail } from "@/api/modules/questionnaire/surveySetting";
 
+// 控制回到顶部按钮显示/隐藏
+const isBackTopVisible = ref(false);
 const openDraw = ref(false);
 const compList = ref([...CompListData]); // 组件列表
-
+const route = useRoute(); // 先获取路由实例
 const pageCompList = ref<any[]>([]); // 页面组件内容
 const dialogVisible = ref(false); // 逻辑弹窗
 const dialogTitle = ref("");
@@ -444,13 +451,23 @@ const preview = () => {
   openDraw.value = true;
 };
 
+const back2Top = () => {
+  if (editorRef.value) {
+    editorRef.value.scrollTo({
+      top: 0,
+      behavior: "smooth" // 平滑滚动
+    });
+  }
+};
+
 const onClose = () => {
   openDraw.value = false;
 };
 
 const isFormEditorDevBool = computed(() => {
-  const bool = useRoute().path.includes("form-editor") || useRoute().path.includes("AddSurvery");
-  return bool;
+  // 先检查 route 是否存在，避免报错
+  if (!route) return false;
+  return route.path.includes("form-editor") || route.path.includes("AddSurvery");
 });
 
 // 更新选中组件数据
@@ -532,6 +549,7 @@ const updateBodyScrollInfo = () => {
   editorScrollInfo.scrollTop = scrollTop;
   // 4. 可选：判断是否滚动到底部（留 1px 误差，避免精度问题）
   editorScrollInfo.isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+  isBackTopVisible.value = scrollTop > 200;
 };
 
 const scrollToBottom = async () => {
@@ -573,7 +591,6 @@ onMounted(async () => {
     if (Object.keys(form).length > 0) {
       useCompStore.updateGlobalFormConfig(form);
     }
-
     emit("updateTime", updateTime);
   }
   nextTick(() => {
@@ -906,19 +923,38 @@ defineExpose({
     margin-top: 20px;
     line-height: 90px;
   }
-  :deep(.form-footer) {
-    .submit {
-      max-width: 100%;
+  :deep(.form-footer > .submit) {
+    max-width: 100%;
 
-      /* 不换行 */
-      overflow: hidden;
+    /* 不换行 */
+    overflow: hidden;
 
-      /* 隐藏超出部分 */
-      text-overflow: ellipsis;
-      white-space: nowrap;
-
-      /* 显示省略号 */
-    }
+    /* 隐藏超出部分 */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+.back2Top-control {
+  position: fixed;
+  bottom: 0;
+  bottom: 26px;
+  left: 50%;
+  z-index: 99;
+  width: 50px;
+  height: 55px;
+  padding: 5px 4px;
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 5px;
+  transform: translateX(388px);
+  img {
+    width: 32px;
+    height: 32px;
+  }
+  .label {
+    padding-top: 5px;
+    font-size: 12px;
   }
 }
 .preview-control {

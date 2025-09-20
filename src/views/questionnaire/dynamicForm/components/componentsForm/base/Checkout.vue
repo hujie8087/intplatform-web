@@ -64,23 +64,21 @@ const radioStyle = ref({
 </script>
 
 <style lang="scss" scoped>
-:deep {
-  .el-checkbox {
-    position: relative;
-    width: 100%;
-    min-height: 40px;
-    line-height: 40px;
-    .el-checkbox__input {
-      position: absolute;
-      top: 12px;
-    }
-    .el-checkbox__label {
-      width: calc(100% - 40px); /* 防止内容溢出 */
-      height: 100%;
-      margin-left: 24px; /* 为复选框留出空间 */
-      line-height: 40px;
-    }
-  }
+:deep(.el-checkbox) {
+  position: relative;
+  width: 100%;
+  min-height: 40px;
+  line-height: 40px;
+}
+:deep(.el-checkbox > .el-checkbox__input) {
+  position: absolute;
+  top: 12px;
+}
+:deep(.el-checkbox > .el-checkbox__label) {
+  width: calc(100% - 40px); /* 防止内容溢出 */
+  height: 100%;
+  margin-left: 24px; /* 为复选框留出空间 */
+  line-height: 40px;
 }
 .other-val {
   display: block;
@@ -112,7 +110,7 @@ const radioStyle = ref({
 
 /* 禁用状态下的文本颜色 */
 :deep(.el-checkbox.is-disabled .el-checkbox__label) {
-  color: #000000 !important;
+  color: #a8abb2 !important;
 }
 
 /* 复选框输入框显示 */

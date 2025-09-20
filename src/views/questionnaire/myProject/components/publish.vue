@@ -142,7 +142,7 @@ $spacing-lg: 24px;
   margin-top: $spacing-lg;
   overflow: hidden;
   background: #ffffff;
-  ::v-deep .el-input__wrapper.is-focus {
+  :deep(.el-input__wrapper.is-focus) {
     box-shadow: 0 0 0 1px #1677ff inset;
   }
 }

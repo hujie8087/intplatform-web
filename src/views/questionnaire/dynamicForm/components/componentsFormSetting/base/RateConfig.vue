@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 
 const compStore = useSelectCompStore();

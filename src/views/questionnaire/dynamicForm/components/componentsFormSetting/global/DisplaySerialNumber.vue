@@ -5,7 +5,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { reactive, defineProps } from "vue";
+import { reactive } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 interface Props {
   form: any;

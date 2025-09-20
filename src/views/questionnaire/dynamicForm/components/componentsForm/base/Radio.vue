@@ -68,7 +68,7 @@ watch(
   margin-left: 15px;
   outline: none;
 }
-:deep .el-radio__label {
+:deep(.el-radio__label) {
   width: 100% !important;
 }
 .citem {

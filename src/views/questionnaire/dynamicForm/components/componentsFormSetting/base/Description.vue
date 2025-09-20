@@ -15,7 +15,7 @@
   />
 </template>
 <script lang="ts" setup>
-import { defineProps, ref } from "vue";
+import { ref } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 
 const compStore: any = useSelectCompStore();

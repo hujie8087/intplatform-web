@@ -15,7 +15,7 @@
   ></el-input>
 </template>
 <script lang="ts" setup>
-import { ref, defineProps } from "vue";
+import { ref } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 
 interface Props {

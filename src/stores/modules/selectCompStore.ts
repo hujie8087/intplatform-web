@@ -18,6 +18,7 @@ export const useSelectCompStore = defineStore("compEvent", () => {
       ...compConfig.value,
       ...updateData
     };
+    console.log(compConfig, "更新组件");
   };
   // 当前组件配置
   const currentCompConfig = computed(() => compConfig.value);

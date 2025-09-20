@@ -5,7 +5,7 @@
     v-model="dataValue"
     style="width: 100%"
     :disabled="isDev"
-    :placeholder="placeholder || '请选择分数'"
+    :placeholder="props.isDev ? (props.placeholder || '请选择') + ' - 编辑状态无法选则' : props.placeholder || '请选择分数'"
   >
     <el-option v-for="(item, _index) in list" :key="_index" :label="item.label" :value="item.value">
       {{ item.label }}

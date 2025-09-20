@@ -1,6 +1,6 @@
 <template>
   <el-upload
-    v-model:file-list="fileList"
+    v-model:file-list="dataValue"
     class="upload-demo"
     action="#"
     multiple
@@ -12,7 +12,7 @@
     :limit="3"
     :on-exceed="handleExceed"
   >
-    <el-button :disabled="isDev" type="primary" size="default">点击上传图片</el-button>
+    <el-button color="#1677FF" :disabled="isDev" type="primary" size="default">点击上传图片</el-button>
     <template #tip>
       <div class="el-upload__tip">上传图片最大为 5M</div>
     </template>
@@ -43,11 +43,11 @@ interface Props {
   id: string;
   placeholder: string;
   isDev: boolean;
-  fileList: Array<any>;
+  dataValue: Array<any>;
   editorScrollInfo: any;
 }
 const props = defineProps<Props>();
-const fileList = ref(props.fileList);
+const dataValue = ref(props.dataValue ? props.dataValue : []);
 const previewVisible = ref(false); // 预览弹窗是否显示
 const selectedFile = ref<UploadUserFile>();
 const getFirstImgUrl = computed(() => {
@@ -86,7 +86,13 @@ const beforeUpload: UploadProps["beforeUpload"] = rawFile => {
   return imgType && imgSize;
 };
 const handleExceed: UploadProps["onExceed"] = (files, uploadFiles) => {
-  ElMessage.warning(`上传文件限制为3份，您本次选择${files.length}份文件, 合计文件为${files.length + uploadFiles.length}份`);
+  console.log(files, "files");
+  // 关键：将 files 统一转为数组（避免单个文件时为 File 对象而非数组）
+  const selectedFiles = Array.isArray(files) ? files : [files];
+  // 计算本次选择的文件数和总文件数
+  const selectedCount = selectedFiles.length;
+  const totalCount = selectedCount + uploadFiles.length;
+  ElMessage.warning(`上传文件限制为3份，您本次选择${selectedCount}份文件，合计文件为${totalCount}份`);
 };
 const beforeRemove: UploadProps["beforeRemove"] = uploadFile => {
   return ElMessageBox.confirm(`确定要删除 ${uploadFile.name} 吗?`).then(
@@ -107,10 +113,10 @@ const handleHttpUpload = async (options: UploadRequestOptions) => {
     // 通知Upload组件上传成功
     options.onSuccess(data, options.file);
     // 更新文件列表中的URL（从接口响应获取）
-    const index = fileList.value.findIndex(item => item.uid === options.file.uid);
+    const index = dataValue.value.findIndex(item => item.uid === options.file.uid);
     if (index !== -1) {
-      fileList.value[index].url = isArray(data) ? data[0].url : data.url; // 假设接口返回data.url
-      fileList.value[index].response = data; // 保存完整响应数据
+      dataValue.value[index].url = isArray(data) ? data[0].url : data.url; // 假设接口返回data.url
+      dataValue.value[index].response = data; // 保存完整响应数据
     }
     // 调用 el-form 内部的校验方法（可自动校验）
     formItemContext?.prop && formContext?.validateField([formItemContext.prop as string]);
@@ -119,9 +125,9 @@ const handleHttpUpload = async (options: UploadRequestOptions) => {
     options.onError(error as any);
   }
 };
-// 监听本地fileList变化，同步到父组件
+// 监听本地dataValue变化，同步到父组件
 watch(
-  () => fileList.value,
+  () => dataValue.value,
   newList => {
     // 转换为父组件需要的格式（过滤临时文件和多余字段）
     const formattedList = newList
@@ -133,7 +139,7 @@ watch(
         ...(item.response || {}) // 合并接口返回的其他数据
       }));
     compStore.updateCurrentComp({
-      fileList: formattedList
+      dataValue: formattedList
     });
   },
   { deep: true }
