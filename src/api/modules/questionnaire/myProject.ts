@@ -22,5 +22,7 @@ export const getProjectDetail = projectKey => {
 export const publishProject = projectKey => {
   return http.put<MyProject.PublishItem>(PORT1 + `/survey/project/publish/${projectKey}`);
 };
-
+export const copyProject = projectKey => {
+  return http.post<MyProject.SaveTemplate>(PORT1 + `survey/project/copy/${projectKey}`);
+};
 // /survey/project/saveAs/tpl/{projectKey}
