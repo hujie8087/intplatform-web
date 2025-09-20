@@ -287,7 +287,7 @@ const submitAnswerSheet = () => {
     const endTime = Date.now();
     const duration = Math.floor((endTime - startTime.value) / 1000); // 秒
     let obj = {
-      projectKey: route.query?.projectKey ?? "6b1ae12f51ab40f39605808cab614054",
+      projectKey: route.query?.projectKey,
       completeTime: duration,
       fingerprint: localStorage.getItem("device_id"),
       submitUa: getClientInfo(),
