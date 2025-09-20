@@ -3,12 +3,12 @@
   <div class="survery-topic-page">
     <div class="drawer-header">
       <span>问卷答题</span>
-      <div class="controls">
+      <!-- <div class="controls">
         <el-radio-group size="default" v-model="previewType">
-          <el-radio-button label="Phone">移动端</el-radio-button>
-          <el-radio-button label="PC">桌面端</el-radio-button>
+          <el-radio-button value="Phone">移动端</el-radio-button>
+          <el-radio-button value="PC">桌面端</el-radio-button>
         </el-radio-group>
-      </div>
+      </div> -->
       <el-button type="primary" :icon="CloseBold" link class="close-topic-btn" @click="closeTopicBtn"></el-button>
     </div>
     <div class="topic-page-container">
@@ -187,6 +187,7 @@ const childrenCompValueChange = value => {
   let hiddenArr = [];
   Object.keys(showRulesObj[value.id]).forEach(key => {
     if (Array.isArray(value.value)) {
+      debugger;
       value.value.forEach(element => {
         if (element == key) {
           showArr.push(showRulesObj[value.id][key]);
@@ -202,29 +203,15 @@ const childrenCompValueChange = value => {
       }
     }
   });
-  // let copyPageCompList = _.cloneDeep(pageCompList.value);
-  debugger;
   pageCompList.value.forEach(el => {
     if (showArr.includes(el.id)) {
       el.hideen = false;
-      // compStore.updateCurrentComp({
-      //   dataValue: ""
-      // });
-      // el.dataValue = "";
     } else if (hiddenArr.includes(el.id)) {
       el.hideen = true;
-      // el.dataValue = "";
-      // compStore.updateCurrentComp({
-      //   dataValue: ""
-      // });
     } else {
       el.hideen = false;
     }
   });
-  // Object.assign(pageCompList.value, copyPageCompList);
-  // pageCompList.value = copyPageCompList;
-  console.log("------------", pageCompList.value);
-  debugger;
 };
 watch([() => compStore.compConfig, () => compStore.currentGlobalFormConfig], ([compConfig, currentGlobalFormConfig]) => {
   updateCompByChange({
@@ -244,11 +231,10 @@ const updateCompByChange = (compConfig: any) => {
     //   let tag = testNumber(nowItem, compConfig.dataValue);
     //   console.log("***********", tag);
     // }
-    debugger;
-    if (activeComp.value.id == pageCompList.value[index].id) {
-      pageCompList.value[index] = { ...pageCompList.value[index], ...compConfig };
-      childrenCompValueChange({ id: activeComp.value.id, value: compConfig.dataValue });
-    }
+    console.log("----------", compConfig);
+    pageCompList.value[index] = { ...pageCompList.value[index], ...compConfig };
+
+    childrenCompValueChange({ id: activeComp.value.id, value: compConfig.dataValue });
   }
 };
 const getActiveCompIndex = () => {
@@ -268,30 +254,48 @@ const testNumber = (nowItem, phone: string) => {
 };
 const submitAnswerSheet = () => {
   // 先校验是否是必填项，校验完看是填写是否错误
-  console.log("///////", pageCompList.value);
-  debugger;
-  let tempArr = pageCompList.value;
+  let setRespans = getCheckoutList();
   let isNext = true;
-  for (let index = 0; index < tempArr.length; index++) {
-    const element = tempArr[index];
+  let hasErroyArr: any = [];
+  for (let index = 0; index < setRespans.length; index++) {
+    const element = setRespans[index];
+    element.errorMsg = "";
     // 增加代码校验，如果有值是否符合校验规则的
-    if (element.dataValue) {
-      // 设置了校验类型的
-      if (element["formValidationFormat"]) {
-        isNext = testNumber(element, element.dataValue);
-        if (!isNext) {
-          let msg = regexRuleMesg[element["formValidationFormat"]];
-          element.errorMsg = msg;
+    if (element.isRequired) {
+      if (element.dataValue) {
+        // 设置了校验类型的
+        if (element["formValidationFormat"]) {
+          isNext = testNumber(element, element.dataValue);
+          hasErroyArr.push(isNext);
+          if (!isNext) {
+            let msg = regexRuleMesg[element["formValidationFormat"]];
+            element.errorMsg = msg;
+            // break;
+          }
         }
-      } else if (element["customErrorMessage"]) {
-        // 设置自定义校验类型的
+        // else if (element["customErrorMessage"]) {
+        //   // 设置自定义校验类型的
+        //   // let isNext = rulter.test(element.dataValue);
+        //   // if (!isNext) {
+        //   //   let msg = "当前数据填写不正确";
+        //   //   element.errorMsg = msg;
+        //   //   break;
+        //   // }
+        // }
+      } else {
+        isNext = false;
+        hasErroyArr.push(isNext);
+        element.errorMsg = "此数据不能为空";
+        if (element["customErrorMessage"]) {
+          element.errorMsg = element["customErrorMessage"];
+        }
+        // break;
       }
-    } else {
-      isNext = false;
-      element.errorMsg = "此数据不能为空";
     }
   }
-  if (isNext) {
+  if (isAllTrue(hasErroyArr)) {
+    console.log("///////", setRespans);
+
     const endTime = Date.now();
     const duration = Math.floor((endTime - startTime.value) / 1000); // 秒
     let obj = {
@@ -301,39 +305,54 @@ const submitAnswerSheet = () => {
       submitUa: getClientInfo(),
       submitOs: getOS(),
       submitBrowser: getBrowser(),
-      answerList: setTopicList()
+      answerList: setTopicList(setRespans)
     };
+    submitFun(obj);
   }
 };
 const submitFun = async params => {
+  console.log("============提交答案", params);
   let result = await submitSurvey(params);
   if (result.code == 200) {
     ElMessage.success(`答卷提交成功`);
   }
 };
 onMounted(async () => {
-  // 40d90ea8cfe24966b5b0cfefaab61990
-  const projectKey = route.query?.projectKey ?? "6b1ae12f51ab40f39605808cab614054";
+  const projectKey = route.query?.projectKey;
+  previewType.value = getDeviceType();
   if (!localStorage.getItem("device_id")) {
     localStorage.setItem("device_id", uuidv4());
   }
-  //   setRulesObj(projectKey);
-  initTopicList(projectKey);
+  setRulesObj(projectKey);
 });
+const getCheckoutList = () => {
+  let arr = pageCompList.value.filter(item => !item.hideen);
+  return arr;
+};
 // 设置题目列表
-const setTopicList = () => {
+const setTopicList = setRespans => {
   let arr: any = [];
-  pageCompList.value.forEach(el => {
+  setRespans.forEach(el => {
     arr.push({
-      questionId: "102",
-      questionName: "姓名",
-      questionType: "INPUT",
-      originalValue: "WALONG",
-      processValue: "WALONG",
-      sort: 32768
+      questionId: el.id,
+      questionName: el.title,
+      questionType: el.type,
+      originalValue: el.dataValue,
+      processValue: el.dataValue
     });
   });
+  return arr;
 };
+const isAllTrue = (arr, allowEmpty = false) => {
+  if (!Array.isArray(arr)) {
+    throw new Error("参数必须是数组");
+  }
+  if (arr.length === 0 && !allowEmpty) {
+    return false;
+  }
+  return arr.every(Boolean);
+};
+
 // 获取操作系统
 const getOS = () => {
   const userAgent = window.navigator.userAgent.toLowerCase();
@@ -405,6 +424,16 @@ const getClientInfo = () => {
     browser
   };
 };
+/**
+ * 判断是否是移动端
+ * @returns {boolean} true = 移动端，false = PC
+ */
+const isMobile = () => {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+};
+function getDeviceType() {
+  return isMobile() ? "Phone" : "PC";
+}
 </script>
 
 <style lang="scss" scoped>
