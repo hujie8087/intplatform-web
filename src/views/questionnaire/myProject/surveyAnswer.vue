@@ -75,7 +75,10 @@ import { ElMessage } from "element-plus";
 import _ from "lodash";
 const route = useRoute();
 const router = useRouter();
-const rulesObj = reactive({});
+const rulesObj = reactive({
+  submitPromptText: "",
+  submitJumpUrl: ""
+});
 const formShowConfig = ref({
   formTitle: "表单预览",
   waterMarkBool: true,
@@ -162,7 +165,6 @@ const setRulesObj = async projectKey => {
       initTopicList(projectKey);
     }
   } catch (error: any) {
-    console.log("///////////", error);
     erroryText.value = error.msg;
   }
 };
@@ -208,14 +210,6 @@ watch([() => compStore.compConfig, () => compStore.currentGlobalFormConfig], ([c
 const updateCompByChange = (compConfig: any) => {
   const index = getActiveCompIndex();
   if (index > -1 && pageCompList.value.length) {
-    // console.log("///////////", compConfig);
-    // customErrorMessage 自定义校验规则
-    // let nowItem = pageCompList.value[index];
-    // if (nowItem["formValidationFormat"]) {
-    //   let ruleTest = regexRule[nowItem["formValidationFormat"]];
-    //   let tag = testNumber(nowItem, compConfig.dataValue);
-    //   console.log("***********", tag);
-    // }
     console.log("----------", compConfig);
     pageCompList.value[index] = { ...pageCompList.value[index], ...compConfig };
 
@@ -238,7 +232,6 @@ const testNumber = (nowItem, phone: string) => {
   return isValid;
 };
 const submitAnswerSheet = () => {
-  debugger;
   // 先校验是否是必填项，校验完看是填写是否错误
   let setRespans = getCheckoutList();
   let isNext = true;
@@ -256,7 +249,6 @@ const submitAnswerSheet = () => {
           if (!isNext) {
             let msg = regexRuleMesg[element["formValidationFormat"]];
             element.errorMsg = msg;
-            // break;
           }
         }
         // else if (element["customErrorMessage"]) {
@@ -300,7 +292,12 @@ const submitFun = async params => {
   console.log("============提交答案", params);
   let result = await submitSurvey(params);
   if (result.code == 200) {
-    ElMessage.success(`答卷提交成功`);
+    let resText = rulesObj.submitPromptText ?? "答卷提交成功";
+    let jumpUrl = rulesObj?.submitJumpUrl;
+    ElMessage.success(`${resText}`);
+    if (jumpUrl) {
+      location.href = jumpUrl;
+    }
   }
 };
 onMounted(async () => {
