@@ -453,13 +453,16 @@ function getDeviceType() {
     border-radius: 6px;
     transform: translateX(-50%);
     &.phone {
-      width: 392px;
+      top: 0;
+      box-sizing: border-box;
+      width: 100vw;
+      height: 100vh;
+      padding: 0;
       overflow-x: hidden !important;
       .form-item .comp-item {
         padding: 10px 20px 30px;
       }
       .form-footer {
-        width: 390px;
         margin-top: 15px;
       }
       :deep(.comp-item .number) {
@@ -472,6 +475,7 @@ function getDeviceType() {
   color: #ffffff !important;
 }
 .comps {
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
 }
@@ -504,5 +508,9 @@ function getDeviceType() {
     width: 300px;
     margin: 20px;
   }
+}
+.survery-topic-page,
+.topic-page-container {
+  overflow-x: hidden; // 防止 body-content 溢出撑开
 }
 </style>
