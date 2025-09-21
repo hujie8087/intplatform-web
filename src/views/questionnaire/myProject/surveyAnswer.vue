@@ -304,7 +304,6 @@ const submitFun = async params => {
   if (result.code == 200) {
     let resText = rulesObj.submitPromptText ?? "答卷提交成功";
     let jumpUrl = rulesObj?.submitJumpUrl;
-    ElMessage.success(`${resText}`);
     if (jumpUrl) {
       ElMessage.success(`${resText}`);
       setTimeout(() => {
