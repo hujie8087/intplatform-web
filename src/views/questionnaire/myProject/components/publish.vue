@@ -184,6 +184,7 @@ $spacing-sm: 8px;
 $spacing-md: 16px;
 $spacing-lg: 24px;
 .publish-page {
+  position: relative;
   display: flex;
   align-items: flex-start; // 改为顶部对齐，避免内容过长时垂直居中异常
   justify-content: center;
@@ -191,8 +192,20 @@ $spacing-lg: 24px;
   margin: 0;
   overflow: hidden;
 }
+.publish-page::after {
+  position: absolute;
+  top: 56px;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: calc(100% - 56px);
+  content: "";
+  background-image: url("./images/bg.jpg");
+  filter: blur(30px);
+  background-repeat: round;
+}
 .content-card {
-  width: 94%;
+  width: 98%;
   min-height: 80%;
   margin-top: $spacing-lg;
   overflow: hidden;

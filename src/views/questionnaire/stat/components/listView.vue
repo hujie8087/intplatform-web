@@ -1,31 +1,41 @@
 <template>
-  <div class="answer_view">
-    <ProTable
-      ref="proTable"
-      highlight-current-row
-      :columns="columns"
-      :request-api="getTableList"
-      :init-param="treeFilterValues"
-      :data-callback="dataCallback"
-      :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
-    >
-      <template #operation="scope">
-        <el-button type="primary" @click="showDetail(scope.row)" :icon="View" circle />
-        <!-- <el-button type="danger" :icon="Delete" circle /> -->
-      </template>
-    </ProTable>
+  <div class="answer_view main-box">
+    <div class="table-box">
+      <ProTable
+        ref="proTable"
+        highlight-current-row
+        :columns="columns"
+        :request-api="getTableList"
+        :init-param="treeFilterValues"
+        :data-callback="dataCallback"
+        :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
+      >
+        <template #tableHeader>
+          <el-button type="warning" :icon="Download" @click="exportFile">批量导出</el-button>
+        </template>
+        <template #operation="scope">
+          <el-tooltip placement="top" effect="dark" content="查看问卷">
+            <el-button link type="success" :icon="View" @click="showDetail(scope.row)" />
+          </el-tooltip>
+          <!-- <el-tooltip placement="top" effect="dark" content="导出结果">
+            <el-button link type="primary" :icon="Document" @click="showDetail(scope.row)" />
+          </el-tooltip> -->
+        </template>
+      </ProTable>
+    </div>
   </div>
 </template>
 
 <script setup lang="tsx" name="listView">
 import { reactive } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
-import { getAnswerList } from "@/api/modules/questionnaire/answer";
-import { View } from "@element-plus/icons-vue";
-// import { Delete } from "@element-plus/icons-vue";
-import { useRoute } from "vue-router";
+import { getAnswerList, exportAnswerResult } from "@/api/modules/questionnaire/answer";
+// Document
+import { View, Download } from "@element-plus/icons-vue";
+import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const key = route.query.key as string | undefined;
+const router = useRouter();
 
 const columns = reactive([
   { type: "selection", label: "", width: 80 },
@@ -57,7 +67,7 @@ const columns = reactive([
     label: "提交时间",
     align: "left"
   },
-  { prop: "operation", label: "操作", fixed: "right" }
+  { prop: "operation", label: "操作" }
 ]);
 const treeFilterValues = reactive({ pageNum: 1, pageSize: 20 });
 const dataCallback = (data: any) => {
@@ -79,27 +89,27 @@ const getTableList = (params: any) => {
 };
 
 const showDetail = (data: any) => {
-  console.log(data, "data");
+  const projectKey = data.projectKey;
+  router.push({ path: "/questionnaire/surverResult", query: { projectKey } });
+};
+const exportFile = async () => {
+  const res = await exportAnswerResult(key);
+  console.log(res);
 };
 </script>
 
 <style scoped lang="scss">
 .answer_view {
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 20px;
-  }
+  height: calc(100vh - 170px);
+  background-color: #f6f8f8;
   :deep(.table-search) {
-    border: none;
+    // border: none;
+    margin: 10px 12px;
   }
   :deep(.table-main) {
-    height: 560px;
-    padding-top: 0;
-    overflow-y: auto;
-    border: none;
-    box-shadow: none;
+    width: auto;
+    margin: 10px 12px;
+    margin-top: 0;
   }
 }
 </style>

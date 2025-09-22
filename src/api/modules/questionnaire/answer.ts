@@ -13,3 +13,7 @@ export const deleteAnswer = (id: number) => {
 export const getAnswerResult = (id: number, projectKey: string) => {
   return http.post(PORT1 + `/survey/answer/result/dtl`, { id, projectKey });
 };
+// 导出问答明细
+export const exportAnswerResult = (projectKey: string) => {
+  return http.get(PORT1 + `/survey/report/answer/${projectKey}`);
+};

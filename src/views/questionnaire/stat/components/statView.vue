@@ -8,25 +8,23 @@
         </el-tooltip>
       </div>
     </div>
-    <el-divider border-style="dashed" />
     <div class="stat-menu">
       <div class="menu-item">
         <el-text>有效回收量</el-text>
-        <span>{{ statData?.completeCount }}</span>
+        <span class="huishou-tongji">{{ statData?.completeCount ?? "-" }}</span>
       </div>
       <div class="menu-item">
         <el-text>总浏览量</el-text>
-        <span>{{ statData?.viewCount }}</span>
+        <span class="huishou-tongji second-tongji">{{ statData?.viewCount ?? "-" }}</span>
       </div>
       <div class="menu-item">
         <el-text>平均完成时间</el-text>
-        <span>{{ statData?.avgCompleteTime }}</span>
+        <span class="huishou-tongji last-tongji">{{ statData?.avgCompleteTime ?? "-" }}</span>
       </div>
     </div>
     <div class="week-chart">
       <ECharts ref="lineChartRef" :option="lineChartOption" />
     </div>
-    <el-divider border-style="dashed" />
     <div class="bottom-chart">
       <div class="item device">
         <el-text class="tit" size="large">常用设备</el-text>
@@ -92,18 +90,13 @@ const lineChartOption: ECOption = {
     }
   },
   tooltip: {
-    trigger: "axis",
-    axisPointer: {
-      type: "cross",
-      label: {
-        backgroundColor: "#6a7985"
-      }
-    }
+    trigger: "axis"
   },
   grid: {
+    top: "12px",
     left: "3%",
     right: "4%",
-    bottom: "3%",
+    bottom: "7%",
     containLabel: true
   },
   xAxis: [
@@ -111,8 +104,14 @@ const lineChartOption: ECOption = {
       type: "category",
       boundaryGap: false,
       data: [],
+      axisLine: {
+        lineStyle: {
+          color: "#999"
+        }
+      },
+      axisTick: { show: false },
       axisLabel: {
-        color: "#a1a1a1"
+        color: "#333"
       }
     }
   ],
@@ -120,7 +119,12 @@ const lineChartOption: ECOption = {
     {
       type: "value",
       axisLabel: {
-        color: "#a1a1a1"
+        color: "#666"
+      },
+      splitLine: {
+        lineStyle: {
+          type: "dashed"
+        }
       }
     }
   ],
@@ -128,11 +132,12 @@ const lineChartOption: ECOption = {
     {
       name: "有效回收量",
       type: "line",
+      smooth: true,
       stack: "Total",
-      areaStyle: {},
-      emphasis: {
-        focus: "series"
-      },
+      // areaStyle: {},
+      // emphasis: {
+      //   focus: "series"
+      // },
       data: []
     }
   ]
@@ -172,8 +177,8 @@ const deviceOption: ECOption = {
     {
       name: "设备类型",
       type: "pie",
-      radius: [60, 120],
-      center: ["50%", "50%"],
+      radius: [80, 110],
+      center: ["50%", "45%"],
       itemStyle: {
         borderRadius: 5
       },
@@ -263,11 +268,16 @@ const refresh = () => {
 
 <style scoped lang="scss">
 .stat-view {
+  margin: 10px 12px;
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 20px;
+    padding: 15px;
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--el-border-color-light);
+    border-radius: 6px 6px 0 0;
+    box-shadow: 0 0 12px rgb(0 0 0 / 5%);
     .refresh {
       cursor: pointer;
       .el-icon {
@@ -283,34 +293,60 @@ const refresh = () => {
   .stat-menu {
     display: flex;
     width: 100%;
-    height: 80px;
+    height: 65px;
+    background: #ffffff;
     .menu-item {
       display: flex;
       flex: 1;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      & > span:nth-child(1) {
-        margin-bottom: 14px;
-      }
     }
   }
   .week-chart {
     width: 100%;
-    height: 400px;
+    height: 290px;
+    background: #ffffff;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 0 12px rgb(0 0 0 / 5%);
   }
   .bottom-chart {
     display: flex;
-    height: 400px;
-    margin-left: 20px;
+    height: 350px;
+    margin-top: 10px;
     .item {
       display: flex;
       flex: 1;
       flex-direction: column;
       .tit {
-        margin-bottom: 10px;
+        margin: 10px 0;
       }
     }
+    .device,
+    .source {
+      background: #ffffff;
+      border: 1px solid var(--el-border-color-light);
+      border-radius: 6px;
+      box-shadow: 0 0 12px rgb(0 0 0 / 5%);
+    }
+    .device {
+      margin-right: 5px;
+    }
+    .source {
+      margin-left: 5px;
+    }
   }
+}
+.huishou-tongji {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333333;
+  color: var(--el-color-danger);
+}
+.huishou-tongji.second-tongji {
+  color: var(--el-color-primary);
+}
+.huishou-tongji.last-tongji {
+  color: var(--el-color-warning);
 }
 </style>
