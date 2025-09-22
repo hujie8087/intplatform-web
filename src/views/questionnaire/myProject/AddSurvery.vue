@@ -125,8 +125,8 @@ onMounted(() => {
   }
   .control {
     position: absolute;
-    top: 8px;
-    right: 6px;
+    top: 18px;
+    right: 15px;
     display: flex;
     flex-grow: 2;
     .cont-item {

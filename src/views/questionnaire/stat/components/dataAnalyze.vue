@@ -8,16 +8,14 @@
         </el-tooltip>
       </div>
     </div>
-    <el-divider border-style="dashed" />
-
     <!-- 数据为空状态 -->
     <div v-if="dataList.length === 0" class="empty-state">
       <el-empty description="暂无数据" />
     </div>
 
-    <div v-else class="content" v-for="(item, index) in dataList" :key="index">
+    <div v-else :class="[index == 0 ? 'content-first-type' : '', 'content']" v-for="(item, index) in dataList" :key="index">
       <div class="select">
-        <el-text>{{ item.label }} ({{ item.type }})</el-text>
+        <el-text class="select-title">{{ item.label }} ({{ item.type }})</el-text>
         <el-radio-group v-model="item.chartType" size="default">
           <el-radio-button label="柱状图" value="column" />
           <el-radio-button label="折线图" value="line" />
@@ -175,13 +173,24 @@ const getColumnOption = (item): ECOption => {
       axisLabel: {
         color: "#a1a1a1",
         rotate: 30 // 旋转标签防止重叠
-      }
+      },
+      axisLine: {
+        lineStyle: {
+          color: "#666"
+        }
+      },
+      axisTick: { show: false }
     },
     yAxis: {
       type: "value",
       axisLabel: {
         color: "#a1a1a1",
         formatter: "{value}"
+      },
+      splitLine: {
+        lineStyle: {
+          type: "dashed"
+        }
       }
     },
     series: [
@@ -189,9 +198,9 @@ const getColumnOption = (item): ECOption => {
         name: item.label,
         type: "bar",
         data: item.data,
-        barWidth: "60%",
+        barWidth: 20,
         itemStyle: {
-          borderRadius: 4
+          borderRadius: [4, 4, 0, 0]
         }
       }
     ]
@@ -265,12 +274,16 @@ const refresh = () => {
 
 <style scoped lang="scss">
 .data-analyze {
-  min-height: calc(100vh - 200px); /* 确保容器至少占满视口高度 */
+  margin: 10px 12px;
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 20px;
+    padding: 15px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--el-border-color-light);
+    border-radius: 6px 6px 0 0;
+    box-shadow: 0 0 12px rgb(0 0 0 / 5%);
     .refresh {
       cursor: pointer;
       .el-icon {
@@ -286,15 +299,27 @@ const refresh = () => {
   .content {
     display: flex;
     flex-direction: column;
-    margin: 20px;
+    padding: 10px 15px;
+    margin-bottom: 10px !important;
+    background-color: #ffffff;
+    border: 1px solid var(--el-border-color-light);
+    border-radius: 6px;
+    box-shadow: 0 0 12px rgb(0 0 0 / 5%);
     .select {
       display: flex;
       justify-content: space-between;
+      .select-title {
+        font-size: 13px;
+      }
     }
     .chart {
       width: 100%;
       height: 400px;
     }
+  }
+  .content-first-type {
+    border-top: none !important;
+    border-radius: 0 0 6px 6px;
   }
 }
 </style>

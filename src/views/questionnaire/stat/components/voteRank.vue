@@ -14,7 +14,6 @@
         </el-tooltip>
       </div>
     </div>
-    <el-divider border-style="dashed" />
     <div class="content">
       <!-- 数据为空状态 -->
       <div v-if="rankingData.length === 0" class="empty-state">
@@ -108,12 +107,16 @@ const refresh = () => {
 
 <style scoped lang="scss">
 .vote-view {
-  min-height: calc(100vh - 200px);
+  margin: 10px 12px;
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 20px;
+    padding: 15px;
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--el-border-color-light);
+    border-radius: 6px 6px 0 0;
+    box-shadow: 0 0 12px rgb(0 0 0 / 5%);
     .title {
       margin-right: 20px;
     }
@@ -205,5 +208,13 @@ const refresh = () => {
       }
     }
   }
+}
+.content {
+  height: 73vh;
+  overflow: scroll;
+  background: #ffffff;
+  border-bottom: 1px solid var(--el-border-color-light);
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 0 12px rgb(0 0 0 / 5%);
 }
 </style>
