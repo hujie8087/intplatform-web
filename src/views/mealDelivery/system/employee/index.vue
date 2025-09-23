@@ -72,13 +72,13 @@ import EmployeeDrawer from "./components/EmployeeDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, EditPen, Download, Upload, View } from "@element-plus/icons-vue";
 import {
-  listEmployee,
   delEmployee,
   updateEmployee,
   addEmployee,
   getEmployee,
   changeEmployeeStatus,
-  batchAddEmployee
+  batchAddEmployee,
+  batchEmployee
 } from "@/api/modules/mdc/system/employee";
 import { Employee } from "@/api/interface/mealDelivery/system/employee";
 import { genderType, religionOptions, userStatus } from "@/utils/serviceDict";
@@ -113,7 +113,11 @@ const getEmployeeList = (params: any) => {
     };
     delete newParams.createTime;
   }
-  return listEmployee(newParams);
+  if (newParams.jobNumber) {
+    newParams.jobNumbers = newParams.jobNumber.split("\n");
+    delete newParams.jobNumber;
+  }
+  return batchEmployee(newParams);
 };
 
 // 获取国籍数据字典
@@ -143,7 +147,17 @@ const treeFilterRef = ref<InstanceType<typeof TreeFilter>>();
 // 表格配置项
 const columns = reactive<ColumnProps<Employee.ResEmployee>[]>([
   { type: "selection", label: "", width: 50 },
-  { prop: "jobNumber", label: "employee.jobNumber", search: { el: "input" }, width: 100 },
+  {
+    prop: "jobNumber",
+    label: "employee.jobNumber",
+    search: {
+      el: "input",
+      props: {
+        type: "textarea"
+      }
+    },
+    width: 100
+  },
   { prop: "username", label: "employee.username", search: { el: "input" }, width: 120 },
   { prop: "deptPath", label: "employee.dept", width: 120 },
   { prop: "companyName", label: "employee.company", width: 80 },
