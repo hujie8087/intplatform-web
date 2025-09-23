@@ -6,6 +6,13 @@ import { Employee } from "@/api/interface/mealDelivery/system/employee";
 export function listEmployee(query) {
   return http.getUrl<Employee.ResEmployee>(PORT1 + "/system/mdc/employee/list", query);
 }
+// 批量查询员工列表
+export function batchEmployee(query) {
+  return http.post<Employee.ResEmployee>(
+    PORT1 + `/system/mdc/employee/list2?pageNum=${query.pageNum}&pageSize=${query.pageSize}`,
+    query
+  );
+}
 
 // 查询员工树列表
 export function listEmployeeTree(query) {
