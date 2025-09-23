@@ -71,7 +71,7 @@
 /* eslint-disable */
 type PreviewType = "Phone" | "PC";
 import { ref, reactive, onMounted, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { Check, CircleCheck } from "@element-plus/icons-vue";
 import FormComponent from "../dynamicForm/components/componentsForm/index.vue";
 import SupportComp from "../dynamicForm/preview/component/SupportComp.vue";
@@ -84,7 +84,6 @@ import _ from "lodash";
 const route = useRoute();
 const dialogTableVisible = ref(false);
 const popupText = ref("");
-const router = useRouter();
 const rulesObj = reactive({
   submitPromptText: "",
   submitJumpUrl: ""
