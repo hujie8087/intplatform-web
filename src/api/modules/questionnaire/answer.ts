@@ -15,5 +15,5 @@ export const getAnswerResult = (id: number, projectKey: string) => {
 };
 // 导出问答明细
 export const exportAnswerResult = (projectKey: string) => {
-  return http.get(PORT1 + `/survey/report/answer/${projectKey}`);
+  return http.get(PORT1 + `/survey/report/answer/${projectKey}`, {}, { responseType: "blob" });
 };
