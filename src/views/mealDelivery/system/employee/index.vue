@@ -114,7 +114,7 @@ const getEmployeeList = (params: any) => {
     delete newParams.createTime;
   }
   if (newParams.jobNumber) {
-    newParams.jobNumbers = newParams.jobNumber.split("\n");
+    newParams.jobNumbers = newParams.jobNumber.split("\n").map(s => s.trim());
     delete newParams.jobNumber;
   }
   return batchEmployee(newParams);
