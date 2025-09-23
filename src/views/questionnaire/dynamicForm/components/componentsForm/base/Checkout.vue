@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const compStore = useSelectCompStore();
 interface Props {
@@ -35,8 +35,8 @@ interface Props {
 }
 const _updateKey = ref("");
 const props = defineProps<Props>();
-const localDataValue = ref([]);
-
+// const localDataValue = ref([]);
+const localDataValue = computed(() => props.dataValue);
 // 1. 使用watch监听（推荐，可获取新旧值）
 watch(
   () => localDataValue.value,
