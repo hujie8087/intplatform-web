@@ -6,7 +6,9 @@
           <img src="@/assets/images/form-editor/callback.svg" alt="" />
         </div>
         <div class="title-data">
-          <span class="name"><el-text>问卷编辑：</el-text>《{{ projectName }}》</span>
+          <span class="name">
+            <el-text>问卷编辑：《{{ projectName }}》</el-text>
+          </span>
         </div>
         <div class="control">
           <div class="cont-item">
@@ -125,7 +127,7 @@ onMounted(() => {
   }
   .control {
     position: absolute;
-    top: 18px;
+    top: 8px;
     right: 15px;
     display: flex;
     flex-grow: 2;

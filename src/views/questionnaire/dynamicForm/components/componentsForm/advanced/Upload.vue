@@ -37,6 +37,8 @@ import { ElNotification, formContextKey, formItemContextKey } from "element-plus
 import { uploadImg } from "@/api/modules/upload";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { isArray } from "lodash";
+import { delayTime } from "../../compConfig";
+
 const compStore = useSelectCompStore();
 const filePath = import.meta.env.VITE_APP_BASE_FILE;
 interface Props {
@@ -64,7 +66,6 @@ const handlePreview: UploadProps["onPreview"] = currentFile => {
 };
 const handleRemove: UploadProps["onRemove"] = () => {
   // 删除后同步可预览列表
-  console.log("删除");
 };
 const beforeUpload: UploadProps["beforeUpload"] = rawFile => {
   const imgSize = rawFile.size / 1024 / 1024 < 5;
@@ -86,7 +87,6 @@ const beforeUpload: UploadProps["beforeUpload"] = rawFile => {
   return imgType && imgSize;
 };
 const handleExceed: UploadProps["onExceed"] = (files, uploadFiles) => {
-  console.log(files, "files");
   // 关键：将 files 统一转为数组（避免单个文件时为 File 对象而非数组）
   const selectedFiles = Array.isArray(files) ? files : [files];
   // 计算本次选择的文件数和总文件数
@@ -138,9 +138,12 @@ watch(
         uid: item.uid,
         ...(item.response || {}) // 合并接口返回的其他数据
       }));
-    compStore.updateCurrentComp({
-      dataValue: formattedList
-    });
+    setTimeout(() => {
+      compStore.updateCurrentComp({
+        dataValue: formattedList,
+        id: props.id
+      });
+    }, delayTime);
   },
   { deep: true }
 );

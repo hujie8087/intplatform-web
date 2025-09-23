@@ -17,7 +17,8 @@ const orientationList = ref([...textOrButtonSizeData]);
 const handleChange = (event: any) => {
   const data = event;
   compStore.updateCurrentComp({
-    size: data
+    size: data,
+    id: props.comp.id
   });
 };
 

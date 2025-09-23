@@ -231,6 +231,7 @@ const getActiveCompIndex = () => {
 };
 // 组件选中
 const selectComp = (item: any) => {
+  compStore.initCurrentComp(item);
   activeComp.value.id = item.id;
 };
 const testNumber = (nowItem, phone: string) => {

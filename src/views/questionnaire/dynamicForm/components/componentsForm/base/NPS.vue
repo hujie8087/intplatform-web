@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
-
+import { delayTime } from "../../compConfig";
 interface Props {
   id: string;
   dataValue: number;
@@ -48,10 +48,11 @@ const changeIndex = (index: number) => {
 };
 
 const selectValue = (item: any) => {
-  console.log(item, "item--->");
-  compStore.updateCurrentComp({
-    dataValue: item
-  });
+  // 1. 可选：先验证当前组件是否仍为选中状态
+  // 传入当前组件自身的ID，确保更新正确的组件
+  setTimeout(() => {
+    compStore.updateCurrentComp({ dataValue: item, id: props.id });
+  }, delayTime);
 };
 </script>
 <style lang="scss">

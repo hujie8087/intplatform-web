@@ -20,7 +20,8 @@ const compStore = useSelectCompStore();
 const handleChangeInput = (event: any) => {
   const data = event;
   compStore.updateCurrentComp({
-    dividerValue: data
+    dividerValue: data,
+    id: props.comp.id
   });
 };
 

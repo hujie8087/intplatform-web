@@ -46,6 +46,7 @@
         :is-dev="isDev"
         :is-preview-render="isPreviewRender"
         :preview-type="previewType"
+        @trigger-select="triggerSelect"
         :editor-scroll-info="editorScrollInfo"
       ></component>
       <!-- 错误提示 -->
@@ -167,7 +168,7 @@ const localComponent = ref({ ...props.component });
 const displaySection = computed(() => !["divider", "paging", "formTitle", "img"].includes(props.type));
 const compConfig = props.component; // 组件配置
 const currentComp = getCompConfig(props.type); //组件
-const emit = defineEmits(["compControl", "addItem"]);
+const emit = defineEmits(["compControl", "addItem", "triggerSelect"]);
 
 // 修改标题和描述
 const changeValue = (event: any, params: string) => {
@@ -185,7 +186,8 @@ const changeValue = (event: any, params: string) => {
 
 const updateParams = (params: string, value: any) => {
   compStore.updateCurrentComp({
-    [params]: value
+    [params]: value,
+    id: props.component.id
   });
   compStore.updateCurrentCompKey(uuidv4());
 };
@@ -234,6 +236,9 @@ const isIgnoreEditor = () => {
 
 const addItem = (type: string) => {
   emit("addItem", type);
+};
+const triggerSelect = () => {
+  emit("triggerSelect", props.component);
 };
 
 const handleChangeRequired = (value: boolean) => {

@@ -14,7 +14,7 @@
 import { ref, watch } from "vue";
 import Email from "@/assets/images/form-editor/email.svg";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
-import { disableInputByDev } from "../../compConfig";
+import { disableInputByDev, delayTime } from "../../compConfig";
 const compStore = useSelectCompStore();
 interface Props {
   id: string;
@@ -28,9 +28,12 @@ const dataValue = ref(props.dataValue || null);
 watch(
   () => dataValue.value,
   newValue => {
-    compStore.updateCurrentComp({
-      dataValue: newValue
-    });
+    setTimeout(() => {
+      compStore.updateCurrentComp({
+        dataValue: newValue,
+        id: props.id
+      });
+    }, delayTime);
   }
 );
 </script>

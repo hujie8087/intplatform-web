@@ -19,7 +19,8 @@ const props = defineProps<Props>();
 const comp = ref(props.comp);
 const changeValue = (value: boolean) => {
   compStore.updateCurrentComp({
-    position: value
+    position: value,
+    id: props.comp.id
   });
 };
 </script>

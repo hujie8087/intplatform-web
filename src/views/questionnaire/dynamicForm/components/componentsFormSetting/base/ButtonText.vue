@@ -23,14 +23,16 @@ const compStore: any = useSelectCompStore();
 const handleChangeInput = (event: any) => {
   const data = event;
   compStore.updateCurrentComp({
-    buttonText: data
+    buttonText: data,
+    id: props.comp.id
   });
 };
 
 const changeValue = (event: any) => {
   const data = event;
   compStore.updateCurrentComp({
-    buttonIconShowBool: data
+    buttonIconShowBool: data,
+    id: props.comp.id
   });
 };
 

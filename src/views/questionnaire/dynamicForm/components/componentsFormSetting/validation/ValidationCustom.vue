@@ -20,7 +20,8 @@ const compStore = useSelectCompStore();
 const handleChangeInput = (event: any) => {
   const data = event;
   compStore.updateCurrentComp({
-    isCustomErrorMessage: data
+    isCustomErrorMessage: data,
+    id: props.comp.id
   });
 };
 </script>

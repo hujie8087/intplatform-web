@@ -20,8 +20,11 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+import { delayTime } from "../../compConfig";
+
 const compStore = useSelectCompStore();
 interface Props {
+  id: string;
   dataList: Array<any>;
   dataValue: string;
   layoutType: string;
@@ -35,12 +38,12 @@ const dataValue = ref(props.dataValue);
 watch(
   () => dataValue.value,
   newValue => {
-    compStore.updateCurrentComp({
-      dataValue: newValue
-    });
-  },
-  {
-    deep: true // 因为是数组，需要深度监听
+    setTimeout(() => {
+      compStore.updateCurrentComp({
+        dataValue: newValue,
+        id: props.id
+      });
+    }, delayTime);
   }
 );
 </script>

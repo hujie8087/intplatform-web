@@ -63,14 +63,16 @@ const compStore = useSelectCompStore();
 const handleChangeInput = (event: any) => {
   const data = event;
   compStore.updateCurrentComp({
-    formValidationFormat: data
+    formValidationFormat: data,
+    id: props.comp.id
   });
 };
 
 const changeValidationFormatRegexInput = (value: any) => {
   const data = value;
   compStore.updateCurrentComp({
-    formValidationFormatRegex: data
+    formValidationFormatRegex: data,
+    id: props.comp.id
   });
 };
 </script>

@@ -19,7 +19,8 @@ const props = defineProps<Props>();
 const comp = ref(props.comp);
 const changeValue = (value: boolean) => {
   compStore.updateCurrentComp({
-    dividerBorderType: value
+    dividerBorderType: value,
+    id: props.comp.id
   });
 };
 </script>

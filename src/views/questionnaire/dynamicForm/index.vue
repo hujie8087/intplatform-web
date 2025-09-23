@@ -105,6 +105,7 @@
                           :component="element"
                           :form-config="selectForm"
                           :type="element?.type"
+                          @trigger-select="selectComp"
                           :is-dev="isFormEditorDevBool"
                           :selected-comp="getActiveComp()"
                           :editor-scroll-info="editorScrollInfo"
@@ -295,12 +296,11 @@ const handleDragHandle = (e: any) => {
 };
 
 // 组件选中
-const selectComp = (item: any) => {
-  useCompStore.initCurrentComp({
-    ...item
-  });
+const selectComp = (item: { id: string; [key: string]: any }) => {
+  if (activeComp.value.id === item?.id) return;
+  // 1. 先初始化Store中的当前组件（会自动更新currentCompId）
+  useCompStore.initCurrentComp(item);
   activeComp.value.id = item.id;
-  console.log(item);
 };
 
 const getActiveComp = () => {
@@ -467,7 +467,7 @@ const onClose = () => {
 const isFormEditorDevBool = computed(() => {
   // 先检查 route 是否存在，避免报错
   if (!route) return false;
-  return route.path.includes("form-editor") || route.path.includes("AddSurvery");
+  return route.path.includes("form-editor") || route.path.includes("AddSurvery1");
 });
 
 // 更新选中组件数据

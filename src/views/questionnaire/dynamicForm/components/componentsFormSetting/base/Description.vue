@@ -23,7 +23,8 @@ const compStore: any = useSelectCompStore();
 const handleChangeInput = (value: any) => {
   const data = value;
   compStore.updateCurrentComp({
-    description: data
+    description: data,
+    id: props.comp.id
   });
 };
 

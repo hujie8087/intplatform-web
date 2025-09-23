@@ -41,6 +41,7 @@ import { uploadImg } from "@/api/modules/upload";
 import { isArray } from "lodash";
 import type { UploadRequestOptions } from "element-plus";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+import { delayTime } from "../../compConfig";
 
 const compStore = useSelectCompStore();
 const filePath = import.meta.env.VITE_APP_BASE_FILE;
@@ -277,14 +278,18 @@ onMounted(() => {
 // 监听 previewType 变化，重新初始化
 watch([() => props.previewType], () => {
   initData();
-  compStore.updateCurrentComp({ dataValue: localDataValue.value });
+  setTimeout(() => {
+    compStore.updateCurrentComp({ dataValue: localDataValue.value, id: props.id });
+  }, delayTime);
 });
 
 // 监听本地 dataValue 变化，同步到父组件
 watch(
   () => localDataValue.value,
   newValue => {
-    compStore.updateCurrentComp({ dataValue: newValue });
+    setTimeout(() => {
+      compStore.updateCurrentComp({ dataValue: newValue, id: props.id });
+    }, delayTime);
   },
   { deep: true }
 );

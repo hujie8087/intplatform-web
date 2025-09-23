@@ -39,7 +39,8 @@ const dataList: any = ref([]);
 const changeRateCount = (event: any) => {
   console.log(event, "event");
   compStore.updateCurrentComp({
-    rateCount: event
+    rateCount: event,
+    id: props.comp.id
   });
 };
 
@@ -53,7 +54,8 @@ const changeRateCount = (event: any) => {
 
 const changeHalf = (event: any) => {
   compStore.updateCurrentComp({
-    rateAllowHalf: event
+    rateAllowHalf: event,
+    id: props.comp.id
   });
 };
 

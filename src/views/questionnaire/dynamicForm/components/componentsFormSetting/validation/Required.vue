@@ -16,7 +16,8 @@ const compStore = useSelectCompStore();
 const handleChangeInput = (event: any) => {
   const data = event;
   compStore.updateCurrentComp({
-    isRequired: data
+    isRequired: data,
+    id: props.comp.id
   });
 };
 </script>

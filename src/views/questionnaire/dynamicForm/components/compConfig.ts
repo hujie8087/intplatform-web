@@ -54,6 +54,8 @@ interface CompConfig {
   isLayoutComp?: boolean; // 布局组件
 }
 export const disableInputByDev = "编辑模式不支持输入";
+// 延迟180ms更新数据，防止选中数据没有更新
+export const delayTime = 180;
 export const publishIntranetAddress = "http://localhost:8848/#/survey/answer";
 export const publishExtranetAddress = "http://localhost:8848/#/survey/answer";
 
@@ -240,6 +242,7 @@ export const getCompConfig = (type: CompType) => {
     compConfig = {
       ...compConfig,
       defaultValue: 0,
+      dataValue: 0,
       startValue: 0,
       rateCount: 10,
       startValueList: [0, 1]

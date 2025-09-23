@@ -13,7 +13,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { disableInputByDev } from "../../compConfig";
+import { disableInputByDev, delayTime } from "../../compConfig";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const compStore = useSelectCompStore();
 interface Props {
@@ -28,9 +28,12 @@ const dataValue = ref(props.dataValue || null);
 watch(
   () => dataValue.value,
   newValue => {
-    compStore.updateCurrentComp({
-      dataValue: newValue
-    });
+    setTimeout(() => {
+      compStore.updateCurrentComp({
+        dataValue: newValue,
+        id: props.id
+      });
+    }, delayTime);
   }
 );
 </script>

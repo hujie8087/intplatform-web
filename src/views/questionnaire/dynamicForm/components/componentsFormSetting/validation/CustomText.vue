@@ -27,7 +27,8 @@ const comp = ref(props.comp);
 const handleChangeInput = (value: any) => {
   const data = value;
   compStore.updateCurrentComp({
-    customErrorMessage: data
+    customErrorMessage: data,
+    id: props.comp.id
   });
 };
 </script>

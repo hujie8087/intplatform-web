@@ -15,6 +15,8 @@
 import { ref, watch } from "vue";
 import { disableInputByDev } from "../../compConfig";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+import { delayTime } from "../../compConfig";
+
 const compStore = useSelectCompStore();
 interface Props {
   id: string;
@@ -28,12 +30,12 @@ const dataValue = ref(props.dataValue || null);
 watch(
   () => dataValue.value,
   newValue => {
-    compStore.updateCurrentComp({
-      dataValue: newValue
-    });
-  },
-  {
-    deep: true // 因为是数组，需要深度监听
+    setTimeout(() => {
+      compStore.updateCurrentComp({
+        dataValue: newValue,
+        id: props.id
+      });
+    }, delayTime);
   }
 );
 </script>

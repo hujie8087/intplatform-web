@@ -17,7 +17,8 @@ const compStore: any = useSelectCompStore();
 const handleChangeInput = (value: any) => {
   const data = value;
   compStore.updateCurrentComp({
-    placeholder: data
+    placeholder: data,
+    id: props.comp.id
   });
 };
 interface Props {

@@ -20,7 +20,8 @@ const props = defineProps<Props>();
 const imageUrl = ref(props.comp.value);
 watch(imageUrl, newValue => {
   compStore.updateCurrentComp({
-    value: newValue
+    value: newValue,
+    id: props.comp.id
   });
 });
 </script>

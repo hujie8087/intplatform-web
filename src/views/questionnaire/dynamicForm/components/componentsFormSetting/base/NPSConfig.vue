@@ -57,13 +57,15 @@ onMounted(() => {
 
 const changeStartValue = (event: any) => {
   compStore.updateCurrentComp({
-    startValue: event
+    startValue: event,
+    id: props.comp.id
   });
 };
 
 const changeEndValue = (event: any) => {
   compStore.updateCurrentComp({
-    rateCount: event
+    rateCount: event,
+    id: props.comp.id
   });
 };
 </script>

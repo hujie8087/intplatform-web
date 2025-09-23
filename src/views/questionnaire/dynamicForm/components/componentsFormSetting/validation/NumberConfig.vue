@@ -38,7 +38,8 @@ const comp = ref(props.comp);
 const handleChangeInput = (event: any, param: "maxValue" | "minValue") => {
   const data = event;
   compStore.updateCurrentComp({
-    [param]: data
+    [param]: data,
+    id: props.comp.id
   });
 };
 </script>
