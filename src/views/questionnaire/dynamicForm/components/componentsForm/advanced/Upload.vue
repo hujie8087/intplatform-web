@@ -17,17 +17,18 @@
       <div class="el-upload__tip">上传图片最大为 5M</div>
     </template>
   </el-upload>
-  <el-dialog
-    :top="editorScrollInfo.scrollTop + 120 + 'px'"
-    v-if="previewVisible"
-    title="图片预览"
-    v-model="previewVisible"
-    width="360px"
-  >
-    <div>
-      <el-image style="width: 320px; height: 320px" :src="getFirstImgUrl" fit="cover" />
+  <div class="custom-dialog" :style="{ top: `${editorScrollInfo.scrollTop}px` }" v-if="previewVisible" @click="handleDialogClick">
+    <!-- 对话框内容 -->
+    <div class="dialog-content">
+      <el-tooltip effect="dark" placement="top-start" content="关闭">
+        <el-icon class="close" @click="handleClose"><CircleCloseFilled /></el-icon>
+      </el-tooltip>
+      <!-- 图片容器 -->
+      <div class="image-wrapper">
+        <img :src="getFirstImgUrl" class="preview-image" />
+      </div>
     </div>
-  </el-dialog>
+  </div>
 </template>
 <script setup lang="ts">
 import { ref, inject, watch, computed } from "vue";
@@ -125,6 +126,12 @@ const handleHttpUpload = async (options: UploadRequestOptions) => {
     options.onError(error as any);
   }
 };
+
+// 关闭对话框
+const handleClose = () => {
+  previewVisible.value = false;
+};
+
 // 监听本地dataValue变化，同步到父组件
 watch(
   () => dataValue.value,
@@ -148,4 +155,78 @@ watch(
   { deep: true }
 );
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.custom-dialog {
+  position: fixed;
+  left: 0;
+  z-index: 1000;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  .dialog-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0 0 0 / 70%);
+    backdrop-filter: blur(2px);
+    transition: opacity 0.3s ease;
+  }
+  .dialog-content {
+    position: relative;
+    z-index: 1;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow: hidden;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 30%);
+    animation: dialog-fade-in 0.3s ease;
+    .close {
+      position: absolute;
+      top: 4px;
+      right: 2px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  }
+  .image-wrapper {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    padding: 24px;
+    .preview-image {
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      transition: opacity 0.3s ease;
+    }
+    .load-error {
+      padding: 20px;
+      font-size: 16px;
+      color: #f56c6c;
+    }
+  }
+}
+
+// 对话框淡入动画
+@keyframes dialog-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+</style>

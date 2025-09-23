@@ -378,7 +378,6 @@ watch(
   .title-value {
     display: flex;
     flex-direction: row;
-    align-items: center;
     font-weight: 400;
     color: rgb(73 96 141);
     .required {
@@ -388,6 +387,7 @@ watch(
     }
     .number {
       display: flex;
+      margin-top: 6px;
     }
     .title_input {
       width: 100%;

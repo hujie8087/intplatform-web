@@ -2,7 +2,7 @@
   <!-- 答卷页面 -->
   <div class="survery-topic-page">
     <div class="topic-page-container">
-      <div :class="['body-content', previewType === 'Phone' ? 'phone' : '']">
+      <div :class="['body-content', previewType === 'Phone' ? 'phone' : '']" ref="editorRef">
         <!-- 没有权限啥的 -->
         <div v-if="erroryText">
           <el-empty :description="erroryText" />
@@ -29,6 +29,7 @@
                 :form-config="selectForm"
                 :preview-type="previewType"
                 :is-preview-render="true"
+                :editor-scroll-info="editorScrollInfo"
               >
               </FormComponent>
             </div>
@@ -70,7 +71,7 @@
 <script setup lang="ts">
 /* eslint-disable */
 type PreviewType = "Phone" | "PC";
-import { ref, reactive, onMounted, watch } from "vue";
+import { ref, reactive, onMounted, watch, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Check, CircleCheck } from "@element-plus/icons-vue";
 import FormComponent from "../dynamicForm/components/componentsForm/index.vue";
@@ -316,6 +317,39 @@ const submitFun = async params => {
     }
   }
 };
+
+// 滚动
+// 1. 定义滚动信息的 TypeScript 接口（类型安全）
+interface ScrollInfo {
+  scrollHeight: number; // 内容总高度
+  clientHeight: number; // 可视区域高度
+  scrollTop: number; // 已滚动距离
+  isAtBottom: boolean; // 额外判断：是否滚动到底部（可选）
+}
+// 2. 获取 .body 元素的 DOM 引用（初始为 null）
+const editorRef = ref<HTMLDivElement | null>(null);
+// 3. 响应式变量存储滚动信息（初始值为 0）
+const editorScrollInfo = reactive<ScrollInfo>({
+  scrollHeight: 0,
+  clientHeight: 0,
+  scrollTop: 0,
+  isAtBottom: false // 可选：用于快速判断是否到底部
+});
+
+/**
+ * 更新元素的滚动信息
+ */
+const updateBodyScrollInfo = () => {
+  const scrollContainer = editorRef.value;
+  if (!scrollContainer) return;
+  const { scrollHeight, clientHeight, scrollTop } = scrollContainer;
+  editorScrollInfo.scrollHeight = scrollHeight;
+  editorScrollInfo.clientHeight = clientHeight;
+  editorScrollInfo.scrollTop = scrollTop;
+  // 4. 可选：判断是否滚动到底部（留 1px 误差，避免精度问题）
+  editorScrollInfo.isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+};
+
 onMounted(async () => {
   const projectKey = route.query?.projectKey;
   previewType.value = getDeviceType();
@@ -323,6 +357,14 @@ onMounted(async () => {
     localStorage.setItem("device_id", uuidv4());
   }
   setRulesObj(projectKey);
+  nextTick(() => {
+    const scrollContainer = editorRef.value;
+    if (!scrollContainer) return;
+    // 2. 初始时主动更新一次滚动信息（获取初始状态）
+    updateBodyScrollInfo();
+    // 3. 绑定 scroll 事件：滚动时实时更新
+    scrollContainer.addEventListener("scroll", updateBodyScrollInfo);
+  });
 });
 const getCheckoutList = () => {
   let arr = pageCompList.value.filter(item => !item.hideen);
