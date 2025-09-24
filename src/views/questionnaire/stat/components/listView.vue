@@ -30,11 +30,10 @@
 import { reactive } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
 import { getAnswerList, exportAnswerResult } from "@/api/modules/questionnaire/answer";
-// Document
 import { View, Download } from "@element-plus/icons-vue";
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
-const key = route.query.key as string | undefined;
+const key = route.query.key as string;
 const router = useRouter();
 
 const columns = reactive([
@@ -90,11 +89,23 @@ const getTableList = (params: any) => {
 
 const showDetail = (data: any) => {
   const projectKey = data.projectKey;
-  router.push({ path: "/questionnaire/surverResult", query: { projectKey } });
+  const id = data.id;
+  router.push({ path: "/questionnaire/surverResult", query: { projectKey, id } });
 };
 const exportFile = async () => {
   const res = await exportAnswerResult(key);
-  console.log(res);
+  let fileName = "答卷完成情况.xlsx";
+  const blob = new Blob([res], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", fileName);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
 };
 </script>
 
