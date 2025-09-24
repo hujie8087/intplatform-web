@@ -988,7 +988,7 @@ defineExpose({
 .callback {
   position: absolute;
   left: 12px;
-  padding-top: 16px;
+  padding-top: 18px;
   cursor: pointer !important;
   img {
     width: 24px;
