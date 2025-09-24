@@ -468,7 +468,7 @@ const onClose = () => {
 const isFormEditorDevBool = computed(() => {
   // 先检查 route 是否存在，避免报错
   if (!route) return false;
-  return route.path.includes("form-editor") || route.path.includes("AddSurvery2");
+  return route.path.includes("form-editor") || route.path.includes("AddSurvery");
 });
 
 // 更新选中组件数据

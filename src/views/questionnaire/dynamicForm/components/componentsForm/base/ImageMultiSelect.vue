@@ -5,7 +5,7 @@
       {{ limitMessage }}
     </el-text>
     <div class="imageMultiSelect">
-      <div v-for="(item, index) in props.dataList" :key="index" class="image-block">
+      <div v-for="(item, index) in props?.dataList" :key="index" class="image-block">
         <div class="title">{{ item.label }}</div>
         <el-text v-if="item.desc" size="default" class="desc" :class="{ 'has-desc': item.desc }">
           {{ item.desc }}
@@ -38,14 +38,12 @@ import { ref, watch, computed } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { delayTime } from "../../compConfig";
 import { ElMessage } from "element-plus";
-
+const emit = defineEmits(["scrollToBottom"]);
 const compStore = useSelectCompStore();
 const filePath = import.meta.env.VITE_APP_BASE_FILE;
-const emit = defineEmits(["scrollToBottom"]);
-
 interface Props {
   id: string;
-  dataList: Array<any>;
+  dataList?: Array<any>;
   dataValue: Array<any>;
   layoutType: string;
   placeholder: string;
@@ -55,7 +53,9 @@ interface Props {
   minValue: number;
   maxValue: number;
 }
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  dataValue: () => []
+});
 const dataValue = ref<Array<any>>([...props.dataValue]);
 
 // 计算属性：当前选择数量
@@ -114,12 +114,6 @@ const voting = (item: any) => {
 
 // 取消投票：从数组中移除item.value
 const cancelVoting = (item: any) => {
-  // 检查是否已达到最小选择数量
-  // if (isMinLimitReached.value) {
-  //   ElMessage.warning(`请至少选择${props.minValue}项`);
-  //   return;
-  // }
-  // 找到值在数组中的索引并移除
   const index = dataValue.value.indexOf(item.value);
   if (index !== -1) {
     dataValue.value.splice(index, 1);
