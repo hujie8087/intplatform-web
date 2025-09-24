@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, watch } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { delayTime } from "../../compConfig";
 
@@ -38,12 +38,15 @@ interface Props {
 }
 const _updateKey = ref("");
 const props = defineProps<Props>();
-// const localDataValue = ref([]);
-const localDataValue = computed(() => props.dataValue);
+const localDataValue = ref<Array<any>>([]);
 // 1. 使用watch监听（推荐，可获取新旧值）
 watch(
   () => localDataValue.value,
-  newValue => {
+  (newValue, oldValue) => {
+    // 如果值没有变化，不执行更新
+    if (JSON.stringify(newValue) === JSON.stringify(oldValue)) {
+      return;
+    }
     setTimeout(() => {
       compStore.updateCurrentComp({
         dataValue: newValue,
@@ -55,7 +58,29 @@ watch(
     deep: true // 因为是数组，需要深度监听
   }
 );
-
+//  监听 props 变化，同步到本地数据
+watch(
+  () => props.dataValue,
+  (newValue, oldValue) => {
+    // 如果值没有变化，不执行更新
+    if (JSON.stringify(newValue) === JSON.stringify(oldValue)) {
+      return;
+    }
+    if (Array.isArray(newValue)) {
+      localDataValue.value = [...newValue];
+    } else if (newValue) {
+      try {
+        const parsed = JSON.parse(newValue);
+        localDataValue.value = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        localDataValue.value = [];
+      }
+    } else {
+      localDataValue.value = [];
+    }
+  },
+  { immediate: true }
+);
 const radioVerticalStyle = ref({
   minHeight: "40px",
   lineHeight: "40px"
