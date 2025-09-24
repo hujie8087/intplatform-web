@@ -7,7 +7,10 @@
         </div>
         <div class="title-data">
           <span class="name">
-            <el-text>问卷编辑：《{{ projectName }}》</el-text>
+            <i
+              >问卷编辑：《 <b>{{ projectName }}</b
+              >》</i
+            >
           </span>
         </div>
         <div class="control">
@@ -109,10 +112,19 @@ onMounted(() => {
   box-shadow: inset 0 -1px 0 #e7e7e7;
   .title-data {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 60px;
+    align-items: center;
+    height: 56px;
     font-size: 16px;
+    .name {
+      i {
+        font-style: normal;
+        color: #333333;
+        vertical-align: middle;
+      }
+      b {
+        color: var(--el-color-success);
+      }
+    }
   }
   .callback {
     position: absolute;
@@ -127,7 +139,7 @@ onMounted(() => {
   }
   .control {
     position: absolute;
-    top: 8px;
+    top: 17px;
     right: 15px;
     display: flex;
     flex-grow: 2;
