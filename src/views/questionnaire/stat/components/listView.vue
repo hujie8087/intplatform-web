@@ -38,7 +38,7 @@ const router = useRouter();
 
 const columns = reactive([
   { type: "selection", label: "", width: 80 },
-  { type: "index", label: "序号", width: 80 },
+  { prop: "serialNumber", label: "序号", width: 120, align: "center" },
   { prop: "submitRequestIp", label: "回答IP", align: "left" },
   {
     prop: "completeTime",
@@ -54,7 +54,7 @@ const columns = reactive([
       let submitBrowser = scope.row.submitBrowser;
       return (
         <span>
-          {submitOs}/{submitBrowser}
+          {submitOs} / {submitBrowser}
         </span>
       );
     }

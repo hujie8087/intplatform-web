@@ -1,14 +1,16 @@
 <template>
   <!-- 选择数量提示信息 -->
-  <el-text v-if="showLimitMessage" type="warning" size="small" class="limit-message">
+  <el-text v-if="showLimitMessage" type="warning" class="limit-message">
     {{ limitMessage }}
   </el-text>
   <div class="imageMultiSelect">
     <div v-for="(item, index) in props.dataList" :key="index" class="image-block">
       <div class="title">{{ item.label }}</div>
-      <el-text v-if="item.desc" size="small" class="desc">
+      <el-text v-if="item.desc" size="default" class="desc" :class="{ 'has-desc': item.desc }">
         {{ item.desc }}
       </el-text>
+      <!-- 当没有描述时显示占位元素，保持高度一致 -->
+      <div v-else class="desc-placeholder"></div>
       <el-image class="img" :src="getImageUrl(item.imageUrl)" fit="cover" />
       <div class="btn">
         <el-button
@@ -21,8 +23,8 @@
           >Voting / 为TA投票</el-button
         >
         <div class="btn_group" v-else>
-          <el-button style="width: 60%" disabled icon="Star" type="primary"> 您已投票 </el-button>
-          <el-button @click="cancelVoting(item)" style="width: 30%" type="danger">取消</el-button>
+          <el-button style="width: 62%" disabled icon="Star" type="primary"> 您已投票 </el-button>
+          <el-button @click="cancelVoting(item)" style="width: 34%" type="danger">取消</el-button>
         </div>
       </div>
     </div>
@@ -82,7 +84,7 @@ const isDisabled = (item: any) => {
   return (props.isDev && props.isSelected) || dataValue.value.includes(item.value) || isMaxLimitReached.value;
 };
 
-const defUrl = "/image/2025/09/01/640 (11).jpg";
+const defUrl = "";
 const getImageUrl = (imgUrl: string) => {
   try {
     if (imgUrl != "") {
@@ -152,23 +154,39 @@ watch(
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  width: calc(50% - 8px);
+  width: 100%;
+  height: 100%;
   .title {
-    min-height: 24px;
-    margin-bottom: 2px;
+    font-size: 24px;
+    white-space: nowrap;
   }
   .desc {
-    align-self: first baseline !important;
-    min-height: 20px;
-    line-height: 24px;
+    display: -webkit-box;
+    align-self: flex-start;
+    width: 100%; /* 确保宽度充满容器 */
+    margin-bottom: 6px;
+  }
+
+  /* 当没有描述时显示的占位元素，保持高度一致 */
+  .desc-placeholder {
+    height: 14px;
   }
   .img {
+    /* 确保图片容器高度固定，不受其他内容影响 */
+    flex-shrink: 0;
     width: 100%;
-    height: 280px;
+    height: 100%;
   }
   .btn {
     margin-top: 10px;
     text-align: center;
+  }
+}
+
+/* 响应式调整 - 在小屏幕上单列显示时也保持一致高度 */
+@media (width <= 768px) {
+  .image-block {
+    width: 100%;
   }
 }
 </style>
