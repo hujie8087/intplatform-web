@@ -109,6 +109,7 @@
                           :is-dev="isFormEditorDevBool"
                           :selected-comp="getActiveComp()"
                           :editor-scroll-info="editorScrollInfo"
+                          @scroll-to-bottom="scrollToBottom"
                         >
                         </ComponentsForm>
                       </div>

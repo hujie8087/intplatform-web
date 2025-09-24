@@ -30,6 +30,7 @@
                 :preview-type="previewType"
                 :is-preview-render="true"
                 :editor-scroll-info="editorScrollInfo"
+                @scroll-to-bottom="scrollToBottom"
               >
               </FormComponent>
             </div>
@@ -352,6 +353,25 @@ const updateBodyScrollInfo = () => {
   editorScrollInfo.scrollTop = scrollTop;
   // 4. 可选：判断是否滚动到底部（留 1px 误差，避免精度问题）
   editorScrollInfo.isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+};
+
+const scrollToBottom = async () => {
+  try {
+    // 1. 等待 DOM 完全更新（确保新组件已渲染，滚动高度已变化）
+    await nextTick();
+    // 2. 获取滚动容器 DOM 实例
+    const scrollContainer = editorRef.value;
+    if (!scrollContainer) {
+      console.warn("滚动容器 .body 未找到");
+      return;
+    }
+    scrollContainer.scrollTo({
+      top: scrollContainer.scrollHeight, // 滚动到最底部
+      behavior: "smooth" // 平滑滚动（移除则为瞬间滚动）
+    });
+  } catch (error) {
+    console.error("滚动到底部失败：", error);
+  }
 };
 
 onMounted(async () => {
