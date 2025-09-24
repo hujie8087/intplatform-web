@@ -216,19 +216,21 @@ const childrenCompValueChange = value => {
     }
   });
 };
-watch([() => compStore.compConfig, () => compStore.currentGlobalFormConfig], ([compConfig, currentGlobalFormConfig]) => {
-  updateCompByChange({
-    ...compConfig
-  });
-  // selectForm.value = currentGlobalFormConfig;
-});
+watch(
+  [() => compStore.compConfig, () => compStore.currentGlobalFormConfig],
+  ([compConfig, currentGlobalFormConfig]) => {
+    updateCompByChange({
+      ...compConfig
+    });
+    // selectForm.value = currentGlobalFormConfig;
+  },
+  { deep: true }
+);
 // 先初步校验规则，如果适合再往后走,更新选中组件数据
 const updateCompByChange = (compConfig: any) => {
   const index = getActiveCompIndex();
   if (index > -1 && pageCompList.value.length) {
-    console.log("----------", compConfig);
     pageCompList.value[index] = { ...pageCompList.value[index], ...compConfig };
-
     childrenCompValueChange({ id: activeComp.value.id, value: compConfig.dataValue });
   }
 };
@@ -268,15 +270,6 @@ const submitAnswerSheet = () => {
             element.errorMsg = msg;
           }
         }
-        // else if (element["customErrorMessage"]) {
-        //   // 设置自定义校验类型的
-        //   // let isNext = rulter.test(element.dataValue);
-        //   // if (!isNext) {
-        //   //   let msg = "当前数据填写不正确";
-        //   //   element.errorMsg = msg;
-        //   //   break;
-        //   // }
-        // }
       } else {
         isNext = false;
         hasErroyArr.push(isNext);
@@ -309,7 +302,11 @@ const submitFun = async params => {
   console.log("============提交答案", params);
   let result = await submitSurvey(params);
   if (result.code == 200) {
-    let resText = rulesObj.submitPromptText ?? "答卷提交成功";
+    let resText = "答卷提交成功";
+    if (rulesObj.submitPromptText) {
+      resText = rulesObj.submitPromptText;
+    }
+
     let jumpUrl = rulesObj?.submitJumpUrl;
     if (jumpUrl) {
       ElMessage.success(`${resText}`);
@@ -521,7 +518,7 @@ function getDeviceType() {
   position: relative;
   flex: 1;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
   &::before {
     position: absolute;
     inset: 0;

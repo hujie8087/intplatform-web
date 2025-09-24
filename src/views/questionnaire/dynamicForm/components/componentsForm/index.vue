@@ -51,7 +51,7 @@
         @scroll-to-bottom="scrollToBottom"
       ></component>
       <!-- 错误提示 -->
-      <div class="required" v-if="component?.isRequired && component?.errorMsg">{{ component?.errorMsg }}</div>
+      <div class="required" v-if="component.errorMsg">{{ component?.errorMsg }}</div>
     </div>
     <div class="active-comp-setting" v-if="compConfig.id === selectedComp?.id && !isIgnoreEditor()">
       <div class="bottom-setting">
@@ -504,6 +504,11 @@ watch(
     font-size: 12px;
     line-height: 1;
     color: var(--el-color-danger);
+  }
+}
+.active-comp {
+  .number {
+    margin-top: 0 !important;
   }
 }
 </style>
