@@ -24,7 +24,13 @@
         </el-radio-group>
       </div>
     </div>
-    <el-button type="primary" style="width: 100%; margin-top: 10px" v-if="!props.dataValue" @click="handleSubmit('ok')">
+    <el-button
+      :disabled="isDev && isSelected"
+      type="primary"
+      style="width: 100%; margin-top: 10px"
+      v-if="!props.dataValue"
+      @click="handleSubmit('ok')"
+    >
       上传
     </el-button>
     <el-button type="danger" style="width: 100%; margin-top: 10px" v-if="props.dataValue" @click="handleSubmit('cancel')">
@@ -56,6 +62,7 @@ interface Props {
   dataValue: string;
   editorScrollInfo: any;
   isDev: boolean;
+  isSelected: boolean;
 }
 const props = defineProps<Props>();
 const currId = ref(props.isPreviewRender ? `preview_${props.id}` : `${props.id}`);

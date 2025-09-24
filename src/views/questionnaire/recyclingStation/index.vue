@@ -19,21 +19,10 @@
        </template> -->
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-popconfirm class="box-item" title="确认恢复该问卷" placement="bottom" @confirm="recoverSurver(scope.row)">
-            <template #reference>
-              <el-button type="primary" link :icon="Refresh">恢复</el-button>
-            </template>
-          </el-popconfirm>
-          <el-popconfirm
-            class="box-item"
-            title="确认删除该问卷吗?删除后将无法恢复"
-            placement="bottom"
-            @confirm="deleteSurvey(scope.row)"
-          >
-            <template #reference>
-              <el-button type="danger" link :icon="Delete" v-auth="['system:user:edit']"> 删除 </el-button>
-            </template>
-          </el-popconfirm>
+          <el-button type="primary" @click="recoverSurver(scope.row)" link :icon="Refresh">恢复</el-button>
+          <el-button type="danger" @click="deleteSurvey(scope.row)" link :icon="Delete" v-auth="['system:user:edit']">
+            删除
+          </el-button>
         </template>
       </ProTable>
     </div>
@@ -47,7 +36,7 @@ import { Delete, Refresh } from "@element-plus/icons-vue";
 import { getProjectList, undeleteQuestionnaire, deleteProject } from "@/api/modules/questionnaire/recyclingStation";
 import { RecyclingStation } from "@/api/interface/questionnaire/recyclingStation";
 import { surveyType } from "@/utils/questionnaire";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 const proTable = ref();
 const treeFilterValues = reactive({
   pageNum: 1,
@@ -88,20 +77,43 @@ const columns = reactive([
   { prop: "operation", label: "操作", fixed: "right" }
 ]);
 const deleteSurvey = async row => {
-  const res = await deleteProject(row.projectKey);
-  if (res.code == 200) {
-    ElMessage.success(`问卷删除${res.msg}`);
-  }
-  proTable.value?.getTableList();
+  ElMessageBox.confirm(`确认删除该问卷吗?删除后将无法恢复`, "温馨提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+    draggable: true
+  })
+    .then(async () => {
+      const res = await deleteProject(row.projectKey);
+      if (res.code == 200) {
+        ElMessage.success(`问卷删除${res.msg}`);
+      }
+      proTable.value?.getTableList();
+    })
+    .catch(() => {
+      // cancel operation
+    });
 };
 // 恢复问卷
 const recoverSurver = async row => {
-  const res = await undeleteQuestionnaire(row.projectKey);
-  if (res.code == 200) {
-    ElMessage.success(`问卷恢复${res.msg}`);
-  }
-  proTable.value?.getTableList();
+  ElMessageBox.confirm(`确认恢复该问卷吗？`, "温馨提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+    draggable: true
+  })
+    .then(async () => {
+      const res = await undeleteQuestionnaire(row.projectKey);
+      if (res.code == 200) {
+        ElMessage.success(`问卷恢复${res.msg}`);
+      }
+      proTable.value?.getTableList();
+    })
+    .catch(() => {
+      // cancel operation
+    });
 };
+
 onMounted(async () => {
   // await getProjectList(treeFilterValues);
 });
