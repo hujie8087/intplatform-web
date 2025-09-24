@@ -4,6 +4,7 @@
     clearable
     v-model="dataValue"
     :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
+    @blur="inputBlur"
   >
     <template #prefix>
       <img class="icon" :src="Email" alt="" />
@@ -14,7 +15,7 @@
 import { ref, watch } from "vue";
 import Email from "@/assets/images/form-editor/email.svg";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
-import { disableInputByDev, delayTime } from "../../compConfig";
+import { disableInputByDev, delayTime, regexRuleMesg, regexRule } from "../../compConfig";
 const compStore = useSelectCompStore();
 interface Props {
   id: string;
@@ -22,9 +23,11 @@ interface Props {
   dataValue: string;
   isDev: boolean;
   isSelected: boolean;
+  type: string;
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || null);
+const formValidationFormat = props.type;
 watch(
   () => dataValue.value,
   newValue => {
@@ -36,6 +39,23 @@ watch(
     }, delayTime);
   }
 );
+const inputBlur = () => {
+  let isNext = testNumber(formValidationFormat, dataValue.value);
+  if (!isNext) {
+    let msg = regexRuleMesg[formValidationFormat];
+    compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+  } else {
+    compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+  }
+};
+const testNumber = (formValidationFormat, phone: string) => {
+  let str: any = phone;
+  if (formValidationFormat == "phone" || formValidationFormat == "idCard") {
+    str = Number(str);
+  }
+  const isValid = regexRule[formValidationFormat].test(str);
+  return isValid;
+};
 </script>
 <style lang="scss" scoped>
 .icon {
