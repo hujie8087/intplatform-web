@@ -58,7 +58,7 @@ watch(
     deep: true // 因为是数组，需要深度监听
   }
 );
-// 🔥 监听 props 变化，同步到本地数据
+//  监听 props 变化，同步到本地数据
 watch(
   () => props.dataValue,
   (newValue, oldValue) => {
