@@ -482,7 +482,7 @@ function getDeviceType() {
   position: relative;
   flex: 1;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
   &::before {
     position: absolute;
     inset: 0;
