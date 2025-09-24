@@ -210,19 +210,21 @@ const childrenCompValueChange = value => {
     }
   });
 };
-watch([() => compStore.compConfig, () => compStore.currentGlobalFormConfig], ([compConfig, currentGlobalFormConfig]) => {
-  updateCompByChange({
-    ...compConfig
-  });
-  // selectForm.value = currentGlobalFormConfig;
-});
+watch(
+  [() => compStore.compConfig, () => compStore.currentGlobalFormConfig],
+  ([compConfig, currentGlobalFormConfig]) => {
+    updateCompByChange({
+      ...compConfig
+    });
+    // selectForm.value = currentGlobalFormConfig;
+  },
+  { deep: true }
+);
 // 先初步校验规则，如果适合再往后走,更新选中组件数据
 const updateCompByChange = (compConfig: any) => {
   const index = getActiveCompIndex();
   if (index > -1 && pageCompList.value.length) {
-    console.log("----------", compConfig);
     pageCompList.value[index] = { ...pageCompList.value[index], ...compConfig };
-
     childrenCompValueChange({ id: activeComp.value.id, value: compConfig.dataValue });
   }
 };
