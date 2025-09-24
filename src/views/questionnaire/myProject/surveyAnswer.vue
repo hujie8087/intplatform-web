@@ -262,15 +262,6 @@ const submitAnswerSheet = () => {
             element.errorMsg = msg;
           }
         }
-        // else if (element["customErrorMessage"]) {
-        //   // 设置自定义校验类型的
-        //   // let isNext = rulter.test(element.dataValue);
-        //   // if (!isNext) {
-        //   //   let msg = "当前数据填写不正确";
-        //   //   element.errorMsg = msg;
-        //   //   break;
-        //   // }
-        // }
       } else {
         isNext = false;
         hasErroyArr.push(isNext);
@@ -303,7 +294,11 @@ const submitFun = async params => {
   console.log("============提交答案", params);
   let result = await submitSurvey(params);
   if (result.code == 200) {
-    let resText = rulesObj.submitPromptText ?? "答卷提交成功";
+    let resText = "答卷提交成功";
+    if (rulesObj.submitPromptText) {
+      resText = rulesObj.submitPromptText;
+    }
+
     let jumpUrl = rulesObj?.submitJumpUrl;
     if (jumpUrl) {
       ElMessage.success(`${resText}`);
