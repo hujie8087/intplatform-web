@@ -81,6 +81,11 @@ import { v4 as uuidv4 } from "uuid";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { regexRule, regexRuleMesg } from "../dynamicForm/components/compConfig";
 import { ElMessage } from "element-plus";
+// 导入 store
+import { useGlobalStore } from "@/stores/modules/global";
+// 获取 store 实例
+const globalStore = useGlobalStore();
+
 import _ from "lodash";
 const route = useRoute();
 const dialogTableVisible = ref(false);
@@ -351,6 +356,8 @@ const updateBodyScrollInfo = () => {
 };
 
 onMounted(async () => {
+  // 初始化主题数据
+  initThemeData();
   const projectKey = route.query?.projectKey;
   previewType.value = getDeviceType();
   if (!localStorage.getItem("device_id")) {
@@ -370,6 +377,13 @@ const getCheckoutList = () => {
   let arr = pageCompList.value.filter(item => !item.hideen);
   return arr;
 };
+
+// 初始化主题数据 默认设置
+const initThemeData = () => {
+  globalStore.setGlobalState("primary", "#409EFF");
+  globalStore.setGlobalState("assemblySize", "large");
+};
+
 // 设置题目列表
 const setTopicList = setRespans => {
   let arr: any = [];

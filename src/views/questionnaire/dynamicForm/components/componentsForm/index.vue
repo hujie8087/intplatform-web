@@ -243,7 +243,8 @@ const triggerSelect = () => {
 
 const handleChangeRequired = (value: boolean) => {
   compStore.updateCurrentComp({
-    isRequired: value
+    isRequired: value,
+    id: props.component.id
   });
   compStore.updateCurrentCompKey(uuidv4());
 };
@@ -381,6 +382,7 @@ watch(
     font-weight: 400;
     color: rgb(73 96 141);
     .required {
+      margin-top: 7px;
       margin-right: 4px;
       font-size: 12px;
       color: #ff4d4f;

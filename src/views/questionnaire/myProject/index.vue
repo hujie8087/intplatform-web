@@ -313,7 +313,7 @@ const updatePage = () => {
       } else {
         res = await addProject(dialogForm);
         ElMessage.success(`新增问卷${res.msg}`);
-        rediectPage("questionBank", { projectKey: res.data });
+        rediectPage("questionBank", { projectKey: res.data, projectName: dialogForm.projectName });
       }
       dialogForm.projectName = "";
       delete dialogForm.projectKey;

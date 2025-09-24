@@ -43,7 +43,7 @@
   <el-dialog v-model="dialogVisible" title="图片配置" width="35%">
     <div class="setting-container">
       <el-empty v-if="comp.dataList.length < 1" description="暂无数据" />
-      <div v-else class="list-item" v-for="(item, index) in comp.dataList" :key="index">
+      <el-card v-else class="list-item" v-for="(item, index) in comp.dataList" :key="index">
         <el-input
           style="width: 380px; margin-bottom: 10px"
           class="title-input"
@@ -60,8 +60,10 @@
           </template>
         </UploadImg>
         <el-input class="desc-textarea" type="textarea" v-model="item.desc" placeholder="请输入简介" size="default"></el-input>
-        <el-icon class="del-icon" @click="delItem(index)"><Remove /></el-icon>
-      </div>
+        <el-tooltip class="box-item" effect="dark" content="删除该项" placement="bottom-start">
+          <el-icon class="del-icon" @click="delItem(index)"><Remove /></el-icon>
+        </el-tooltip>
+      </el-card>
     </div>
     <template #footer>
       <span class="dialog-footer">
@@ -137,13 +139,14 @@ const comp = ref(props.comp);
 
 // 内容区域样式
 .setting-container {
+  height: 400px;
+  overflow-y: auto;
   .list-item {
     display: flex;
     flex-direction: column;
     gap: 14px;
     padding: 10px;
     margin-bottom: 10px;
-    background-color: rgb(240 248 255) !important;
     border-radius: 8px;
     transition: all 0.25s ease;
     &:hover {

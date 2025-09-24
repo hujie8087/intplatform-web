@@ -133,7 +133,7 @@ const initData = async () => {
   const signDOM = document.getElementById(currId.value);
   const canvas: HTMLCanvasElement | null = signDOM?.querySelector("canvas");
   if (!canvas) {
-    ElMessage.warning("画布初始化失败");
+    // ElMessage.warning("画布初始化失败");
     return;
   }
 

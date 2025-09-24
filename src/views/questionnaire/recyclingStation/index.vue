@@ -21,7 +21,7 @@
         <template #operation="scope">
           <el-popconfirm class="box-item" title="确认恢复该问卷" placement="bottom" @confirm="recoverSurver(scope.row)">
             <template #reference>
-              <el-button type="primary" link :icon="DataLine">恢复</el-button>
+              <el-button type="primary" link :icon="Refresh">恢复</el-button>
             </template>
           </el-popconfirm>
           <el-popconfirm
@@ -43,7 +43,7 @@
 <script setup lang="tsx" name="recyclingStation">
 import { ref, reactive, onMounted } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
-import { Delete, DataLine } from "@element-plus/icons-vue";
+import { Delete, Refresh } from "@element-plus/icons-vue";
 import { getProjectList, undeleteQuestionnaire, deleteProject } from "@/api/modules/questionnaire/recyclingStation";
 import { RecyclingStation } from "@/api/interface/questionnaire/recyclingStation";
 import { surveyType } from "@/utils/questionnaire";
