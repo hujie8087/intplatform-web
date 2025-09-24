@@ -50,7 +50,7 @@
         :editor-scroll-info="editorScrollInfo"
       ></component>
       <!-- 错误提示 -->
-      <div class="required" v-if="component?.isRequired && component?.errorMsg">{{ component?.errorMsg }}</div>
+      <div class="required" v-if="component.errorMsg">{{ component?.errorMsg }}</div>
     </div>
     <div class="active-comp-setting" v-if="compConfig.id === selectedComp?.id && !isIgnoreEditor()">
       <div class="bottom-setting">
