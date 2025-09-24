@@ -40,6 +40,7 @@ watch(
   }
 );
 const inputBlur = () => {
+  if (props.isDev) return false;
   let isNext = testNumber(formValidationFormat, dataValue.value);
   if (!isNext) {
     let msg = regexRuleMesg[formValidationFormat];

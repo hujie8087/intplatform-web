@@ -26,6 +26,7 @@ const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || null);
 const formValidationFormat = props.formValidationFormat;
 const inputBlur = () => {
+  if (props.isDev) return false;
   let isNext = testNumber(formValidationFormat, dataValue.value);
   if (!isNext) {
     let msg = regexRuleMesg[formValidationFormat];
