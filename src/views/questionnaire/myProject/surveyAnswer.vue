@@ -17,6 +17,7 @@
                 'cursor-move': true,
                 'form-item': true
               }"
+              :data-comp-id="item.id"
               @click="selectComp(item)"
             >
               <FormComponent
@@ -256,7 +257,8 @@ const submitAnswerSheet = () => {
   // 先校验是否是必填项，校验完看是填写是否错误
   let setRespans = getCheckoutList();
   let isNext = true;
-  let hasErrorArr: any = [];
+  let hasErrorArr: boolean[] = [];
+  let firstInvalidCompId: string | null = null; // 第一个未通过的组件 id
   for (let index = 0; index < setRespans.length; index++) {
     const element = setRespans[index];
     element.errorMsg = "";
@@ -270,6 +272,7 @@ const submitAnswerSheet = () => {
           if (!isNext) {
             let msg = regexRuleMesg[element["formValidationFormat"]];
             element.errorMsg = msg;
+            if (!firstInvalidCompId) firstInvalidCompId = element.id;
           }
         } else {
           isNext = testNumber({ formValidationFormat: element["type"] }, element.dataValue);
@@ -277,15 +280,14 @@ const submitAnswerSheet = () => {
           if (!isNext) {
             let msg = regexRuleMesg[element["type"]] ?? "";
             element.errorMsg = msg;
+            if (!firstInvalidCompId) firstInvalidCompId = element.id;
           }
         }
       } else {
         isNext = false;
         hasErrorArr.push(isNext);
-        element.errorMsg = "此数据不能为空";
-        if (element["customErrorMessage"]) {
-          element.errorMsg = element["customErrorMessage"];
-        }
+        element.errorMsg = element["customErrorMessage"] || "此数据不能为空";
+        if (!firstInvalidCompId) firstInvalidCompId = element.id;
       }
     } else {
       if (element["formValidationFormat"]) {
@@ -294,6 +296,7 @@ const submitAnswerSheet = () => {
         if (!isNext) {
           let msg = regexRuleMesg[element["formValidationFormat"]];
           element.errorMsg = msg;
+          if (!firstInvalidCompId) firstInvalidCompId = element.id;
         }
       } else {
         isNext = testNumber({ formValidationFormat: element["type"] }, element.dataValue);
@@ -301,25 +304,32 @@ const submitAnswerSheet = () => {
         if (!isNext) {
           let msg = regexRuleMesg[element["type"]] ?? "";
           element.errorMsg = msg;
+          if (!firstInvalidCompId) firstInvalidCompId = element.id;
         }
       }
     }
   }
-  if (isAllTrue(hasErrorArr)) {
-    console.log("///////", setRespans);
-    const endTime = Date.now();
-    const duration = Math.floor((endTime - startTime.value) / 1000); // 秒
-    let obj = {
-      projectKey: route.query?.projectKey,
-      completeTime: duration,
-      fingerprint: localStorage.getItem("device_id"),
-      submitUa: getClientInfo(),
-      submitOs: getOS(),
-      submitBrowser: getBrowser(),
-      answerList: setTopicList(setRespans)
-    };
-    submitFun(obj);
+  // 如果有错误，提示并滚动到第一个错误项
+  if (!isAllTrue(hasErrorArr)) {
+    ElMessage.error("请先填写必答题或修正错误再提交");
+    if (firstInvalidCompId) {
+      scrollToComp(firstInvalidCompId);
+    }
+    return;
   }
+  console.log("///////", setRespans);
+  const endTime = Date.now();
+  const duration = Math.floor((endTime - startTime.value) / 1000); // 秒
+  let obj = {
+    projectKey: route.query?.projectKey,
+    completeTime: duration,
+    fingerprint: localStorage.getItem("device_id"),
+    submitUa: getClientInfo(),
+    submitOs: getOS(),
+    submitBrowser: getBrowser(),
+    answerList: setTopicList(setRespans)
+  };
+  submitFun(obj);
 };
 const submitFun = async params => {
   console.log("============提交答案", params);
@@ -342,7 +352,13 @@ const submitFun = async params => {
     }
   }
 };
-
+const scrollToComp = async (compId: string) => {
+  await nextTick();
+  const target = document.querySelector(`[data-comp-id="${compId}"]`);
+  if (target) {
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+};
 // 滚动
 // 1. 定义滚动信息的 TypeScript 接口（类型安全）
 interface ScrollInfo {
