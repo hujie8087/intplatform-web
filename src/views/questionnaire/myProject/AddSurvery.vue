@@ -139,7 +139,7 @@ onMounted(() => {
     top: 50%;
     left: 12px;
     cursor: pointer !important;
-    transform: translateY(-35%);
+    transform: translateY(-45%);
     img {
       width: 24px;
       height: 24px;
