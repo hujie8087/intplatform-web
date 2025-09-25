@@ -304,12 +304,16 @@ const submitAnswerSheet = () => {
           if (!firstInvalidCompId) firstInvalidCompId = element.id;
         }
       } else {
-        isNext = testNumber({ formValidationFormat: element["type"] }, element.dataValue);
-        hasErrorArr.push(isNext);
-        if (!isNext) {
-          let msg = regexRuleMesg[element["type"]] ?? "";
-          element.errorMsg = msg;
-          if (!firstInvalidCompId) firstInvalidCompId = element.id;
+        if (element.dataValue) {
+          isNext = testNumber({ formValidationFormat: element["type"] }, element.dataValue);
+          hasErrorArr.push(isNext);
+          if (!isNext) {
+            let msg = regexRuleMesg[element["type"]] ?? "";
+            element.errorMsg = msg;
+            if (!firstInvalidCompId) firstInvalidCompId = element.id;
+          }
+        } else {
+          hasErrorArr.push(true);
         }
       }
     }
@@ -465,7 +469,7 @@ const isAllTrue = (arr, allowEmpty = false) => {
   if (arr.length === 0 && !allowEmpty) {
     return false;
   }
-  return arr.every(Boolean);
+  return arr.every(item => item === true);
 };
 
 // 获取操作系统
