@@ -61,7 +61,12 @@
         </div>
       </div>
     </div>
-    <el-dialog v-model="dialogTableVisible" :close-on-click-modal="false" width="78%">
+    <el-dialog
+      v-model="dialogTableVisible"
+      top="240px"
+      :close-on-click-modal="false"
+      :width="previewType === 'Phone' ? '48%' : '20%'"
+    >
       <div class="popup-icon">
         <el-icon :size="80">
           <CircleCheck />
