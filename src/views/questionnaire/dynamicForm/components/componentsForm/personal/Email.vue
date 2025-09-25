@@ -26,13 +26,19 @@ interface Props {
   isDev: boolean;
   isSelected: boolean;
   type: string;
+  isRequired: boolean;
+  customErrorMessage: string;
 }
 const props = defineProps<Props>();
-const dataValue = ref(props.dataValue || null);
+const dataValue = ref(props.dataValue || "");
 const formValidationFormat = props.type;
 watch(
   () => dataValue.value,
   newValue => {
+    const curError = compStore?.currentCompConfig?.errorMsg;
+    if (curError) {
+      compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+    }
     setTimeout(() => {
       compStore.updateCurrentComp({
         dataValue: newValue,
@@ -41,14 +47,19 @@ watch(
     }, delayTime);
   }
 );
+const isEmpty = str => /^\s*$/.test(str);
 const inputBlur = () => {
-  if (props.isDev) return false;
-  let isNext = testNumber(formValidationFormat, dataValue.value);
-  if (!isNext) {
-    let msg = regexRuleMesg[formValidationFormat];
+  if (props.isDev || !props.isRequired) return false;
+  let isNext = isEmpty(dataValue.value);
+  if (isNext) {
+    let msg = props.customErrorMessage ? props.customErrorMessage : "此数据不能为空";
     compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
   } else {
-    compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+    isNext = testNumber(formValidationFormat, dataValue.value);
+    if (!isNext) {
+      let msg = regexRuleMesg[formValidationFormat];
+      compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+    }
   }
 };
 const testNumber = (formValidationFormat, phone: string) => {
