@@ -249,42 +249,63 @@ const testNumber = (nowItem, phone: string) => {
   if (nowItem["formValidationFormat"] == "phone" || nowItem["formValidationFormat"] == "idCard") {
     str = Number(str);
   }
-  const isValid = regexRule[nowItem["formValidationFormat"]].test(str);
+  const isValid = regexRule[nowItem["formValidationFormat"]]?.test(str) ?? true;
   return isValid;
 };
 const submitAnswerSheet = () => {
   // 先校验是否是必填项，校验完看是填写是否错误
   let setRespans = getCheckoutList();
   let isNext = true;
-  let hasErroyArr: any = [];
+  let hasErrorArr: any = [];
   for (let index = 0; index < setRespans.length; index++) {
     const element = setRespans[index];
     element.errorMsg = "";
     // 增加代码校验，如果有值是否符合校验规则的
     if (element.isRequired) {
       if (element.dataValue) {
-        // 设置了校验类型的
+        // 设置了校验类型的-要用他的校验规则，还有一些类型组件也要参加校验
         if (element["formValidationFormat"]) {
           isNext = testNumber(element, element.dataValue);
-          hasErroyArr.push(isNext);
+          hasErrorArr.push(isNext);
           if (!isNext) {
             let msg = regexRuleMesg[element["formValidationFormat"]];
+            element.errorMsg = msg;
+          }
+        } else {
+          isNext = testNumber({ formValidationFormat: element["type"] }, element.dataValue);
+          hasErrorArr.push(isNext);
+          if (!isNext) {
+            let msg = regexRuleMesg[element["type"]] ?? "";
             element.errorMsg = msg;
           }
         }
       } else {
         isNext = false;
-        hasErroyArr.push(isNext);
+        hasErrorArr.push(isNext);
         element.errorMsg = "此数据不能为空";
         if (element["customErrorMessage"]) {
           element.errorMsg = element["customErrorMessage"];
         }
       }
     } else {
-      hasErroyArr.push(isNext);
+      if (element["formValidationFormat"]) {
+        isNext = testNumber(element, element.dataValue);
+        hasErrorArr.push(isNext);
+        if (!isNext) {
+          let msg = regexRuleMesg[element["formValidationFormat"]];
+          element.errorMsg = msg;
+        }
+      } else {
+        isNext = testNumber({ formValidationFormat: element["type"] }, element.dataValue);
+        hasErrorArr.push(isNext);
+        if (!isNext) {
+          let msg = regexRuleMesg[element["type"]] ?? "";
+          element.errorMsg = msg;
+        }
+      }
     }
   }
-  if (isAllTrue(hasErroyArr)) {
+  if (isAllTrue(hasErrorArr)) {
     console.log("///////", setRespans);
     const endTime = Date.now();
     const duration = Math.floor((endTime - startTime.value) / 1000); // 秒
