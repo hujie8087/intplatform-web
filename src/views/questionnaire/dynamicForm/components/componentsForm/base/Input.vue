@@ -24,18 +24,25 @@ interface Props {
   isDev: boolean;
   isSelected: boolean;
   formValidationFormat: string;
+  isRequired: boolean;
+  customErrorMessage: string;
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || null);
 const formValidationFormat = props.formValidationFormat;
+const isRequired = props?.isRequired ?? false;
 const inputBlur = () => {
-  if (props.isDev || !formValidationFormat) return false;
-  let isNext = testNumber(formValidationFormat, dataValue.value);
-  if (!isNext) {
-    let msg = regexRuleMesg[formValidationFormat];
-    compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+  debugger;
+  if (props.isDev || !isRequired) return false;
+  // if (props.isDev || !formValidationFormat) return false;
+  if (dataValue.value) {
+    let isNext = testNumber(formValidationFormat, dataValue.value);
+    if (!isNext) {
+      let msg = props.customErrorMessage ? props.customErrorMessage : regexRuleMesg[formValidationFormat];
+      compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+    }
   } else {
-    compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+    compStore.updateCurrentComp({ errorMsg: "此数据不能为空", id: props.id });
   }
 };
 
@@ -47,6 +54,11 @@ const handleFocus = () => {
 watch(
   () => dataValue.value,
   newValue => {
+    // 清除已存在的错误提示（有输入就去掉红框）
+    const curError = compStore?.currentCompConfig?.errorMsg;
+    if (curError) {
+      compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+    }
     setTimeout(() => {
       compStore.updateCurrentComp({ dataValue: newValue, id: props.id });
     }, delayTime);
