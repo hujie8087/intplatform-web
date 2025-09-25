@@ -4,6 +4,7 @@
     v-model="dataValue"
     style="width: 100%"
     :disabled="props.isDev && props.isSelected"
+    @focus="handleFocus"
     :placeholder="
       props.isDev && props.isSelected ? (props.placeholder || '请选择') + ' - 编辑状态无法选择' : props.placeholder || '请选择'
     "
@@ -19,7 +20,7 @@ import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { delayTime } from "../../compConfig";
 
 const compStore = useSelectCompStore();
-
+const emit = defineEmits(["compFocus"]);
 interface Props {
   id: string;
   dataList: Array<any>;
@@ -46,7 +47,9 @@ const list = computed(() => {
   }
   return _val;
 });
-
+const handleFocus = () => {
+  emit("compFocus");
+};
 watch(
   () => dataValue.value,
   newValue => {

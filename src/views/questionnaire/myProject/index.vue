@@ -216,7 +216,7 @@ const columns = reactive([
       }
     }
   },
-  { prop: "collectCount", label: "答卷数(份)", width: 180 },
+  { prop: "collectCount", label: "收集答卷数(份)", width: 180 },
   {
     width: 180,
     prop: "status",

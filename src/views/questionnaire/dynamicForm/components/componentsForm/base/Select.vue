@@ -5,6 +5,7 @@
     :popper-append-to-body="false"
     style="width: 100%"
     :disabled="props.isDev && props.isSelected"
+    @focus="handleFocus"
     :placeholder="
       props.isDev && props.isSelected ? (props.placeholder || '请选择') + ' - 编辑状态无法选择' : props.placeholder || '请选择'
     "
@@ -21,7 +22,7 @@
 import { ref, watch } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { delayTime } from "../../compConfig";
-
+const emit = defineEmits(["compFocus"]);
 const compStore = useSelectCompStore();
 interface Props {
   id: string;
@@ -35,6 +36,9 @@ interface Props {
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue);
+const handleFocus = () => {
+  emit("compFocus");
+};
 watch(
   () => dataValue.value,
   newValue => {
