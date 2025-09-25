@@ -225,7 +225,7 @@ const columns = reactive<ColumnProps<WaterSettlement.ResWaterSettlement>[]>([
     enum: messHallListOptions,
     search: { el: "select", props: { filterable: true } }
   },
-  { prop: "deliveryType", label: "配送方式", width: 100, enum: deliveryTypeOptions, tag: true, search: { el: "select" } },
+  // { prop: "deliveryType", label: "配送方式", width: 100, enum: deliveryTypeOptions, tag: true, search: { el: "select" } },
   {
     prop: "fcName",
     label: "车号",

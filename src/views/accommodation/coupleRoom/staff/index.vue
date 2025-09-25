@@ -13,6 +13,14 @@
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
           <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增</el-button>
+          <!-- 导入 -->
+          <el-button type="success" :icon="Upload" v-auth="['room:staff:import']" @click="importCoupleRoomStaffExcel"
+            >导入</el-button
+          >
+          <!-- 导出 -->
+          <el-button type="warning" :icon="Download" v-auth="['room:staff:export']" @click="exportCoupleRoomStaffExcel"
+            >导出</el-button
+          >
           <el-button
             type="danger"
             :disabled="!scope.isSelected"
@@ -41,6 +49,7 @@
         </template>
       </ProTable>
       <CoupleRoomStaffDrawer ref="drawerRef" />
+      <ImportExcel ref="dialogRef" />
     </div>
   </div>
 </template>
@@ -50,20 +59,23 @@ import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import CoupleRoomStaffDrawer from "./components/CoupleRoomStaffDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { Delete, Edit, CirclePlus, View } from "@element-plus/icons-vue";
+import { Delete, Edit, CirclePlus, View, Upload, Download } from "@element-plus/icons-vue";
 import {
   getCoupleRoomStaffList,
   addCoupleRoomStaff,
   editCoupleRoomStaff,
   deleteCoupleRoomStaff,
-  getCoupleRoomStaffDetail
+  getCoupleRoomStaffDetail,
+  importCoupleRoomStaff
 } from "@/api/modules/service/coupleRoom";
 import { useI18n } from "vue-i18n";
 import { CoupleRoom } from "@/api/interface/service/coupleRoom";
 import { DictOptions } from "@/api/interface";
 import { useDict } from "@/hooks/useDict";
-
+import { useDownload } from "@/hooks/useDownload";
+import ImportExcel from "@/components/ImportExcel/index.vue";
 const coupleRoomArea = ref<DictOptions[]>([]);
+const baseUrl = import.meta.env.VITE_API_URL;
 useDict("couple_room_area").then(res => {
   coupleRoomArea.value = res.couple_room_area.map(item => ({
     ...item,
@@ -150,6 +162,22 @@ const openDrawer = async (title: string, row: Partial<CoupleRoom.ResStaff> = {})
     coupleRoomAreaOptions: coupleRoomArea.value
   };
   drawerRef.value?.acceptParams(params);
+};
+
+// 导入人员
+const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
+const importCoupleRoomStaffExcel = () => {
+  dialogRef.value?.acceptParams({
+    title: "人员",
+    importApi: importCoupleRoomStaff,
+    tempApi: "",
+    getTableList: proTable.value?.getTableList
+  });
+};
+
+// 导出人员
+const exportCoupleRoomStaffExcel = () => {
+  useDownload(`${baseUrl}/coupleRoom/room/staff/export`, "人员列表", true, ".xlsx", "post", proTable.value?.searchParam);
 };
 
 // const deliveryOrderDrawerRef = ref<InstanceType<typeof DeliveryOrderDrawer> | null>(null);
