@@ -5,6 +5,7 @@
     v-model="dataValue"
     :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
     @blur="inputBlur"
+    @focus="handleFocus"
   >
     <template #prefix>
       <img class="icon" :src="Email" alt="" />
@@ -17,6 +18,7 @@ import Email from "@/assets/images/form-editor/email.svg";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { disableInputByDev, delayTime, regexRuleMesg, regexRule } from "../../compConfig";
 const compStore = useSelectCompStore();
+const emit = defineEmits(["compFocus"]);
 interface Props {
   id: string;
   placeholder: string;
@@ -56,6 +58,9 @@ const testNumber = (formValidationFormat, phone: string) => {
   }
   const isValid = regexRule[formValidationFormat].test(str);
   return isValid;
+};
+const handleFocus = () => {
+  emit("compFocus");
 };
 </script>
 <style lang="scss" scoped>

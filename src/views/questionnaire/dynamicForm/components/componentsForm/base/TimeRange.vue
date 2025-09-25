@@ -8,6 +8,7 @@
       v-model="dataValue"
       :start-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '开始时间'"
       :end-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '结束时间'"
+      @focus="handleFocus"
     />
   </div>
 </template>
@@ -16,6 +17,7 @@ import { ref, watch } from "vue";
 import { disableInputByDev, delayTime } from "../../compConfig";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const compStore = useSelectCompStore();
+const emit = defineEmits(["compFocus"]);
 interface Props {
   id: string;
   placeholder: string;
@@ -25,6 +27,9 @@ interface Props {
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || null);
+const handleFocus = () => {
+  emit("compFocus");
+};
 watch(
   () => dataValue.value,
   newValue => {

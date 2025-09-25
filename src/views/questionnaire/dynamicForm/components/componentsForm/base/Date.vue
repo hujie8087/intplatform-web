@@ -6,7 +6,7 @@
     v-model="dataValue"
     :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
     value-format="YYYY-MM-DD"
-    @focus="handleDateClick"
+    @focus="handleFocus"
   />
 </template>
 <script setup lang="ts">
@@ -25,9 +25,9 @@ interface Props {
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || null);
 
-const emit = defineEmits(["triggerSelect"]); // 定义触发选中的事件
-const handleDateClick = () => {
-  emit("triggerSelect"); // 传递组件信息给父级
+const emit = defineEmits(["compFocus"]); // 定义触发选中的事件
+const handleFocus = () => {
+  emit("compFocus"); // 传递组件信息给父级
 };
 
 watch(

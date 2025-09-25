@@ -31,6 +31,7 @@
                 :is-preview-render="true"
                 :editor-scroll-info="editorScrollInfo"
                 @scroll-to-bottom="scrollToBottom"
+                @comp-focus="selectComp"
               >
               </FormComponent>
             </div>

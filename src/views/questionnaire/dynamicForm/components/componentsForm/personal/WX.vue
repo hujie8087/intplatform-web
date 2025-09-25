@@ -3,6 +3,7 @@
     :disabled="isDev && isSelected"
     clearable
     v-model="dataValue"
+    @focus="handleFocus"
     :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
   >
     <template #prefix>
@@ -16,6 +17,7 @@ import WX from "@/assets/images/form-editor/wx.svg";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { disableInputByDev, delayTime } from "../../compConfig";
 const compStore = useSelectCompStore();
+const emit = defineEmits(["compFocus"]);
 interface Props {
   id: string;
   placeholder: string;
@@ -36,6 +38,9 @@ watch(
     }, delayTime);
   }
 );
+const handleFocus = () => {
+  emit("compFocus");
+};
 </script>
 <style lang="scss" scoped>
 .icon {

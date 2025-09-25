@@ -46,7 +46,7 @@
         :is-dev="isDev"
         :is-preview-render="isPreviewRender"
         :preview-type="previewType"
-        @trigger-select="triggerSelect"
+        @comp-focus="compFocus"
         :editor-scroll-info="editorScrollInfo"
         @scroll-to-bottom="scrollToBottom"
       ></component>
@@ -169,7 +169,7 @@ const localComponent = ref({ ...props.component });
 const displaySection = computed(() => !["divider", "paging", "formTitle", "img"].includes(props.type));
 const compConfig = props.component; // 组件配置
 const currentComp = getCompConfig(props.type); //组件
-const emit = defineEmits(["compControl", "addItem", "triggerSelect", "scrollToBottom"]);
+const emit = defineEmits(["compControl", "addItem", "scrollToBottom", "compFocus"]);
 
 // 修改标题和描述
 const changeValue = (event: any, params: string) => {
@@ -238,8 +238,10 @@ const isIgnoreEditor = () => {
 const addItem = (type: string) => {
   emit("addItem", type);
 };
-const triggerSelect = () => {
-  emit("triggerSelect", props.component);
+
+const compFocus = () => {
+  console.log(props.component, "focus焦点获取, form父级组件");
+  emit("compFocus", props.component);
 };
 
 const scrollToBottom = () => {

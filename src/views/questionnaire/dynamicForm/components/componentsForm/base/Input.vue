@@ -5,7 +5,7 @@
     class="item-comp"
     :placeholder="isDev && props.isSelected ? disableInputByDev : placeholder || '提示信息'"
     @blur="inputBlur"
-    @keydown="handleKeydown"
+    @focus="handleFocus"
   ></el-input>
 </template>
 
@@ -14,6 +14,8 @@ import { ref, watch } from "vue";
 import { disableInputByDev, delayTime, regexRule, regexRuleMesg } from "../../compConfig";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const compStore = useSelectCompStore();
+const emit = defineEmits(["compFocus"]);
+
 interface Props {
   id: string;
   placeholder: string;
@@ -36,6 +38,12 @@ const inputBlur = () => {
     compStore.updateCurrentComp({ errorMsg: "", id: props.id });
   }
 };
+
+// input获取焦点时应该调用父组件的选择组件方法
+const handleFocus = () => {
+  emit("compFocus");
+};
+
 watch(
   () => dataValue.value,
   newValue => {
@@ -51,9 +59,6 @@ const testNumber = (formValidationFormat, phone: string) => {
   }
   const isValid = regexRule[formValidationFormat].test(str);
   return isValid;
-};
-const handleKeydown = event => {
-  event.preventDefault();
 };
 </script>
 

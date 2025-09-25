@@ -7,6 +7,7 @@
       :disabled="isDev && isSelected"
       v-model="dataValue"
       value-format="YYYY-MM-DD"
+      @focus="handleFocus"
       :start-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '开始日期'"
       :end-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '结束日期'"
     ></el-date-picker>
@@ -16,6 +17,7 @@
 import { ref, watch } from "vue";
 import { disableInputByDev, delayTime } from "../../compConfig";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+const emit = defineEmits(["compFocus"]);
 const compStore = useSelectCompStore();
 interface Props {
   id: string;
@@ -26,6 +28,9 @@ interface Props {
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || null);
+const handleFocus = () => {
+  emit("compFocus");
+};
 watch(
   () => dataValue.value,
   newValue => {

@@ -105,11 +105,11 @@
                           :component="element"
                           :form-config="selectForm"
                           :type="element?.type"
-                          @trigger-select="selectComp"
                           :is-dev="isFormEditorDevBool"
                           :selected-comp="getActiveComp()"
                           :editor-scroll-info="editorScrollInfo"
                           @scroll-to-bottom="scrollToBottom"
+                          @comp-focus="selectComp"
                         >
                         </ComponentsForm>
                       </div>
@@ -298,6 +298,7 @@ const handleDragHandle = (e: any) => {
 
 // 组件选中
 const selectComp = (item: { id: string; [key: string]: any }) => {
+  console.log("selectComp", item);
   if (activeComp.value.id === item?.id) return;
   // 1. 先初始化Store中的当前组件（会自动更新currentCompId）
   useCompStore.initCurrentComp(item);

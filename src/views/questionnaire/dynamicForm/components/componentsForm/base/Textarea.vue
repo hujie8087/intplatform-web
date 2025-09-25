@@ -6,6 +6,7 @@
       :disabled="isDev && isSelected"
       v-model="dataValue"
       class="item-comp"
+      @focus="handleFocus"
       :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
     ></el-input>
   </div>
@@ -16,7 +17,7 @@ import { ref, watch } from "vue";
 import { disableInputByDev } from "../../compConfig";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { delayTime } from "../../compConfig";
-
+const emit = defineEmits(["compFocus"]);
 const compStore = useSelectCompStore();
 interface Props {
   id: string;
@@ -38,6 +39,9 @@ watch(
     }, delayTime);
   }
 );
+const handleFocus = () => {
+  emit("compFocus");
+};
 </script>
 
 <style lang="scss" scoped>

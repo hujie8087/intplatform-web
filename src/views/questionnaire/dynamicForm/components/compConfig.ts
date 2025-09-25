@@ -55,7 +55,7 @@ interface CompConfig {
 }
 export const disableInputByDev = "编辑模式不支持输入";
 // 延迟180ms更新数据，防止选中数据没有更新
-export const delayTime = 180;
+export const delayTime = 40;
 export const publishIntranetAddress = "http://localhost:8848/#/survey/answer";
 export const publishExtranetAddress = "http://localhost:8848/#/survey/answer";
 

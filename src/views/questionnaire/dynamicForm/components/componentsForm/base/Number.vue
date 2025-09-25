@@ -6,12 +6,14 @@
     :controls="false"
     :min="props.minValue"
     :max="props.maxValue"
+    @focus="handleFocus"
   />
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { delayTime } from "../../compConfig";
+const emit = defineEmits(["compFocus"]);
 
 const compStore = useSelectCompStore();
 interface Props {
@@ -25,6 +27,9 @@ interface Props {
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || "");
+const handleFocus = () => {
+  emit("compFocus");
+};
 watch(
   () => dataValue.value,
   newValue => {
