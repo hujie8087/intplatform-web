@@ -148,7 +148,7 @@ onMounted(() => {
   }
   .control {
     position: absolute;
-    top: 7px;
+    top: 50%;
     right: 15px;
     display: flex;
     flex-grow: 2;
