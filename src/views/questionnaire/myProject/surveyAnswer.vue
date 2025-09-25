@@ -36,6 +36,7 @@
               </FormComponent>
             </div>
             <div
+              v-if="pageCompList && pageCompList.length > 0"
               class="form-footer form-item"
               :style="{
                 'text-align': pageFooter.position || 'left'
@@ -54,7 +55,7 @@
               </el-button>
             </div>
             <!-- 脚标 -->
-            <SupportComp />
+            <SupportComp v-if="pageCompList && pageCompList.length > 0" />
           </el-watermark>
         </div>
       </div>

@@ -240,7 +240,6 @@ const addItem = (type: string) => {
 };
 
 const compFocus = () => {
-  console.log(props.component, "focus焦点获取, form父级组件");
   emit("compFocus", props.component);
 };
 
