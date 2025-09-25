@@ -290,16 +290,16 @@ const submitAnswerSheet = () => {
         if (!firstInvalidCompId) firstInvalidCompId = element.id;
       }
     } else {
-      if (element["formValidationFormat"]) {
-        isNext = testNumber(element, element.dataValue);
-        hasErrorArr.push(isNext);
-        if (!isNext) {
-          let msg = regexRuleMesg[element["formValidationFormat"]];
-          element.errorMsg = msg;
-          if (!firstInvalidCompId) firstInvalidCompId = element.id;
-        }
-      } else {
-        if (element.dataValue) {
+      if (element.dataValue) {
+        if (element["formValidationFormat"]) {
+          isNext = testNumber(element, element.dataValue);
+          hasErrorArr.push(isNext);
+          if (!isNext) {
+            let msg = regexRuleMesg[element["formValidationFormat"]];
+            element.errorMsg = msg;
+            if (!firstInvalidCompId) firstInvalidCompId = element.id;
+          }
+        } else {
           isNext = testNumber({ formValidationFormat: element["type"] }, element.dataValue);
           hasErrorArr.push(isNext);
           if (!isNext) {
@@ -307,9 +307,9 @@ const submitAnswerSheet = () => {
             element.errorMsg = msg;
             if (!firstInvalidCompId) firstInvalidCompId = element.id;
           }
-        } else {
-          hasErrorArr.push(true);
         }
+      } else {
+        hasErrorArr.push(true);
       }
     }
   }
