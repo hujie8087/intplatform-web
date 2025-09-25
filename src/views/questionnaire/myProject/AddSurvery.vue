@@ -113,6 +113,7 @@ onMounted(() => {
   background: #f6f8fa;
 }
 .nav-data {
+  position: relative;
   height: 56px;
   padding: 0 50px;
   line-height: 1;
@@ -135,9 +136,10 @@ onMounted(() => {
   }
   .callback {
     position: absolute;
+    top: 50%;
     left: 12px;
-    padding-top: 16px;
     cursor: pointer !important;
+    transform: translateY(-35%);
     img {
       width: 24px;
       height: 24px;
@@ -150,6 +152,7 @@ onMounted(() => {
     right: 15px;
     display: flex;
     flex-grow: 2;
+    transform: translateY(-50%);
     .cont-item {
       margin-right: 10px;
       cursor: pointer;
@@ -174,27 +177,6 @@ onMounted(() => {
   display: flex;
   height: calc(100% - 86px);
   padding: 0;
-
-  // grid-template-columns: 56px 270px 1fr 260px;
-
-  // @media (width <= 1400px) {
-  //   grid-template-columns: 56px 220px 1fr 220px;
-  //   overflow-x: auto;
-  //   .form {
-  //     width: auto;
-  //   }
-  // }
-
-  // @media (width <= 1400px) {
-  //   grid-template-columns: 56px 260px 1fr 250px;
-  //   overflow-x: auto;
-  //   .form {
-  //     width: auto;
-  //   }
-  // }
-  // ::v-deep(.content .compList .item) {
-  //   font-size: 14px;
-  // }
   .right-content-container {
     flex: 1;
     height: 100%;
