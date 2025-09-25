@@ -127,3 +127,13 @@ export const deleteMoreCoupleRoomStaff = (params: number[]) => {
 export const getCoupleRoomStaffDetail = (id: number) => {
   return http.get<CoupleRoom.ResStaff>(PORT1 + `/coupleRoom/room/staff/${id}`);
 };
+
+// * 导入人员
+export const importCoupleRoomStaff = (params: CoupleRoom.ReqStaffParams) => {
+  return http.post(PORT1 + `/coupleRoom/room/staff/import`, params);
+};
+
+// * 导出人员
+export const exportCoupleRoomStaff = (params: CoupleRoom.ReqStaffParams) => {
+  return http.get(PORT1 + `/coupleRoom/room/staff/export`, params);
+};
