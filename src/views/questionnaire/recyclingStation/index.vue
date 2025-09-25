@@ -19,8 +19,15 @@
        </template> -->
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="primary" @click="recoverSurver(scope.row)" link :icon="Refresh">恢复</el-button>
-          <el-button type="danger" @click="deleteSurvey(scope.row)" link :icon="Delete" v-auth="['system:user:edit']">
+          <el-button
+            type="primary"
+            v-auth="['survey:project:recycle:restore']"
+            @click="recoverSurver(scope.row)"
+            link
+            :icon="Refresh"
+            >恢复</el-button
+          >
+          <el-button type="danger" @click="deleteSurvey(scope.row)" link :icon="Delete" v-auth="['survey:project:recycle:del']">
             删除
           </el-button>
         </template>

@@ -26,7 +26,7 @@ interface Props {
   maxValue: number;
 }
 const props = defineProps<Props>();
-const dataValue = ref(props.dataValue || "");
+const dataValue = ref(props.dataValue || null);
 const handleFocus = () => {
   emit("compFocus");
 };
