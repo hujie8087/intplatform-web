@@ -32,9 +32,7 @@ const dataValue = ref(props.dataValue || null);
 const formValidationFormat = props.formValidationFormat;
 const isRequired = props?.isRequired ?? false;
 const inputBlur = () => {
-  debugger;
   if (props.isDev || !isRequired) return false;
-  // if (props.isDev || !formValidationFormat) return false;
   if (dataValue.value) {
     let isNext = testNumber(formValidationFormat, dataValue.value);
     if (!isNext) {
