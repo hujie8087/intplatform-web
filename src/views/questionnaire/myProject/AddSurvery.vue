@@ -6,12 +6,7 @@
           <img src="@/assets/images/form-editor/callback.svg" alt="" />
         </div>
         <div class="title-data">
-          <span class="name">
-            <i
-              >问卷编辑：《 <b>{{ projectName }}</b
-              >》</i
-            >
-          </span>
+          <el-text class="name">问卷: {{ projectName }} </el-text>
         </div>
         <div class="control">
           <div class="cont-item">
@@ -54,6 +49,10 @@ const projectKey = $route.query.key;
 const current = $route.query.current;
 const projectName = $route.query.projectName;
 
+import { useGlobalStore } from "@/stores/modules/global";
+import { nextTick } from "vue";
+const globalStore = useGlobalStore();
+
 provide("projectKey", projectKey);
 const dynamicRef = ref();
 // let isCollapse = ref(false);
@@ -90,8 +89,16 @@ const saveSurvey = async () => {
   }
 };
 
+// 初始化主题数据 默认设置
+const initThemeData = () => {
+  nextTick(() => {
+    globalStore.setGlobalState("assemblySize", "large");
+  });
+};
+
 onMounted(() => {
-  console.log("mounted");
+  // 初始化主题数据
+  initThemeData();
 });
 </script>
 
@@ -141,7 +148,7 @@ onMounted(() => {
   }
   .control {
     position: absolute;
-    top: 50%;
+    top: 7px;
     right: 15px;
     display: flex;
     flex-grow: 2;

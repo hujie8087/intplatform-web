@@ -48,6 +48,7 @@
         :preview-type="previewType"
         @trigger-select="triggerSelect"
         :editor-scroll-info="editorScrollInfo"
+        @scroll-to-bottom="scrollToBottom"
       ></component>
       <!-- 错误提示 -->
       <div class="required" v-if="component.errorMsg">{{ component?.errorMsg }}</div>
@@ -168,7 +169,7 @@ const localComponent = ref({ ...props.component });
 const displaySection = computed(() => !["divider", "paging", "formTitle", "img"].includes(props.type));
 const compConfig = props.component; // 组件配置
 const currentComp = getCompConfig(props.type); //组件
-const emit = defineEmits(["compControl", "addItem", "triggerSelect"]);
+const emit = defineEmits(["compControl", "addItem", "triggerSelect", "scrollToBottom"]);
 
 // 修改标题和描述
 const changeValue = (event: any, params: string) => {
@@ -241,9 +242,14 @@ const triggerSelect = () => {
   emit("triggerSelect", props.component);
 };
 
+const scrollToBottom = () => {
+  emit("scrollToBottom");
+};
+
 const handleChangeRequired = (value: boolean) => {
   compStore.updateCurrentComp({
-    isRequired: value
+    isRequired: value,
+    id: props.component.id
   });
   compStore.updateCurrentCompKey(uuidv4());
 };
@@ -381,6 +387,7 @@ watch(
     font-weight: 400;
     color: rgb(73 96 141);
     .required {
+      margin-top: 7px;
       margin-right: 4px;
       font-size: 12px;
       color: #ff4d4f;

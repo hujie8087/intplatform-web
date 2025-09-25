@@ -11,7 +11,7 @@
           {{ item.label }}
         </span>
         <span class="other-val" v-if="item.subType === 'other'">
-          <el-input :disabled="isDev" class="item-comp" v-model="item.value" placeholder="其他选项内容自定义" />
+          <el-input :disabled="isDev" class="item-comp" v-model="item.value" placeholder="待填表者更新" />
         </span>
       </div>
     </el-radio>

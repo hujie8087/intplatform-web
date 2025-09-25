@@ -65,9 +65,9 @@
 
             <!-- 右侧表单组 -->
             <div class="submit-setting-right">
-              <el-form-item>
+              <!-- <el-form-item>
                 <el-checkbox v-model="form.isPublicResult" label="公开反馈结果" />
-              </el-form-item>
+              </el-form-item> -->
               <el-form-item>
                 <el-checkbox v-model="form.isEveryoneWriteOnce" label="每人限填写一次" />
               </el-form-item>

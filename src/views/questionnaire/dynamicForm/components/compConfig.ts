@@ -127,6 +127,7 @@ export const getCompConfig = (type: CompType) => {
       compConfig = {
         ...compConfig,
         layoutType: "vertical",
+        dataValue: [],
         dataList: [
           {
             label: "标题",
@@ -137,6 +138,7 @@ export const getCompConfig = (type: CompType) => {
           }
         ]
       };
+      console.log(compConfig, "compConfig");
     }
   }
 

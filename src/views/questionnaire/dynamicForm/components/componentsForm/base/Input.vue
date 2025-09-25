@@ -5,6 +5,7 @@
     class="item-comp"
     :placeholder="isDev && props.isSelected ? disableInputByDev : placeholder || '提示信息'"
     @blur="inputBlur"
+    @keydown="handleKeydown"
   ></el-input>
 </template>
 
@@ -50,6 +51,9 @@ const testNumber = (formValidationFormat, phone: string) => {
   }
   const isValid = regexRule[formValidationFormat].test(str);
   return isValid;
+};
+const handleKeydown = event => {
+  event.preventDefault();
 };
 </script>
 

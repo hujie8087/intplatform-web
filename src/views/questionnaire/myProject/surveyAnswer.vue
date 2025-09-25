@@ -30,6 +30,7 @@
                 :preview-type="previewType"
                 :is-preview-render="true"
                 :editor-scroll-info="editorScrollInfo"
+                @scroll-to-bottom="scrollToBottom"
               >
               </FormComponent>
             </div>
@@ -81,6 +82,11 @@ import { v4 as uuidv4 } from "uuid";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { regexRule, regexRuleMesg } from "../dynamicForm/components/compConfig";
 import { ElMessage } from "element-plus";
+// 导入 store
+import { useGlobalStore } from "@/stores/modules/global";
+// 获取 store 实例
+const globalStore = useGlobalStore();
+
 import _ from "lodash";
 const route = useRoute();
 const dialogTableVisible = ref(false);
@@ -346,7 +352,28 @@ const updateBodyScrollInfo = () => {
   editorScrollInfo.isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
 };
 
+const scrollToBottom = async () => {
+  try {
+    // 1. 等待 DOM 完全更新（确保新组件已渲染，滚动高度已变化）
+    await nextTick();
+    // 2. 获取滚动容器 DOM 实例
+    const scrollContainer = editorRef.value;
+    if (!scrollContainer) {
+      console.warn("滚动容器 .body 未找到");
+      return;
+    }
+    scrollContainer.scrollTo({
+      top: scrollContainer.scrollHeight, // 滚动到最底部
+      behavior: "smooth" // 平滑滚动（移除则为瞬间滚动）
+    });
+  } catch (error) {
+    console.error("滚动到底部失败：", error);
+  }
+};
+
 onMounted(async () => {
+  // 初始化主题数据
+  initThemeData();
   const projectKey = route.query?.projectKey;
   previewType.value = getDeviceType();
   if (!localStorage.getItem("device_id")) {
@@ -366,6 +393,13 @@ const getCheckoutList = () => {
   let arr = pageCompList.value.filter(item => !item.hideen);
   return arr;
 };
+
+// 初始化主题数据 默认设置
+const initThemeData = () => {
+  globalStore.setGlobalState("primary", "#409EFF");
+  globalStore.setGlobalState("assemblySize", "large");
+};
+
 // 设置题目列表
 const setTopicList = setRespans => {
   let arr: any = [];

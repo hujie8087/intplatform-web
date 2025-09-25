@@ -16,7 +16,7 @@
     </div>
     <div class="content">
       <!-- 数据为空状态 -->
-      <div v-if="rankingData.length === 0" class="empty-state">
+      <div v-if="rankingData?.length === 0 || !rankingData" class="empty-state">
         <el-empty description="暂无数据" />
       </div>
       <!-- 排行榜列表 -->
