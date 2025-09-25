@@ -207,7 +207,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, inject, nextTick, reactive } from "vue";
+import { ref, computed, watch, onMounted, inject, nextTick, reactive, onBeforeUnmount } from "vue";
 import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
 import { getDefaultConfig, optionalType } from "./components/compConfig";
 import Icon from "./components/compIcon";
@@ -602,6 +602,10 @@ onMounted(async () => {
     // 3. 绑定 scroll 事件：滚动时实时更新
     scrollContainer.addEventListener("scroll", updateBodyScrollInfo);
   });
+});
+
+onBeforeUnmount(() => {
+  editorRef.value?.removeEventListener("scroll", updateBodyScrollInfo);
 });
 
 const currentCompKeyData = computed(() => useCompStore.currentCompKey);

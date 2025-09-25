@@ -199,7 +199,7 @@ const selectComp = (item: any) => {
   position: relative;
   left: 50%;
   width: 686px;
-  height: calc(100% - 110px);
+  height: calc(100% - 20px);
   padding: 20px 0 30px;
   overflow-y: auto;
   background: #ffffff;

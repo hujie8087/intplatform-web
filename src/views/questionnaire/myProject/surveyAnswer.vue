@@ -80,7 +80,7 @@
 <script setup lang="ts">
 /* eslint-disable */
 type PreviewType = "Phone" | "PC";
-import { ref, reactive, onMounted, watch, nextTick } from "vue";
+import { ref, reactive, onMounted, watch, nextTick, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
 import { Check, CircleCheck } from "@element-plus/icons-vue";
 import FormComponent from "../dynamicForm/components/componentsForm/index.vue";
@@ -438,6 +438,11 @@ onMounted(async () => {
     scrollContainer.addEventListener("scroll", updateBodyScrollInfo);
   });
 });
+
+onBeforeUnmount(() => {
+  editorRef.value?.removeEventListener("scroll", updateBodyScrollInfo);
+});
+
 const getCheckoutList = () => {
   let arr = pageCompList.value.filter(item => !item.hideen);
   return arr;

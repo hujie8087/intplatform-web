@@ -15,6 +15,7 @@
                 :form-config="selectForm"
                 :preview-type="previewType"
                 :is-preview-render="true"
+                :editor-scroll-info="{ scrollTop: scrollBox.scrollTop }"
               >
               </FormComponent>
             </div>
