@@ -7,7 +7,7 @@
       'group-item-select': isSelected
     }"
     :key="isSelected + _updateKey"
-    @change="handleFocus"
+    @change="inputBlur"
   >
     <el-checkbox v-for="(item, _index) in props.dataList" :key="_index" :label="item.value" :disabled="isDev">
       <div class="citem">
@@ -97,7 +97,7 @@ const radioStyle = ref({
   display: "flex",
   lineHeight: "40px"
 });
-const handleFocus = () => {
+const inputBlur = () => {
   if (props.isDev || !props.isRequired) return false;
   if (!localDataValue.value.length) {
     let msg = props.customErrorMessage ? props.customErrorMessage : "此数据不能为空";
