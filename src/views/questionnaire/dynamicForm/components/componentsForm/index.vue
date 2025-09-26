@@ -509,7 +509,7 @@ watch(
 }
 .active-comp {
   .number {
-    margin-top: 0 !important;
+    // margin-top: 0 !important;
   }
 }
 </style>

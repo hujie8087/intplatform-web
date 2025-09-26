@@ -441,10 +441,12 @@ const initDataState = () => {
 };
 
 const deleteSuccess = (compName = "") => {
-  ElMessage({
-    message: `【${compName}】删除成功！`,
-    type: "success"
-  });
+  // **
+  console.log(compName);
+  // ElMessage({
+  //   message: `【${compName}】删除成功！`,
+  //   type: "success"
+  // });
 };
 
 // 预览
@@ -468,7 +470,7 @@ const onClose = () => {
 const isFormEditorDevBool = computed(() => {
   // 先检查 route 是否存在，避免报错
   if (!route) return false;
-  return route.path.includes("form-editor") || route.path.includes("AddSurvery2");
+  return route.path.includes("form-editor") || route.path.includes("AddSurvery");
 });
 
 // 更新选中组件数据
