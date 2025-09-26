@@ -7,6 +7,7 @@
       v-model="dataValue"
       class="item-comp"
       @focus="handleFocus"
+      @blur="inputBlur"
       :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
     ></el-input>
   </div>
@@ -25,6 +26,8 @@ interface Props {
   dataValue: string | null;
   isDev: boolean;
   isSelected: boolean;
+  isRequired: boolean;
+  customErrorMessage: string;
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || null);
@@ -32,6 +35,11 @@ watch(
   () => dataValue.value,
   newValue => {
     setTimeout(() => {
+      // 清除已存在的错误提示（有输入就去掉红框）
+      const curError = compStore?.currentCompConfig?.errorMsg;
+      if (curError) {
+        compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+      }
       compStore.updateCurrentComp({
         dataValue: newValue,
         id: props.id
@@ -41,6 +49,13 @@ watch(
 );
 const handleFocus = () => {
   emit("compFocus");
+};
+const inputBlur = () => {
+  if (!props.isRequired) return false;
+  if (!dataValue.value) {
+    let msg = props.customErrorMessage ? props.customErrorMessage : "此数据不能为空";
+    compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+  }
 };
 </script>
 
