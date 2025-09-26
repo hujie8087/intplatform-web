@@ -75,7 +75,7 @@
                 type="primary"
                 :icon="pageFooter.buttonIconShowBool ? Check : null"
                 :size="pageFooter.size"
-                style="width: 120px"
+                style="width: 76%"
                 :style="{ padding: getSize(), lineHeight: getLineheight() }"
               >
                 {{ pageFooter.buttonText || "提交" }}

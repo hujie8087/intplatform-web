@@ -111,7 +111,7 @@ const radioStyle = ref({
 }
 .other-val {
   display: block;
-  margin-left: 24px; /* 与复选框对齐 */
+  margin-left: 32px; /* 与复选框对齐 */
 }
 .citem {
   display: flex;
