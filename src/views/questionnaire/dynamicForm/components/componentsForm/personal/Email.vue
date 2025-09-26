@@ -16,7 +16,7 @@
 import { ref, watch } from "vue";
 import Email from "@/assets/images/form-editor/email.svg";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
-import { disableInputByDev, delayTime, regexRuleMesg, regexRule } from "../../compConfig";
+import { disableInputByDev, delayTime, regexRuleMesg, regexRule, isEmpty } from "../../compConfig";
 const compStore = useSelectCompStore();
 const emit = defineEmits(["compFocus"]);
 interface Props {
@@ -47,7 +47,6 @@ watch(
     }, delayTime);
   }
 );
-const isEmpty = str => /^\s*$/.test(str);
 const inputBlur = () => {
   if (props.isDev || !props.isRequired) return false;
   let isNext = isEmpty(dataValue.value);
