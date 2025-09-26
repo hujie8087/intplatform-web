@@ -7,6 +7,7 @@
     :min="props.minValue"
     :max="props.maxValue"
     @focus="handleFocus"
+    @blur="inputBlur"
   />
 </template>
 <script setup lang="ts">
@@ -24,6 +25,8 @@ interface Props {
   isSelected: boolean;
   minValue: number;
   maxValue: number;
+  isRequired: boolean;
+  customErrorMessage: string;
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue || "");
@@ -33,6 +36,11 @@ const handleFocus = () => {
 watch(
   () => dataValue.value,
   newValue => {
+    // 清除已存在的错误提示（有输入就去掉红框）
+    const curError = compStore?.currentCompConfig?.errorMsg;
+    if (curError) {
+      compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+    }
     setTimeout(() => {
       compStore.updateCurrentComp({
         dataValue: newValue,
@@ -41,5 +49,16 @@ watch(
     }, delayTime);
   }
 );
+const isNumber = (val: any): boolean => {
+  // 去掉前后空格后再判断
+  return !isNaN(val) && val !== "" && val !== null;
+};
+const inputBlur = () => {
+  if (!props.isRequired) return false;
+  if (!isNumber(dataValue.value)) {
+    let msg = props.customErrorMessage ? props.customErrorMessage : "此数据不能为空";
+    compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+  }
+};
 </script>
 <style lang="scss"></style>
