@@ -16,7 +16,7 @@
 import { ref, watch } from "vue";
 import Phone from "@/assets/images/form-editor/phone.svg";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
-import { disableInputByDev, delayTime, regexRule, regexRuleMesg } from "../../compConfig";
+import { disableInputByDev, delayTime, regexRule, regexRuleMesg, isEmpty } from "../../compConfig";
 const compStore = useSelectCompStore();
 const emit = defineEmits(["compFocus"]);
 interface Props {
@@ -26,13 +26,20 @@ interface Props {
   isDev: boolean;
   isSelected: boolean;
   type: string;
+  isRequired: boolean;
+  customErrorMessage: string;
 }
 const props = defineProps<Props>();
-const dataValue = ref(props.dataValue || null);
+const dataValue = ref(props.dataValue || "");
 const formValidationFormat = props.type;
 watch(
   () => dataValue.value,
   newValue => {
+    // 清除已存在的错误提示（有输入就去掉红框）
+    const curError = compStore?.currentCompConfig?.errorMsg;
+    if (curError) {
+      compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+    }
     setTimeout(() => {
       compStore.updateCurrentComp({
         dataValue: newValue,
@@ -42,13 +49,17 @@ watch(
   }
 );
 const inputBlur = () => {
-  if (props.isDev) return false;
-  let isNext = testNumber(formValidationFormat, dataValue.value);
-  if (!isNext) {
-    let msg = regexRuleMesg[formValidationFormat];
+  if (props.isDev || !props.isRequired) return false;
+  let isNext = isEmpty(dataValue.value);
+  if (isNext) {
+    let msg = props.customErrorMessage ? props.customErrorMessage : "此数据不能为空";
     compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
   } else {
-    compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+    isNext = testNumber(formValidationFormat, dataValue.value);
+    if (!isNext) {
+      let msg = regexRuleMesg[formValidationFormat];
+      compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+    }
   }
 };
 const testNumber = (formValidationFormat, phone: string) => {

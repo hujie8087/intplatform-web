@@ -362,3 +362,5 @@ export const regexRuleMesg = {
   email: "邮箱类型不正确"
   // regular: ""
 };
+// 判读数据是否为空
+export const isEmpty = str => /^\s*$/.test(str);
