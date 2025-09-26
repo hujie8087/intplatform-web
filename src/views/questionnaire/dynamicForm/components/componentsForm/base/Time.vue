@@ -7,6 +7,7 @@
     :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
     value-format="HH:mm:ss"
     @focus="handleFocus"
+    @blur="inputBlur"
   />
 </template>
 <script setup lang="ts">
@@ -21,6 +22,8 @@ interface Props {
   dataValue: string;
   isDev: boolean;
   isSelected: boolean;
+  isRequired: boolean;
+  customErrorMessage: string;
 }
 const props = defineProps<Props>();
 const dataValue = ref<null | string>(props.dataValue && props.dataValue.trim() ? props.dataValue : "00:00:00");
@@ -31,6 +34,11 @@ watch(
   () => dataValue.value,
   newValue => {
     setTimeout(() => {
+      // 清除已存在的错误提示（有输入就去掉红框）
+      const curError = compStore?.currentCompConfig?.errorMsg;
+      if (curError) {
+        compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+      }
       compStore.updateCurrentComp({
         dataValue: newValue,
         id: props.id
@@ -38,5 +46,12 @@ watch(
     }, delayTime);
   }
 );
+const inputBlur = () => {
+  if (!props.isRequired) return false;
+  if (!dataValue.value) {
+    let msg = props.customErrorMessage ? props.customErrorMessage : "此数据不能为空";
+    compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+  }
+};
 </script>
 <style lang="scss"></style>
