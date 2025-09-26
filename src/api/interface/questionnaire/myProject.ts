@@ -17,6 +17,10 @@ export namespace MyProject {
     msg: string;
     code: number;
   }
+  export interface StopItem {
+    msg: string;
+    code: number;
+  }
 }
 
 interface ProjectItem {
