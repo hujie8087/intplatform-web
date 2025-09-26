@@ -7,6 +7,7 @@
       'group-item-select': isSelected
     }"
     :key="isSelected + _updateKey"
+    @change="handleFocus"
   >
     <el-checkbox v-for="(item, _index) in props.dataList" :key="_index" :label="item.value" :disabled="isDev">
       <div class="citem">
@@ -35,6 +36,8 @@ interface Props {
   isDev: boolean;
   isSelected: boolean;
   isPreviewRender?: boolean;
+  isRequired: boolean;
+  customErrorMessage: string;
 }
 const _updateKey = ref("");
 const props = defineProps<Props>();
@@ -46,6 +49,10 @@ watch(
     // 如果值没有变化，不执行更新
     if (JSON.stringify(newValue) === JSON.stringify(oldValue)) {
       return;
+    }
+    const curError = compStore?.currentCompConfig?.errorMsg ?? "";
+    if (curError) {
+      compStore.updateCurrentComp({ errorMsg: "", id: props.id });
     }
     setTimeout(() => {
       compStore.updateCurrentComp({
@@ -90,6 +97,13 @@ const radioStyle = ref({
   display: "flex",
   lineHeight: "40px"
 });
+const handleFocus = () => {
+  if (props.isDev || !props.isRequired) return false;
+  if (!localDataValue.value.length) {
+    let msg = props.customErrorMessage ? props.customErrorMessage : "此数据不能为空";
+    compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+  }
+};
 </script>
 
 <style lang="scss" scoped>
