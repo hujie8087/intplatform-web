@@ -5,6 +5,7 @@
     style="width: 100%"
     :disabled="props.isDev && props.isSelected"
     @focus="handleFocus"
+    @blur="inputBlur"
     :placeholder="
       props.isDev && props.isSelected ? (props.placeholder || '请选择') + ' - 编辑状态无法选择' : props.placeholder || '请选择'
     "
@@ -32,6 +33,8 @@ interface Props {
   isPreviewRender?: boolean;
   startValue: number;
   rateCount: number;
+  isRequired: boolean;
+  customErrorMessage: string;
 }
 const props = defineProps<Props>();
 
@@ -53,6 +56,11 @@ const handleFocus = () => {
 watch(
   () => dataValue.value,
   newValue => {
+    // 清除已存在的错误提示（有输入就去掉红框）
+    const curError = compStore?.currentCompConfig?.errorMsg;
+    if (curError) {
+      compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+    }
     setTimeout(() => {
       compStore.updateCurrentComp({
         dataValue: newValue,
@@ -61,6 +69,13 @@ watch(
     }, delayTime);
   }
 );
+const inputBlur = () => {
+  if (!props.isRequired) return false;
+  if (!dataValue.value) {
+    let msg = props.customErrorMessage ? props.customErrorMessage : "此数据不能为空";
+    compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+  }
+};
 </script>
 <style lang="scss" scoped>
 .item {
