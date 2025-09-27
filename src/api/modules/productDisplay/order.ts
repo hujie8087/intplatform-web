@@ -33,7 +33,7 @@ export const deleteMoreOrder = (params: number[]) => {
 };
 
 // * 获取订单菜品列表
-export const getOrderDishList = (params: { orderId: number; page: number; size: number }) => {
+export const getOrderDishList = (params: { orderId: number; pageNum: number; pageSize: number }) => {
   return http.getRow<Order.ResOrderDish>(PORT1 + `/productdisplay/food/details/list`, params);
 };
 
