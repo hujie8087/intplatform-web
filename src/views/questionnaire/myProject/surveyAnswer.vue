@@ -264,23 +264,29 @@ const submitAnswerSheet = () => {
     element.errorMsg = "";
     // 增加代码校验，如果有值是否符合校验规则的
     if (element.isRequired) {
-      if (element.dataValue) {
-        // 设置了校验类型的-要用他的校验规则，还有一些类型组件也要参加校验
-        if (element["formValidationFormat"]) {
-          isNext = testNumber(element, element.dataValue);
+      if (element.dataValue || element.dataValue === 0) {
+        if (Array.isArray(element.dataValue) && element.dataValue.length == 0) {
+          isNext = false;
           hasErrorArr.push(isNext);
-          if (!isNext) {
-            let msg = regexRuleMesg[element["formValidationFormat"]];
-            element.errorMsg = msg;
-            if (!firstInvalidCompId) firstInvalidCompId = element.id;
-          }
+          element.errorMsg = element["customErrorMessage"] || "此数据不能为空";
         } else {
-          isNext = testNumber({ formValidationFormat: element["type"] }, element.dataValue);
-          hasErrorArr.push(isNext);
-          if (!isNext) {
-            let msg = regexRuleMesg[element["type"]] ?? "";
-            element.errorMsg = msg;
-            if (!firstInvalidCompId) firstInvalidCompId = element.id;
+          // 设置了校验类型的-要用他的校验规则，还有一些类型组件也要参加校验
+          if (element["formValidationFormat"]) {
+            isNext = testNumber(element, element.dataValue);
+            hasErrorArr.push(isNext);
+            if (!isNext) {
+              let msg = regexRuleMesg[element["formValidationFormat"]];
+              element.errorMsg = msg;
+              if (!firstInvalidCompId) firstInvalidCompId = element.id;
+            }
+          } else {
+            isNext = testNumber({ formValidationFormat: element["type"] }, element.dataValue);
+            hasErrorArr.push(isNext);
+            if (!isNext) {
+              let msg = regexRuleMesg[element["type"]] ?? "";
+              element.errorMsg = msg;
+              if (!firstInvalidCompId) firstInvalidCompId = element.id;
+            }
           }
         }
       } else {
