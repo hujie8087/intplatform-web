@@ -13,7 +13,11 @@
         :class="{
           isDev,
           hoverChildrenIndex: hoverIndex >= index,
-          active: list.includes(0) ? props.dataValue >= index : props.dataValue > index
+          active:
+            !isDev &&
+            props.dataValue !== '' &&
+            props.dataValue !== null &&
+            (props.dataValue === 0 ? index === 0 : props.dataValue >= item)
         }"
         >{{ item }}</span
       >
@@ -26,7 +30,7 @@ import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { delayTime } from "../../compConfig";
 interface Props {
   id: string;
-  dataValue: number;
+  dataValue: number | "" | null;
   startValue: number;
   rateCount: number;
   isDev: boolean;

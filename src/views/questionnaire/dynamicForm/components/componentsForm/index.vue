@@ -290,7 +290,7 @@ watch(
 
 <style lang="scss" scoped>
 :deep(.el-textarea__inner) {
-  padding: 6px 12px !important;
+  padding: 14px 12px !important;
   margin-left: -10px !important;
   font-size: 14px !important;
   color: rgb(73 96 141) !important;

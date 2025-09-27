@@ -244,7 +244,7 @@ export const getCompConfig = (type: CompType) => {
     compConfig = {
       ...compConfig,
       defaultValue: 0,
-      dataValue: 0,
+      dataValue: null,
       startValue: 0,
       rateCount: 10,
       startValueList: [0, 1]
