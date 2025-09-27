@@ -108,7 +108,6 @@
                           :is-dev="isFormEditorDevBool"
                           :selected-comp="getActiveComp()"
                           :editor-scroll-info="editorScrollInfo"
-                          @scroll-to-bottom="scrollToBottom"
                           @comp-focus="selectComp"
                         >
                         </ComponentsForm>
@@ -135,7 +134,7 @@
                   type="primary"
                   :icon="pageFooter.buttonIconShowBool ? Check : null"
                   :size="pageFooter.size"
-                  style="width: 120px"
+                  style="width: 76%"
                   :style="{ padding: getSize(), lineHeight: getLineHeight() }"
                 >
                   {{ pageFooter.buttonText || "提交" }}
@@ -208,7 +207,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, inject, nextTick, reactive } from "vue";
+import { ref, computed, watch, onMounted, inject, nextTick, reactive, onBeforeUnmount } from "vue";
 import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
 import { getDefaultConfig, optionalType } from "./components/compConfig";
 import Icon from "./components/compIcon";
@@ -442,10 +441,12 @@ const initDataState = () => {
 };
 
 const deleteSuccess = (compName = "") => {
-  ElMessage({
-    message: `【${compName}】删除成功！`,
-    type: "success"
-  });
+  // **
+  console.log(compName);
+  // ElMessage({
+  //   message: `【${compName}】删除成功！`,
+  //   type: "success"
+  // });
 };
 
 // 预览
@@ -603,6 +604,10 @@ onMounted(async () => {
     // 3. 绑定 scroll 事件：滚动时实时更新
     scrollContainer.addEventListener("scroll", updateBodyScrollInfo);
   });
+});
+
+onBeforeUnmount(() => {
+  editorRef.value?.removeEventListener("scroll", updateBodyScrollInfo);
 });
 
 const currentCompKeyData = computed(() => useCompStore.currentCompKey);

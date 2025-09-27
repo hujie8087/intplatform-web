@@ -48,7 +48,7 @@
                 type="primary"
                 :icon="pageFooter.buttonIconShowBool ? Check : null"
                 :size="pageFooter.size"
-                style="width: 120px"
+                style="width: 76%"
                 :style="{ padding: getSize(), lineHeight: getLineheight() }"
                 @click="submitAnswerSheet"
               >
@@ -61,7 +61,12 @@
         </div>
       </div>
     </div>
-    <el-dialog v-model="dialogTableVisible" :close-on-click-modal="false" width="78%">
+    <el-dialog
+      v-model="dialogTableVisible"
+      top="240px"
+      :close-on-click-modal="false"
+      :width="previewType === 'Phone' ? '48%' : '20%'"
+    >
       <div class="popup-icon">
         <el-icon :size="80">
           <CircleCheck />
@@ -75,7 +80,7 @@
 <script setup lang="ts">
 /* eslint-disable */
 type PreviewType = "Phone" | "PC";
-import { ref, reactive, onMounted, watch, nextTick } from "vue";
+import { ref, reactive, onMounted, watch, nextTick, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
 import { Check, CircleCheck } from "@element-plus/icons-vue";
 import FormComponent from "../dynamicForm/components/componentsForm/index.vue";
@@ -243,6 +248,7 @@ const getActiveCompIndex = () => {
 // 组件选中
 const selectComp = (item: any) => {
   compStore.initCurrentComp(item);
+  console.log(item, "item");
   activeComp.value.id = item.id;
 };
 const testNumber = (nowItem, phone: string) => {
@@ -438,6 +444,11 @@ onMounted(async () => {
     scrollContainer.addEventListener("scroll", updateBodyScrollInfo);
   });
 });
+
+onBeforeUnmount(() => {
+  editorRef.value?.removeEventListener("scroll", updateBodyScrollInfo);
+});
+
 const getCheckoutList = () => {
   let arr = pageCompList.value.filter(item => !item.hideen);
   return arr;

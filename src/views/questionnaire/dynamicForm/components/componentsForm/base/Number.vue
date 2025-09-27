@@ -29,7 +29,7 @@ interface Props {
   customErrorMessage: string;
 }
 const props = defineProps<Props>();
-const dataValue = ref(props.dataValue || "");
+const dataValue = ref(props.dataValue || null);
 const handleFocus = () => {
   emit("compFocus");
 };

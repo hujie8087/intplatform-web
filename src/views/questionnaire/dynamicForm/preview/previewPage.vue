@@ -75,7 +75,7 @@
                 type="primary"
                 :icon="pageFooter.buttonIconShowBool ? Check : null"
                 :size="pageFooter.size"
-                style="width: 120px"
+                style="width: 76%"
                 :style="{ padding: getSize(), lineHeight: getLineheight() }"
               >
                 {{ pageFooter.buttonText || "提交" }}
@@ -199,7 +199,7 @@ const selectComp = (item: any) => {
   position: relative;
   left: 50%;
   width: 686px;
-  height: calc(100% - 110px);
+  height: calc(100% - 20px);
   padding: 20px 0 30px;
   overflow-y: auto;
   background: #ffffff;

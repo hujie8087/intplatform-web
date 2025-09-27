@@ -51,7 +51,6 @@ interface Props {
   titleDescriptionSize: string;
   titleDescriptionColor: string;
   titleDescriptionFontWeight: string;
-  titleDescriptionFontStyle: string;
   value: string;
   isDev: boolean;
 }

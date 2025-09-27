@@ -12,7 +12,7 @@
           {{ item.label }}
         </span>
         <span class="other-val" v-if="item.subType === 'other'">
-          <el-input :disabled="isDev" class="item-comp" v-model="item.value" placeholder="待填表者更新" />
+          <el-input style="width: 240px" :disabled="isDev" class="item-comp" v-model="item.value" placeholder="待填表者更新" />
         </span>
       </div>
     </el-radio>
@@ -110,7 +110,7 @@ const inputBlur = () => {
   position: relative;
   width: 100%;
   .other-val {
-    margin-left: 14px;
+    margin-left: 32px;
   }
 }
 </style>

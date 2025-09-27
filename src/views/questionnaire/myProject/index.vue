@@ -75,6 +75,25 @@
             >
             </el-button>
           </el-tooltip>
+
+          <el-tooltip
+            placement="top"
+            effect="dark"
+            :content="scope.row.status === 1 ? '开始收集' : scope.row.status === 2 ? '结束收集' : ''"
+          >
+            <el-button
+              v-if="scope.row.status === 1"
+              type="info"
+              class="btn-custom"
+              link
+              :icon="VideoPlay"
+              @click="updateStatus(scope.row)"
+            >
+            </el-button>
+            <el-button v-if="scope.row.status === 2" type="warning" link :icon="VideoPause" @click="updateStatus(scope.row)">
+            </el-button>
+          </el-tooltip>
+
           <el-tooltip placement="top" effect="dark" content="复制问卷">
             <el-button
               type="info"
@@ -149,13 +168,15 @@ import {
   addProject,
   editProject,
   copyProject,
-  getProjectDetail
+  getProjectDetail,
+  publishProject,
+  stopProject
 } from "@/api/modules/questionnaire/myProject";
 import { surveyType } from "@/utils/questionnaire";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useRouter } from "vue-router";
 import { ElMessageBox, ElMessage } from "element-plus";
-import { CirclePlus, Delete, Share, DataLine, CopyDocument, Edit, Setting } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, Share, DataLine, CopyDocument, Edit, Setting, VideoPlay, VideoPause } from "@element-plus/icons-vue";
 import { ElInput } from "element-plus";
 const router = useRouter();
 const proTable = ref();
@@ -328,6 +349,28 @@ const deleteSurvey = async row => {
   // let msg = params.length > 1 ? "批量删除区域" : "删除该区域";
   await useHandleData(deleteProject, row.projectKey, "删除该问卷");
   proTable.value?.getTableList();
+};
+
+// 更新状态
+const updateStatus = async row => {
+  let msg = row.status === 1 ? "确定要发布该问卷吗?" : row.status === 2 ? "确定要停止收集该问卷吗?" : "";
+  ElMessageBox.confirm(msg, "温馨提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+    draggable: true
+  })
+    .then(async () => {
+      // 刷新列表
+      let res: any = row.status === 1 ? await publishProject(row.projectKey) : await stopProject(row.projectKey);
+      if (res?.code == 200) {
+        ElMessage.success(row.status === 1 ? "发布问卷成功" : "停止收集成功");
+      }
+      proTable.value?.getTableList();
+    })
+    .catch(() => {
+      // cancel operation
+    });
 };
 </script>
 
