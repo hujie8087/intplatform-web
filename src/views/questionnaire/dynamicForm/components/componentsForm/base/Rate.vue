@@ -7,6 +7,7 @@
     score-template="{value} 分"
     :max="props.rateCount"
     :allow-half="props.rateAllowHalf"
+    @change="inputBlur"
   />
 </template>
 
@@ -24,6 +25,8 @@ interface Props {
   isSelected: boolean;
   rateCount: number;
   rateAllowHalf: boolean;
+  errorMsg: string;
+  isRequired: boolean;
 }
 const props = defineProps<Props>();
 const dataValue = ref(props.dataValue);
@@ -31,6 +34,11 @@ const dataValue = ref(props.dataValue);
 watch(
   () => dataValue.value,
   newValue => {
+    // 清除已存在的错误提示（有输入就去掉红框）
+    const curError = compStore?.currentCompConfig?.errorMsg;
+    if (curError) {
+      compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+    }
     setTimeout(() => {
       compStore.updateCurrentComp({
         dataValue: newValue,
@@ -39,6 +47,17 @@ watch(
     }, delayTime);
   }
 );
+const inputBlur = () => {
+  debugger;
+  if (!props.isRequired) return false;
+  if (dataValue.value || dataValue.value === 0) {
+    // 清除已存在的错误提示（有输入就去掉红框）
+    const curError = props?.errorMsg;
+    if (curError) {
+      compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+    }
+  }
+};
 </script>
 <style lang="scss" scoped>
 .item {
