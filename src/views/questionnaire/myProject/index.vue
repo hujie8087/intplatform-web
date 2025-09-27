@@ -160,7 +160,7 @@
 </template>
 
 <script setup lang="tsx" name="myProject">
-import { ref, reactive, h } from "vue";
+import { ref, reactive } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
 import {
   getProjectList,
@@ -176,11 +176,21 @@ import { surveyType } from "@/utils/questionnaire";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useRouter } from "vue-router";
 import { ElMessageBox, ElMessage } from "element-plus";
-import { CirclePlus, Delete, Share, DataLine, CopyDocument, Edit, Setting, VideoPlay, VideoPause } from "@element-plus/icons-vue";
+import {
+  CirclePlus,
+  Delete,
+  Share,
+  DataLine,
+  CopyDocument,
+  Edit,
+  Setting,
+  VideoPlay,
+  VideoPause,
+  EditPen
+} from "@element-plus/icons-vue";
 import { ElInput } from "element-plus";
 const router = useRouter();
 const proTable = ref();
-const activeEditKey = ref(false);
 
 const columns = reactive([
   { type: "selection", label: "", width: 80 },
@@ -191,50 +201,17 @@ const columns = reactive([
     search: { el: "input" },
     align: "left",
     render: scope => {
-      // const cacheName = scope.row.projectName;
-      // 编辑状态：渲染输入框
-      if (activeEditKey.value === scope.row.projectKey) {
-        // 导入ElInput组件（确保已全局注册或在此处导入）
-        // 输入事件处理函数
-        const handleInput = async value => {
-          // 更新行数据
-          scope.row.projectName = value;
-          dialogForm.projectKey = scope.row.projectKey;
-          dialogForm.projectName = value;
-          await editProject(dialogForm);
-        };
-        // 使用h函数创建ElInput组件
-        return h(ElInput, {
-          // 绑定值
-          modelValue: scope.row.projectName || "",
-          // 输入事件（v-model的更新事件）
-          "onUpdate:modelValue": handleInput,
-          // 输入框尺寸
-          size: "large",
-          disabled: scope.row.status === 1 ? false : true,
-          // 占位符
-          placeholder: "请输入问卷名称",
-          // 样式
-          style: { width: "100%", height: "100%" }
-        });
-      } else {
-        return h(
-          "p",
-          {
-            style: {
-              width: "100%",
-              height: "100%",
-              cursor: scope.row.status === 1 ? "pointer" : "default",
-              opacity: scope.row.status !== 1 ? 0.6 : 1
-            },
-            onClick: () => {
-              if (scope.row.status !== 1) return;
-              activeEditKey.value = scope.row.projectKey;
-            }
-          },
-          scope.row.projectName || "未命名"
-        );
-      }
+      const { status, projectName } = scope.row;
+      return (
+        <span>
+          {projectName}
+          {status === 1 && (
+            <el-icon onClick={() => editPorjectName(scope.row)} style="margin-left: 8px; cursor: pointer; color: #409EFF;">
+              <EditPen />
+            </el-icon>
+          )}
+        </span>
+      );
     }
   },
   { prop: "collectCount", label: "收集答卷数(份)", width: 180 },
