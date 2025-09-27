@@ -34,10 +34,12 @@ const isRequired = props?.isRequired ?? false;
 const inputBlur = () => {
   if (props.isDev || !isRequired) return false;
   if (dataValue.value) {
-    let isNext = testNumber(formValidationFormat, dataValue.value);
-    if (!isNext) {
-      let msg = props.customErrorMessage ? props.customErrorMessage : regexRuleMesg[formValidationFormat];
-      compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+    if (formValidationFormat) {
+      let isNext = testNumber(formValidationFormat, dataValue.value);
+      if (!isNext) {
+        let msg = props.customErrorMessage ? props.customErrorMessage : regexRuleMesg[formValidationFormat];
+        compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+      }
     }
   } else {
     compStore.updateCurrentComp({ errorMsg: "此数据不能为空", id: props.id });
@@ -64,9 +66,10 @@ watch(
 );
 const testNumber = (formValidationFormat, phone: string) => {
   let str: any = phone;
-  if (formValidationFormat == "phone" || formValidationFormat == "idCard") {
-    str = Number(str);
-  }
+  if (!formValidationFormat)
+    if (formValidationFormat == "phone" || formValidationFormat == "idCard") {
+      str = Number(str);
+    }
   const isValid = regexRule[formValidationFormat].test(str);
   return isValid;
 };
