@@ -4,6 +4,7 @@
     style="width: 100%"
     :style="layoutType === 'vertical' || isSelected ? radioVerticalStyle : radioStyle"
     :disabled="isDev && isSelected"
+    @change="inputBlur"
   >
     <el-radio :key="_index" v-for="(item, _index) of props.dataList" :label="item.value" class="list-item">
       <div class="citem">
@@ -33,6 +34,8 @@ interface Props {
   isDev: boolean;
   isSelected: boolean;
   isPreviewRender?: boolean;
+  isRequired: boolean;
+  customErrorMessage: string;
 }
 
 const props = defineProps<Props>();
@@ -50,6 +53,11 @@ const radioStyle = ref({
 watch(
   () => dataValue.value,
   newValue => {
+    // 清除已存在的错误提示（有输入就去掉红框）
+    const curError = compStore?.currentCompConfig?.errorMsg;
+    if (curError) {
+      compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+    }
     setTimeout(() => {
       compStore.updateCurrentComp({
         dataValue: newValue,
@@ -58,6 +66,13 @@ watch(
     }, delayTime);
   }
 );
+const inputBlur = () => {
+  if (!props.isRequired) return false;
+  if (!dataValue.value) {
+    let msg = props.customErrorMessage ? props.customErrorMessage : "此数据不能为空";
+    compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+  }
+};
 </script>
 
 <style lang="scss" scoped>
