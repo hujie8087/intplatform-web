@@ -48,13 +48,14 @@ watch(
   }
 );
 const inputBlur = () => {
-  debugger;
   if (!props.isRequired) return false;
   if (dataValue.value || dataValue.value === 0) {
     // 清除已存在的错误提示（有输入就去掉红框）
     const curError = props?.errorMsg;
     if (curError) {
-      compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+      setTimeout(() => {
+        compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+      }, delayTime);
     }
   }
 };
