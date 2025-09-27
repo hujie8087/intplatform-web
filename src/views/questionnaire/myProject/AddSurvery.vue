@@ -43,7 +43,8 @@ import sample from "./components/sample.vue"; //样本
 import setting from "./components/setting.vue"; //设置
 import publish from "./components/publish.vue"; // 发布
 import stat from "../stat/index.vue"; // 统计
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
+
 const $route = useRoute(); // 路由
 const projectKey = $route.query.key;
 const current = $route.query.current;
@@ -51,12 +52,12 @@ const projectName = $route.query.projectName;
 
 import { useGlobalStore } from "@/stores/modules/global";
 import { nextTick } from "vue";
+import { useTabsStore } from "@/stores/modules/tabs";
 const globalStore = useGlobalStore();
-
+const tabStore = useTabsStore();
 provide("projectKey", projectKey);
 const dynamicRef = ref();
 // let isCollapse = ref(false);
-const router = useRouter(); // 路由器
 // default-active 需要字符串类型的当前激活路由
 const menuItemList = {
   questionBank, // 题库
@@ -74,7 +75,8 @@ const selectSideItemType = async (item: string) => {
 };
 
 const backButton = () => {
-  router.replace({ path: "/questionnaire/myProject" });
+  let href = window.location.hash.slice(1);
+  tabStore.removeTabs(href, true);
 };
 // 保存问卷
 const saveSurvey = async () => {
