@@ -3,8 +3,6 @@
     class="item"
     v-model="dataValue"
     :disabled="isDev"
-    show-score
-    score-template="{value} 分"
     :max="props.rateCount"
     :allow-half="props.rateAllowHalf"
     @change="inputBlur"

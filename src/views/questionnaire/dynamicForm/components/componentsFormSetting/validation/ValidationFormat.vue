@@ -11,6 +11,7 @@
       v-model="comp.formValidationFormatRegex"
       placeholder="请输入自定义正则表达式"
       allow-clear
+      clearable
       maxlength="40"
       :autosize="autosize"
       @input="changeValidationFormatRegexInput"

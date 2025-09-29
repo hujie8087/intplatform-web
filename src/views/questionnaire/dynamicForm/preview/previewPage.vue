@@ -209,7 +209,7 @@ const selectComp = (item: any) => {
     width: 392px;
     overflow-x: hidden !important;
     .form-item .comp-item {
-      padding: 10px 20px 30px;
+      padding: 18px 20px;
     }
     .form-footer {
       width: 390px;

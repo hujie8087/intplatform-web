@@ -144,8 +144,8 @@
       </ProTable>
       <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500" :before-close="handleClose">
         <el-form ref="ruleFormRef" :model="dialogForm" :rules="rules" label-width="90">
-          <el-form-item label="项目名称" prop="projectName">
-            <el-input v-model="dialogForm.projectName" placeholder="请输入项目名称" clearable />
+          <el-form-item label="问卷名称" prop="projectName">
+            <el-input maxlength="40" show-word-limit v-model="dialogForm.projectName" placeholder="请输入问卷名称" clearable />
           </el-form-item>
         </el-form>
         <template #footer>
