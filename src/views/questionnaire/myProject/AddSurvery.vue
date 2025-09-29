@@ -8,9 +8,9 @@
         <div class="title-data">
           <el-text class="name">问卷: {{ projectName }} </el-text>
         </div>
-        <div class="control">
+        <div class="control" v-if="showBtn">
           <div class="cont-item">
-            <el-button type="primary" :icon="Finished" @click="saveSurvey">
+            <el-button type="primary" :icon="Finished" v-auth="['survey:project:saveAll']" @click="saveSurvey">
               <span class="name">保存</span>
             </el-button>
           </div>
@@ -68,10 +68,11 @@ const menuItemList = {
 };
 const defaultActiveMenu = shallowRef(menuItemList[current]); // 默认激活第一个菜单
 const currentSideItemType = ref(current); // 当前侧边栏选中类型
-
+const showBtn = ref(true);
 const selectSideItemType = async (item: string) => {
   currentSideItemType.value = item;
   defaultActiveMenu.value = menuItemList[item]; // 动态组件
+  showBtn.value = item == "questionBank";
 };
 
 const backButton = () => {
