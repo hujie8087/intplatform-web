@@ -13,7 +13,7 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
-          <el-button type="primary" v-auth="['system:user:add']" :icon="CirclePlus" @click="editPorjectName">
+          <el-button type="primary" v-auth="['survey:project:add']" :icon="CirclePlus" @click="editPorjectName">
             新建问卷
           </el-button>
         </template>
@@ -36,7 +36,7 @@
               link
               v-if="scope.row.userId !== 1"
               :icon="Edit"
-              v-auth="['system:user:edit']"
+              v-auth="['survey:project:edit']"
               @click="rediectPage('questionBank', scope.row)"
             >
             </el-button
@@ -47,7 +47,7 @@
               link
               v-if="scope.row.userId !== 1"
               :icon="DataLine"
-              v-auth="['system:user:edit']"
+              v-auth="['project:answer:list']"
               @click="rediectPage('stat', scope.row)"
             >
             </el-button>
@@ -58,7 +58,7 @@
               link
               v-if="scope.row.userId !== 1"
               :icon="Setting"
-              v-auth="['system:user:edit']"
+              v-auth="['survey:setting:query']"
               @click="rediectPage('setting', scope.row)"
             >
             </el-button>
@@ -70,7 +70,7 @@
               link
               v-if="scope.row.userId !== 1"
               :icon="Share"
-              v-auth="['system:user:edit']"
+              v-auth="['survey:project:detail']"
               @click="rediectPage('publish', scope.row)"
             >
             </el-button>
@@ -87,10 +87,18 @@
               class="btn-custom"
               link
               :icon="VideoPlay"
+              v-auth="['survey:project:publish']"
               @click="updateStatus(scope.row)"
             >
             </el-button>
-            <el-button v-if="scope.row.status === 2" type="warning" link :icon="VideoPause" @click="updateStatus(scope.row)">
+            <el-button
+              v-if="scope.row.status === 2"
+              type="warning"
+              link
+              :icon="VideoPause"
+              v-auth="['survey:project:stop']"
+              @click="updateStatus(scope.row)"
+            >
             </el-button>
           </el-tooltip>
 
@@ -101,7 +109,7 @@
               link
               v-if="scope.row.userId !== 1"
               :icon="CopyDocument"
-              v-auth="['system:user:edit']"
+              v-auth="['survey:project:copy']"
               @click="copy(scope.row)"
             >
             </el-button>
@@ -112,7 +120,7 @@
               type="danger"
               link
               :icon="Delete"
-              v-auth="['system:user:remove']"
+              v-auth="['survey:project:remove']"
               @click="deleteSurvey(scope.row)"
             ></el-button>
           </el-tooltip>
