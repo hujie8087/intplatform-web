@@ -156,7 +156,8 @@ export const maintainMap = () => {
           } = data || {};
           let end = finishCount + endCount;
           let fix = waitReWorkCount + waitingCount;
-          const offsetCenter = L.latLng(center.lat - 0.009, center.lng + 0.004);
+          // const offsetCenter = L.latLng(center.lat - 0.009, center.lng + 0.004);
+          const offsetCenter = L.latLng(center.lat, center.lng);
           const popup = L.popup({
             closeButton: false, // 右上角删除按钮
             closeOnClick: true, // 点击空白地方消失
