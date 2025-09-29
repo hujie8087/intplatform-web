@@ -8,7 +8,12 @@
           <p>复制下面的问卷链接到QQ、Email等工具中直接发给被用户</p>
           <div class="address-input-group">
             <el-input style="width: 520px" v-model="intranetUrl" readonly></el-input>
-            <el-button type="primary" style="margin: 0 20px" @click="copyAddress('intranet')" :icon="Connection"
+            <el-button
+              type="primary"
+              style="margin: 0 20px"
+              @click="copyAddress('intranet')"
+              :icon="Connection"
+              v-auth="['survey:project:add']"
               >复制地址</el-button
             >
             <el-button type="primary" style="margin: 0 20px 0 0" @click="openSurvey('intranet')" :icon="Link">打开问卷</el-button>
@@ -57,7 +62,9 @@
       </div>
       <div class="survey-container" v-if="dialogForm.status === 1">
         <el-empty description="问卷尚未发布" :image="noDataImage" :image-size="500">
-          <el-button @click="publishSurvey" size="large" type="primary" style="width: 320px">点击发布问卷</el-button>
+          <el-button @click="publishSurvey" size="large" type="primary" style="width: 320px" v-auth="['survey:project:publish']"
+            >点击发布问卷</el-button
+          >
         </el-empty>
       </div>
     </div>
