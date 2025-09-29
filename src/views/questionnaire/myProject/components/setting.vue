@@ -153,7 +153,14 @@
 
           <!-- 提交按钮：统一位置、添加加载状态 -->
           <el-form-item class="form-actions">
-            <el-button type="primary" style="width: 120px" :icon="Check" @click="handleUpdateSetting" :loading="isSubmitting">
+            <el-button
+              type="primary"
+              style="width: 120px"
+              :icon="Check"
+              v-auth="['survey:setting:save']"
+              @click="handleUpdateSetting"
+              :loading="isSubmitting"
+            >
               保存
             </el-button>
           </el-form-item>
