@@ -21,8 +21,13 @@ const convertToLatLng = polygons => {
 };
 // 人员信息函数
 export const useMap = (regionList = []) => {
-  let map = {};
+  let map: L.Map | null = null;
   const initializeMap = () => {
+    // 如果已有实例，先销毁
+    if (map) {
+      map.remove();
+      map = null;
+    }
     map = L.map("map", {
       center: [0.471591392971324, 127.98038005828859],
       zoom: 15,
@@ -59,9 +64,14 @@ export const useMap = (regionList = []) => {
 };
 // 维修统计函数
 export const maintainMap = () => {
-  let map = {};
+  let map: L.Map | null = null;
   let drawnItems: L.FeatureGroup | null = null;
   const initMaintainMap = (regionList = []) => {
+    // 如果已有实例，先销毁
+    if (map) {
+      map.remove();
+      map = null;
+    }
     map = L.map("maintenance", {
       center: [0.471591392971324, 127.98038005828859],
       zoom: 15,
@@ -218,13 +228,13 @@ export const maintainMap = () => {
 };
 //隐患排查
 export const riskMap = () => {
-  let map = {};
+  let map: L.Map | null = null;
   let mapInstance: L.Map | null = null;
   let drawnItems: L.FeatureGroup | null = null;
-  // if (map != null) {
-  //   map.remove(); // 先移除旧地图
-  // }
   const initRsikMap = (regionList = []) => {
+    if (map) {
+      map.remove(); // 先移除旧地图
+    }
     map = L.map("risk", {
       center: [0.471591392971324, 127.98038005828859],
       zoom: 15,
@@ -275,7 +285,7 @@ export const riskMap = () => {
 };
 // 报餐送餐
 export const mealMap = (regionList = []) => {
-  let map = {};
+  let map: L.Map | null = null;
   let drawnItems: L.FeatureGroup | null = null;
   // 🔹不同类型的图层单独管理
   let layers = {
@@ -285,6 +295,11 @@ export const mealMap = (regionList = []) => {
     // overlays: L.layerGroup()
   };
   const initMealMap = () => {
+    // 如果已有实例，先销毁
+    if (map) {
+      map.remove();
+      map = null;
+    }
     map = L.map("meal", {
       center: [0.471591392971324, 127.98038005828859],
       zoom: 15,
@@ -319,22 +334,22 @@ export const mealMap = (regionList = []) => {
     Object.values(layers).forEach(layer => layer.addTo(map));
   };
   // 在模块/组件的外层作用域（只声明一次）
-  const setMarker = (data = []) => {
+  const setMarker = (data: any[] = []) => {
     layers.markers.clearLayers(); // 先清空之前的 markers
     let icon1 = L.icon({
-      // 标记图片地址
+      // 标记图片地址--灰色
       iconUrl: iconImg_1,
       //标记图片大小
       iconSize: [30, 35]
     });
     let icon2 = L.icon({
-      // 标记图片地址
+      // 标记图片地址-绿色
       iconUrl: iconImg_2,
       //标记图片大小
       iconSize: [30, 35]
     });
     let icon3 = L.icon({
-      // 标记图片地址
+      // 标记图片地址-橘色
       iconUrl: iconImg_3,
       //标记图片大小
       iconSize: [30, 35]
@@ -343,7 +358,7 @@ export const mealMap = (regionList = []) => {
       const lat = Number(item.latitude);
       const lng = Number(item.longitude);
       if (Number.isNaN(lat) || Number.isNaN(lng)) return;
-      const chosenIcon = item.remainingGoodsCount === 0 ? icon2 : item.goodsCount === item.remainingGoodsCount ? icon1 : icon3;
+      const chosenIcon = item.receivedGoodsCount === item.goodsCount ? icon2 : item.receivedGoodsCount === 0 ? icon1 : icon3;
       const marker = L.marker([lat, lng], { icon: chosenIcon }).bindPopup(setPopupStyle(item), { closeButton: false });
       layers.markers.addLayer(marker);
     });
@@ -365,7 +380,7 @@ export const mealMap = (regionList = []) => {
         </div>
         <div class="site-popup-third">
           <span>剩余货物</span>
-          <b>${formatNumber(item.remainingGoodsCount)}</b>
+          <b>${formatNumber(item.goodsCount - item.receivedGoodsCount)}</b>
         </div>
       </div>`;
     }
