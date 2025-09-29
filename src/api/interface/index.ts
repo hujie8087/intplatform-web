@@ -201,7 +201,7 @@ export namespace User {
 
 export interface DictOptions {
   label: string;
-  value: number | string | boolean;
+  value: number | string;
   tagType?: EpPropMergeType<StringConstructor, "primary" | "danger" | "warning" | "success" | "info", unknown>;
   cssClass?: string;
   enLabel?: string;

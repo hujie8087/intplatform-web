@@ -127,6 +127,8 @@ const getPickupTypeList = async () => {
   const res = await getPickupType();
   pickupTypeOptions.value = res.rows.map((item, index) => ({
     label: item.name,
+    enLabel: item.name,
+    idLabel: item.name,
     value: item.id,
     tagType: tagTypeList.value[index]
   }));
@@ -271,7 +273,7 @@ const orderDetailDishList = ref<Order.ResOrderDish[]>([]);
 // 打开查看订单详情
 const openDrawer = async (row: Partial<Order.ResOrder> = {}) => {
   if (row.id) {
-    const res = await getOrderDishList({ orderId: row.id, page: 1, size: 999999 });
+    const res = await getOrderDishList({ orderId: row.id, pageNum: 1, pageSize: 999999 });
     orderDetailDishList.value = res.rows;
   }
   const params = {
