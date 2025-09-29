@@ -6,6 +6,7 @@
       range-separator="至"
       :disabled="isDev && isSelected"
       v-model="dataValue"
+      value-format="HH:mm:ss"
       :start-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '开始时间'"
       :end-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '结束时间'"
       @focus="handleFocus"

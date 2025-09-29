@@ -4,7 +4,13 @@
       <div class="body-content">
         <div class="topic-list comps">
           <el-watermark :font="{ fontSize: 20 }" :content="selectForm?.displayWaterMark ? selectForm?.waterMarkText || '' : ''">
-            <div v-for="item in pageCompList" :key="item?.id" class="cursor-move form-item cannot-click">
+            <div
+              @click="selectComp(item)"
+              v-for="item in pageCompList"
+              :key="item?.id"
+              :class="{ 'cannot-click': item.type !== 'upload' }"
+              class="cursor-move form-item"
+            >
               <FormComponent
                 v-if="!['paging'].includes(item.type) || (['paging'].includes(item.type) && formShowConfig.displayPaging)"
                 :render-type="'preview'"
@@ -33,11 +39,15 @@ import { ArrowUp } from "@element-plus/icons-vue";
 import FormComponent from "../dynamicForm/components/componentsForm/index.vue";
 import { getSurveyResult } from "@/api/modules/questionnaire/surverResult";
 import { useRoute } from "vue-router";
+// 导入 store
+import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const selectForm = ref();
 const route = useRoute();
 const pageCompList = ref();
 const scrollBox = ref<HTMLElement>();
 const showBackTop = ref(false);
+const compStore = useSelectCompStore();
+
 // 回到顶部
 const backToTop = () => {
   scrollBox.value?.scrollTo({ top: 0, behavior: "smooth" });
@@ -46,6 +56,10 @@ const backToTop = () => {
 const handleScroll = () => {
   if (!scrollBox.value) return;
   showBackTop.value = scrollBox.value.scrollTop > 300;
+};
+
+const selectComp = (item: any) => {
+  compStore.initCurrentComp(item);
 };
 
 onMounted(async () => {
