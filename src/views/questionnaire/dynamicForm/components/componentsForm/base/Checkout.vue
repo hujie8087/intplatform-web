@@ -1,0 +1,163 @@
+<template>
+  <el-checkbox-group
+    v-model="localDataValue"
+    :style="layoutType === 'vertical' || isSelected ? radioVerticalStyle : radioStyle"
+    :class="{
+      'group-item': true,
+      'group-item-select': isSelected
+    }"
+    :key="isSelected + _updateKey"
+    @change="inputBlur"
+  >
+    <el-checkbox v-for="(item, _index) in props.dataList" :key="_index" :label="item.value" :disabled="isDev">
+      <div class="citem">
+        <span class="editor-item">
+          {{ item.label }}
+        </span>
+        <span class="other-val" v-if="item.subType === 'other'">
+          <el-input style="width: 240px" :disabled="isDev" class="item-comp" v-model="item.value" placeholder="待填表者更新" />
+        </span>
+      </div>
+    </el-checkbox>
+  </el-checkbox-group>
+</template>
+
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+import { delayTime } from "../../compConfig";
+
+const compStore = useSelectCompStore();
+interface Props {
+  id: string;
+  dataList: Array<any>;
+  dataValue: string;
+  layoutType: string;
+  isDev: boolean;
+  isSelected: boolean;
+  isPreviewRender?: boolean;
+  isRequired: boolean;
+  customErrorMessage: string;
+}
+const _updateKey = ref("");
+const props = defineProps<Props>();
+const localDataValue = ref<Array<any>>([]);
+// 1. 使用watch监听（推荐，可获取新旧值）
+watch(
+  () => localDataValue.value,
+  (newValue, oldValue) => {
+    // 如果值没有变化，不执行更新
+    if (JSON.stringify(newValue) === JSON.stringify(oldValue)) {
+      return;
+    }
+    const curError = compStore?.currentCompConfig?.errorMsg ?? "";
+    if (curError) {
+      compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+    }
+    setTimeout(() => {
+      compStore.updateCurrentComp({
+        dataValue: newValue,
+        id: props.id
+      });
+    }, delayTime);
+  },
+  {
+    deep: true // 因为是数组，需要深度监听
+  }
+);
+//  监听 props 变化，同步到本地数据
+watch(
+  () => props.dataValue,
+  (newValue, oldValue) => {
+    // 如果值没有变化，不执行更新
+    if (JSON.stringify(newValue) === JSON.stringify(oldValue)) {
+      return;
+    }
+    if (Array.isArray(newValue)) {
+      localDataValue.value = [...newValue];
+    } else if (newValue) {
+      try {
+        const parsed = JSON.parse(newValue);
+        localDataValue.value = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        localDataValue.value = [];
+      }
+    } else {
+      localDataValue.value = [];
+    }
+  },
+  { immediate: true }
+);
+const radioVerticalStyle = ref({
+  minHeight: "40px",
+  lineHeight: "40px"
+});
+
+const radioStyle = ref({
+  display: "flex",
+  lineHeight: "40px"
+});
+const inputBlur = () => {
+  if (props.isDev || !props.isRequired) return false;
+  if (!localDataValue.value.length) {
+    let msg = props.customErrorMessage ? props.customErrorMessage : "此数据不能为空";
+    compStore.updateCurrentComp({ errorMsg: msg, id: props.id });
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+:deep(.el-checkbox) {
+  position: relative;
+  width: 100%;
+  min-height: 40px;
+  line-height: 40px;
+}
+:deep(.el-checkbox > .el-checkbox__input) {
+  position: absolute;
+  top: 12px;
+}
+:deep(.el-checkbox > .el-checkbox__label) {
+  width: calc(100% - 40px); /* 防止内容溢出 */
+  height: 100%;
+  margin-left: 24px; /* 为复选框留出空间 */
+  line-height: 40px;
+}
+.other-val {
+  display: block;
+  margin-left: 32px; /* 与复选框对齐 */
+}
+.citem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: calc(100%);
+  .delete {
+    display: none;
+  }
+  &:hover,
+  &:active,
+  &:focus {
+    .delete {
+      display: block;
+      float: right;
+      margin-left: auto;
+      cursor: pointer;
+    }
+  }
+}
+.editor-item {
+  margin-left: 0; /* 已通过label的margin控制整体偏移 */
+  outline: none;
+}
+
+/* 禁用状态下的文本颜色 */
+:deep(.el-checkbox.is-disabled .el-checkbox__label) {
+  color: #a8abb2 !important;
+}
+
+/* 复选框输入框显示 */
+:deep(.el-checkbox__input .el-checkbox__inner) {
+  display: inline-block;
+}
+</style>
