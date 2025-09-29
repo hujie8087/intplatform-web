@@ -5,6 +5,8 @@
     v-model="dataValue"
     @focus="handleFocus"
     @blur="inputBlur"
+    maxlength="255"
+    :show-word-limit="true"
     :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
   >
     <template #prefix>

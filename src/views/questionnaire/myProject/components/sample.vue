@@ -13,19 +13,28 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
-          <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增样本</el-button>
-          <el-button type="danger" :icon="Delete" @click="deleteDeptHandle" :disabled="isAllDelete">批量删除</el-button>
-          <el-button type="success" :icon="Upload" @click="importFile">导入</el-button>
-          <el-button type="warning" :icon="Download" @click="exportFile">导出</el-button>
+          <el-button type="primary" :icon="CirclePlus" v-auth="['survey:sample:add']" @click="openDrawer('新增')"
+            >新增样本</el-button
+          >
+          <el-button
+            type="danger"
+            :icon="Delete"
+            @click="deleteDeptHandle"
+            v-auth="['survey:sample:remove']"
+            :disabled="isAllDelete"
+            >批量删除</el-button
+          >
+          <el-button type="success" :icon="Upload" v-auth="['survey:sample:import']" @click="importFile">导入</el-button>
+          <el-button type="warning" :icon="Download" v-auth="['survey:sample:export']" @click="exportFile">导出</el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="warning" v-auth="['system:dept:edit']" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"
+          <el-button type="warning" v-auth="['survey:sample:edit']" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"
             >编辑</el-button
           >
           <el-button
             type="danger"
-            v-auth="['system:dept:remove']"
+            v-auth="['survey:sample:remove']"
             v-if="scope.row.deptId !== 100"
             link
             :icon="Delete"

@@ -68,6 +68,7 @@
 import { ref } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { optionData, textOrButtonSizeData } from "../settingConfigData";
+import { delayTime } from "../../compConfig";
 
 const orientationList = ref([...textOrButtonSizeData]);
 const positionList = ref([...optionData]);
@@ -77,23 +78,32 @@ interface Props {
 const compStore: any = useSelectCompStore();
 const changeValue = (event: any, param?: string) => {
   const data = event;
-  compStore.updateCurrentComp({
-    [param || "buttonIconShowBool"]: data
-  });
+  setTimeout(() => {
+    compStore.updateCurrentComp({
+      [param || "buttonIconShowBool"]: data,
+      id: comp.value.id
+    });
+  }, delayTime);
 };
 
 const handleChangeInput = (value: any, params?: string) => {
   const data = value;
-  compStore.updateCurrentComp({
-    [params || "titleValue"]: data
-  });
+  setTimeout(() => {
+    compStore.updateCurrentComp({
+      [params || "titleValue"]: data,
+      id: comp.value.id
+    });
+  }, delayTime);
 };
 
 const changeSelect = (value: any, param?: string) => {
   const data = value;
-  compStore.updateCurrentComp({
-    [param || "titleSize"]: data
-  });
+  setTimeout(() => {
+    compStore.updateCurrentComp({
+      [param || "titleSize"]: data,
+      id: comp.value.id
+    });
+  }, delayTime);
 };
 
 const props = defineProps<Props>();

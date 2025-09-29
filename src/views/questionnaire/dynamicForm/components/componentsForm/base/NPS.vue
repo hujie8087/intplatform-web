@@ -36,6 +36,8 @@ interface Props {
   isDev: boolean;
   isSelected: boolean;
   customErrorMessage: string;
+  errorMsg: string;
+  isRequired: boolean;
 }
 const compStore = useSelectCompStore();
 const props = defineProps<Props>();
@@ -51,15 +53,16 @@ const list = computed(() => {
 const changeIndex = (index: number) => {
   hoverIndex.value = index;
 };
-
 const selectValue = (item: any) => {
   // 1. 可选：先验证当前组件是否仍为选中状态
   // 传入当前组件自身的ID，确保更新正确的组件
-  if (item || item === 0) {
+  if ((item || item === 0) && props.isRequired) {
     // 清除已存在的错误提示（有输入就去掉红框）
-    const curError = compStore?.currentCompConfig?.errorMsg;
+    const curError = props?.errorMsg;
     if (curError) {
-      compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+      setTimeout(() => {
+        compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+      }, delayTime);
     }
   }
   setTimeout(() => {

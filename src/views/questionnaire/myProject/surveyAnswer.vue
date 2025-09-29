@@ -608,7 +608,7 @@ function getDeviceType() {
       padding: 0;
       overflow-x: hidden !important;
       .form-item .comp-item {
-        padding: 10px 20px 30px;
+        padding: 18px 20px;
       }
       .form-footer {
         margin-top: 15px;

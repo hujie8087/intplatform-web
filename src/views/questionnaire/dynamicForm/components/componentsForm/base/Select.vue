@@ -68,9 +68,6 @@ const inputBlur = () => {
 </script>
 
 <style lang="scss" scoped>
-.item-comp {
-  margin: 8px 0 20px;
-}
 .editor-item {
   margin-left: 15px;
   outline: none;

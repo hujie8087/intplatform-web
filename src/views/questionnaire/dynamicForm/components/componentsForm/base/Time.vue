@@ -1,9 +1,13 @@
 <template>
-  <el-time-picker
+  <el-time-select
     class="item-comp"
     style="width: 100%"
     :disabled="isDev && isSelected"
     v-model="dataValue"
+    start="00:00"
+    step="00:01"
+    end="23:59"
+    format="hh:mm A"
     :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
     value-format="HH:mm:ss"
     @focus="handleFocus"
@@ -26,7 +30,7 @@ interface Props {
   customErrorMessage: string;
 }
 const props = defineProps<Props>();
-const dataValue = ref<null | string>(props.dataValue && props.dataValue.trim() ? props.dataValue : "00:00:00");
+const dataValue = ref<null | string>(props.dataValue && props.dataValue.trim() ? props.dataValue : null);
 const handleFocus = () => {
   emit("compFocus");
 };

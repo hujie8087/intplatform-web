@@ -372,7 +372,7 @@ watch(
 }
 .form-item {
   .comp-item {
-    padding: 16px 60px 24px;
+    padding: 18px 60px;
   }
 }
 .form-item-active {

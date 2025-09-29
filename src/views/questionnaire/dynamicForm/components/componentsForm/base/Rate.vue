@@ -3,8 +3,6 @@
     class="item"
     v-model="dataValue"
     :disabled="isDev"
-    show-score
-    score-template="{value} 分"
     :max="props.rateCount"
     :allow-half="props.rateAllowHalf"
     @change="inputBlur"
@@ -48,13 +46,14 @@ watch(
   }
 );
 const inputBlur = () => {
-  debugger;
   if (!props.isRequired) return false;
   if (dataValue.value || dataValue.value === 0) {
     // 清除已存在的错误提示（有输入就去掉红框）
     const curError = props?.errorMsg;
     if (curError) {
-      compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+      setTimeout(() => {
+        compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+      }, delayTime);
     }
   }
 };
