@@ -139,6 +139,16 @@ const username = computed(() => userStore.userInfo.user.nickName);
 
 const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
+  if (newParams.startTime) {
+    newParams.beginStartTime = newParams.startTime[0];
+    newParams.endStartTime = newParams.startTime[1];
+    delete newParams.startTime;
+  }
+  if (newParams.endTime) {
+    newParams.beginEndTime = newParams.endTime[0];
+    newParams.endEndTime = newParams.endTime[1];
+    delete newParams.endTime;
+  }
   return getCoupleRoomOrderList(newParams);
 };
 
@@ -162,7 +172,7 @@ const getChamberOptions = async () => {
 };
 getChamberOptions();
 
-const freezeOptions = ref<DictOptions[]>([
+const freezeOptions = ref([
   {
     label: "正常",
     value: false,
@@ -210,13 +220,12 @@ const columns = reactive<ColumnProps<CoupleRoom.ResRoomOrder>[]>([
     label: "区域",
     enum: coupleRoomArea,
     tag: true,
-    width: 120,
     search: { el: "select", props: { filterable: true } }
   },
   {
     prop: "startTime",
     label: "入住日期",
-    search: { el: "input" },
+    search: { el: "date-picker", props: { type: "daterange", valueFormat: "YYYY-MM-DD" } },
     render(scope) {
       return dayjs(scope.row.startTime).format("YYYY-MM-DD");
     }
@@ -224,13 +233,14 @@ const columns = reactive<ColumnProps<CoupleRoom.ResRoomOrder>[]>([
   {
     prop: "endTime",
     label: "退房日期",
-    search: { el: "input" },
+    search: { el: "date-picker", props: { type: "daterange", valueFormat: "YYYY-MM-DD" } },
     render(scope) {
       return dayjs(scope.row.endTime).format("YYYY-MM-DD");
     }
   },
   { prop: "chamberName", label: "房间号", search: { el: "input" } },
   { prop: "nick", label: "账号", width: 120, search: { el: "input" } },
+  { prop: "name", label: "申请人", search: { el: "input" } },
   { prop: "day", label: "入住天数", width: 80 },
   { prop: "remark", label: "备注", width: 150 },
   {
