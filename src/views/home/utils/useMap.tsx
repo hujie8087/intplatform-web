@@ -21,17 +21,23 @@ const convertToLatLng = polygons => {
 };
 // 人员信息函数
 export const useMap = (regionList = []) => {
-  let map = {};
+  let map: L.Map | null = null;
   const initializeMap = () => {
+    // 如果已有实例，先销毁
+    if (map) {
+      map.remove();
+      map = null;
+    }
     map = L.map("map", {
       center: [0.471591392971324, 127.98038005828859],
       zoom: 15,
       zoomControl: false,
       attributionControl: false,
       scrollWheelZoom: { smooth: true, debounceTimeout: 200 },
-      maxZoom: 20
+      maxZoom: 19
     });
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    L.tileLayer("https://www.google.com/maps/vt?lyrs=s@189&gl=en&x={x}&y={y}&z={z}").addTo(map);
     const bounds = [
       [0.462128, 127.883903],
       [0.554159, 128.047638]
@@ -59,18 +65,24 @@ export const useMap = (regionList = []) => {
 };
 // 维修统计函数
 export const maintainMap = () => {
-  let map = {};
+  let map: L.Map | null = null;
   let drawnItems: L.FeatureGroup | null = null;
   const initMaintainMap = (regionList = []) => {
+    // 如果已有实例，先销毁
+    if (map) {
+      map.remove();
+      map = null;
+    }
     map = L.map("maintenance", {
       center: [0.471591392971324, 127.98038005828859],
       zoom: 15,
       zoomControl: false,
       attributionControl: false,
       scrollWheelZoom: { smooth: true, debounceTimeout: 200 },
-      maxZoom: 20
+      maxZoom: 19
     });
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    L.tileLayer("https://www.google.com/maps/vt?lyrs=s@189&gl=en&x={x}&y={y}&z={z}").addTo(map);
     /*   L.FeatureGroup()：Leaflet 提供的一种 图层组（Layer Group）。
     它可以用来存放多个绘制的图形对象（点、线、面、矩形、多边形等）。
     drawnItems 就是一个变量，用来保存你绘制出来的所有图层。 */
@@ -156,7 +168,8 @@ export const maintainMap = () => {
           } = data || {};
           let end = finishCount + endCount;
           let fix = waitReWorkCount + waitingCount;
-          const offsetCenter = L.latLng(center.lat - 0.009, center.lng + 0.004);
+          // const offsetCenter = L.latLng(center.lat - 0.009, center.lng + 0.004);
+          const offsetCenter = L.latLng(center.lat, center.lng);
           const popup = L.popup({
             closeButton: false, // 右上角删除按钮
             closeOnClick: true, // 点击空白地方消失
@@ -217,22 +230,23 @@ export const maintainMap = () => {
 };
 //隐患排查
 export const riskMap = () => {
-  let map = {};
+  let map: L.Map | null = null;
   let mapInstance: L.Map | null = null;
   let drawnItems: L.FeatureGroup | null = null;
-  // if (map != null) {
-  //   map.remove(); // 先移除旧地图
-  // }
   const initRsikMap = (regionList = []) => {
+    if (map) {
+      map.remove(); // 先移除旧地图
+    }
     map = L.map("risk", {
       center: [0.471591392971324, 127.98038005828859],
       zoom: 15,
       zoomControl: false,
       attributionControl: false,
       scrollWheelZoom: { smooth: true, debounceTimeout: 200 },
-      maxZoom: 20
+      maxZoom: 19
     });
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    L.tileLayer("https://www.google.com/maps/vt?lyrs=s@189&gl=en&x={x}&y={y}&z={z}").addTo(map);
     /*   L.FeatureGroup()：Leaflet 提供的一种 图层组（Layer Group）。
     它可以用来存放多个绘制的图形对象（点、线、面、矩形、多边形等）。
     drawnItems 就是一个变量，用来保存你绘制出来的所有图层。 */
@@ -274,7 +288,7 @@ export const riskMap = () => {
 };
 // 报餐送餐
 export const mealMap = (regionList = []) => {
-  let map = {};
+  let map: L.Map | null = null;
   let drawnItems: L.FeatureGroup | null = null;
   // 🔹不同类型的图层单独管理
   let layers = {
@@ -284,15 +298,21 @@ export const mealMap = (regionList = []) => {
     // overlays: L.layerGroup()
   };
   const initMealMap = () => {
+    // 如果已有实例，先销毁
+    if (map) {
+      map.remove();
+      map = null;
+    }
     map = L.map("meal", {
       center: [0.471591392971324, 127.98038005828859],
       zoom: 15,
       zoomControl: false,
       attributionControl: false,
       scrollWheelZoom: { smooth: true, debounceTimeout: 200 },
-      maxZoom: 20
+      maxZoom: 19
     });
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    L.tileLayer("https://www.google.com/maps/vt?lyrs=s@189&gl=en&x={x}&y={y}&z={z}").addTo(map);
     /*   L.FeatureGroup()：Leaflet 提供的一种 图层组（Layer Group）。
     它可以用来存放多个绘制的图形对象（点、线、面、矩形、多边形等）。
     drawnItems 就是一个变量，用来保存你绘制出来的所有图层。 */
@@ -318,22 +338,22 @@ export const mealMap = (regionList = []) => {
     Object.values(layers).forEach(layer => layer.addTo(map));
   };
   // 在模块/组件的外层作用域（只声明一次）
-  const setMarker = (data = []) => {
+  const setMarker = (data: any[] = []) => {
     layers.markers.clearLayers(); // 先清空之前的 markers
     let icon1 = L.icon({
-      // 标记图片地址
+      // 标记图片地址--灰色
       iconUrl: iconImg_1,
       //标记图片大小
       iconSize: [30, 35]
     });
     let icon2 = L.icon({
-      // 标记图片地址
+      // 标记图片地址-绿色
       iconUrl: iconImg_2,
       //标记图片大小
       iconSize: [30, 35]
     });
     let icon3 = L.icon({
-      // 标记图片地址
+      // 标记图片地址-橘色
       iconUrl: iconImg_3,
       //标记图片大小
       iconSize: [30, 35]
@@ -342,7 +362,7 @@ export const mealMap = (regionList = []) => {
       const lat = Number(item.latitude);
       const lng = Number(item.longitude);
       if (Number.isNaN(lat) || Number.isNaN(lng)) return;
-      const chosenIcon = item.remainingGoodsCount === 0 ? icon2 : item.goodsCount === item.remainingGoodsCount ? icon1 : icon3;
+      const chosenIcon = item.receivedGoodsCount === item.goodsCount ? icon2 : item.receivedGoodsCount === 0 ? icon1 : icon3;
       const marker = L.marker([lat, lng], { icon: chosenIcon }).bindPopup(setPopupStyle(item), { closeButton: false });
       layers.markers.addLayer(marker);
     });
@@ -364,7 +384,7 @@ export const mealMap = (regionList = []) => {
         </div>
         <div class="site-popup-third">
           <span>剩余货物</span>
-          <b>${formatNumber(item.remainingGoodsCount)}</b>
+          <b>${formatNumber(item.goodsCount - item.receivedGoodsCount)}</b>
         </div>
       </div>`;
     }
