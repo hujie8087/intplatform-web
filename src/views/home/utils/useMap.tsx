@@ -34,9 +34,10 @@ export const useMap = (regionList = []) => {
       zoomControl: false,
       attributionControl: false,
       scrollWheelZoom: { smooth: true, debounceTimeout: 200 },
-      maxZoom: 20
+      maxZoom: 19
     });
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    L.tileLayer("https://www.google.com/maps/vt?lyrs=s@189&gl=en&x={x}&y={y}&z={z}").addTo(map);
     const bounds = [
       [0.462128, 127.883903],
       [0.554159, 128.047638]
@@ -78,9 +79,10 @@ export const maintainMap = () => {
       zoomControl: false,
       attributionControl: false,
       scrollWheelZoom: { smooth: true, debounceTimeout: 200 },
-      maxZoom: 20
+      maxZoom: 19
     });
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    L.tileLayer("https://www.google.com/maps/vt?lyrs=s@189&gl=en&x={x}&y={y}&z={z}").addTo(map);
     /*   L.FeatureGroup()：Leaflet 提供的一种 图层组（Layer Group）。
     它可以用来存放多个绘制的图形对象（点、线、面、矩形、多边形等）。
     drawnItems 就是一个变量，用来保存你绘制出来的所有图层。 */
@@ -241,9 +243,10 @@ export const riskMap = () => {
       zoomControl: false,
       attributionControl: false,
       scrollWheelZoom: { smooth: true, debounceTimeout: 200 },
-      maxZoom: 20
+      maxZoom: 19
     });
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    L.tileLayer("https://www.google.com/maps/vt?lyrs=s@189&gl=en&x={x}&y={y}&z={z}").addTo(map);
     /*   L.FeatureGroup()：Leaflet 提供的一种 图层组（Layer Group）。
     它可以用来存放多个绘制的图形对象（点、线、面、矩形、多边形等）。
     drawnItems 就是一个变量，用来保存你绘制出来的所有图层。 */
@@ -306,9 +309,10 @@ export const mealMap = (regionList = []) => {
       zoomControl: false,
       attributionControl: false,
       scrollWheelZoom: { smooth: true, debounceTimeout: 200 },
-      maxZoom: 20
+      maxZoom: 19
     });
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    L.tileLayer("https://www.google.com/maps/vt?lyrs=s@189&gl=en&x={x}&y={y}&z={z}").addTo(map);
     /*   L.FeatureGroup()：Leaflet 提供的一种 图层组（Layer Group）。
     它可以用来存放多个绘制的图形对象（点、线、面、矩形、多边形等）。
     drawnItems 就是一个变量，用来保存你绘制出来的所有图层。 */
