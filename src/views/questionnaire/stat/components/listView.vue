@@ -11,7 +11,7 @@
         :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
       >
         <template #tableHeader>
-          <el-button type="warning" :icon="Download" @click="exportFile">批量导出</el-button>
+          <el-button type="warning" :icon="Download" v-auth="['survey:report:answer']" @click="exportFile">批量导出</el-button>
         </template>
         <template #operation="scope">
           <el-tooltip placement="top" effect="dark" content="查看问卷">
