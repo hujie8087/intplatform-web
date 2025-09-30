@@ -2,6 +2,11 @@ import { CompType } from "./compData";
 import _ from "lodash";
 import { isRef, isReactive, toRaw } from "vue";
 import { v4 as uuidv4 } from "uuid";
+import { useTheme } from "@/hooks/useTheme";
+import { DEFAULT_PRIMARY } from "@/config";
+import { useGlobalStore } from "@/stores/modules/global";
+const { initTheme, changePrimary } = useTheme();
+const globalStore = useGlobalStore();
 type ClassifyList = "personal";
 interface CompConfig {
   name: string;
@@ -365,3 +370,13 @@ export const regexRuleMesg = {
 };
 // 判读数据是否为空
 export const isEmpty = str => /^\s*$/.test(str);
+
+export const comeThemeColor = () => {
+  changePrimary("#409eff");
+  globalStore.setGlobalState("assemblySize", "large");
+};
+export const outThemeColor = () => {
+  changePrimary(DEFAULT_PRIMARY);
+  initTheme();
+  globalStore.setGlobalState("assemblySize", "small");
+};

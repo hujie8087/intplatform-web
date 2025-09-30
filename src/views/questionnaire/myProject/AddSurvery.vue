@@ -44,16 +44,13 @@ import setting from "./components/setting.vue"; //设置
 import publish from "./components/publish.vue"; // 发布
 import stat from "../stat/index.vue"; // 统计
 import { useRoute } from "vue-router";
+import { comeThemeColor, outThemeColor } from "../dynamicForm/components/compConfig";
 
 const $route = useRoute(); // 路由
 const projectKey = $route.query.key;
 const current = $route.query.current;
 const projectName = $route.query.projectName;
-
-import { useGlobalStore } from "@/stores/modules/global";
-import { nextTick } from "vue";
 import { useTabsStore } from "@/stores/modules/tabs";
-const globalStore = useGlobalStore();
 const tabStore = useTabsStore();
 provide("projectKey", projectKey);
 const dynamicRef = ref();
@@ -78,6 +75,7 @@ const selectSideItemType = async (item: string) => {
 const backButton = () => {
   let href = window.location.hash.slice(1);
   tabStore.removeTabs(href, true);
+  outThemeColor();
 };
 // 保存问卷
 const saveSurvey = async () => {
@@ -91,17 +89,9 @@ const saveSurvey = async () => {
     console.warn("子组件没有暴露 saveSurveryFun  方法");
   }
 };
-
-// 初始化主题数据 默认设置
-const initThemeData = () => {
-  nextTick(() => {
-    globalStore.setGlobalState("assemblySize", "large");
-  });
-};
-
 onMounted(() => {
   // 初始化主题数据
-  initThemeData();
+  comeThemeColor();
 });
 </script>
 
