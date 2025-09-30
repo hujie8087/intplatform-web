@@ -19,24 +19,13 @@
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <!-- <el-tooltip placement="top" effect="dark" content="编辑问卷名称">
-            <el-button
-              class="btn-edit-pen"
-              link
-              v-if="scope.row.userId !== 1"
-              :icon="EditPen"
-              v-auth="['system:user:edit']"
-              @click="editPorjectName(scope.row)"
-            >
-            </el-button>
-          </el-tooltip> -->
           <el-tooltip placement="top" effect="dark" content="编辑问卷">
             <el-button
               type="warning"
               link
               v-if="scope.row.userId !== 1"
               :icon="Edit"
-              v-auth="['survey:project:edit']"
+              v-auth="['survey:project:saveAll']"
               @click="rediectPage('questionBank', scope.row)"
             >
             </el-button
@@ -47,7 +36,7 @@
               link
               v-if="scope.row.userId !== 1"
               :icon="DataLine"
-              v-auth="['project:answer:list']"
+              v-auth="['survey:project:saveAll']"
               @click="rediectPage('stat', scope.row)"
             >
             </el-button>
@@ -58,7 +47,7 @@
               link
               v-if="scope.row.userId !== 1"
               :icon="Setting"
-              v-auth="['survey:setting:query']"
+              v-auth="['survey:project:saveAll']"
               @click="rediectPage('setting', scope.row)"
             >
             </el-button>
@@ -70,7 +59,7 @@
               link
               v-if="scope.row.userId !== 1"
               :icon="Share"
-              v-auth="['survey:project:detail']"
+              v-auth="['survey:project:saveAll']"
               @click="rediectPage('publish', scope.row)"
             >
             </el-button>
@@ -87,7 +76,7 @@
               class="btn-custom"
               link
               :icon="VideoPlay"
-              v-auth="['survey:project:publish']"
+              v-auth="['survey:project:saveAll']"
               @click="updateStatus(scope.row)"
             >
             </el-button>
@@ -96,7 +85,7 @@
               type="warning"
               link
               :icon="VideoPause"
-              v-auth="['survey:project:stop']"
+              v-auth="['survey:project:saveAll']"
               @click="updateStatus(scope.row)"
             >
             </el-button>

@@ -2,16 +2,16 @@
   <div class="stat-page">
     <div class="content-card">
       <el-tabs type="border-card" v-model="activeName" class="demo-tabs tong-ji-page" @tab-click="handleClick">
-        <el-tab-pane label="列表视图" name="first" v-auth="['project:answer:list']">
+        <el-tab-pane label="列表视图" name="first">
           <listView v-if="activeName === 'first'" />
         </el-tab-pane>
-        <el-tab-pane label="统计视图" name="second" v-auth="['survey:stats:stats']">
+        <el-tab-pane label="统计视图" name="second">
           <statView v-if="activeName === 'second'" />
         </el-tab-pane>
-        <el-tab-pane label="数据分析" name="third" v-auth="['survey:stats:analysis']">
+        <el-tab-pane label="数据分析" name="third">
           <dataAnalyze v-if="activeName === 'third'" />
         </el-tab-pane>
-        <el-tab-pane label="投票排名" name="fourth" v-auth="['survey:stats:rank']">
+        <el-tab-pane label="投票排名" name="fourth">
           <voteRank v-if="activeName === 'fourth'" />
         </el-tab-pane>
       </el-tabs>

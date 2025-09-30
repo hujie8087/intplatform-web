@@ -143,6 +143,7 @@
                   <el-input
                     v-model="form.timedEndPromptText"
                     :disabled="!setting.timingQuantitativeForm"
+                    ss
                     maxlength="100"
                     show-word-limit
                   />
@@ -157,7 +158,7 @@
               type="primary"
               style="width: 120px"
               :icon="Check"
-              v-auth="['survey:setting:save']"
+              v-auth="['survey:project:saveAll']"
               @click="handleUpdateSetting"
               :loading="isSubmitting"
             >
@@ -283,7 +284,6 @@ const getSurveySettingData = async () => {
     console.error("Get survey setting error:", error);
   }
 };
-
 /** 提交问卷设置（添加表单校验、加载状态） */
 const handleUpdateSetting = async () => {
   // 1. 表单校验
@@ -302,9 +302,6 @@ const handleUpdateSetting = async () => {
     isSubmitting.value = true;
     await save(submitData); // 假设后端更新接口
     ElMessage.success("问卷设置更新成功");
-  } catch (error) {
-    ElMessage.error("更新失败，请重试");
-    console.error("Update survey setting error:", error);
   } finally {
     isSubmitting.value = false; // 无论成功失败，关闭加载
   }

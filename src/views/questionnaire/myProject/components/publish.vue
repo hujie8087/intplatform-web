@@ -62,7 +62,7 @@
       </div>
       <div class="survey-container" v-if="dialogForm.status === 1">
         <el-empty description="问卷尚未发布" :image="noDataImage" :image-size="500">
-          <el-button @click="publishSurvey" size="large" type="primary" style="width: 320px" v-auth="['survey:project:publish']"
+          <el-button @click="publishSurvey" size="large" type="primary" style="width: 320px" v-auth="['survey:project:saveAll']"
             >点击发布问卷</el-button
           >
         </el-empty>
