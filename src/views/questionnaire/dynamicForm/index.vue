@@ -665,6 +665,7 @@ const saveSurveryFun = async projectKey => {
       formItemId: item.id,
       type: item.type,
       title: item.title,
+      description: item.description,
       // 是否显示类型，不需要用户操作的组件，单纯为了展示的组件
       isDisplayType: optionalType.includes(item.type),
       required: item?.isRequired ?? false,
