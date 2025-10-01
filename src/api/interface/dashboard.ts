@@ -111,6 +111,7 @@ export interface ResponseType {
     onlineCount: number | string;
     todayLoginCount: number | string;
     todayRegisterCount: number | string;
+    activeCount: number | string;
     yearData: YearDataItem[];
   };
 }
