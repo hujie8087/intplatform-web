@@ -3,7 +3,7 @@
     <div class="person-info-top">
       <ul class="person-info-top-item-wrapper">
         <li class="person-info-top-item">
-          <div class="person-info-top-item-top">总人数</div>
+          <div class="person-info-top-item-top">当前已激活人数</div>
           <div class="person-info-top-item-bottom">
             <img src="../images/big1.png" alt="" style="width: 21px; height: 19px" />
             <dv-digital-flop :config="config.allCount" style="width: 75%; height: 25px" />
@@ -98,7 +98,7 @@ const option = reactive<ECOption>({});
 const initPage = async () => {
   const res = (await getPersonnelStatistics({})) as ResponseType;
   let data = res.data;
-  config.allCount.number[0] = data.allCount as number;
+  config.allCount.number[0] = data.activeCount as number;
   config.todayLoginCount.number[0] = data.todayLoginCount as number;
   config.onlineCount.number[0] = data.onlineCount as number;
   config.todayRegisterCount.number[0] = data.todayRegisterCount as number;
@@ -111,7 +111,6 @@ const setChartData = data => {
     seriesDat: []
   };
   let tempObj = {
-    totalCount: [],
     loginCount: [],
     registerCount: []
   };
@@ -122,39 +121,6 @@ const setChartData = data => {
     });
   });
   let keysTitltle = {
-    totalCount: {
-      name: "总人数",
-      areaStyle: {
-        normal: {
-          color: new echarts.graphic.LinearGradient(
-            0,
-            0,
-            0,
-            1,
-            [
-              {
-                offset: 0,
-                color: "rgba(255, 125, 0, 0.3)"
-              },
-              {
-                offset: 0.8,
-                color: "rgba(255, 125, 0, 0)"
-              }
-            ],
-            false
-          ),
-          shadowColor: "rgba(0, 0, 0, 0.1)",
-          shadowBlur: 10
-        }
-      },
-      itemStyle: {
-        normal: {
-          color: "rgb(255,125,0)",
-          borderColor: "rgba(255,125,0,0.27)",
-          borderWidth: 12
-        }
-      }
-    },
     loginCount: {
       name: "月登录",
       areaStyle: {

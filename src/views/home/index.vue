@@ -375,4 +375,54 @@ onBeforeUnmount(() => {
 .full-screen .large-screen-zoom {
   left: 27.8%;
 }
+.meal-service-icon-tips {
+  padding: 4px 6px 0;
+  font-size: 12px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  white-space: nowrap; /* 避免文字换行 */
+  cursor: pointer;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+}
+.meal-service-icon-tips::after {
+  position: absolute;
+  bottom: -6px; /* 往下偏移一点 */
+  left: 50%;
+  width: 0;
+  height: 0;
+  content: "";
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+  transform: translateX(-50%);
+}
+.meal-service-icon-tips::before {
+  position: absolute;
+  bottom: -7px; /* 稍微大一点 */
+  left: 50%;
+  content: "";
+  border-top: 7px solid #ffffff; /* 白色边框 */
+  border-right: 7px solid transparent;
+  border-left: 7px solid transparent;
+  transform: translateX(-50%);
+}
+.green-bg-color {
+  background: #00e50b;
+}
+.green-bg-color::after {
+  border-top: 6px solid #00e50b; /* 和背景色保持一致 */
+}
+.origin-bg-color {
+  background: #ff7d00;
+}
+.origin-bg-color::after {
+  border-top: 6px solid #ff7d00; /* 和背景色保持一致 */
+}
+.grey-bg-color {
+  background: #86909c;
+}
+.grey-bg-color::after {
+  border-top: 6px solid #86909c; /* 和背景色保持一致 */
+}
 </style>

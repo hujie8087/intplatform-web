@@ -4,12 +4,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import "leaflet-draw";
-// import image3 from "@/assets/202407qcgx-south-all.webp";
-import image3 from "@/assets/images/map.webp";
 import { getRepairStatistics, getCarMessge } from "@/api/modules/dashboard";
-import iconImg_1 from "../images/icon_1.png";
-import iconImg_2 from "../images/icon_2.png";
-import iconImg_3 from "../images/icon_3.png";
 import truckImg from "../images/truckImg.png";
 import { CarListItem } from "@/api/interface/dashboard";
 type ParamsType = { date: string; foodName: string; fcName: string };
@@ -207,9 +202,11 @@ export const maintainMap = () => {
         return polygonLayer;
       });
       // 整体 featureGroup,然后一个整体，然后后面缩放到可视区域
-      polygonsGroup = L.featureGroup(polygons).addTo(map);
-      // 缩放到能看到所有区域
-      map.fitBounds(polygonsGroup.getBounds());
+      if (polygons.length) {
+        polygonsGroup = L.featureGroup(polygons).addTo(map);
+        // 缩放到能看到所有区域
+        map.fitBounds(polygonsGroup.getBounds());
+      }
     };
     createMaskLayer();
     function formatter(number) {
@@ -250,33 +247,16 @@ export const riskMap = () => {
     /*   L.FeatureGroup()：Leaflet 提供的一种 图层组（Layer Group）。
     它可以用来存放多个绘制的图形对象（点、线、面、矩形、多边形等）。
     drawnItems 就是一个变量，用来保存你绘制出来的所有图层。 */
-    drawnItems = new L.FeatureGroup();
-    map.addLayer(drawnItems);
     const bounds = [
       [0.462128, 127.883903],
       [0.554159, 128.047638]
     ];
-    L.imageOverlay(image3, bounds, { opacity: 1 }).addTo(map);
-
-    let maskLayer;
-    const createMaskLayer = () => {
-      if (maskLayer) map.removeLayer(maskLayer);
-      const maskPolygon = [
-        [
-          [-90, -180],
-          [-90, 180],
-          [90, 180],
-          [90, -180]
-        ],
-        ...config.map(layer => layer.geoJson.geometry.coordinates[0].map(coord => [coord[1], coord[0]]))
-      ];
-      maskLayer = L.polygon(maskPolygon, {
-        fillColor: "#082238",
-        fillOpacity: 0.7,
-        stroke: false
-      }).addTo(map);
-    };
-    // createMaskLayer();
+    L.tileLayer((isHttps ? import.meta.env.VITE_MAP_TILES_URL_https : import.meta.env.VITE_MAP_TILES_URL) + "/{z}/{x}_{y}.webp", {
+      maxZoom: 19,
+      minZoom: 10,
+      bounds: bounds, // 限制瓦片层显示范围
+      attribution: "© Custom Tiles"
+    }).addTo(map);
   };
   const riskZoom = () => {
     map.invalidateSize && map.invalidateSize();
@@ -340,30 +320,34 @@ export const mealMap = (regionList = []) => {
   // 在模块/组件的外层作用域（只声明一次）
   const setMarker = (data: any[] = []) => {
     layers.markers.clearLayers(); // 先清空之前的 markers
-    let icon1 = L.icon({
-      // 标记图片地址--灰色
-      iconUrl: iconImg_1,
-      //标记图片大小
-      iconSize: [30, 35]
-    });
-    let icon2 = L.icon({
-      // 标记图片地址-绿色
-      iconUrl: iconImg_2,
-      //标记图片大小
-      iconSize: [30, 35]
-    });
-    let icon3 = L.icon({
-      // 标记图片地址-橘色
-      iconUrl: iconImg_3,
-      //标记图片大小
-      iconSize: [30, 35]
-    });
     data.forEach(item => {
       const lat = Number(item.latitude);
       const lng = Number(item.longitude);
       if (Number.isNaN(lat) || Number.isNaN(lng)) return;
-      const chosenIcon = item.receivedGoodsCount === item.goodsCount ? icon2 : item.receivedGoodsCount === 0 ? icon1 : icon3;
-      const marker = L.marker([lat, lng], { icon: chosenIcon }).bindPopup(setPopupStyle(item), { closeButton: false });
+      const chosenIcon =
+        item.receivedGoodsCount === item.goodsCount && item.goodsCount !== 0
+          ? "green-bg-color"
+          : item.receivedGoodsCount === 0
+            ? "grey-bg-color"
+            : "origin-bg-color";
+      // 定义一个透明 icon
+      const text = item.fsAddressId || "未命名";
+      let { width, height } = measureWidth(text, chosenIcon);
+      const transparentIcon = L.divIcon({
+        className: `meal-service-icon-tips ${chosenIcon}`,
+        html: text, // 不渲染任何 DOM
+        iconSize: [width, height], // 让它自适应文字宽度
+        iconAnchor: [width / 2, height / 2],
+        popupAnchor: [0, -(height / 2 - 5)]
+      });
+      const marker = L.marker([lat, lng], { icon: transparentIcon }).bindPopup(setPopupStyle(item), {
+        closeButton: false,
+        className: "meal-custom-popup", // 自定义类名便于样式控制
+        autoPan: false // 禁止自动平移，避免影响定位
+      });
+      marker.on("click", () => {
+        marker.openPopup();
+      });
       layers.markers.addLayer(marker);
     });
     function setPopupStyle(item) {
@@ -527,4 +511,18 @@ const getNowTime = () => {
   const mm = pad(now.getMinutes());
   const ss = pad(now.getSeconds());
   return `${hh}: ${mm}: ${ss}`;
+};
+// 测试文本标签宽度
+const measureWidth = (text, chosenIcon) => {
+  const tempDiv = document.createElement("div");
+  tempDiv.className = `meal-service-icon-tips ${chosenIcon}`;
+  tempDiv.style.visibility = "hidden";
+  tempDiv.style.visibility = "hidden";
+  tempDiv.style.position = "absolute";
+  tempDiv.innerHTML = text;
+  document.body.appendChild(tempDiv);
+  const width = tempDiv.clientWidth;
+  const height = tempDiv.clientHeight;
+  document.body.removeChild(tempDiv);
+  return { width, height };
 };
