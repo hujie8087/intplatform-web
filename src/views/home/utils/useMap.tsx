@@ -1,17 +1,13 @@
 /* eslint-disable */
-
+import { reactive, ref } from "vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import "leaflet-draw";
-// import image3 from "@/assets/202407qcgx-south-all.webp";
-import image3 from "@/assets/images/map.webp";
-import { getRepairStatistics, getCarMessge } from "@/api/modules/dashboard";
-import iconImg_1 from "../images/icon_1.png";
-import iconImg_2 from "../images/icon_2.png";
-import iconImg_3 from "../images/icon_3.png";
+import { getRepairStatistics, getCarMessge, getPersonCardBar } from "@/api/modules/dashboard";
 import truckImg from "../images/truckImg.png";
 import { CarListItem } from "@/api/interface/dashboard";
+import echarts, { ECOption } from "@/components/ECharts/config";
 type ParamsType = { date: string; foodName: string; fcName: string };
 const isHttps = window.location.protocol === "https:";
 const convertToLatLng = polygons => {
@@ -207,9 +203,11 @@ export const maintainMap = () => {
         return polygonLayer;
       });
       // 整体 featureGroup,然后一个整体，然后后面缩放到可视区域
-      polygonsGroup = L.featureGroup(polygons).addTo(map);
-      // 缩放到能看到所有区域
-      map.fitBounds(polygonsGroup.getBounds());
+      if (polygons.length) {
+        polygonsGroup = L.featureGroup(polygons).addTo(map);
+        // 缩放到能看到所有区域
+        map.fitBounds(polygonsGroup.getBounds());
+      }
     };
     createMaskLayer();
     function formatter(number) {
@@ -250,33 +248,16 @@ export const riskMap = () => {
     /*   L.FeatureGroup()：Leaflet 提供的一种 图层组（Layer Group）。
     它可以用来存放多个绘制的图形对象（点、线、面、矩形、多边形等）。
     drawnItems 就是一个变量，用来保存你绘制出来的所有图层。 */
-    drawnItems = new L.FeatureGroup();
-    map.addLayer(drawnItems);
     const bounds = [
       [0.462128, 127.883903],
       [0.554159, 128.047638]
     ];
-    L.imageOverlay(image3, bounds, { opacity: 1 }).addTo(map);
-
-    let maskLayer;
-    const createMaskLayer = () => {
-      if (maskLayer) map.removeLayer(maskLayer);
-      const maskPolygon = [
-        [
-          [-90, -180],
-          [-90, 180],
-          [90, 180],
-          [90, -180]
-        ],
-        ...config.map(layer => layer.geoJson.geometry.coordinates[0].map(coord => [coord[1], coord[0]]))
-      ];
-      maskLayer = L.polygon(maskPolygon, {
-        fillColor: "#082238",
-        fillOpacity: 0.7,
-        stroke: false
-      }).addTo(map);
-    };
-    // createMaskLayer();
+    L.tileLayer((isHttps ? import.meta.env.VITE_MAP_TILES_URL_https : import.meta.env.VITE_MAP_TILES_URL) + "/{z}/{x}_{y}.webp", {
+      maxZoom: 19,
+      minZoom: 10,
+      bounds: bounds, // 限制瓦片层显示范围
+      attribution: "© Custom Tiles"
+    }).addTo(map);
   };
   const riskZoom = () => {
     map.invalidateSize && map.invalidateSize();
@@ -340,30 +321,34 @@ export const mealMap = (regionList = []) => {
   // 在模块/组件的外层作用域（只声明一次）
   const setMarker = (data: any[] = []) => {
     layers.markers.clearLayers(); // 先清空之前的 markers
-    let icon1 = L.icon({
-      // 标记图片地址--灰色
-      iconUrl: iconImg_1,
-      //标记图片大小
-      iconSize: [30, 35]
-    });
-    let icon2 = L.icon({
-      // 标记图片地址-绿色
-      iconUrl: iconImg_2,
-      //标记图片大小
-      iconSize: [30, 35]
-    });
-    let icon3 = L.icon({
-      // 标记图片地址-橘色
-      iconUrl: iconImg_3,
-      //标记图片大小
-      iconSize: [30, 35]
-    });
     data.forEach(item => {
       const lat = Number(item.latitude);
       const lng = Number(item.longitude);
       if (Number.isNaN(lat) || Number.isNaN(lng)) return;
-      const chosenIcon = item.receivedGoodsCount === item.goodsCount ? icon2 : item.receivedGoodsCount === 0 ? icon1 : icon3;
-      const marker = L.marker([lat, lng], { icon: chosenIcon }).bindPopup(setPopupStyle(item), { closeButton: false });
+      const chosenIcon =
+        item.receivedGoodsCount === item.goodsCount && item.goodsCount !== 0
+          ? "green-bg-color"
+          : item.receivedGoodsCount === 0
+            ? "grey-bg-color"
+            : "origin-bg-color";
+      // 定义一个透明 icon
+      const text = item.fsAddressId || "未命名";
+      let { width, height } = measureWidth(text, chosenIcon);
+      const transparentIcon = L.divIcon({
+        className: `meal-service-icon-tips ${chosenIcon}`,
+        html: text, // 不渲染任何 DOM
+        iconSize: [width, height], // 让它自适应文字宽度
+        iconAnchor: [width / 2, height / 2],
+        popupAnchor: [0, -(height / 2 - 5)]
+      });
+      const marker = L.marker([lat, lng], { icon: transparentIcon }).bindPopup(setPopupStyle(item), {
+        closeButton: false,
+        className: "meal-custom-popup", // 自定义类名便于样式控制
+        autoPan: false // 禁止自动平移，避免影响定位
+      });
+      marker.on("click", () => {
+        marker.openPopup();
+      });
       layers.markers.addLayer(marker);
     });
     function setPopupStyle(item) {
@@ -527,4 +512,217 @@ const getNowTime = () => {
   const mm = pad(now.getMinutes());
   const ss = pad(now.getSeconds());
   return `${hh}: ${mm}: ${ss}`;
+};
+// 测试文本标签宽度
+const measureWidth = (text, chosenIcon) => {
+  const tempDiv = document.createElement("div");
+  tempDiv.className = `meal-service-icon-tips ${chosenIcon}`;
+  tempDiv.style.visibility = "hidden";
+  tempDiv.style.visibility = "hidden";
+  tempDiv.style.position = "absolute";
+  tempDiv.innerHTML = text;
+  document.body.appendChild(tempDiv);
+  const width = tempDiv.clientWidth;
+  const height = tempDiv.clientHeight;
+  document.body.removeChild(tempDiv);
+  return { width, height };
+};
+// 展示弹窗的方法
+export const showDailogFun = type => {
+  const dialogShow = ref(false);
+  const dialogTitle = ref("");
+  const personBarChart = ref();
+  let option: ECOption = {};
+  let domObj = {};
+  const deptPath = ref("");
+  const stack = []; // 栈用来保存下钻路径\
+  const getCardDataFun = async obj => {
+    let allCount = obj.count;
+    let res: any = await getPersonCardBar({ type: obj.type });
+    let data = res.data;
+    let iwipCount = data[0].num;
+    const othterCount = allCount - iwipCount; // 其他的数据
+    let handleArr = setDataFun(data, othterCount); // 处理后的数据
+    const backBtn = document.querySelector(".back-button-page");
+    // 初始渲染
+    const myChart = echarts.init(personBarChart.value);
+    domObj = myChart;
+    option = renderChart(handleArr);
+    // // 下钻事件
+    myChart.setOption(option, true);
+    myChart.on("click", function (params) {
+      const currentNode = stack.length === 0 ? handleArr : stack[stack.length - 1];
+      const clickedItem = currentNode.children.find(d => d.name === params.name);
+      if (clickedItem && clickedItem.children && clickedItem.children.length > 0) {
+        stack.push(clickedItem);
+        deptPath.value = clickedItem.deptPath;
+        option = renderChart(clickedItem);
+        myChart.setOption(option, true);
+      }
+      backBtn.style.display = stack.length > 0 ? "block" : "none";
+    });
+    // // 返回上一级
+    backBtn &&
+      backBtn.addEventListener("click", () => {
+        stack.pop();
+        const parent = stack.length === 0 ? handleArr : stack[stack.length - 1];
+        deptPath.value = parent.deptPath;
+        option = renderChart(parent);
+        domObj.setOption(option, true);
+        backBtn.style.display = stack.length > 0 ? "block" : "none";
+      });
+  };
+  const renderChart = node => {
+    if (!node) return;
+    const children = node.children || [];
+    const option = {
+      color: "#33D1C9",
+      title: { show: false },
+      grid: {
+        left: "4.5%",
+        top: 20,
+        bottom: children.length > 13 ? 70 : 40,
+        right: "2%"
+        // containLabel: true
+      },
+      tooltip: { trigger: "item" },
+      xAxis: {
+        type: "category",
+        data: children.map(d => d.name),
+        axisTick: {
+          show: false
+        },
+        splitLine: {
+          show: false
+        },
+        axisLabel: {
+          fontSize: 11,
+          interval: 0, // 强制显示所有标签，不省略
+          formatter: function (value) {
+            const limit = 6; // 每行最多 6 个字
+            const maxLines = 2; // 最多两行
+            let result = "";
+            for (let i = 0; i < maxLines; i++) {
+              const start = i * limit;
+              const end = start + limit;
+              if (start >= value.length) break;
+              result += value.substring(start, end);
+
+              if (i < maxLines - 1 && end < value.length) {
+                result += "\n"; // 换行
+              }
+            }
+
+            if (value.length > limit * maxLines) {
+              result = result.substring(0, limit * maxLines - 1) + "...";
+            }
+            return result;
+          }
+        },
+        boundaryGap: true
+      },
+      yAxis: {
+        type: "value",
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: "#57617B"
+          }
+        },
+        axisLabel: {
+          color: "#57617B"
+        }
+      },
+      series: [
+        {
+          type: "bar",
+          barWidth: 24,
+          data: children.map(d => d.value),
+          label: { show: true, position: "top" },
+          itemStyle: {
+            borderRadius: [3, 3, 0, 0] // 左上、右上、右下、左下
+          }
+        }
+      ],
+      ...isAddDataZoom(children, 13)
+    };
+    return option;
+  };
+  // 数据处理
+  const setDataFun = (data, othterCount) => {
+    let wrapperChild = data[0].children;
+    let hasIwipArr: any = {};
+    wrapperChild.forEach(element => {
+      if (element.label == "IWIP") {
+        hasIwipArr = element;
+      }
+    });
+    const dataTree = {
+      name: hasIwipArr.label,
+      deptPath: hasIwipArr.deptPath,
+      children: []
+    };
+    deptPath.value = hasIwipArr.deptPath;
+    const getMapFeatures = (features = []) => {
+      if (!Array.isArray(features) || features.length === 0) {
+        return [];
+      }
+      return features
+        .map(feature => {
+          const geoJsonFeature = {
+            name: feature.label,
+            value: feature.num,
+            deptPath: feature.deptPath
+          };
+          if (Array.isArray(feature.children) && feature.children.length > 0) {
+            geoJsonFeature.children = getMapFeatures(feature.children);
+          }
+          return geoJsonFeature;
+        })
+        .filter(f => f.value > 0)
+        .sort((a, b) => b.value - a.value);
+    };
+    dataTree.children = getMapFeatures(hasIwipArr.children);
+    if (othterCount > 0) {
+      dataTree.children.push({
+        name: "其他",
+        deptPath: "其他",
+        value: othterCount
+      });
+    }
+    dataTree.children = dataTree.children.filter(f => f.value > 0).sort((a, b) => b.value - a.value);
+    return dataTree;
+  };
+  const isAddDataZoom = (arr, pageSize) => {
+    let obj = {};
+    if (arr.length > pageSize) {
+      obj = {
+        dataZoom: [
+          {
+            type: "slider", // slider表示有滑动软的，inside表示内置的show: true,
+            height: 0,
+            bottom: 25,
+            zoomLock: true,
+            start: (pageSize / arr.length) * 100 + "%",
+            startValue: 0,
+            endValue: pageSize, // 每页条数
+            showDetail: false,
+            filterMode: "filter",
+            borderColor: "transparent", // 边框颜色
+            fillerColor: "transparent", // 选中范国背最色
+            // backgroundColor: "#046162", //背质领色
+            backgroundColor: "#333", //背质领色
+            moveOnMouseMove: true,
+            moveHandleSize: 12
+          }
+        ]
+      };
+    } else {
+      obj = {
+        dataZoom: null
+      };
+    }
+    return obj;
+  };
+  return { dialogShow, dialogTitle, deptPath, personBarChart, getCardDataFun };
 };

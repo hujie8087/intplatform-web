@@ -166,7 +166,7 @@ import { useHandleData } from "@/hooks/useHandleData";
 import { ElForm, ElMessage, FormRules } from "element-plus";
 import PrintTemplate from "./components/PrintTemplate.vue";
 import { BasicSite } from "@/api/interface/mealDelivery/basic/site";
-
+const filePath = import.meta.env.VITE_APP_BASE_FILE;
 const printTemplateRef = ref<InstanceType<typeof PrintTemplate>>();
 const selectedList = computed(() => {
   return proTable.value?.selectedList.filter(item => item.orderNo) ?? [];
@@ -477,6 +477,38 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
             }}
           >
             <el-tag type={orderStatusMapping(scope.row).color}>{orderStatusMapping(scope.row).text}</el-tag>
+            {orderStatusMapping(scope.row).text === "已送达" && (
+              <el-image
+                ref="imageRef"
+                style="width: 25px; height: 25px;display: inline-block;vertical-align: middle; margin-left: 10px;"
+                src={filePath + scope.row.imageUrl}
+                show-progress
+                preview-src-list={[filePath + scope.row.imageUrl]}
+                fit="cover"
+                preview-teleported={true}
+                z-index={10000}
+                onClick={e => {
+                  e.stopPropagation(); // 阻止冒泡
+                }}
+              >
+                {{
+                  error: () => (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="#ccc"
+                      style="vertical-align: middle;"
+                    >
+                      <rect width="24" height="24" fill="#f5f5f5" stroke="#aaa" />
+                      <path d="M4 16l4-4 3 3 5-5 4 4v6H4z" fill="#999" />
+                      <path d="M10 8h.01M14 8h.01M12 10l1.5 2L12 14l-1.5-2z" stroke="#666" strokeWidth="1" />
+                    </svg>
+                  )
+                }}
+              </el-image>
+            )}
             <br />
             <span style="font-size: 12px; line-height: 12px; color: #909399">{orderDateTime(scope.row)}</span>
           </div>
@@ -495,6 +527,33 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
                   style="font-size: 12px; text-align: left;padding:0"
                 >
                   {activity.content}
+                  {activity.content === "已送达" && (
+                    <el-image
+                      style="width: 20px; height: 20px; margin-left: 6px; vertical-align: middle;"
+                      src={filePath + scope.row.imageUrl}
+                      preview-src-list={[filePath + scope.row.imageUrl]}
+                      fit="cover"
+                      preview-teleported={true}
+                      z-index={10000}
+                    >
+                      {{
+                        error: () => (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="20"
+                            height="20"
+                            fill="#ccc"
+                            style="vertical-align: middle;"
+                          >
+                            <rect width="24" height="24" fill="#f5f5f5" stroke="#aaa" />
+                            <path d="M4 16l4-4 3 3 5-5 4 4v6H4z" fill="#999" />
+                            <path d="M10 8h.01M14 8h.01M12 10l1.5 2L12 14l-1.5-2z" stroke="#666" strokeWidth="1" />
+                          </svg>
+                        )
+                      }}
+                    </el-image>
+                  )}
                 </el-timeline-item>
               ))}
             </el-timeline>

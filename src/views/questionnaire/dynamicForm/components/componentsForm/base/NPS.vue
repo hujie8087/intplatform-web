@@ -1,0 +1,109 @@
+<template>
+  <div class="nps-list">
+    <div
+      class="nps-item"
+      v-for="(item, index) in list"
+      :key="index"
+      @mouseenter="!isDev && changeIndex(index)"
+      @mouseleave="!isDev && changeIndex(-1)"
+      @click="!isDev && selectValue(item)"
+    >
+      <span
+        class="item"
+        :class="{
+          isDev,
+          hoverChildrenIndex: hoverIndex >= index,
+          active:
+            !isDev &&
+            props.dataValue !== '' &&
+            props.dataValue !== null &&
+            (props.dataValue === 0 ? index === 0 : props.dataValue >= item)
+        }"
+        >{{ item }}</span
+      >
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+import { ref, computed } from "vue";
+import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+import { delayTime } from "../../compConfig";
+interface Props {
+  id: string;
+  dataValue: number | "" | null;
+  startValue: number;
+  rateCount: number;
+  isDev: boolean;
+  isSelected: boolean;
+  customErrorMessage: string;
+  errorMsg: string;
+  isRequired: boolean;
+}
+const compStore = useSelectCompStore();
+const props = defineProps<Props>();
+const hoverIndex = ref(-1);
+const list = computed(() => {
+  let _val = [];
+  for (let i = props.startValue; i <= props.rateCount; i++) {
+    _val.push(i);
+  }
+  return _val;
+});
+
+const changeIndex = (index: number) => {
+  hoverIndex.value = index;
+};
+const selectValue = (item: any) => {
+  // 1. 可选：先验证当前组件是否仍为选中状态
+  // 传入当前组件自身的ID，确保更新正确的组件
+  if ((item || item === 0) && props.isRequired) {
+    // 清除已存在的错误提示（有输入就去掉红框）
+    const curError = props?.errorMsg;
+    if (curError) {
+      setTimeout(() => {
+        compStore.updateCurrentComp({ errorMsg: "", id: props.id });
+      }, delayTime);
+    }
+  }
+  setTimeout(() => {
+    compStore.updateCurrentComp({ dataValue: item, id: props.id });
+  }, delayTime);
+};
+</script>
+<style lang="scss">
+.nps-list {
+  display: flex;
+  flex-basis: content;
+  flex-wrap: wrap;
+}
+.nps-item {
+  display: inline-flex;
+  width: 32px;
+  height: 30px;
+  margin-top: 2px;
+  margin-right: 4px;
+  margin-bottom: 2px;
+  font-size: 22px;
+  line-height: 30px;
+  .item {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    color: #ffffff;
+    text-align: center;
+    cursor: pointer;
+    background: #dee0e3;
+    border-radius: 6px;
+    &:hover:not(.isDev),
+    &.hoverChildrenIndex {
+      background: rgb(22 119 255 / 66%);
+    }
+    &.active:not(.isDev) {
+      background: #1677ff;
+    }
+  }
+  .isDev {
+    cursor: no-drop;
+  }
+}
+</style>
