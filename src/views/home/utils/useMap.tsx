@@ -1,12 +1,13 @@
 /* eslint-disable */
-
+import { reactive, ref } from "vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import "leaflet-draw";
-import { getRepairStatistics, getCarMessge } from "@/api/modules/dashboard";
+import { getRepairStatistics, getCarMessge, getPersonCardBar } from "@/api/modules/dashboard";
 import truckImg from "../images/truckImg.png";
 import { CarListItem } from "@/api/interface/dashboard";
+import echarts, { ECOption } from "@/components/ECharts/config";
 type ParamsType = { date: string; foodName: string; fcName: string };
 const isHttps = window.location.protocol === "https:";
 const convertToLatLng = polygons => {
@@ -525,4 +526,203 @@ const measureWidth = (text, chosenIcon) => {
   const height = tempDiv.clientHeight;
   document.body.removeChild(tempDiv);
   return { width, height };
+};
+// 展示弹窗的方法
+export const showDailogFun = type => {
+  const dialogShow = ref(false);
+  const dialogTitle = ref("");
+  const personBarChart = ref();
+  let option: ECOption = {};
+  let domObj = {};
+  const deptPath = ref("");
+  const stack = []; // 栈用来保存下钻路径\
+  const getCardDataFun = async obj => {
+    let allCount = obj.count;
+    let res: any = await getPersonCardBar({ type: obj.type });
+    let data = res.data;
+    let iwipCount = data[0].num;
+    const othterCount = allCount - iwipCount; // 其他的数据
+    let handleArr = setDataFun(data, othterCount); // 处理后的数据
+    const backBtn = document.querySelector(".back-button-page");
+    // 初始渲染
+    const myChart = echarts.init(personBarChart.value);
+    domObj = myChart;
+    option = renderChart(handleArr);
+    // // 下钻事件
+    myChart.setOption(option, true);
+    myChart.on("click", function (params) {
+      const currentNode = stack.length === 0 ? handleArr : stack[stack.length - 1];
+      const clickedItem = currentNode.children.find(d => d.name === params.name);
+      if (clickedItem && clickedItem.children && clickedItem.children.length > 0) {
+        stack.push(clickedItem);
+        deptPath.value = clickedItem.deptPath;
+        option = renderChart(clickedItem);
+        myChart.setOption(option, true);
+      }
+      backBtn.style.display = stack.length > 0 ? "block" : "none";
+    });
+    // // 返回上一级
+    backBtn &&
+      backBtn.addEventListener("click", () => {
+        stack.pop();
+        const parent = stack.length === 0 ? handleArr : stack[stack.length - 1];
+        deptPath.value = parent.deptPath;
+        option = renderChart(parent);
+        domObj.setOption(option, true);
+        backBtn.style.display = stack.length > 0 ? "block" : "none";
+      });
+  };
+  const renderChart = node => {
+    if (!node) return;
+    const children = node.children || [];
+    const option = {
+      color: "#33D1C9",
+      title: { show: false },
+      grid: {
+        left: "4.5%",
+        top: 20,
+        bottom: children.length > 13 ? 70 : 40,
+        right: "2%"
+        // containLabel: true
+      },
+      tooltip: { trigger: "item" },
+      xAxis: {
+        type: "category",
+        data: children.map(d => d.name),
+        axisTick: {
+          show: false
+        },
+        splitLine: {
+          show: false
+        },
+        axisLabel: {
+          fontSize: 11,
+          interval: 0, // 强制显示所有标签，不省略
+          formatter: function (value) {
+            const limit = 6; // 每行最多 6 个字
+            const maxLines = 2; // 最多两行
+            let result = "";
+            for (let i = 0; i < maxLines; i++) {
+              const start = i * limit;
+              const end = start + limit;
+              if (start >= value.length) break;
+              result += value.substring(start, end);
+
+              if (i < maxLines - 1 && end < value.length) {
+                result += "\n"; // 换行
+              }
+            }
+
+            if (value.length > limit * maxLines) {
+              result = result.substring(0, limit * maxLines - 1) + "...";
+            }
+            return result;
+          }
+        },
+        boundaryGap: true
+      },
+      yAxis: {
+        type: "value",
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: "#57617B"
+          }
+        },
+        axisLabel: {
+          color: "#57617B"
+        }
+      },
+      series: [
+        {
+          type: "bar",
+          barWidth: 24,
+          data: children.map(d => d.value),
+          label: { show: true, position: "top" },
+          itemStyle: {
+            borderRadius: [3, 3, 0, 0] // 左上、右上、右下、左下
+          }
+        }
+      ],
+      ...isAddDataZoom(children, 13)
+    };
+    return option;
+  };
+  // 数据处理
+  const setDataFun = (data, othterCount) => {
+    let wrapperChild = data[0].children;
+    let hasIwipArr: any = {};
+    wrapperChild.forEach(element => {
+      if (element.label == "IWIP") {
+        hasIwipArr = element;
+      }
+    });
+    const dataTree = {
+      name: hasIwipArr.label,
+      deptPath: hasIwipArr.deptPath,
+      children: []
+    };
+    deptPath.value = hasIwipArr.deptPath;
+    const getMapFeatures = (features = []) => {
+      if (!Array.isArray(features) || features.length === 0) {
+        return [];
+      }
+      return features
+        .map(feature => {
+          const geoJsonFeature = {
+            name: feature.label,
+            value: feature.num,
+            deptPath: feature.deptPath
+          };
+          if (Array.isArray(feature.children) && feature.children.length > 0) {
+            geoJsonFeature.children = getMapFeatures(feature.children);
+          }
+          return geoJsonFeature;
+        })
+        .filter(f => f.value > 0)
+        .sort((a, b) => b.value - a.value);
+    };
+    dataTree.children = getMapFeatures(hasIwipArr.children);
+    if (othterCount > 0) {
+      dataTree.children.push({
+        name: "其他",
+        deptPath: "其他",
+        value: othterCount
+      });
+    }
+    dataTree.children = dataTree.children.filter(f => f.value > 0).sort((a, b) => b.value - a.value);
+    return dataTree;
+  };
+  const isAddDataZoom = (arr, pageSize) => {
+    let obj = {};
+    if (arr.length > pageSize) {
+      obj = {
+        dataZoom: [
+          {
+            type: "slider", // slider表示有滑动软的，inside表示内置的show: true,
+            height: 0,
+            bottom: 25,
+            zoomLock: true,
+            start: (pageSize / arr.length) * 100 + "%",
+            startValue: 0,
+            endValue: pageSize, // 每页条数
+            showDetail: false,
+            filterMode: "filter",
+            borderColor: "transparent", // 边框颜色
+            fillerColor: "transparent", // 选中范国背最色
+            // backgroundColor: "#046162", //背质领色
+            backgroundColor: "#333", //背质领色
+            moveOnMouseMove: true,
+            moveHandleSize: 12
+          }
+        ]
+      };
+    } else {
+      obj = {
+        dataZoom: null
+      };
+    }
+    return obj;
+  };
+  return { dialogShow, dialogTitle, deptPath, personBarChart, getCardDataFun };
 };
