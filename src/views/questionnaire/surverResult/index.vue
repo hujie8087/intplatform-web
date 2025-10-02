@@ -82,6 +82,7 @@ onBeforeUnmount(() => {
   position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   &::before {
     position: absolute;
     inset: 0;
@@ -92,9 +93,10 @@ onBeforeUnmount(() => {
   }
   .topic-page-container {
     position: relative;
-    width: 55%;
-    height: 100%;
+    width: 520px;
+    height: 94%;
     margin: 0 auto;
+    margin-top: 20px;
     overflow: auto;
     background: #ffffff;
   }

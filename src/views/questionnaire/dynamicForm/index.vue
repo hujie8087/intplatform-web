@@ -40,10 +40,7 @@
           <img :src="Icon.preview" alt="" />
           <div class="label">预览</div>
         </div>
-        <div class="back2Top-control" title="返回" @click="back2Top">
-          <img :src="Icon.TopFill" alt="" />
-        </div>
-
+        <el-icon v-show="showBackTop" class="back-top-btn" @click="backToTop"><ArrowUp /></el-icon>
         <div
           class="form"
           :class="{
@@ -223,8 +220,6 @@ import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
 import { topicSaves, editSurverTopic, getSurverDetail } from "@/api/modules/questionnaire/surveySetting";
 
-// 控制回到顶部按钮显示/隐藏
-const isBackTopVisible = ref(false);
 const openDraw = ref(false);
 const compList = ref([...CompListData]); // 组件列表
 const route = useRoute(); // 先获取路由实例
@@ -238,6 +233,8 @@ const currentSettingLogicTopic = ref({});
 const setTopicIndex = ref(0);
 const projectKey = inject("projectKey");
 const emit = defineEmits(["updateTime"]);
+const showBackTop = ref(false);
+
 watch(
   pageCompList,
   newValue => {
@@ -454,7 +451,7 @@ const preview = () => {
   openDraw.value = true;
 };
 
-const back2Top = () => {
+const backToTop = () => {
   if (editorRef.value) {
     editorRef.value.scrollTo({
       top: 0,
@@ -552,7 +549,7 @@ const updateBodyScrollInfo = () => {
   editorScrollInfo.scrollTop = scrollTop;
   // 4. 可选：判断是否滚动到底部（留 1px 误差，避免精度问题）
   editorScrollInfo.isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-  isBackTopVisible.value = scrollTop > 200;
+  showBackTop.value = scrollTop > 300;
 };
 
 const scrollToBottom = async () => {
@@ -939,27 +936,22 @@ defineExpose({
     white-space: nowrap;
   }
 }
-.back2Top-control {
+.back-top-btn {
   position: fixed;
-  bottom: 0;
-  bottom: 26px;
-  left: 50%;
-  z-index: 99;
-  width: 50px;
-  height: 55px;
-  padding: 5px 4px;
-  font-size: 14px;
-  text-align: center;
+  right: 27%; // 调整到右下角
+  bottom: 8%;
+  z-index: 999;
+  padding: 8px;
+  font-size: 28px;
+  color: #409eff; // Element 默认蓝色
   cursor: pointer;
-  border-radius: 5px;
-  transform: translateX(388px);
-  img {
-    width: 32px;
-    height: 32px;
-  }
-  .label {
-    padding-top: 5px;
-    font-size: 12px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+  transition: all 0.3s;
+  &:hover {
+    color: #66b1ff;
+    transform: translateY(-3px);
   }
 }
 .preview-control {
