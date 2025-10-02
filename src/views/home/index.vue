@@ -45,7 +45,19 @@
       </div>
     </div>
     <!-- 主体区域：动态组件 -->
-    <component ref="childCompRef" :is="pages[activePage]" :set-function="setMapFun" />
+    <component ref="childCompRef" :is="pages[activePage]" :set-function="setMapFun" @child-click-event="childEvent" />
+    <el-dialog v-model="dialogShow" width="60%" class="person-info-dialog">
+      <template #title>
+        <div class="dialog-title">
+          <el-icon class="title-icon back-button-page" :size="22">
+            <Back />
+          </el-icon>
+          <span>{{ dialogTitle }}</span>
+          <i> ( {{ deptPath }} ) </i>
+        </div>
+      </template>
+      <div class="person-dialog-chart" ref="personBarChart"></div>
+    </el-dialog>
   </div>
 </template>
 
@@ -55,10 +67,11 @@ import PagePerson from "./personInfo/index.vue";
 import MaintenanceReport from "./maintenanceReport/index.vue";
 import RiskInspection from "./riskInspection/index.vue";
 import mealService from "./mealService/index.vue";
-import { useMap, maintainMap, riskMap, mealMap } from "./utils/useMap";
+import { useMap, maintainMap, riskMap, mealMap, showDailogFun } from "./utils/useMap";
 import { getRegionAllList } from "@/api/modules/system/drawArea";
 import enlargeImg from "./images/fangda.png";
 import narrowImg from "./images/suoxiao.png";
+import { Back } from "@element-plus/icons-vue";
 const isFull = ref(false);
 const imgUrl = ref(enlargeImg);
 const pages = {
@@ -72,6 +85,7 @@ const { initMaintainMap, maintainZoom } = maintainMap(); // 维修统计的地�
 const { initRsikMap, riskZoom } = riskMap(); // 排查隐患地图
 const { initMealMap, setMarker, setTrucks, mealZoom } = mealMap(); // 报餐送餐
 let setMapFun = { setMarker, setTrucks };
+const { getCardDataFun, dialogShow, dialogTitle, deptPath, personBarChart } = showDailogFun();
 // 各个页面地图初始化方法
 const objFun = {
   person: initializeMap,
@@ -113,6 +127,13 @@ const isFullScreen = () => {
   }
   zoomMethodObj[activePage.value](); // 地图缩放
   childCompRef.value?.zoomResize(isFull.value); // 各个页图表缩放
+};
+const childEvent = obj => {
+  if (activePage.value == "person") {
+    dialogShow.value = true;
+    dialogTitle.value = obj["title"];
+    getCardDataFun(obj);
+  }
 };
 onMounted(() => {
   let el = document.querySelector(".el-main");
@@ -229,6 +250,25 @@ onBeforeUnmount(() => {
   cursor: pointer;
   img {
     width: 20px;
+  }
+}
+.person-info-dialog {
+  .dialog-title {
+    display: flex;
+    align-items: center;
+    color: #999999;
+    .title-icon {
+      margin-right: 10px;
+      cursor: pointer;
+    }
+  }
+  .back-button-page {
+    display: none;
+  }
+  i {
+    font-size: 12px;
+    font-style: normal;
+    color: #888888;
   }
 }
 </style>
@@ -369,6 +409,7 @@ onBeforeUnmount(() => {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 2;
   width: 100%;
   height: 100%;
 }
@@ -424,5 +465,15 @@ onBeforeUnmount(() => {
 }
 .grey-bg-color::after {
   border-top: 6px solid #86909c; /* 和背景色保持一致 */
+}
+.person-dialog-chart {
+  height: 380px;
+}
+.person-info-dialog {
+  height: 450px;
+  background: linear-gradient(180deg, #01023c 0%, #0e3047 100%);
+}
+.person-info-dialog .el-dialog__header {
+  border-bottom: 1px solid #57617b;
 }
 </style>
