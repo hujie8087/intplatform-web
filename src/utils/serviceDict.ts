@@ -35,6 +35,13 @@ export const userStatus = [
   { label: I18n.global.t("dict.enable"), value: "0", tagType: "success" },
   { label: I18n.global.t("dict.disable"), value: "1", tagType: "danger" }
 ];
+/**
+ * @description：激活状态
+ */
+export const activeStateOption = [
+  { label: I18n.global.t("main.no"), value: 0, tagType: "danger" },
+  { label: I18n.global.t("main.yes"), value: 1, tagType: "success" }
+];
 
 /**
  * @description：是否显示
