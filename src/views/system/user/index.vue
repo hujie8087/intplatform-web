@@ -177,7 +177,7 @@ import {
 } from "@/api/modules/user";
 import { Account, Role } from "@/api/interface/system";
 import { getUserRole, updateRole, changeUserStatus, revokeAuthorization, userAuthorization } from "@/api/modules/system/user";
-import { genderType, userStatus, userType } from "@/utils/serviceDict";
+import { genderType, userStatus, activeStateOption } from "@/utils/serviceDict";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { getRoleList } from "@/api/modules/system/role";
 import { getCanteenListOptions } from "@/api/modules/productDisplay/marketCanteen";
@@ -233,11 +233,11 @@ const columns = reactive<ColumnProps<Account.ResAccountList>[]>([
     }
   },
   {
-    prop: "userType",
-    label: "用户类型",
+    prop: "isLogin",
+    label: "是否激活",
     width: 120,
     tag: true,
-    enum: userType,
+    enum: activeStateOption,
     search: { el: "select" }
   },
   { prop: "createTime", label: "创建时间", width: 180, sortable: true },
