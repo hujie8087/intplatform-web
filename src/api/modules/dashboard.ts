@@ -22,6 +22,10 @@ export const getCateringScreenData = (params: { beginTime?: string; endTime?: st
 export const getPersonnelStatistics = params => {
   return http.get<DataVisualize.Personnel>(PORT1 + `system/statistics/data`, params, { loading: false });
 };
+// 用户数据部门分析
+export const getPersonCardBar = params => {
+  return http.get(PORT1 + `system/statistics/data/distribution`, params, { loading: false });
+};
 
 // 维修统计信息
 export const getRepairStatistics = (params: { dateType?: string; ancestors?: string }) => {

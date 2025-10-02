@@ -2,28 +2,28 @@
   <div class="person-info">
     <div class="person-info-top">
       <ul class="person-info-top-item-wrapper">
-        <li class="person-info-top-item">
+        <li class="person-info-top-item" @click="clickCard(0)">
           <div class="person-info-top-item-top">当前已激活人数</div>
           <div class="person-info-top-item-bottom">
             <img src="../images/big1.png" alt="" style="width: 21px; height: 19px" />
             <dv-digital-flop :config="config.allCount" style="width: 75%; height: 25px" />
           </div>
         </li>
-        <li class="person-info-top-item">
+        <li class="person-info-top-item" @click="clickCard(1)">
           <div class="person-info-top-item-top">今日登录人数</div>
           <div class="person-info-top-item-bottom">
             <img src="../images/big2.png" alt="" style="width: 19px; height: 22px" />
             <dv-digital-flop :config="config.todayLoginCount" style="width: 75%; height: 25px; text-align: left" />
           </div>
         </li>
-        <li class="person-info-top-item">
+        <li class="person-info-top-item" @click="clickCard(2)">
           <div class="person-info-top-item-top">当前在线人数</div>
           <div class="person-info-top-item-bottom">
             <img src="../images/big3.png" alt="" style="width: 18px; height: 19px" />
             <dv-digital-flop :config="config.onlineCount" style="width: 75%; height: 25px; text-align: left" />
           </div>
         </li>
-        <li class="person-info-top-item">
+        <li class="person-info-top-item" @click="clickCard(3)">
           <div class="person-info-top-item-top">当日注册人数</div>
           <div class="person-info-top-item-bottom">
             <img src="../images/big4.png" alt="" style="width: 20px; height: 20px" />
@@ -261,7 +261,18 @@ const setOptions = obj => {
   };
   Object.assign(option, option1);
 };
-
+const emit = defineEmits(["childClickEvent"]);
+const clickCard = index => {
+  let arr = [
+    { type: "active", title: "当前已经激活人数", count: config.allCount.number[0] },
+    { type: "login", title: "今日登录人数", count: config.todayLoginCount.number[0] },
+    { type: "online", title: "当前在线人数", count: config.onlineCount.number[0] },
+    { type: "register", title: "当日注册人数", count: config.todayRegisterCount.number[0] }
+  ];
+  if (arr[index].count > 0) {
+    emit("childClickEvent", arr[index]);
+  }
+};
 onMounted(() => {
   initPage();
 });
@@ -313,6 +324,7 @@ defineExpose({ zoomResize });
   padding: 0;
   padding-left: 1.5%;
   list-style: none;
+  cursor: pointer;
   background: linear-gradient(180deg, #01023c 0%, #0e3047 100%);
   border-radius: 8px;
   opacity: 1;
