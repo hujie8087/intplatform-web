@@ -114,7 +114,8 @@ export default {
       add: "新增",
       menu: "菜单权限",
       building: "区域权限",
-      remark: "备注"
+      remark: "备注",
+      parentRole: "上级角色"
     },
     post: {
       postList: "岗位列表",

@@ -88,7 +88,7 @@ import UserTaskInfoForm from "@/components/UserTaskInfoForm/index.vue";
 import UserTaskListTable from "@/components/UserTaskListTable/index.vue";
 import { queryUserTaskInfo } from "@/api/modules/mdc/monitor/usertask";
 import { useHandleData } from "@/hooks/useHandleData";
-const filePath = import.meta.env.VITE_APP_BASE_FILE;
+const filePath = import.meta.env.VITE_API_URL;
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
@@ -362,9 +362,9 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
               <el-image
                 ref="imageRef"
                 style="width: 25px; height: 25px;display: inline-block;vertical-align: middle; margin-left: 10px;"
-                src={filePath + scope.row.imageUrl}
+                src={filePath + "/file/mdc/image?filename=" + scope.row.imageUrl + "&w=50&h=50"}
                 show-progress
-                preview-src-list={[filePath + scope.row.imageUrl]}
+                preview-src-list={[filePath + "/file/mdc/image?filename=" + scope.row.imageUrl]}
                 fit="cover"
                 preview-teleported={true}
                 z-index={10000}
@@ -411,8 +411,8 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
                   {activity.content === "已送达" && (
                     <el-image
                       style="width: 20px; height: 20px; margin-left: 6px; vertical-align: middle;"
-                      src={filePath + scope.row.imageUrl}
-                      preview-src-list={[filePath + scope.row.imageUrl]}
+                      src={filePath + "/file/mdc/image?filename=" + scope.row.imageUrl + "&w=50&h=50"}
+                      preview-src-list={[filePath + "/file/mdc/image?filename=" + scope.row.imageUrl]}
                       fit="cover"
                       preview-teleported={true}
                       z-index={10000}

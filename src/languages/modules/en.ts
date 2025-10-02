@@ -114,7 +114,8 @@ export default {
       add: "Add",
       menu: "Menu Permission",
       building: "Building Permission",
-      remark: "Remark"
+      remark: "Remark",
+      parentRole: "Parent Role"
     },
     post: {
       postList: "Post List",

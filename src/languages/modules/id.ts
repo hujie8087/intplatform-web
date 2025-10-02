@@ -114,7 +114,8 @@ export default {
       add: "Tambah Baru",
       menu: "Izin Menu",
       building: "Izin Wilayah",
-      remark: "Catatan"
+      remark: "Catatan",
+      parentRole: "Peran Atasan"
     },
     post: {
       postList: "Daftar Posisi",

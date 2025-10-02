@@ -215,6 +215,8 @@ export namespace Role {
     permissions?: string[];
     admin?: boolean;
     repairAreaId?: string;
+    prId?: number;
+    children?: ResRole[];
   }
   export interface ResMenu {
     id: number;
@@ -337,6 +339,7 @@ export namespace Notice {
     file?: string;
     video?: string;
     sort?: number;
+    url?: string;
   }
   export interface ResNotice {
     createBy?: string;
@@ -364,6 +367,7 @@ export namespace Notice {
     approvalMessage: string;
     approvalDeptId?: number;
     approvalDeptMessage?: string;
+    url?: string;
   }
   export interface pushMessage {
     title: string;

@@ -8,6 +8,7 @@
         :request-api="getTableList"
         :data-callback="dataCallback"
         :init-param="initParam"
+        row-key="roleId"
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
@@ -106,7 +107,6 @@ const dataCallback = (data: any) => {
 const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
   newParams.username && (newParams.username = "custom-" + newParams.username);
-  console.log(newParams);
   return getRoleList(newParams);
 };
 
@@ -122,11 +122,12 @@ getBuildingList();
 // const { BUTTONS } = useAuthButtons();
 const columns = computed((): ColumnProps[] => [
   { type: "selection", fixed: "left", width: 50 },
-  { prop: "roleId", label: "system.role.roleId", width: 100 },
+  // { prop: "roleId", label: "system.role.roleId", width: 100 },
   {
     prop: "roleName",
     label: "system.role.name",
-    search: { el: "input" }
+    search: { el: "input" },
+    align: "left"
   },
   // 多级 prop
   {
@@ -207,7 +208,8 @@ const openDrawer = async (num: number, rowData: Partial<Role.ResRole> = {}) => {
     getTableList: proTable.value.getTableList,
     menuList: roleMenuTreeselect.value,
     menuIds: menuIds.value,
-    buildingOptions: buildingOptions.value
+    buildingOptions: buildingOptions.value,
+    roleList: proTable.value.tableData
   };
   drawerRef.value.acceptParams(params);
 };
