@@ -81,6 +81,8 @@ import UserTaskInfoForm from "@/components/UserTaskInfoForm/index.vue";
 import UserTaskListTable from "@/components/UserTaskListTable/index.vue";
 import { queryUserTaskInfo } from "@/api/modules/mdc/monitor/usertask";
 import dayjs from "dayjs";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n(); // 解构出t方法
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
@@ -98,46 +100,46 @@ useDict("delivery_type").then(res => {
 });
 
 const foodNameMap = ref<DictOptions[]>([
-  { label: "早餐", value: "0", tagType: "primary" },
-  { label: "午餐", value: "1", tagType: "success" },
-  { label: "晚餐", value: "2", tagType: "warning" },
-  { label: "夜宵", value: "3", tagType: "danger" },
+  { label: t("mealDelivery.settlement.breakfast"), value: "0", tagType: "primary" },
+  { label: t("mealDelivery.settlement.Lunch"), value: "1", tagType: "success" },
+  { label: t("mealDelivery.settlement.Dinner"), value: "2", tagType: "warning" },
+  { label: t("mealDelivery.settlement.NightSnack"), value: "3", tagType: "danger" },
   { label: "20L", value: "4", tagType: "info" },
-  { label: "点心", value: "5", tagType: "warning" },
-  { label: "凌晨餐", value: "6", tagType: "info" }
+  { label: t("mealDelivery.settlement.DimSum"), value: "5", tagType: "warning" },
+  { label: t("mealDelivery.settlement.PreDawnMeal"), value: "6", tagType: "info" }
 ]);
 const packageTypeMap = ref<DictOptions[]>([
-  { label: "打包袋", value: "0", tagType: "warning" },
-  { label: "餐盒", value: "1", tagType: "success" },
-  { label: "桶装", value: "2", tagType: "primary" }
+  { label: t("mealDelivery.settlement.TakeawayBag"), value: "0", tagType: "warning" },
+  { label: t("mealDelivery.settlement.MealBox"), value: "1", tagType: "success" },
+  { label: t("mealDelivery.settlement.Barrel"), value: "2", tagType: "primary" }
 ]);
 // 出餐方式
 const foodTypeOptions = ref<DictOptions[]>([
-  { label: "中国餐", value: "0", tagType: "primary" },
-  { label: "印尼餐", value: "1", tagType: "success" },
-  { label: "桶装水", value: "2", tagType: "warning" }
+  { label: t("mealDelivery.settlement.ChineseFood"), value: "0", tagType: "primary" },
+  { label: t("mealDelivery.settlement.IndonesianMeal"), value: "1", tagType: "success" },
+  { label: t("mealDelivery.settlement.GallonWater"), value: "2", tagType: "warning" }
 ]);
 
 const printStatusOptions = ref<DictOptions[]>([
-  { label: "未打印", value: "0", tagType: "danger" },
-  { label: "已打印", value: "1", tagType: "success" }
+  { label: t("mealDelivery.settlement.NotPrinted"), value: "0", tagType: "danger" },
+  { label: t("mealDelivery.settlement.Printed"), value: "1", tagType: "success" }
 ]);
 
 const orderStatusOptions = ref<DictOptions[]>([
-  { label: "已下单", value: "0", tagType: "danger" },
-  { label: "配餐中", value: "1", tagType: "success" },
-  { label: "送餐中", value: "2", tagType: "warning" },
-  { label: "已送达", value: "3", tagType: "info" }
+  { label: t("mealDelivery.settlement.OrderPlaced"), value: "0", tagType: "danger" },
+  { label: t("mealDelivery.settlement.Catering"), value: "1", tagType: "success" },
+  { label: t("mealDelivery.settlement.FoodBeingDelivered"), value: "2", tagType: "warning" },
+  { label: t("mealDelivery.settlement.Arrived"), value: "3", tagType: "info" }
 ]);
 
 const orderStatusMapping = (row: Settlement.ResSettlement): { text: string; color: string } => {
   const { orderStatus, centerStatus } = row;
   if ("0" === orderStatus && "1" === centerStatus) {
     // 班组已下单
-    return { text: "班组已下单", color: "primary" };
+    return { text: t("mealDelivery.settlement.OrderPlacedByTeam"), color: "primary" };
   } else if ("0" === orderStatus && "2" === centerStatus) {
     // 部门已审核
-    return { text: "部门已审核", color: "primary" };
+    return { text: t("mealDelivery.settlement.DepartmentReviewed"), color: "primary" };
   } else if ("1" === orderStatus && "3" === centerStatus) {
     // 餐厅备餐中
     return { text: "餐厅备餐中", color: "warning" };
@@ -235,10 +237,10 @@ const expandedRowSet = ref(new Set());
 const columns = reactive<ColumnProps<Settlement.ResSettlement>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { type: "expand", width: 30 },
-  { prop: "orderNo", label: "订单编号", width: 160, search: { el: "input" } },
+  { prop: "orderNo", label: "mealDelivery.settlement.orderNo", width: 160, search: { el: "input" } },
   {
     prop: "orderDate",
-    label: "订单日期",
+    label: "mealDelivery.settlement.orderDate",
     width: 80,
     search: {
       span: 2,
@@ -253,28 +255,28 @@ const columns = reactive<ColumnProps<Settlement.ResSettlement>[]>([
       ]
     }
   },
-  { prop: "companyName", label: "付费公司", width: 80 },
+  { prop: "companyName", label: "mealDelivery.settlement.companyName", width: 80 },
   {
     prop: "deptPath",
-    label: "部门名称",
+    label: "mealDelivery.settlement.deptPath",
     width: 120,
     render(scope) {
       return <div style="white-space: normal;">{scope.row.deptPath}</div>;
     }
   },
-  { prop: "num", label: "数量", width: 60 },
+  { prop: "num", label: "mealDelivery.settlement.num", width: 60 },
   {
     prop: "createBy",
-    label: "申报人",
+    label: "mealDelivery.settlement.createBy",
     search: { el: "input" },
     render(scope) {
       return <div style="white-space: normal;">{scope.row.createBy}</div>;
     }
   },
-  { prop: "jobNumber", label: "申报人工号", width: 100 },
+  { prop: "jobNumber", label: "mealDelivery.settlement.jobNumber", width: 100 },
   {
     prop: "deliverySite",
-    label: "配送站点",
+    label: "mealDelivery.settlement.deliverySite",
     width: 80,
     enum: siteAddressListOptions,
     search: {
@@ -286,16 +288,23 @@ const columns = reactive<ColumnProps<Settlement.ResSettlement>[]>([
   },
   {
     prop: "phoneNumber",
-    label: "联系方式",
+    label: "mealDelivery.settlement.phoneNumber",
     width: 100,
     render(scope) {
       return <div style="white-space: normal;">{scope.row.phoneNumber}</div>;
     }
   },
-  { prop: "foodType", label: "餐饮类型", width: 70, enum: foodTypeOptions, tag: true, search: { el: "select" } },
+  {
+    prop: "foodType",
+    label: "mealDelivery.settlement.foodType",
+    width: 70,
+    enum: foodTypeOptions,
+    tag: true,
+    search: { el: "select" }
+  },
   {
     prop: "foodName",
-    label: "餐饮名称",
+    label: "mealDelivery.settlement.foodName",
     width: 70,
     enum: foodNameMap,
     tag: true,
@@ -308,7 +317,7 @@ const columns = reactive<ColumnProps<Settlement.ResSettlement>[]>([
   },
   {
     prop: "canteen",
-    label: "出餐食堂",
+    label: "mealDelivery.settlement.canteen",
     width: 120,
     enum: messHallListOptions,
     render(scope) {
@@ -316,16 +325,22 @@ const columns = reactive<ColumnProps<Settlement.ResSettlement>[]>([
     },
     search: { el: "select", props: { filterable: true } }
   },
-  { prop: "packageType", label: "打包类型", width: 70, enum: packageTypeMap, tag: true, search: { el: "select" } },
-  // { prop: "deliveryType", label: "配送方式", width: 70, enum: deliveryTypeOptions, tag: true, search: { el: "select" } },
+  {
+    prop: "packageType",
+    label: "mealDelivery.settlement.packageType",
+    width: 70,
+    enum: packageTypeMap,
+    tag: true,
+    search: { el: "select" }
+  },
   {
     prop: "fcName",
-    label: "车号",
+    label: "mealDelivery.settlement.fcName",
     width: 60
   },
   {
     prop: "fcId",
-    label: "车号",
+    label: "mealDelivery.settlement.fcName",
     isShow: false,
     enum: carList,
     search: {
@@ -337,7 +352,7 @@ const columns = reactive<ColumnProps<Settlement.ResSettlement>[]>([
   },
   {
     prop: "orderStatus",
-    label: "订单状态",
+    label: "mealDelivery.settlement.orderStatus",
     width: 120,
     render(scope) {
       const rowId = scope.row.orderNo;
@@ -380,7 +395,7 @@ const columns = reactive<ColumnProps<Settlement.ResSettlement>[]>([
   },
   {
     prop: "orderArrays",
-    label: "订单状态",
+    label: "mealDelivery.settlement.orderStatus",
     isShow: false,
     enum: orderStatusOptions,
     tag: true,
@@ -391,7 +406,14 @@ const columns = reactive<ColumnProps<Settlement.ResSettlement>[]>([
       }
     }
   },
-  { prop: "printed", label: "打印状态", width: 80, enum: printStatusOptions, tag: true, search: { el: "select" } }
+  {
+    prop: "printed",
+    label: "mealDelivery.settlement.printed",
+    width: 80,
+    enum: printStatusOptions,
+    tag: true,
+    search: { el: "select" }
+  }
 ]);
 
 const getOrderData = (row: Settlement.ResSettlement): { timestamp: string; color: string; content: string }[] => {
