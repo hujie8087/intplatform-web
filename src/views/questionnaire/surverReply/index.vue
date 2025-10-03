@@ -93,13 +93,12 @@ const columns = reactive([
   { type: "selection", fixed: "left", width: 50 },
   { type: "index", label: "序号", width: 80 },
   {
-    prop: "title",
-    label: "回复名称",
-    search: { el: "input", defaultValue: "" }
+    prop: "projectName",
+    label: "归属问卷"
   },
   {
-    prop: "projectName",
-    label: "归属问卷",
+    prop: "title",
+    label: "回复",
     search: { el: "input", defaultValue: "" }
   },
   {
@@ -118,7 +117,7 @@ const columns = reactive([
     prop: "remark",
     label: "备注"
   },
-  { prop: "operation", label: "操作", width: 150, fixed: "right" }
+  { prop: "operation", label: "操作", width: 170, fixed: "right" }
 ]);
 const dataCallback = data => {
   return {
