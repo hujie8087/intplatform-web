@@ -2,7 +2,7 @@
   <div class="setting-item">
     <el-text size="default" class="block-title">图片设置</el-text>
     <div class="setting-item-img">
-      <UploadImg class="mb-10" v-model:image-url="imageUrl" :file-size="5" width="100px" height="100px">
+      <UploadImg class="mb-10" :api="uploadSurvey" v-model:image-url="imageUrl" :file-size="5" width="100px" height="100px">
         <template #tip> 上传图片最大为 5M </template>
       </UploadImg>
     </div>
@@ -11,6 +11,7 @@
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 import UploadImg from "@/components/Upload/Img.vue";
+import { uploadSurvey } from "@/api/modules/upload";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 interface Props {
   comp: any;

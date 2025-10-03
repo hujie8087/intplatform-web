@@ -54,7 +54,14 @@
           @input="item.value = item.label"
           size="default"
         ></el-input>
-        <UploadImg class="img-upload" v-model:image-url="item.imageUrl" :file-size="5" width="90px" height="90px">
+        <UploadImg
+          class="img-upload"
+          :api="uploadSurvey"
+          v-model:image-url="item.imageUrl"
+          :file-size="5"
+          width="90px"
+          height="90px"
+        >
           <template #tip>
             <span class="upload-tip">上传图片最大为 5M</span>
           </template>
@@ -75,6 +82,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import UploadImg from "@/components/Upload/Img.vue";
+import { uploadSurvey } from "@/api/modules/upload";
 import { v4 as uuidv4 } from "uuid";
 // import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 interface Props {
