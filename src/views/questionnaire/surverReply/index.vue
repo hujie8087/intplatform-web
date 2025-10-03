@@ -12,17 +12,17 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" :icon="Plus" v-auth="['survey:replay:add']" @click="addSurveyReplyList('新增')">
+          <el-button type="primary" :icon="Plus" v-auth="['survey:reply:add']" @click="addSurveyReplyList('新增')">
             新建回复
           </el-button>
-          <el-button type="success" :icon="Download" v-auth="['survey:replay:export']" @click="exportSurveyReply">
+          <el-button type="success" :icon="Download" v-auth="['survey:reply:export']" @click="exportSurveyReply">
             导出回复
           </el-button>
           <el-button
             type="danger"
             :disabled="!scope.isSelected"
             :icon="Delete"
-            v-auth="['survey:replay:remove']"
+            v-auth="['survey:reply:remove']"
             @click="batchDelete(scope.selectedListIds)"
           >
             批量删除
@@ -34,17 +34,11 @@
             type="primary"
             link
             :icon="EditPen"
-            v-auth="['survey:replay:edit']"
+            v-auth="['survey:reply:edit']"
             @click="addSurveyReplyList('修改', scope.row)"
             >修改</el-button
           >
-          <el-button
-            type="danger"
-            :icon="Delete"
-            link
-            v-auth="['survey:replay:remove']"
-            @click="deleteSurveyReplyList(scope.row)"
-          >
+          <el-button type="danger" :icon="Delete" link v-auth="['survey:reply:remove']" @click="deleteSurveyReplyList(scope.row)">
             删除
           </el-button>
         </template>
