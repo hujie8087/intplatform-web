@@ -369,11 +369,7 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
             <el-timeline reverse={false} style="padding: 0">
               {(() => {
                 const activities = getOrderData(scope.row);
-                // 找到最后一个状态（比如按时间戳最大值来判断）
-                const lastActivity = activities.reduce((prev, curr) =>
-                  new Date(curr.timestamp) > new Date(prev.timestamp) ? curr : prev
-                );
-
+                const lastActivity = activities[activities.length - 1];
                 return activities.map((activity, index) => (
                   <el-timeline-item
                     key={index}
@@ -384,7 +380,7 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
                     {activity.content}
 
                     {/* 判断是否是最后一个状态且已送达 */}
-                    {activity === lastActivity && (
+                    {lastActivity.timestamp && activity === lastActivity && (
                       <el-image
                         style="width: 20px; height: 20px; margin-left: 6px; vertical-align: middle;"
                         src={filePath + "/file/mdc/image?filename=" + scope.row.imageUrl + "&w=50&h=50"}
