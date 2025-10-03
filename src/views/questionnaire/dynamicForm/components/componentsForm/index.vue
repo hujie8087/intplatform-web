@@ -110,11 +110,11 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue";
-import { JustShowCompType } from "../compData";
-import { HasSettingTypeList, HasSettingTypeListAndNoOther } from "../compConfig";
+import { HasSettingTypeList, HasSettingTypeListAndNoOther, JustShowCompType } from "../compConfig";
 // 显示组件
 import FormTitleComponent from "./show/FormTitle.vue";
 import ImageComponent from "./show/Image.vue";
+import ReplyComponent from "./show/Reply.vue";
 // 基础组件
 import InputComponent from "./base/Input.vue";
 import TextareaComponent from "./base/Textarea.vue";
@@ -166,7 +166,8 @@ const compStore = useSelectCompStore();
 // 创建props的本地副本
 const localComponent = ref({ ...props.component });
 
-const displaySection = computed(() => !["divider", "paging", "formTitle", "img"].includes(props.type));
+const displaySection = computed(() => !JustShowCompType.includes(props.type));
+
 const compConfig = props.component; // 组件配置
 const currentComp = getCompConfig(props.type); //组件
 const emit = defineEmits(["compControl", "addItem", "scrollToBottom", "compFocus"]);
@@ -204,6 +205,7 @@ function getTypeToComponent(type: string) {
     formTitle: FormTitleComponent,
     input: InputComponent,
     img: ImageComponent,
+    reply: ReplyComponent,
     radio: RadioComponent,
     checkout: CheckoutComponent,
     rate: RateComponent,

@@ -9,6 +9,7 @@ import Setting from "/src/assets/images/form-editor/setting.svg";
 // 显示组件
 import Title from "/src/assets/images/form-editor/title.svg";
 import Img from "/src/assets/images/form-editor/img.svg";
+import Reply from "/src/assets/images/form-editor/reply.svg";
 // 基础组件
 import Input from "/src/assets/images/form-editor/input.svg";
 import Textarea from "/src/assets/images/form-editor/textarea.svg";
@@ -75,5 +76,6 @@ export default {
   ImgMultiSelect,
   Sign,
   Upload,
-  TopFill
+  TopFill,
+  Reply
 };
