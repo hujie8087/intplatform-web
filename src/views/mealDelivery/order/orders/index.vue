@@ -477,7 +477,7 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
             }}
           >
             <el-tag type={orderStatusMapping(scope.row).color}>{orderStatusMapping(scope.row).text}</el-tag>
-            {orderStatusMapping(scope.row).text === "已送达" && (
+            {scope.row.orderStatus === "4" && scope.row.centerStatus === "3" && (
               <el-image
                 ref="imageRef"
                 style="width: 25px; height: 25px;display: inline-block;vertical-align: middle; margin-left: 10px;"
@@ -534,7 +534,7 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
                     style="font-size: 12px; text-align: left;padding:0"
                   >
                     {activity.content}
-                    {activity === lastActivity && activity.content === "已送达" && (
+                    {activity === lastActivity && (
                       <el-image
                         style="width: 20px; height: 20px; margin-left: 6px; vertical-align: middle;"
                         src={filePath + "/file/mdc/image?filename=" + scope.row.imageUrl + "&w=50&h=50"}
