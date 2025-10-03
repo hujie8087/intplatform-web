@@ -13,10 +13,10 @@
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
           <el-button type="primary" :icon="Plus" v-auth="['survey:replay:add']" @click="addSurveyReplyList('新增')">
-            新建问卷回复
+            新建回复
           </el-button>
           <el-button type="success" :icon="Download" v-auth="['survey:replay:export']" @click="exportSurveyReply">
-            导出问卷回复
+            导出回复
           </el-button>
           <el-button
             type="danger"
@@ -51,25 +51,15 @@
       </ProTable>
       <el-dialog v-model="dialogShow" :title="dialogTitle" width="30%" class="survey-reply-dialog">
         <el-form ref="surveyReplyFormRef" :model="surverReplyForm" :rules="rules" label-width="100">
-          <el-form-item label="项目名称" prop="projectKey">
+          <el-form-item label="归属问卷" prop="projectKey">
             <el-select v-model="surverReplyForm.projectKey" placeholder="请选择绑定的项目名称" clearable filterable>
               <el-option v-for="item in projectOption" :label="item.label" :value="item.value" :key="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item label="问卷回复名称" prop="title">
+          <el-form-item label="回复名称" prop="title">
             <el-input v-model="surverReplyForm.title" placeholder="请输入问卷回复名称" clearable />
           </el-form-item>
-          <el-form-item label="日期" class="set-time-class">
-            <el-date-picker
-              v-model="surverReplyForm.replyDate"
-              type="month"
-              placeholder="请选择日期"
-              value-format="YYYY-MM"
-              format="YYYY-MM"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item label="图片">
+          <el-form-item label="回复内容">
             <UploadImg v-model:image-url="surverReplyForm.url" :file-size="5" width="100px" height="100px">
               <template #tip> 上传图片最大为 5M </template>
             </UploadImg>
@@ -94,7 +84,6 @@ import { Plus, Delete, EditPen, Download } from "@element-plus/icons-vue";
 import { getSurveyReply, addSurveyReply, editSurveyReply, deleteSurveyReply } from "@/api/modules/questionnaire/surveyReply";
 import UploadImg from "@/components/Upload/Img.vue";
 import { getProjectList } from "@/api/modules/questionnaire/myProject";
-import dayjs from "dayjs";
 import { useHandleData } from "@/hooks/useHandleData";
 import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
@@ -105,7 +94,12 @@ const columns = reactive([
   { type: "index", label: "序号", width: 80 },
   {
     prop: "title",
-    label: "问卷回复名称",
+    label: "回复名称",
+    search: { el: "input", defaultValue: "" }
+  },
+  {
+    prop: "projectName",
+    label: "归属问卷",
     search: { el: "input", defaultValue: "" }
   },
   {
@@ -118,15 +112,6 @@ const columns = reactive([
           <el-image src={src} preview-src-list={[src]} style={{ width: "50px", height: "50px" }} preview-teleported={true} />
         </span>
       );
-    }
-  },
-  {
-    prop: "replyDate",
-    label: "日期",
-    search: {
-      el: "date-picker",
-      props: { type: "month", valueFormat: "YYYY-MM", clearable: true },
-      defaultValue: ""
     }
   },
   {
@@ -147,7 +132,6 @@ const surveyReplyFormRef = ref();
 type SurveyPopForm = {
   projectKey: string;
   title: string;
-  replyDate: string;
   url: string;
   remark: string;
   id?: number;
@@ -156,7 +140,6 @@ type SurveyPopForm = {
 const surverReplyForm = reactive<SurveyPopForm>({
   projectKey: "",
   title: "",
-  replyDate: dayjs().endOf("day").format("YYYY-MM"),
   url: "",
   remark: "",
   type: "新增"
