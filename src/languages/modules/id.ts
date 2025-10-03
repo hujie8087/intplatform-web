@@ -358,5 +358,47 @@ export default {
     postName: "Posisi",
     religion: "Agama",
     sex: "Jenis Kelamin"
+  },
+  mealDelivery: {
+    settlement: {
+      orderNo: "Nomor Pesanan",
+      orderDate: "Hari Pemesanan",
+      companyName: "Perusahaan berbayar",
+      deptPath: "Nama bagian",
+      num: "Jumlah",
+      createBy: "Pendaftar",
+      jobNumber: "Nomor karyawan buat daftar",
+      deliverySite: "Titik Pengiriman",
+      phoneNumber: "Kontak",
+      foodType: "Jenis Makanan",
+      foodName: "Nama Makanan",
+      canteen: "Makan Di Kantin",
+      packageType: "Jenis Bungkusan",
+      fcName: "Nomor Mobil",
+      orderStatus: "Status Pengiriman",
+      printed: "Status Cetak",
+      breakfast: "Sarapan Pagi",
+      Lunch: "Makan Siang",
+      Dinner: "Makan Malam",
+      NightSnack: "Makan Tengah Malam",
+      DimSum: "Takjil",
+      PreDawnMeal: "Sahur",
+      TakeawayBag: "Kantong",
+      MealBox: "Kotak",
+      Barrel: "Ember",
+      ChineseFood: "Mkn China",
+      IndonesianMeal: "Mkn Indo",
+      GallonWater: "Air Galon",
+      Printed: "Di Cetak",
+      NotPrinted: "Tidak Di Cetak",
+      OrderPlaced: "Sudah Di Pesan",
+      Catering: "Makanan Sedang Di Proses",
+      FoodBeingDelivered: "Makanan Sedang Di Antar",
+      Arrived: "Makanan Telah Tiba",
+      OrderPlacedByTeam: "Pesanan Ditempatkan Tim",
+      DepartmentReviewed: "Departemen Telah Ditinjau"
+      // KitchenPrepping	餐厅备餐中	Persiapan Dapur
+      // OutForDelivery	取餐配送中	Dalam Pengiriman
+    }
   }
 };
