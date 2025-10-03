@@ -519,43 +519,51 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
             }}
           >
             <el-timeline reverse={false} style="padding: 0">
-              {getOrderData(scope.row).map((activity, index) => (
-                <el-timeline-item
-                  key={index}
-                  timestamp={activity.timestamp}
-                  color={activity.color}
-                  style="font-size: 12px; text-align: left;padding:0"
-                >
-                  {activity.content}
-                  {activity.content === "已送达" && (
-                    <el-image
-                      style="width: 20px; height: 20px; margin-left: 6px; vertical-align: middle;"
-                      src={filePath + "/file/mdc/image?filename=" + scope.row.imageUrl + "&w=50&h=50"}
-                      preview-src-list={[filePath + "/file/mdc/image?filename=" + scope.row.imageUrl]}
-                      fit="cover"
-                      preview-teleported={true}
-                      z-index={10000}
-                    >
-                      {{
-                        error: () => (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            width="20"
-                            height="20"
-                            fill="#ccc"
-                            style="vertical-align: middle;"
-                          >
-                            <rect width="24" height="24" fill="#f5f5f5" stroke="#aaa" />
-                            <path d="M4 16l4-4 3 3 5-5 4 4v6H4z" fill="#999" />
-                            <path d="M10 8h.01M14 8h.01M12 10l1.5 2L12 14l-1.5-2z" stroke="#666" strokeWidth="1" />
-                          </svg>
-                        )
-                      }}
-                    </el-image>
-                  )}
-                </el-timeline-item>
-              ))}
+              {(() => {
+                const activities = getOrderData(scope.row);
+                // 找到最后一个状态（比如按时间戳最大值来判断）
+                const lastActivity = activities.reduce((prev, curr) =>
+                  new Date(curr.timestamp) > new Date(prev.timestamp) ? curr : prev
+                );
+
+                return activities.map((activity, index) => (
+                  <el-timeline-item
+                    key={index}
+                    timestamp={activity.timestamp}
+                    color={activity.color}
+                    style="font-size: 12px; text-align: left;padding:0"
+                  >
+                    {activity.content}
+                    {activity === lastActivity && activity.content === "已送达" && (
+                      <el-image
+                        style="width: 20px; height: 20px; margin-left: 6px; vertical-align: middle;"
+                        src={filePath + "/file/mdc/image?filename=" + scope.row.imageUrl + "&w=50&h=50"}
+                        preview-src-list={[filePath + "/file/mdc/image?filename=" + scope.row.imageUrl]}
+                        fit="cover"
+                        preview-teleported={true}
+                        z-index={10000}
+                      >
+                        {{
+                          error: () => (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              width="20"
+                              height="20"
+                              fill="#ccc"
+                              style="vertical-align: middle;"
+                            >
+                              <rect width="24" height="24" fill="#f5f5f5" stroke="#aaa" />
+                              <path d="M4 16l4-4 3 3 5-5 4 4v6H4z" fill="#999" />
+                              <path d="M10 8h.01M14 8h.01M12 10l1.5 2L12 14l-1.5-2z" stroke="#666" strokeWidth="1" />
+                            </svg>
+                          )
+                        }}
+                      </el-image>
+                    )}
+                  </el-timeline-item>
+                ));
+              })()}
             </el-timeline>
           </div>
         </div>
