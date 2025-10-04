@@ -70,7 +70,7 @@ class RequestHttp {
         axiosCanceler.removePending(config);
         config.loading && tryHideFullScreenLoading();
         // 登录失效
-        if (data.code == ResultEnum.OVERDUE) {
+        if (data.code == ResultEnum.OVERDUE || data.code == ResultEnum.UNPROCESSABLE_ENTITY) {
           userStore.setToken("");
           router.replace(LOGIN_URL);
           ElMessage.error(data.msg);

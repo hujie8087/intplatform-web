@@ -523,3 +523,34 @@ export namespace AppMenuType {
     remark: string;
   }
 }
+
+// app资源管理模块
+export namespace AppResource {
+  export interface ReqAppResourceParams extends ReqPage {
+    resourceType?: string;
+    resourceKey?: string;
+    resourceName?: string;
+    contentType?: number;
+    content?: string;
+    sortOrder?: number;
+    status?: number;
+  }
+  export interface ResAppResource {
+    id: number;
+    resourceType: string;
+    resourceKey: string;
+    resourceName: string;
+    contentType: string;
+    content: string;
+    sortOrder: number;
+    status: number;
+    startTime: string;
+    endTime: string;
+    platform: number;
+    extInfo: string;
+    create_by: string;
+    createTime: string;
+    updateBy: string;
+    updateTime: string;
+  }
+}

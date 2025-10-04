@@ -12,6 +12,10 @@ export namespace Complaint {
     typeId: string;
     contacts: string;
     phone: string;
+    processingStatus: number;
+    processingResults: string;
+    handleBy: string;
+    handleTime: string;
     delFlag: string;
     remark: string;
     def1: string;
