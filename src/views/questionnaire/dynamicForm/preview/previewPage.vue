@@ -98,8 +98,8 @@ import { ref, watch, reactive, nextTick } from "vue";
 import { Check } from "@element-plus/icons-vue";
 import FormComponent from "../components/componentsForm/index.vue";
 import SupportComp from "./component/SupportComp.vue";
-import { useSelectCompStore } from "@/stores/modules/selectCompStore";
-const useCompStore = useSelectCompStore();
+// import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+// const useCompStore = useSelectCompStore();
 
 const formShowConfig = ref({
   formTitle: "表单预览",
@@ -181,7 +181,8 @@ const getLineheight = () => {
 
 // 组件选中
 const selectComp = (item: any) => {
-  useCompStore.initCurrentComp(item);
+  console.log(item, "item");
+  // useCompStore.initCurrentComp(item);
 };
 </script>
 
