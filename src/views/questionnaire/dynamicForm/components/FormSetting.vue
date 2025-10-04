@@ -77,8 +77,8 @@
 import { reactive, computed, watch } from "vue";
 import _ from "lodash";
 import Icon from "./compIcon";
-import { CompListData, JustShowCompType } from "./compData";
-import { hasOwnPropertyFunction, verifyRegularityCompList } from "./compConfig";
+import { CompListData } from "./compData";
+import { hasOwnPropertyFunction, verifyRegularityCompList, JustShowCompType } from "./compConfig";
 // 全局配置
 import DisplayWaterMark from "./componentsFormSetting/global/DisplayWaterMark.vue";
 import DisplayDescription from "./componentsFormSetting/global/DisplayDescription.vue";
@@ -118,7 +118,7 @@ const props = defineProps<Props>();
 const selectComp = reactive(props.selectComp || {});
 const selectForm = reactive(props.selectForm || {});
 // 是否展示标题和描述设置
-const displayTitleAndDesc = computed(() => !["formTitle", "img", "button"].includes(selectComp?.type));
+const displayTitleAndDesc = computed(() => !JustShowCompType.includes(selectComp?.type));
 
 const currCompIcon = computed(() => {
   let _list: any[] = [];

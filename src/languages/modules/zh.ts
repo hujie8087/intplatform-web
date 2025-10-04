@@ -358,5 +358,47 @@ export default {
     postName: "岗位",
     religion: "宗教",
     sex: "性别"
+  },
+  mealDelivery: {
+    settlement: {
+      orderNo: "订单编号",
+      orderDate: "订单日期",
+      companyName: "付费公司",
+      deptPath: "部门名称",
+      num: "数量",
+      createBy: "申报人",
+      jobNumber: "申报人工号",
+      deliverySite: "配送站点",
+      phoneNumber: "联系方式",
+      foodType: "餐饮类型",
+      foodName: "餐饮名称",
+      canteen: "出餐食堂",
+      packageType: "打包类型",
+      fcName: "车号",
+      orderStatus: "订单状态",
+      printed: "打印状态",
+      breakfast: "早餐",
+      Lunch: "午餐",
+      Dinner: "晚餐",
+      NightSnack: "夜宵",
+      DimSum: "点心",
+      PreDawnMeal: "凌晨餐",
+      TakeawayBag: "打包袋",
+      MealBox: "餐盒",
+      Barrel: "桶装",
+      ChineseFood: "中国餐",
+      IndonesianMeal: "印尼餐",
+      GallonWater: "桶装水",
+      Printed: "已打印",
+      NotPrinted: "未打印",
+      OrderPlaced: "已下单",
+      Catering: "配餐中",
+      FoodBeingDelivered: "送餐中",
+      Arrived: "已送达",
+      OrderPlacedByTeam: "班组已下单",
+      DepartmentReviewed: "部门已审核"
+      // KitchenPrepping	餐厅备餐中	Persiapan Dapur
+      // OutForDelivery	取餐配送中	Dalam Pengiriman
+    }
   }
 };

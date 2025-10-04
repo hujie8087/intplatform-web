@@ -24,3 +24,8 @@ export const uploadFlora = (params: FormData) => {
 export const uploadByfName = (params: { file: File; fName: string }) => {
   return http.post<Upload.ResFileUrl>(PORT1 + `/file/uploadByfName`, params, { cancel: false });
 };
+
+// 问卷调查图片上传
+export const uploadSurvey = (params: FormData) => {
+  return http.post<Upload.ResFileUrl>(PORT1 + `/file/uploadSurvey`, params, { cancel: false });
+};

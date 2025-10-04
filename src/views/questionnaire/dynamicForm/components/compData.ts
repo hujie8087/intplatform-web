@@ -4,6 +4,8 @@ export enum CompType {
   // 展示组件
   formTitle = "formTitle",
   img = "img",
+  reply = "reply",
+
   // 基础组件
   input = "input",
   textarea = "textarea",
@@ -76,9 +78,6 @@ interface CompCategoryType {
   children: CompItemType[];
 }
 
-// 仅展示组件类型
-export const JustShowCompType: string[] = [CompType.formTitle, CompType.img, CompType.divider, CompType.paging, CompType.button];
-
 // 显示组件
 const ShowComponentList: CompItemType[] = [
   {
@@ -92,6 +91,12 @@ const ShowComponentList: CompItemType[] = [
     name: "图片展示",
     type: CompType.img,
     icon: Icon.Img
+  },
+  {
+    label: "问卷回复",
+    name: "问卷回复",
+    type: CompType.reply,
+    icon: Icon.Reply
   }
 ];
 
