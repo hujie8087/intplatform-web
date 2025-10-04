@@ -12,15 +12,21 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="菜名" prop="def1">
-            <el-input v-model="drawerProps.rowData.def1" :placeholder="`${$t('main.inputError', '菜名')}`" clearable></el-input>
+            <el-input
+              v-model="drawerProps.rowData.def1"
+              :disabled="drawerProps.isReply"
+              :placeholder="`${$t('main.inputError', '菜名')}`"
+              clearable
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="24">
           <el-form-item label="做法" prop="content">
             <el-input
               type="textarea"
-              rows="4"
+              :rows="4"
               v-model="drawerProps.rowData.content"
+              :disabled="drawerProps.isReply"
               :placeholder="`${$t('main.inputError', '做法')}`"
               clearable
             ></el-input>
@@ -30,6 +36,7 @@
           <el-form-item label="联系人" prop="contacts">
             <el-input
               v-model="drawerProps.rowData.contacts"
+              :disabled="drawerProps.isReply"
               :placeholder="`${$t('main.inputError', '联系人')}`"
               clearable
             ></el-input>
@@ -37,16 +44,39 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="工号" prop="def2">
-            <el-input v-model="drawerProps.rowData.def2" :placeholder="`${$t('main.inputError', '工号')}`" clearable></el-input>
+            <el-input
+              v-model="drawerProps.rowData.def2"
+              :disabled="drawerProps.isReply"
+              :placeholder="`${$t('main.inputError', '工号')}`"
+              clearable
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="24">
           <el-form-item label="联系电话" prop="phone">
             <el-input
               v-model="drawerProps.rowData.phone"
+              :disabled="drawerProps.isReply"
               :placeholder="`${$t('main.inputError', '联系电话')}`"
               clearable
             ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="回复内容" prop="processingResults">
+            <el-input type="textarea" :rows="4" v-model="drawerProps.rowData.processingResults" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="24" v-if="drawerProps.isView">
+          <el-form-item label="回复状态" prop="processingStatus">
+            <el-tag :type="drawerProps.rowData.processingStatus === 0 ? 'warning' : 'success'">
+              {{ drawerProps.rowData.processingStatus === 0 ? "待回复" : "已回复" }}
+            </el-tag>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24" v-if="drawerProps.isView">
+          <el-form-item label="回复时间" prop="handleTime">
+            <el-date-picker v-model="drawerProps.rowData.handleTime" type="datetime" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -65,12 +95,19 @@ import { Complaint } from "@/api/interface/service/complaint";
 import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
 const { t } = useI18n(); // 解构出t方法
+import { useUserStore } from "@/stores/modules/user";
+import dayjs from "dayjs";
 
-const rules = reactive({});
+const userStore = useUserStore();
+
+const rules = reactive({
+  processingResults: [{ required: true, message: t("main.inputError", { msg: "回复内容" }) }]
+});
 
 interface DrawerProps {
   title: string;
   isView: boolean;
+  isReply: boolean;
   rowData: Partial<Complaint.ResComplaintMessage>;
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
@@ -82,6 +119,7 @@ interface DrawerProps {
 const drawerVisible = ref(false);
 const drawerProps = ref<DrawerProps>({
   isView: false,
+  isReply: false,
   title: "",
   rowData: {}
 });
@@ -97,7 +135,12 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     try {
-      await drawerProps.value.api!(drawerProps.value.rowData);
+      await drawerProps.value.api!({
+        ...drawerProps.value.rowData,
+        processingStatus: 1,
+        handleBy: userStore.userInfo?.user.nickName,
+        handleTime: dayjs().format("YYYY-MM-DD HH:mm:ss")
+      });
       ElMessage.success({
         message: t("main.successMsg", { title: "配送费", method: `${drawerProps.value.title}` })
       });

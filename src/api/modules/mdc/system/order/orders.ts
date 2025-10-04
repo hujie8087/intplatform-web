@@ -154,3 +154,8 @@ export function queryFoodOrderDeliverySummaryList(data: any) {
 export function orderDelivered(ordersId) {
   return http.put<any>(PORT1 + "/order/orders/completeOrder3/" + ordersId);
 }
+
+// 获取图片
+export function getImage(imageUrl: string, w: number, h: number) {
+  return http.get<any>(PORT1 + "/file/mdc/image?filename=" + imageUrl + "&w=" + w + "&h=" + h);
+}

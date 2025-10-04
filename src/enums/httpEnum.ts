@@ -5,6 +5,9 @@ export enum ResultEnum {
   SUCCESS = 200,
   ERROR = 500,
   OVERDUE = 401,
+  UNAUTHORIZED = 403,
+  NOT_FOUND = 404,
+  UNPROCESSABLE_ENTITY = 406,
   TIMEOUT = 30000,
   TYPE = "success"
 }

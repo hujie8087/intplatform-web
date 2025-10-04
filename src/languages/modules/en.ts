@@ -114,7 +114,8 @@ export default {
       add: "Add",
       menu: "Menu Permission",
       building: "Building Permission",
-      remark: "Remark"
+      remark: "Remark",
+      parentRole: "Parent Role"
     },
     post: {
       postList: "Post List",
@@ -357,5 +358,47 @@ export default {
     postName: "Post",
     religion: "Religion",
     sex: "Sex"
+  },
+  mealDelivery: {
+    settlement: {
+      orderNo: "Order No.",
+      orderDate: "Order Date",
+      companyName: "Company Name",
+      deptPath: "Department Name",
+      num: "Num",
+      createBy: "Applicant",
+      jobNumber: "Worker ID for filing",
+      deliverySite: "Delivery Site",
+      phoneNumber: "Phone Number",
+      foodType: "Food Type",
+      foodName: "Food Name",
+      canteen: "Canteen",
+      packageType: "Package Type",
+      fcName: "Plate",
+      orderStatus: "Order Status",
+      printed: "Print Status",
+      breakfast: "Breakfast",
+      Lunch: "Lunch",
+      Dinner: "Dinner",
+      NightSnack: "Night Snack",
+      DimSum: "Dim Sum",
+      PreDawnMeal: "Late-night Meal",
+      TakeawayBag: "Takeaway Bag",
+      MealBox: "Meal Box",
+      Barrel: "Barrel",
+      ChineseFood: "Chinese Food",
+      IndonesianMeal: "Indonesian Meal",
+      GallonWater: "Gallon Water",
+      Printed: "Printed",
+      NotPrinted: "Not Printed",
+      OrderPlaced: "Order Placed",
+      Catering: "Catering",
+      FoodBeingDelivered: "Food Being Delivered",
+      Arrived: "Arrived",
+      OrderPlacedByTeam: "Order Placed By Team",
+      DepartmentReviewed: "Department Reviewed"
+      // KitchenPrepping	餐厅备餐中	Persiapan Dapur
+      // OutForDelivery	取餐配送中	Dalam Pengiriman
+    }
   }
 };

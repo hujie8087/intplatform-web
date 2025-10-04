@@ -43,7 +43,7 @@
 import { ref, watch, computed, onMounted, nextTick } from "vue";
 import SmoothSignature from "smooth-signature";
 import { ElMessage } from "element-plus";
-import { uploadImg } from "@/api/modules/upload";
+import { uploadSurvey } from "@/api/modules/upload";
 import { isArray } from "lodash";
 import type { UploadRequestOptions } from "element-plus";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
@@ -242,7 +242,7 @@ const handleHttpUpload = async (options: UploadRequestOptions) => {
   let formData = new FormData();
   formData.append("files", options.file);
   try {
-    const { data } = await uploadImg(formData);
+    const { data } = await uploadSurvey(formData);
     options.onSuccess(data, options.file);
     localDataValue.value = isArray(data) ? data[0].url : data.url;
     isUploaded.value = true;

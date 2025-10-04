@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useTheme } from "@/hooks/useTheme";
 import { DEFAULT_PRIMARY } from "@/config";
 import { useGlobalStore } from "@/stores/modules/global";
+
 const { initTheme, changePrimary } = useTheme();
 const globalStore = useGlobalStore();
 type ClassifyList = "personal";
@@ -61,8 +62,8 @@ interface CompConfig {
 export const disableInputByDev = "编辑模式不支持输入";
 // 延迟40ms更新数据，防止选中数据没有更新
 export const delayTime = 50;
-// export const publishIntranetAddress = "https://web.iwipwedabay.com/intplatform/mis/#/survey/answer";
-export const publishIntranetAddress = "http://localhost:8848/#/survey/answer";
+export const publishIntranetAddress = "https://web.iwipwedabay.com/intplatform/mis/#/survey/answer";
+// export const publishIntranetAddress = "http://localhost:8848/#/survey/answer";
 export const publishExtranetAddress = "http://localhost:8848/#/survey/answer";
 
 export const hasOwnPropertyFunction = (object: Object, key: string) => {
@@ -78,6 +79,17 @@ export const defaultConfig: CompConfig = {
   customErrorMessage: "",
   title: ""
 };
+
+// 仅展示组件类型
+export const JustShowCompType: CompType[] = [
+  CompType.formTitle,
+  CompType.img,
+  CompType.reply,
+  CompType.divider,
+  CompType.paging,
+  CompType.button
+];
+
 // 有设置操作的类型
 export const HasSettingTypeList = ["radio", "checkout", "select"];
 // 没有添加其它选项的类型
@@ -98,7 +110,7 @@ export const hasPlaceholderType: CompType[] = [
   CompType.number
 ]; //有Placeholder的类型
 export const isLayoutType: CompType[] = [CompType.paging, CompType.divider];
-export const hasIgnoreRequireType: CompType[] = [CompType.img, CompType.paging, CompType.divider, CompType.button]; // 忽略类型
+export const hasIgnoreRequireType: CompType[] = JustShowCompType; // 忽略类型
 export const isRate: CompType[] = [CompType.rate];
 export const isNPS: CompType[] = [CompType.nps, CompType.selectRate];
 export const isButton: CompType[] = [CompType.button];
@@ -144,7 +156,6 @@ export const getCompConfig = (type: CompType) => {
           }
         ]
       };
-      console.log(compConfig, "compConfig");
     }
   }
 

@@ -15,6 +15,14 @@
           :placeholder="`${$t('main.inputError', { msg: $t('system.role.name') })}`"
         ></el-input>
       </el-form-item>
+      <el-form-item :label="`${$t('system.role.parentRole')}`" prop="prId">
+        <el-select
+          v-model="drawerProps.rowData.prId"
+          :placeholder="`${$t('main.inputError', { msg: $t('system.role.parentRole') })}`"
+        >
+          <el-option v-for="item in drawerProps.roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId" />
+        </el-select>
+      </el-form-item>
       <el-form-item :label="`${$t('system.role.roleKey')}`" prop="roleKey">
         <el-input
           v-model="drawerProps.rowData.roleKey"
@@ -101,6 +109,7 @@ interface DrawerProps {
   getTableList?: () => Promise<any>;
   menuList?: Role.ResMenu[];
   menuIds: number[];
+  roleList?: Role.ResRole[];
   buildingOptions?: Building.ResBuilding[];
 }
 // drawer框状态
@@ -155,7 +164,7 @@ const handleSubmit = () => {
     // drawerProps.value.rowData.menuIds = treeRef.value?.getCheckedKeys(false);
     // 2. 获取完全勾选的节点 ID
     const checkedKeys = treeRef.value.getCheckedKeys(false, true);
-    const finalKeys = getCheckedWithParents(drawerProps.value.menuList, checkedKeys); // 取到父节点id
+    const finalKeys = getCheckedWithParents(drawerProps.value.menuList || [], checkedKeys); // 取到父节点id
     try {
       await drawerProps.value.api!({
         ...drawerProps.value.rowData,

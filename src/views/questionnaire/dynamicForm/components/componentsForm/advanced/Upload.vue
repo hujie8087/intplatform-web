@@ -35,10 +35,10 @@ import { ref, inject, watch, computed } from "vue";
 import type { UploadProps, UploadRequestOptions, UploadUserFile } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { ElNotification, formContextKey, formItemContextKey } from "element-plus";
-import { uploadImg } from "@/api/modules/upload";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { isArray } from "lodash";
 import { delayTime } from "../../compConfig";
+import { uploadSurvey } from "@/api/modules/upload";
 
 const compStore = useSelectCompStore();
 const filePath = import.meta.env.VITE_APP_BASE_FILE;
@@ -109,7 +109,7 @@ const handleHttpUpload = async (options: UploadRequestOptions) => {
   let formData = new FormData();
   formData.append("files", options.file);
   try {
-    const api = uploadImg;
+    const api = uploadSurvey;
     const { data } = await api(formData);
     // 通知Upload组件上传成功
     options.onSuccess(data, options.file);

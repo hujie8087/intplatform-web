@@ -29,6 +29,14 @@
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
           <el-button
+            type="warning"
+            link
+            v-auth="['productdisplay:wantEat:edit']"
+            v-if="scope.row.processingStatus === 0"
+            @click="openDrawer('回复', scope.row)"
+            >回复</el-button
+          >
+          <el-button
             type="danger"
             link
             v-auth="['productdisplay:wantEat:remove']"
@@ -72,6 +80,11 @@ useDict("sys_normal_disable").then(res => {
   sys_normal_disable.value = res.sys_normal_disable;
 });
 
+const processingStatusOptions = ref<DictOptions[]>([
+  { label: "待回复", value: 0, tagType: "warning" },
+  { label: "已回复", value: 1, tagType: "success" }
+]);
+
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
@@ -86,13 +99,23 @@ const dataCallback = (data: any) => {
 // 表格配置项
 const columns = reactive<ColumnProps<Complaint.ResComplaintMessage>[]>([
   { type: "selection", fixed: "left", width: 50 },
-  { prop: "id", label: "序号", width: 80 },
-  { prop: "contacts", label: "联系人", width: 150 },
+  { prop: "contacts", label: "联系人", width: 150, search: { el: "input" } },
   { prop: "phone", label: "联系电话", width: 150 },
-  { prop: "def2", label: "工号", width: 150 },
+  { prop: "def2", label: "工号", width: 150, search: { el: "input" } },
   { prop: "def1", label: "标题", width: 150 },
   { prop: "content", label: "内容" },
   { prop: "createTime", label: "提交时间", width: 150 },
+  { prop: "processingResults", label: "回复结果" },
+  { prop: "handleBy", label: "回复人", search: { el: "input" } },
+  { prop: "handleTime", label: "回复时间", width: 150 },
+  {
+    prop: "processingStatus",
+    label: "回复状态",
+    width: 100,
+    enum: processingStatusOptions,
+    tag: true,
+    search: { el: "select", props: { filterable: true } }
+  },
   { prop: "operation", label: "操作", width: 230, fixed: "right" }
 ]);
 
@@ -119,10 +142,12 @@ const openDrawer = async (title: string, row: Partial<Complaint.ResComplaintMess
   const params = {
     title,
     isView: title === "查看",
+    isReply: title === "回复",
     rowData: { ...row },
-    api: title === "新增" ? addComplaintMessage : title === "编辑" ? editComplaintMessage : undefined,
+    api: title === "新增" ? addComplaintMessage : title === "回复" ? editComplaintMessage : undefined,
     getTableList: proTable.value?.getTableList,
-    noticeStatusOptions: sys_normal_disable.value
+    noticeStatusOptions: sys_normal_disable.value,
+    processingStatusOptions: processingStatusOptions.value
   };
   drawerRef.value?.acceptParams(params);
 };

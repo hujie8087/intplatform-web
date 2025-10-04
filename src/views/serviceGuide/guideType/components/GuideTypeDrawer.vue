@@ -15,6 +15,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
+          <el-form-item label="H5" prop="url">
+            <el-input v-model="drawerProps.rowData.url" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
           <el-form-item label="指南说明" prop="content">
             <WangEditor v-model:value="content" height="300px" />
           </el-form-item>

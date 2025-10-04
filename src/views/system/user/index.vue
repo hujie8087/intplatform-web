@@ -179,7 +179,7 @@ import { Account, Role } from "@/api/interface/system";
 import { getUserRole, updateRole, changeUserStatus, revokeAuthorization, userAuthorization } from "@/api/modules/system/user";
 import { genderType, userStatus, activeStateOption } from "@/utils/serviceDict";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
-import { getRoleList } from "@/api/modules/system/role";
+import { getRoleSelectList } from "@/api/modules/system/role";
 import { getCanteenListOptions } from "@/api/modules/productDisplay/marketCanteen";
 import { DictOptions } from "@/api/interface";
 import { getConfigData } from "@/api/modules/system/config";
@@ -246,8 +246,8 @@ const columns = reactive<ColumnProps<Account.ResAccountList>[]>([
 
 const roleList = ref<Role.ResRole[]>([]);
 const getRolesList = async () => {
-  const res = await getRoleList({ pageNum: 1, pageSize: 1000 });
-  roleList.value = res.rows;
+  const res = await getRoleSelectList();
+  roleList.value = res.data;
 };
 getRolesList();
 // 默认 treeFilter 参数
@@ -404,7 +404,7 @@ const submitUnbind = async () => {
     });
   } else {
     // 解绑
-    await revokeAuthorization(authorizationID);
+    await revokeAuthorization(authorizationID.toString());
     unbindDialogVisible.value = false;
     ElMessage.success("解绑成功");
     proTable.value?.getTableList();

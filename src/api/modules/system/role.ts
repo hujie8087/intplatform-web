@@ -46,3 +46,8 @@ export const changeRoleStatus = (params: { roleId: number; status: number }) => 
 export const getBuildingFirstList = () => {
   return http.get<Building.ResBuilding[]>(PORT1 + `/maintenance/building/firstlist`);
 };
+
+// * 获取角色下拉列表
+export const getRoleSelectList = () => {
+  return http.get<Role.ResRole[]>(PORT1 + `/system/role/listAll`);
+};
