@@ -206,7 +206,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, inject, nextTick, reactive, onBeforeUnmount } from "vue";
 import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
-import { getDefaultConfig, optionalType } from "./components/compConfig";
+import { getDefaultConfig, JustShowCompType } from "./components/compConfig";
 import Icon from "./components/compIcon";
 import { Check, Delete, CirclePlus } from "@element-plus/icons-vue";
 import FormSetting from "./components/FormSetting.vue";
@@ -664,13 +664,14 @@ const saveSurveryFun = async projectKey => {
       title: item.title,
       description: item.description,
       // 是否显示类型，不需要用户操作的组件，单纯为了展示的组件
-      isDisplayType: optionalType.includes(item.type),
+      isDisplayType: JustShowCompType.includes(item.type),
       required: item?.isRequired ?? false,
       expand: item
     };
     projectItemSaveVo.push(obj);
   });
   setRequestParams["projectItemSaveVo"] = projectItemSaveVo;
+  console.log(projectItemSaveVo, "projectItemSaveVo");
   const res = await topicSaves(setRequestParams, projectKey);
   if (res.code == 200) {
     ElMessage({

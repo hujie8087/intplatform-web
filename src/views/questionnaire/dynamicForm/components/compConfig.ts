@@ -89,7 +89,6 @@ export const JustShowCompType: CompType[] = [
   CompType.paging,
   CompType.button
 ];
-
 // 有设置操作的类型
 export const HasSettingTypeList = ["radio", "checkout", "select"];
 // 没有添加其它选项的类型
@@ -323,8 +322,6 @@ export const getDefaultConfig = (type: CompType | CompType[], ignoreDefault: boo
 export const verifyRegularityCompList = () => {
   return [CompType.input];
 };
-// 不需要填的标识
-export const optionalType = ["formTitle", "img", "divider", "paging"];
 
 export function cleanData<T>(obj: T, seen = new WeakSet()): T {
   // 处理 ref / reactive
