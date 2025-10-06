@@ -2,9 +2,9 @@
   <div class="publish-page">
     <div class="content-card">
       <div class="survey-container" v-if="dialogForm.status === 2 || dialogForm.status === 3">
-        <!-- 内网答卷地址 -->
+        <!-- 外网答卷地址 -->
         <div class="address-group">
-          <h3>内网答卷地址</h3>
+          <h3>答卷地址</h3>
           <p>复制下面的问卷链接到QQ、Email等工具中直接发给被用户</p>
           <div class="address-input-group">
             <el-input style="width: 520px" v-model="intranetUrl" readonly></el-input>
@@ -32,9 +32,9 @@
           </div>
         </div> -->
         <div class="qr-code-box">
-          <!-- 内网二维码地址 -->
+          <!-- 外网二维码地址 -->
           <div class="qr-code-group">
-            <h3>内网二维码地址</h3>
+            <h3>二维码地址</h3>
             <p>通过手机扫一扫，或下载二维码，即可进行问卷数据收集。</p>
             <div class="qr-code-wrapper">
               <QrCode v-if="intranetUrl" :value="intranetUrl" :size="240" class="qr-code" ref="intranetQrCodeRef" />
