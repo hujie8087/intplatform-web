@@ -42,7 +42,7 @@ export enum CompType {
   upload = "upload"
 }
 // 忽略行号类型组件
-export const IgnoreLineNumberTypeList = [CompType.formTitle, CompType.img, CompType.divider, CompType.paging];
+export const IgnoreLineNumberTypeList = [CompType.formTitle, CompType.img, CompType.divider, CompType.paging, CompType.reply];
 
 // 组件元素类型
 export interface CompItemType {
