@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div class="comp-item-description" v-if="displaySection && formConfig?.displayDescription">
+    <div class="comp-item-description" v-if="displaySection && formConfig?.displayDescription && component?.description">
       <div type="secondary" v-if="(component?.id !== selectedComp?.id && isDev) || renderType">
         <div class="description">{{ component.description }}</div>
       </div>
