@@ -5,7 +5,7 @@
         <!-- 外网答卷地址 -->
         <div class="address-group">
           <h3>答卷地址</h3>
-          <p>复制下面的问卷链接到QQ、Email等工具中直接发给被用户</p>
+          <p>复制下面的问卷链接到QQ、Email等工具中直接发给用户</p>
           <div class="address-input-group">
             <el-input style="width: 520px" v-model="intranetUrl" readonly></el-input>
             <el-button
@@ -22,7 +22,7 @@
         <!-- 外网答卷地址 -->
         <!-- <div class="address-group">
           <h3>外网答卷地址</h3>
-          <p>复制下面的问卷链接到QQ、Email等工具中直接发给被用户</p>
+          <p>复制下面的问卷链接到QQ、Email等工具中直接发给用户</p>
           <div class="address-input-group">
             <el-input style="width: 520px" size="large" v-model="extranetAddress" readonly></el-input>
             <el-button style="margin: 0 20px" size="large" @click="copyAddress('extranet')" :icon="Connection"
@@ -169,10 +169,10 @@ const downloadQrCode = type => {
   let fileName = "";
   if (type === "intranet") {
     qrCodeDataURL = intranetQrCodeRef.value.qrBase64; // 假设QrCode组件内用qrBase64存储dataURL
-    fileName = "内网问卷二维码";
+    fileName = "问卷二维码";
   } else if (type === "extranet") {
     qrCodeDataURL = extranetQrCodeRef.value.qrBase64; // 假设QrCode组件内用qrBase64存储dataURL
-    fileName = "外网问卷二维码";
+    fileName = "问卷二维码";
   }
   if (qrCodeDataURL) {
     const link = document.createElement("a");
