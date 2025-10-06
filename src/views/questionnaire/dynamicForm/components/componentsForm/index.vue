@@ -89,7 +89,7 @@
       <el-tooltip placement="right" content="复制">
         <el-icon :size="16" class="control" @click="compControl('copy')"><CopyDocument /></el-icon>
       </el-tooltip>
-      <el-tooltip placement="right" content="逻辑">
+      <el-tooltip v-if="dataListType.includes(selectedComp?.type)" placement="right" content="逻辑">
         <el-icon :size="16" class="control" @click="compControl('logic')"><Magnet /></el-icon>
       </el-tooltip>
       <el-tooltip placement="right" content="删除" :color="'#f50'">
@@ -110,7 +110,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue";
-import { HasSettingTypeList, HasSettingTypeListAndNoOther, JustShowCompType } from "../compConfig";
+import { dataListType, HasSettingTypeList, HasSettingTypeListAndNoOther, JustShowCompType } from "../compConfig";
 // 显示组件
 import FormTitleComponent from "./show/FormTitle.vue";
 import ImageComponent from "./show/Image.vue";

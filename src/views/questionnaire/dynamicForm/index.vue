@@ -671,7 +671,6 @@ const saveSurveryFun = async projectKey => {
     projectItemSaveVo.push(obj);
   });
   setRequestParams["projectItemSaveVo"] = projectItemSaveVo;
-  console.log(projectItemSaveVo, "projectItemSaveVo");
   const res = await topicSaves(setRequestParams, projectKey);
   if (res.code == 200) {
     ElMessage({
