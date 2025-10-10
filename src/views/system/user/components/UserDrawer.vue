@@ -249,7 +249,11 @@ const handleSubmit = () => {
       });
       // 如果用户有角色，更新用户角色
       if (drawerProps.value.rowData?.roles && drawerProps.value.rowData.roleIds && drawerProps.value.rowData.roleIds.length > 0) {
-        await updateRole({ userId: drawerProps.value.rowData.userId, roleIds: drawerProps.value.rowData.roleIds });
+        await updateRole({
+          userId: drawerProps.value.rowData.userId,
+          roleIds: drawerProps.value.rowData.roleIds,
+          userName: drawerProps.value.rowData.userName
+        });
       }
       drawerProps.value.getTableList!();
       drawerVisible.value = false;

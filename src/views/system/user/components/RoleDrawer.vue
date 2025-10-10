@@ -83,8 +83,9 @@ const drawerProps = ref<DrawerProps>({
   isView: false,
   title: ""
 });
-const roleForm = ref<{ userId: number; roleIds: number[] }>({
+const roleForm = ref<{ userId: number; userName: string; roleIds: number[] }>({
   userId: 0,
+  userName: "",
   roleIds: []
 });
 // 接收父组件传过来的参数
@@ -92,6 +93,7 @@ const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
   roleForm.value.userId = params.rowData!.userId;
+  roleForm.value.userName = params.rowData!.userName;
   roleForm.value.roleIds = params.rowData!.roles.map(item => item.roleId);
 };
 
@@ -103,7 +105,11 @@ const handleSubmit = () => {
     try {
       console.log(roleForm.value);
 
-      await drawerProps.value.api!({ userId: roleForm.value.userId, roleIds: roleForm.value.roleIds.join(",") });
+      await drawerProps.value.api!({
+        userId: roleForm.value.userId,
+        roleIds: roleForm.value.roleIds.join(","),
+        userName: roleForm.value.userName
+      });
       ElMessage.success({
         message: t("main.successMsg", { method: `${drawerProps.value.title}` })
       });
