@@ -446,14 +446,22 @@ export default {
       emptyFormTip: "点击左侧题目/拖拽题目到次区域",
       formSetting: "表单配置",
       baseSetting: "基础配置",
+      formVerify: "表单验证",
       globalSetting: "全局表单配置",
       compDesc: "组件描述",
       compSerialNum: "组件序号",
       waterMarker: "水印",
       waterMarkerPlaceholder: "请输入水印（不超过15个字符）",
+      logic: "逻辑",
+      copy: "复制",
+      addItem: "添加单项",
+      addOther: "添加其它",
+      batchOper: "批量操作",
+      logicTip: "如果本题回答",
       // 标题组件国际化
       titleComp: {
         tName: "标题名称",
+        tNamePlaceHolder: "请输入标题文字（最多30个字）",
         showTImg: "显示标题图片",
         tImg: "标题图片",
         tImgPlaceholder: "请输入图片URL",
@@ -463,6 +471,53 @@ export default {
         defTDesc:
           "为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，我们非常重视每位 用户的宝贵意见，期待您的参与！现在我们就马上开始吧！",
         tPosition: "位置(标题+描述)"
+      },
+      // 按钮组件
+      buttonComp: {
+        btnTitle: "按钮文字",
+        btnTitlePlaceholder: "请输入按钮文字（最多30个字）",
+        showIcon: "显示图标"
+      },
+      // 图片组件
+      ImageComp: {
+        imgSet: "图片设置"
+      },
+      // 回复组件
+      replyComp: {
+        selectReply: "选择问卷回复",
+        historyReply: "历史回复"
+      },
+      // 评分组件
+      rateComp: {
+        num: "数量",
+        isHalf: "允许半选",
+        numRange: "取值范围",
+        numRangeTip: "开始值可以选择0，结束值最小值为3"
+      },
+      // 分割线组件
+      dividerComp: {
+        dividerText: "分割线文本",
+        dividerType: "分割线类型"
+      },
+      // 共用组件
+      commonComp: {
+        position: "位置",
+        size: "大小",
+        title: "标题",
+        descOrRemark: "描述/备注",
+        inputPlaceholder: "输入框提示"
+      },
+      // 校验组件
+      validateComp: {
+        required: "必填",
+        customErrorTip: "自定义错误提示",
+        customErrorTipPlaceholder: "请输入自定义错误提示",
+        format: "格式",
+        formatPlaceholder: "请输入自定义正则表达式",
+        minSelect: "最少应选",
+        MaxSelect: "最多可选",
+        minVal: "最小值",
+        maxVal: "最大值"
       }
     },
     project: {

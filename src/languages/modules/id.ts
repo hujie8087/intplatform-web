@@ -446,11 +446,79 @@ export default {
       emptyFormTip: "Klik atau seret soal dari kiri ke area ini",
       formSetting: "Pengaturan Formulir",
       baseSetting: "Pengaturan Dasar",
+      formVerify: "Validasi Formulir",
       globalSetting: "Pengaturan Global Formulir",
       compDesc: "Deskripsi Komponen",
       compSerialNum: "Nomor Urut Komponen",
       waterMarker: "Tanda Air",
-      waterMarkerPlaceholder: "Masukkan tanda air (maks 15 karakter)"
+      waterMarkerPlaceholder: "Masukkan tanda air (maks 15 karakter)",
+      logic: "Logika",
+      copy: "Salin",
+      addItem: "Tambah Item",
+      addOther: "Tambah Lainnya",
+      batchOper: "Operasi Batch",
+      logicTip: "Jika jawaban untuk soal ini",
+      // 标题组件国际化
+      titleComp: {
+        tName: "Nama Judul",
+        tNamePlaceHolder: "Masukkan teks judul (maks 30 karakter)",
+        showTImg: "Tampilkan gambar judul",
+        tImg: "Gambar judul",
+        tImgPlaceholder: "Masukkan URL gambar",
+        tSize: "Ukuran judul",
+        showTDesc: "Tampilkan deskripsi judul",
+        tDesc: "Deskripsi judul",
+        defTDesc:
+          "Untuk memberikan layanan yang lebih baik, kami harap Anda dapat meluangkan beberapa menit untuk berbagi pengalaman dan saran dengan kami. Kami menghargai pendapat berharga setiap pengguna dan menantikan partisipasi Anda! Mari mulai sekarang!",
+        tPosition: "Posisi (judul + deskripsi)"
+      },
+      // 按钮组件
+      buttonComp: {
+        btnTitle: "Teks Tombol",
+        btnTitlePlaceholder: "Masukkan teks tombol (maks 30 karakter)",
+        showIcon: "Tampilkan Ikon"
+      },
+      // 图片组件
+      ImageComp: {
+        imgSet: "Pengaturan Gambar"
+      },
+      // 回复组件
+      replyComp: {
+        selectReply: "Pilih Balasan Kuesioner",
+        historyReply: "Balasan Riwayat"
+      },
+      // 评分组件
+      rateComp: {
+        num: "Jumlah",
+        isHalf: "Izinkan pilihan setengah",
+        numRange: "Rentang nilai",
+        numRangeTip: "Nilai awal bisa 0, nilai akhir minimal 3"
+      },
+      // 分割线组件
+      dividerComp: {
+        dividerText: "Teks Pemisah",
+        dividerType: "Jenis Pemisah"
+      },
+      // 共用组件
+      commonComp: {
+        position: "Posisi",
+        size: "Ukuran",
+        title: "Judul",
+        descOrRemark: "Deskripsi/Catatan",
+        inputPlaceholder: "Petunjuk Kotak Input"
+      },
+      // 校验组件
+      validateComp: {
+        required: "Wajib diisi",
+        customErrorTip: "Petunjuk Kesalahan Kustom",
+        customErrorTipPlaceholder: "Masukkan petunjuk kesalahan kustom",
+        format: "Format",
+        formatPlaceholder: "Masukkan ekspresi reguler kustom",
+        minSelect: "Pilihan minimum",
+        MaxSelect: "Pilihan maksimum",
+        minVal: "Nilai minimum",
+        maxVal: "Nilai maksimum"
+      }
     },
     project: {
       questionnaireName: "Judul",

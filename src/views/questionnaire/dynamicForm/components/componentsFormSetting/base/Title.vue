@@ -1,5 +1,5 @@
 <template>
-  <el-text size="default" class="block-title">标题</el-text>
+  <el-text size="default" class="block-title">{{ $t("survey.form.commonComp.title") }}</el-text>
   <el-input
     class="mb-10"
     v-if="compStore.currentCompConfig"
@@ -7,7 +7,7 @@
     v-model="comp.title"
     :maxlength="50"
     type="textarea"
-    :placeholder="'请输入标题'"
+    :placeholder="$t('main.inputPlaceholder')"
     @input="handleChangeInput"
     :autosize="{ minRows: 2, maxRows: 5 }"
     clearable

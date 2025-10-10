@@ -160,10 +160,10 @@
       </PreviewPage>
 
       <!-- 逻辑弹窗 -->
-      <el-dialog v-model="dialogVisible" :title="dialogTitle" width="550" @close="logicDialogCancel">
+      <el-dialog v-model="dialogVisible" :title="dialogTitle" width="700" @close="logicDialogCancel">
         <div class="dialog-form">
           <div v-for="(item, index) in logicArr" :key="index" class="logic-row">
-            <span class="label">如果本题回答</span>
+            <span class="label">{{ $t("survey.form.logicTip") }} </span>
             <el-select v-model="item.optionValue" placeholder="请选择选项">
               <el-option :label="elItem?.label" :value="elItem?.value" v-for="elItem in logicTopicSelect" :key="elItem?.value" />
             </el-select>
@@ -194,8 +194,8 @@
         </div>
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="logicDialogCancel">取消</el-button>
-            <el-button type="primary" @click="logicDialogSure"> 保存</el-button>
+            <el-button @click="logicDialogCancel">{{ $t("main.cancel") }}</el-button>
+            <el-button type="primary" @click="logicDialogSure"> {{ $t("main.confirm") }}</el-button>
           </div>
         </template>
       </el-dialog>

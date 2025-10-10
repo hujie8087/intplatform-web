@@ -8,8 +8,15 @@
       </template>
     </el-image>
 
-    <el-button style="margin-top: 10px" v-if="isDev && !props.value" @click="openDialog" type="primary">选择问卷回复</el-button>
-    <el-dialog v-model="dialogVisible" :style="{ top: `${editorScrollInfo.scrollTop}px` }" title="历史问卷回复" width="500">
+    <el-button style="margin-top: 10px" v-if="isDev && !props.value" @click="openDialog" type="primary">{{
+      $t("survey.form.replyComp.selectReply")
+    }}</el-button>
+    <el-dialog
+      v-model="dialogVisible"
+      :style="{ top: `${editorScrollInfo.scrollTop}px` }"
+      :title="$t('survey.form.replyComp.historyReply')"
+      width="500"
+    >
       <div class="item-container">
         <!-- 元素1 -->
         <div
@@ -37,8 +44,8 @@
       </div>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="selectData"> 选择 </el-button>
+          <el-button @click="dialogVisible = false">{{ $t("main.cancel") }}</el-button>
+          <el-button type="primary" @click="selectData"> {{ $t("main.confirm") }} </el-button>
         </div>
       </template>
     </el-dialog>

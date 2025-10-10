@@ -1,11 +1,11 @@
 <template>
-  <el-text size="default" class="block-title">输入框提示</el-text>
+  <el-text size="default" class="block-title">{{ $t("survey.form.commonComp.inputPlaceholder") }}</el-text>
   <el-input
     class="mb-10"
     v-if="compStore.currentCompConfig"
     size="default"
     v-model="comp.placeholder"
-    :placeholder="'请输入标题'"
+    :placeholder="$t('main.inputPlaceholder')"
     @input="handleChangeInput"
     clearable
   />

@@ -49,7 +49,9 @@
           <!--数据列表排序，删除，修改功能-->
           <DataList v-if="showParams('dataList')" :comp="selectComp"> </DataList>
         </div>
-        <div class="category-name" v-if="selectComp?.type && !JustShowCompType.includes(selectComp?.type)">表单验证</div>
+        <div class="category-name" v-if="selectComp?.type && !JustShowCompType.includes(selectComp?.type)">
+          {{ $t("survey.form.formVerify") }}
+        </div>
         <div class="content">
           <!-- 数字区间 最大值最小值控制 -->
           <NumberConfig v-if="selectComp?.type === 'number'" :comp="selectComp" />

@@ -1,12 +1,12 @@
 <template>
-  <el-text size="default" class="block-title">描述/备注</el-text>
+  <el-text size="default" class="block-title">{{ $t("survey.form.commonComp.descOrRemark") }}</el-text>
   <el-input
     class="mb-10"
     v-if="compStore.currentCompConfig"
     size="default"
     v-model="comp.description"
     type="textarea"
-    :placeholder="'请输入描述'"
+    :placeholder="$t('main.inputPlaceholder')"
     @input="handleChangeInput"
     :autosize="{ minRows: 2, maxRows: 5 }"
     clearable

@@ -446,11 +446,79 @@ export default {
       emptyFormTip: "Click or drag questions from the left to this area",
       formSetting: "Form Settings",
       baseSetting: "Basic Settings",
+      formVerify: "Form Validation",
       globalSetting: "Global Form Settings",
       compDesc: "Component Description",
       compSerialNum: "Component Serial Number",
       waterMarker: "Watermark",
-      waterMarkerPlaceholder: "Please enter watermark (max 15 characters)"
+      waterMarkerPlaceholder: "Please enter watermark (max 15 characters)",
+      logic: "Logic",
+      copy: "Copy",
+      addItem: "Add Items",
+      addOther: "Add Others",
+      batchOper: "Batch Operations",
+      logicTip: "If the answer to this question",
+      // 标题组件国际化
+      titleComp: {
+        tName: "Title Name",
+        tNamePlaceHolder: "Please enter title text (max 30 characters)",
+        showTImg: "Show title image",
+        tImg: "Title image",
+        tImgPlaceholder: "Please enter image URL",
+        tSize: "Title size",
+        showTDesc: "Show title description",
+        tDesc: "Title description",
+        defTDesc:
+          "To provide you with better service, we hope you can take a few minutes to share your feelings and suggestions with us. We value each user's valuable opinions and look forward to your participation! Let's start right now!",
+        tPosition: "Position(title+description)"
+      },
+      // 按钮组件
+      buttonComp: {
+        btnTitle: "Button Text",
+        btnTitlePlaceholder: "Please enter button text (max 30 characters)",
+        showIcon: "Show Icon"
+      },
+      // 图片组件
+      ImageComp: {
+        imgSet: "Image Settings"
+      },
+      // 回复组件
+      replyComp: {
+        selectReply: "Select Questionnaire Reply",
+        historyReply: "Historical Replies"
+      },
+      // 评分组件
+      rateComp: {
+        num: "Quantity",
+        isHalf: "Allow half selection",
+        numRange: "Value range",
+        numRangeTip: "Start value can be 0, minimum end value is 3"
+      },
+      // 分割线组件
+      dividerComp: {
+        dividerText: "Divider Text",
+        dividerType: "Divider Type"
+      },
+      // 共用组件
+      commonComp: {
+        position: "Position",
+        size: "Size",
+        title: "Title",
+        descOrRemark: "Description/Remark",
+        inputPlaceholder: "Input Box Prompt"
+      },
+      // 校验组件
+      validateComp: {
+        required: "Required",
+        customErrorTip: "Custom Error Prompt",
+        customErrorTipPlaceholder: "Please enter custom error prompt",
+        format: "Format",
+        formatPlaceholder: "Please enter custom regular expression",
+        minSelect: "Minimum Select",
+        MaxSelect: "Maximum Select",
+        minVal: "Minimum Value",
+        maxVal: "Maximum Value"
+      }
     },
     project: {
       questionnaireName: "Title",

@@ -10,13 +10,13 @@
     </el-radio-group> -->
   <!-- </div> -->
   <div class="setting-item h-50">
-    <el-text size="default" class="block-title2">数量</el-text>
+    <el-text size="default" class="block-title2">{{ $t("survey.form.rateComp.num") }}</el-text>
     <el-select size="default" v-model="comp.rateCount" style="width: 120px" class="abs-r" @change="changeRateCount">
       <el-option v-for="(item, index) in dataList" :key="index" :label="item.name" :value="item.value" />
     </el-select>
   </div>
   <div class="setting-item h-50">
-    <el-text size="default" class="block-title2">允许半选</el-text>
+    <el-text size="default" class="block-title2">{{ $t("survey.form.rateComp.isHalf") }}</el-text>
     <el-switch size="default" v-model="comp.rateAllowHalf" @change="changeHalf($event)" />
   </div>
 </template>
@@ -62,7 +62,7 @@ const changeHalf = (event: any) => {
 onMounted(() => {
   for (let i = 1; i <= 10; i++) {
     dataList.value.push({
-      name: i + " 个",
+      name: i,
       value: i
     });
   }

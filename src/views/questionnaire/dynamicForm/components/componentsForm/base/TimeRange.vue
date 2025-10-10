@@ -3,12 +3,12 @@
     <el-time-picker
       style="width: 330px"
       is-range
-      range-separator="至"
+      :range-separator="$t('main.to')"
       :disabled="isDev && isSelected"
       v-model="dataValue"
       value-format="HH:mm:ss"
-      :start-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '开始时间'"
-      :end-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '结束时间'"
+      :start-placeholder="isDev && isSelected ? disableInputByDev : placeholder || $t('main.startTime')"
+      :end-placeholder="isDev && isSelected ? disableInputByDev : placeholder || $t('main.endTime')"
       @focus="handleFocus"
       @blur="inputBlur"
     />

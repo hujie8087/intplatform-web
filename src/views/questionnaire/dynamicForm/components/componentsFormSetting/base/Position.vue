@@ -1,6 +1,6 @@
 <template>
   <div class="setting-item h-42 comp">
-    <el-text size="default">位置</el-text>
+    <el-text size="default">{{ $t("survey.form.commonComp.position") }}</el-text>
     <el-select size="default" v-model="comp.position" @change="changeValue" placeholder="Select" style="width: 120px">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>

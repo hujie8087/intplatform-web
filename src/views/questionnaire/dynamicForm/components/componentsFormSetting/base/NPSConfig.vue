@@ -1,8 +1,8 @@
 <template>
   <div class="setting-item">
     <el-text size="default">
-      取值范围
-      <el-tooltip class="box-item" effect="dark" content="开始值可以选择0，结束值最小值是3" placement="top-start">
+      {{ $t("survey.form.rateComp.numRange") }}
+      <el-tooltip class="box-item" effect="dark" :content="$t('survey.form.rateComp.numRangeTip')" placement="top-start">
         <el-icon><Warning /></el-icon>
       </el-tooltip>
     </el-text>
