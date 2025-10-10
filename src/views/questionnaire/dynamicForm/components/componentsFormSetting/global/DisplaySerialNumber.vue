@@ -1,6 +1,6 @@
 <template>
   <div class="setting-item h-42">
-    <el-text class="mx-1" size="default">组件序号</el-text>
+    <el-text class="mx-1" size="default">{{ $t("survey.form.compSerialNum") }}</el-text>
     <el-switch size="default" v-model="form.displayNumberSort" @change="val => changeValue(val as boolean)" />
   </div>
 </template>

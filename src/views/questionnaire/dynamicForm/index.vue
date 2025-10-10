@@ -36,9 +36,9 @@
         </div>
       </div>
       <div class="editor" ref="editorRef">
-        <div class="preview-control" title="预览" @click="preview">
+        <div class="preview-control" @click="preview">
           <img :src="Icon.preview" alt="" />
-          <div class="label">预览</div>
+          <div class="label">{{ $t("survey.form.preview") }}</div>
         </div>
         <el-icon v-show="showBackTop" class="back-top-btn" @click="backToTop"><ArrowUp /></el-icon>
         <div
@@ -80,7 +80,7 @@
                               'has-data': pageCompList.length
                             }"
                           >
-                            点击左侧题目 / 拖拽题目到此区域
+                            {{ $t("survey.form.emptyFormTip") }}
                           </span>
                         </div>
                       </div>
@@ -134,7 +134,7 @@
                   style="width: 76%"
                   :style="{ padding: getSize(), lineHeight: getLineHeight() }"
                 >
-                  {{ pageFooter.buttonText || "提交" }}
+                  {{ pageFooter.buttonText || $t("survey.form.submit") }}
                 </el-button>
               </div>
             </el-watermark>
@@ -205,7 +205,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, inject, nextTick, reactive, onBeforeUnmount } from "vue";
-import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
+import { createCompListData, CompCategoryType, CompType, IgnoreLineNumberTypeList } from "./components/compData";
 import { getDefaultConfig, JustShowCompType } from "./components/compConfig";
 import Icon from "./components/compIcon";
 import { Check, Delete, CirclePlus } from "@element-plus/icons-vue";
@@ -219,9 +219,14 @@ import { ElMessage } from "element-plus";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
 import { topicSaves, editSurverTopic, getSurverDetail } from "@/api/modules/questionnaire/surveySetting";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const openDraw = ref(false);
-const compList = ref([...CompListData]); // 组件列表
+
+// const compList = ref([...CompListData]); // 组件列表
+const compList = ref<CompCategoryType[]>([]);
+
 const route = useRoute(); // 先获取路由实例
 const pageCompList = ref<any[]>([]); // 页面组件内容
 const dialogVisible = ref(false); // 逻辑弹窗
@@ -572,6 +577,7 @@ const scrollToBottom = async () => {
 };
 
 onMounted(async () => {
+  compList.value = createCompListData(t);
   useCompStore.initGlobalFormConfig({ ...defaultFormConfig });
   globalData.value = useCompStore.currentGlobalFormConfig;
   pageFooter.value = getDefaultConfig(CompType.button);
@@ -717,7 +723,7 @@ defineExpose({
 }
 .editor-content {
   display: grid;
-  grid-template-columns: 270px 1fr 260px;
+  grid-template-columns: 290px 1fr 260px;
   height: 100%;
   padding: 0;
 
@@ -803,6 +809,7 @@ defineExpose({
       flex-direction: row;
       align-items: center;
       justify-content: flex-start;
+      font-size: 14px;
       .icon {
         margin-right: 5px;
       }

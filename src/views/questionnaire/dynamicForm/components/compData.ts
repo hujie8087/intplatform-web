@@ -1,4 +1,5 @@
 import Icon from "./compIcon";
+
 // 组件类型
 export enum CompType {
   // 展示组件
@@ -301,3 +302,230 @@ export const CompListData: CompCategoryType[] = [
     children: [...AdvancedComponentList]
   }
 ];
+
+// 关键修改：使用工厂函数，接收t函数作为参数
+export const createCompListData = (t: (key: string) => string): CompCategoryType[] => {
+  // 显示组件
+  const ShowComponentList: CompItemType[] = [
+    {
+      label: t("survey.form.title"),
+      name: t("survey.form.title"),
+      type: CompType.formTitle,
+      icon: Icon.Title
+    },
+    {
+      label: t("survey.form.image"),
+      name: t("survey.form.image"),
+      type: CompType.img,
+      icon: Icon.Img
+    },
+    {
+      label: t("survey.form.reply"),
+      name: t("survey.form.reply"),
+      type: CompType.reply,
+      icon: Icon.Reply
+    }
+  ];
+
+  // 基础组件
+  const BasicComponentList: CompItemType[] = [
+    {
+      label: t("survey.form.input"),
+      name: t("survey.form.input"),
+      type: CompType.input,
+      icon: Icon.Input
+    },
+    {
+      label: t("survey.form.textarea"),
+      name: t("survey.form.textarea"),
+      type: CompType.textarea,
+      icon: Icon.Textarea
+    },
+    {
+      label: t("survey.form.radio"),
+      name: t("survey.form.radio"),
+      type: CompType.radio,
+      icon: Icon.Radio
+    },
+    {
+      label: t("survey.form.checkout"),
+      name: t("survey.form.checkout"),
+      type: CompType.checkout,
+      icon: Icon.Checkout
+    },
+    {
+      label: t("survey.form.select"),
+      name: t("survey.form.select"),
+      type: CompType.select,
+      icon: Icon.Select
+    },
+    {
+      label: t("survey.form.number"),
+      name: t("survey.form.number"),
+      type: CompType.number,
+      icon: Icon.Number
+    },
+    {
+      label: t("survey.form.imageMultiSelect"),
+      name: t("survey.form.imageMultiSelect"),
+      type: CompType.imgMultiSelect,
+      icon: Icon.ImgMultiSelect
+    }
+  ];
+
+  // 评分组件
+  const RateComponentList: CompItemType[] = [
+    {
+      label: t("survey.form.rate"),
+      name: t("survey.form.rate"),
+      type: CompType.rate,
+      icon: Icon.Rate
+    },
+    {
+      label: t("survey.form.nps"),
+      name: t("survey.form.nps"),
+      type: CompType.nps,
+      icon: Icon.NPS
+    },
+    {
+      label: t("survey.form.selectRate"),
+      name: t("survey.form.selectRate"),
+      type: CompType.selectRate,
+      icon: Icon.Select
+    }
+  ];
+
+  // 日期组件
+  const TimeComponentList: CompItemType[] = [
+    {
+      label: t("survey.form.date"),
+      name: t("survey.form.date"),
+      type: CompType.date,
+      icon: Icon.Date
+    },
+    {
+      label: t("survey.form.dateRange"),
+      name: t("survey.form.dateRange"),
+      type: CompType.dateRange,
+      icon: Icon.DateRange
+    },
+    {
+      label: t("survey.form.time"),
+      name: t("survey.form.time"),
+      type: CompType.time,
+      icon: Icon.Time
+    },
+    {
+      label: t("survey.form.timeRange"),
+      name: t("survey.form.timeRange"),
+      type: CompType.timeRange,
+      icon: Icon.TimeRange
+    }
+  ];
+
+  // 布局组件
+  const LayoutComponentList: CompItemType[] = [
+    {
+      label: t("survey.form.divider"),
+      name: t("survey.form.divider"),
+      type: CompType.divider,
+      icon: Icon.Divider
+    }
+  ];
+
+  // 个人组件
+  const PersonalComponentList: CompItemType[] = [
+    {
+      label: t("survey.form.name"),
+      name: t("survey.form.name"),
+      type: CompType.name,
+      icon: Icon.Name
+    },
+    {
+      label: t("survey.form.workNumber"),
+      name: t("survey.form.workNumber"),
+      type: CompType.workNumber,
+      icon: Icon.WorkNumber
+    },
+    {
+      label: t("survey.form.phone"),
+      name: t("survey.form.phone"),
+      type: CompType.phone,
+      icon: Icon.Phone
+    },
+    {
+      label: t("survey.form.wx"),
+      name: t("survey.form.wx"),
+      type: CompType.wx,
+      icon: Icon.WX
+    },
+    {
+      label: t("survey.form.email"),
+      name: t("survey.form.email"),
+      type: CompType.email,
+      icon: Icon.Email
+    }
+  ];
+
+  // 高级组件
+  const AdvancedComponentList: CompItemType[] = [
+    {
+      label: t("survey.form.sign"),
+      name: t("survey.form.sign"),
+      type: CompType.sign,
+      icon: Icon.Sign
+    },
+    {
+      label: t("survey.form.uploadImg"),
+      name: t("survey.form.uploadImg"),
+      type: CompType.upload,
+      icon: Icon.Upload
+    }
+  ];
+
+  return [
+    {
+      name: t("survey.form.showComp"),
+      label: t("survey.form.showComp"),
+      tooltip: t("survey.form.showComp"),
+      type: CompListType.show,
+      children: [...ShowComponentList]
+    },
+    {
+      name: t("survey.form.personaComp"),
+      label: t("survey.form.personaComp"),
+      type: CompListType.personal,
+      children: [...PersonalComponentList]
+    },
+    {
+      name: t("survey.form.baseComp"),
+      label: t("survey.form.baseComp"),
+      type: CompListType.basic,
+      children: [...BasicComponentList]
+    },
+    {
+      name: t("survey.form.rankComp"),
+      label: t("survey.form.rankComp"),
+      type: CompListType.rate,
+      children: [...RateComponentList]
+    },
+    {
+      name: t("survey.form.dateComp"),
+      label: t("survey.form.dateComp"),
+      type: CompListType.time,
+      children: [...TimeComponentList]
+    },
+    {
+      name: t("survey.form.layoutComp"),
+      label: t("survey.form.layoutComp"),
+      type: CompListType.layout,
+      children: [...LayoutComponentList]
+    },
+    {
+      name: t("survey.form.advancedComp"),
+      label: t("survey.form.advancedComp"),
+      type: CompListType.advanced,
+      children: [...AdvancedComponentList]
+    }
+  ];
+};

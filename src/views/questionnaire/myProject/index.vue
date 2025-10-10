@@ -14,12 +14,12 @@
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
           <el-button type="primary" v-auth="['survey:project:add']" :icon="CirclePlus" @click="editPorjectName">
-            新建问卷
+            {{ $t("main.add") }}
           </el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-tooltip placement="top" effect="dark" content="编辑问卷">
+          <el-tooltip placement="top" effect="dark" :content="$t('main.edit')">
             <el-button
               type="warning"
               link
@@ -30,7 +30,7 @@
             >
             </el-button
           ></el-tooltip>
-          <el-tooltip placement="top" effect="dark" content="答卷数据">
+          <el-tooltip placement="top" effect="dark" :content="$t('survey.project.stat')">
             <el-button
               type="success"
               link
@@ -41,7 +41,7 @@
             >
             </el-button>
           </el-tooltip>
-          <el-tooltip placement="top" effect="dark" content="问卷设置">
+          <el-tooltip placement="top" effect="dark" :content="$t('survey.project.setting')">
             <el-button
               type="primary"
               link
@@ -52,7 +52,7 @@
             >
             </el-button>
           </el-tooltip>
-          <el-tooltip placement="top" effect="dark" content="答卷地址">
+          <el-tooltip placement="top" effect="dark" :content="$t('survey.project.share')">
             <el-button
               type="info"
               class="btn-custom"
@@ -68,7 +68,9 @@
           <el-tooltip
             placement="top"
             effect="dark"
-            :content="scope.row.status === 1 ? '开始收集' : scope.row.status === 2 ? '结束收集' : ''"
+            :content="
+              scope.row.status === 1 ? $t('survey.project.begin') : scope.row.status === 2 ? $t('survey.project.stop') : ''
+            "
           >
             <el-button
               v-if="scope.row.status === 1"
@@ -91,7 +93,7 @@
             </el-button>
           </el-tooltip>
 
-          <el-tooltip placement="top" effect="dark" content="复制问卷">
+          <el-tooltip placement="top" effect="dark" :content="$t('survey.project.copy')">
             <el-button
               type="info"
               class="btn-copySurvey"
@@ -104,7 +106,7 @@
             </el-button>
           </el-tooltip>
 
-          <el-tooltip placement="top" effect="dark" content="删除问卷">
+          <el-tooltip placement="top" effect="dark" :content="$t('main.delete')">
             <el-button
               type="danger"
               link
@@ -141,8 +143,14 @@
       </ProTable>
       <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500" :before-close="handleClose">
         <el-form ref="ruleFormRef" :model="dialogForm" :rules="rules" label-width="90">
-          <el-form-item label="问卷名称" prop="projectName">
-            <el-input maxlength="40" show-word-limit v-model="dialogForm.projectName" placeholder="请输入问卷名称" clearable />
+          <el-form-item :label="$t('survey.project.questionnaireName')" prop="projectName">
+            <el-input
+              maxlength="40"
+              show-word-limit
+              v-model="dialogForm.projectName"
+              :placeholder="$t('survey.project.questionnaireNamePlaceholder')"
+              clearable
+            />
           </el-form-item>
         </el-form>
         <template #footer>
@@ -157,7 +165,7 @@
 </template>
 
 <script setup lang="tsx" name="myProject">
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted, watch } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
 import {
   getProjectList,
@@ -169,7 +177,6 @@ import {
   publishProject,
   stopProject
 } from "@/api/modules/questionnaire/myProject";
-import { surveyType } from "@/utils/questionnaire";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useRouter } from "vue-router";
 import { ElMessageBox, ElMessage } from "element-plus";
@@ -188,13 +195,20 @@ import {
 import { ElInput } from "element-plus";
 const router = useRouter();
 const proTable = ref();
+import { useI18n } from "vue-i18n";
+const { t, locale } = useI18n();
+
+interface SurveyTypeItem {
+  label: string;
+  value: number;
+}
+const surveyType = ref<SurveyTypeItem[]>([]);
 
 const columns = reactive([
   { type: "selection", label: "", width: 80 },
-  { type: "index", label: "序号", width: 80 },
   {
     prop: "projectName",
-    label: "问卷名称",
+    label: "survey.project.questionnaireName",
     search: { el: "input" },
     align: "left",
     render: scope => {
@@ -211,22 +225,27 @@ const columns = reactive([
       );
     }
   },
-  { prop: "collectCount", label: "收集答卷数(份)", width: 180 },
+  { prop: "collectCount", label: "survey.project.collectionQuantity", width: 180 },
   {
     width: 180,
     prop: "status",
-    label: "问卷状态",
+    label: "survey.project.status",
     tag: true,
     search: { el: "select" },
     enum: surveyType,
     render: scope => {
       let status = scope.row.status;
-      let text = status == 1 ? "未发布" : status == 2 ? "收集中" : "停止发布";
+      let text =
+        status == 1
+          ? t("survey.statusOptions.unpublished")
+          : status == 2
+            ? t("survey.statusOptions.inCollection")
+            : t("survey.statusOptions.stopped");
       return <span>{<el-tag type={status === 1 ? "primary" : status === 2 ? "success" : "danger"}>{text}</el-tag>}</span>;
     }
   },
-  { prop: "createTime", label: "创建时间", width: 200, sortable: true },
-  { prop: "operation", label: "操作", width: 260, fixed: "right" }
+  { prop: "createTime", label: "main.createTime", width: 200, sortable: true },
+  { prop: "operation", label: "main.operation", width: 260, fixed: "right" }
   //   { prop: "dept.deptName", label: "部门", width: 120 }
 ]);
 const treeFilterValues = reactive({ pageNum: 1, pageSize: 20 });
@@ -249,16 +268,18 @@ const dialogForm = reactive<dialogFormType>({
   projectName: "",
   status: null
 });
-const rules = reactive({ projectName: [{ required: true, message: "请输入项目名称", trigger: "blur" }] });
+const rules = reactive({
+  projectName: [{ required: true, message: t("survey.project.questionnaireNamePlaceholder"), trigger: "blur" }]
+});
 // 编辑问卷名称
 const editPorjectName = async row => {
   if (row?.projectKey) {
-    dialogTitle.value = "修改问卷";
+    dialogTitle.value = t("main.edit");
     let res: any = await getProjectDetail(row?.projectKey);
     dialogForm.projectKey = res?.data?.projectKey;
     dialogForm.projectName = res?.data?.projectName;
   } else {
-    dialogTitle.value = "新增问卷";
+    dialogTitle.value = t("main.add");
   }
   dialogVisible.value = true;
 };
@@ -277,9 +298,9 @@ const rediectPage = (current, data: any) => {
 // 复制问卷
 const copy = async (data: any) => {
   const { projectKey } = data;
-  ElMessageBox.confirm(`是否需要复制该问卷?`, "温馨提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t("survey.project.copyTip"), t("main.tips"), {
+    confirmButtonText: t("main.confirm"),
+    cancelButtonText: t("main.cancel"),
     type: "warning",
     draggable: true
   })
@@ -321,16 +342,16 @@ const updatePage = () => {
 };
 const deleteSurvey = async row => {
   // let msg = params.length > 1 ? "批量删除区域" : "删除该区域";
-  await useHandleData(deleteProject, row.projectKey, "删除该问卷");
+  await useHandleData(deleteProject, row.projectKey, t("main.deleteMsg"));
   proTable.value?.getTableList();
 };
 
 // 更新状态
 const updateStatus = async row => {
-  let msg = row.status === 1 ? "确定要发布该问卷吗?" : row.status === 2 ? "确定要停止收集该问卷吗?" : "";
-  ElMessageBox.confirm(msg, "温馨提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  let msg = row.status === 1 ? t("survey.project.publishTip") : row.status === 2 ? t("survey.project.stopTip") : "";
+  ElMessageBox.confirm(msg, t("main.tips"), {
+    confirmButtonText: t("main.confirm"),
+    cancelButtonText: t("main.cancel"),
     type: "warning",
     draggable: true
   })
@@ -338,7 +359,7 @@ const updateStatus = async row => {
       // 刷新列表
       let res: any = row.status === 1 ? await publishProject(row.projectKey) : await stopProject(row.projectKey);
       if (res?.code == 200) {
-        ElMessage.success(row.status === 1 ? "发布问卷成功" : "停止收集成功");
+        ElMessage.success(row.status === 1 ? t("survey.project.publishTipSuccess") : t("survey.project.stopTipSuccess"));
       }
       proTable.value?.getTableList();
     })
@@ -346,6 +367,26 @@ const updateStatus = async row => {
       // cancel operation
     });
 };
+
+const generateSurveyType = () => {
+  return [
+    { label: t("survey.statusOptions.unpublished"), value: 1 },
+    { label: t("survey.statusOptions.inCollection"), value: 2 },
+    { label: t("survey.statusOptions.stopped"), value: 3 }
+  ];
+};
+
+// 监听语言变化，重新生成数组
+watch(
+  () => locale.value, // 监听语言切换
+  () => {
+    surveyType.value = generateSurveyType();
+  }
+);
+
+onMounted(() => {
+  surveyType.value = generateSurveyType();
+});
 </script>
 
 <style scoped>

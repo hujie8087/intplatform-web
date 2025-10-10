@@ -1,25 +1,24 @@
 <template>
   <div class="data-analyze">
     <div class="header">
-      <el-text size="large" class="title">分析概览</el-text>
+      <el-text size="large" class="title">{{ $t("survey.stat.dataAnalyzeOverview") }}</el-text>
       <div class="refresh">
-        <el-tooltip class="box-item" effect="dark" content="点击刷新" placement="top-start">
+        <el-tooltip class="box-item" effect="dark" :content="$t('survey.stat.refresh')" placement="top-start">
           <el-icon @click="refresh" :class="{ rotating: isRotating }"><RefreshRight /></el-icon>
         </el-tooltip>
       </div>
     </div>
     <!-- 数据为空状态 -->
     <div v-if="dataList.length === 0" class="empty-state">
-      <el-empty description="暂无数据" />
+      <el-empty :description="$t('main.noData')" />
     </div>
-
     <div v-else :class="[index == 0 ? 'content-first-type' : '', 'content']" v-for="(item, index) in dataList" :key="index">
       <div class="select">
         <el-text class="select-title">{{ item.label }} ({{ item.type }})</el-text>
         <el-radio-group v-model="item.chartType" size="default">
-          <el-radio-button label="柱状图" value="column" />
-          <el-radio-button label="折线图" value="line" />
-          <el-radio-button label="饼图" value="pie" />
+          <el-radio-button :label="$t('survey.stat.barChart')" value="column" />
+          <el-radio-button :label="$t('survey.stat.lineChart')" value="line" />
+          <el-radio-button :label="$t('survey.stat.pieChart')" value="pie" />
         </el-radio-group>
       </div>
       <div class="chart">
@@ -320,6 +319,9 @@ const refresh = () => {
   .content-first-type {
     border-top: none !important;
     border-radius: 0 0 6px 6px;
+  }
+  .empty-state {
+    background-color: #ffffff;
   }
 }
 </style>

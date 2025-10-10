@@ -60,8 +60,8 @@ export const getUserRole = (id: number) => {
   return http.getNoData<Account.ResRoleUser>(PORT1 + `/system/user/authRole/${id}`);
 };
 // * 设置用户角色
-export const updateRole = ({ userId, roleIds }) => {
-  return http.put(PORT1 + `/system/user/authRole?userId=${userId}&roleIds=${roleIds}`);
+export const updateRole = ({ userId, roleIds, userName }) => {
+  return http.put(PORT1 + `/system/user/authRole?userId=${userId}&roleIds=${roleIds}&userName=${userName}`);
 };
 
 // * 修改用户状态

@@ -3,13 +3,13 @@
   <div class="vote-view">
     <div class="header">
       <div class="left">
-        <el-text size="large" class="title">投票概览</el-text>
+        <el-text size="large" class="title">{{ $t("survey.stat.voteRankOverview") }}</el-text>
         <el-select v-model="currentSelect" class="m-2" placeholder="选择" size="default" style="width: 240px">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </div>
       <div class="refresh">
-        <el-tooltip class="box-item" effect="dark" content="点击刷新" placement="top-start">
+        <el-tooltip class="box-item" effect="dark" :content="$t('survey.stat.refresh')" placement="top-start">
           <el-icon @click="refresh" :class="{ rotating: isRotating }"><RefreshRight /></el-icon>
         </el-tooltip>
       </div>
@@ -17,7 +17,7 @@
     <div class="content">
       <!-- 数据为空状态 -->
       <div v-if="rankingData?.length === 0 || !rankingData" class="empty-state">
-        <el-empty description="暂无数据" />
+        <el-empty :description="$t('main.noData')" />
       </div>
       <!-- 排行榜列表 -->
       <div v-else class="ranking-container">
@@ -35,7 +35,7 @@
               <span class="rank-num">{{ index + 1 }}</span>
               <p class="singer">{{ item.title }}</p>
             </div>
-            <div class="vote" :class="{ 'top-style': index < 3 }">{{ item.value }} 票</div>
+            <div class="vote" :class="{ 'top-style': index < 3 }">{{ item.value }}</div>
           </li>
         </ul>
       </div>
