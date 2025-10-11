@@ -3,7 +3,7 @@
     :disabled="isDev && isSelected"
     clearable
     v-model="dataValue"
-    :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
+    :placeholder="isDev && isSelected ? $t('survey.form.disableInputByDev') : placeholder || '提示信息'"
     @blur="inputBlur"
     @focus="handleFocus"
   >
@@ -16,7 +16,7 @@
 import { ref, watch } from "vue";
 import Email from "@/assets/images/form-editor/email.svg";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
-import { disableInputByDev, delayTime, regexRuleMesg, regexRule, isEmpty } from "../../compConfig";
+import { delayTime, regexRuleMesg, regexRule, isEmpty } from "../../compConfig";
 const compStore = useSelectCompStore();
 const emit = defineEmits(["compFocus"]);
 interface Props {

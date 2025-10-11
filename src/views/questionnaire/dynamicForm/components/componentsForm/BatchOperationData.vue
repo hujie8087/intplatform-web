@@ -12,7 +12,7 @@
         <el-input
           size="default"
           type="textarea"
-          placeholder="请输入批次操作数据（每行一条数据）"
+          :placeholder="$t('survey.form.def.batchDataPlaceholder')"
           allow-clear
           v-model="batchDataValue"
           :autosize="{ minRows: 3, maxRows: 30 }"

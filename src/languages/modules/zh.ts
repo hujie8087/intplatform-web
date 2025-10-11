@@ -408,6 +408,45 @@ export default {
       stopped: "已停止"
     },
     form: {
+      tab: {
+        questionBank: "题库",
+        sample: "样本",
+        setting: "设置",
+        publish: "发布",
+        stat: "统计"
+      },
+      options: {
+        left: "左",
+        center: "中",
+        right: "右",
+        small: "小",
+        middle: "中",
+        large: "大",
+        solid: "直线",
+        dashed: "虚线"
+      },
+      def: {
+        description: "描述",
+        buttonText: "提交",
+        dividerValue: "分割线",
+        tName: "标题名称",
+        defTDesc:
+          "为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，我们非常重视每位 用户的宝贵意见，期待您的参与！现在我们就马上开始吧！",
+        name: "请输入姓名",
+        gender: "请选择性别",
+        phone: "请输入手机号",
+        telePhone: "请输入固话",
+        workNumber: "请输入工号",
+        email: "请输入邮件",
+        wx: "请输入微信",
+        select: "请选择",
+        option: "选项",
+        other: "其它",
+        optionOne: "选项一",
+        optionTwo: "选项二",
+        optionThree: "选项三",
+        batchDataPlaceholder: "请输入批次操作数据（每行一条数据）"
+      },
       showComp: "展示",
       title: "标题",
       image: "图片展示",
@@ -458,6 +497,7 @@ export default {
       addOther: "添加其它",
       batchOper: "批量操作",
       logicTip: "如果本题回答",
+      disableInputByDev: "编辑模式不支持输入",
       // 标题组件国际化
       titleComp: {
         tName: "标题名称",
@@ -468,8 +508,6 @@ export default {
         tSize: "标题大小",
         showTDesc: "显示标题描述",
         tDesc: "标题描述",
-        defTDesc:
-          "为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，我们非常重视每位 用户的宝贵意见，期待您的参与！现在我们就马上开始吧！",
         tPosition: "位置(标题+描述)"
       },
       // 按钮组件
@@ -518,6 +556,13 @@ export default {
         MaxSelect: "最多可选",
         minVal: "最小值",
         maxVal: "最大值"
+      },
+      // 预览组件
+      previewComp: {
+        formPreview: "表单预览",
+        Mobile: "移动端",
+        PC: "桌面端",
+        nullDataTip: "表单为空，请返回编辑器配置内容"
       }
     },
     project: {

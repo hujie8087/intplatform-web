@@ -6,9 +6,7 @@
     :disabled="props.isDev && props.isSelected"
     @focus="handleFocus"
     @blur="inputBlur"
-    :placeholder="
-      props.isDev && props.isSelected ? (props.placeholder || '请选择') + ' - 编辑状态无法选择' : props.placeholder || '请选择'
-    "
+    :placeholder="props.isDev && props.isSelected ? $t('survey.form.disableInputByDev') : props.placeholder || '请选择'"
   >
     <el-option v-for="(item, _index) in list" :key="_index" :label="item.label" :value="item.value">
       {{ item.label }}

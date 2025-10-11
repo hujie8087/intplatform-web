@@ -261,7 +261,7 @@ const createCompByClick = (item: any) => {
 };
 
 const createByClickOrClone = (element: any) => {
-  const defaultComp: any = getDefaultConfig(element.type);
+  const defaultComp: any = getDefaultConfig(element.type, false, t);
   const item = {
     ...defaultComp,
     ...element.value,
@@ -322,12 +322,12 @@ const addItem = (type: "new" | "other", item: any, index: number) => {
   const isNewBool = type === "new";
   const newDataItem = isNewBool
     ? {
-        label: "选项",
-        value: "选项"
+        label: t("survey.form.def.option"),
+        value: t("survey.form.def.option")
       }
     : {
         subType: "other",
-        label: "其他",
+        label: t("survey.form.def.other"),
         value: ""
       };
   if (["new", "other"].includes(type)) {
@@ -580,7 +580,7 @@ onMounted(async () => {
   compList.value = createCompListData(t);
   useCompStore.initGlobalFormConfig({ ...defaultFormConfig });
   globalData.value = useCompStore.currentGlobalFormConfig;
-  pageFooter.value = getDefaultConfig(CompType.button);
+  pageFooter.value = getDefaultConfig(CompType.button, false, t);
   pageFooter.value.id = uuidv4();
   let topicList: any = await editSurverTopic(projectKey);
   topicList.data.forEach(el => {

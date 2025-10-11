@@ -31,7 +31,12 @@
       class="abs-r"
       @change="changeSelect($event, 'titleSize')"
     >
-      <el-option :value="item.value" :label="item.label" v-for="(item, index) in orientationList" :key="index" />
+      <el-option
+        :value="item.value"
+        :label="$t(`survey.form.options.${item.label}`)"
+        v-for="(item, index) in orientationList"
+        :key="index"
+      />
     </el-select>
   </div>
   <div class="setting-item h-42">
@@ -48,7 +53,7 @@
     type="textarea"
     show-word-limit
     @input="handleChangeInput($event, 'titleDescription')"
-    :maxlength="200"
+    :maxlength="250"
   />
   <div class="setting-item h-50">
     <el-text class="mx-1" size="default">{{ $t("survey.form.titleComp.tPosition") }}</el-text>
@@ -59,7 +64,12 @@
       class="abs-r"
       @change="changeSelect($event, 'titleDescriptionPosition')"
     >
-      <el-option :value="item.value" :label="item.label" v-for="(item, index) in positionList" :key="index" />
+      <el-option
+        :value="item.value"
+        :label="$t(`survey.form.options.${item.label}`)"
+        v-for="(item, index) in positionList"
+        :key="index"
+      />
     </el-select>
   </div>
 </template>

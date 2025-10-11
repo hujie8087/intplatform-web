@@ -9,14 +9,14 @@
       value-format="YYYY-MM-DD"
       @focus="handleFocus"
       @blur="inputBlur"
-      :start-placeholder="isDev && isSelected ? disableInputByDev : placeholder || $t('main.startTime')"
-      :end-placeholder="isDev && isSelected ? disableInputByDev : placeholder || $t('main.endTime')"
+      :start-placeholder="isDev && isSelected ? $t('survey.form.disableInputByDev') : placeholder || $t('main.startTime')"
+      :end-placeholder="isDev && isSelected ? $t('survey.form.disableInputByDev') : placeholder || $t('main.endTime')"
     ></el-date-picker>
   </div>
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { disableInputByDev, delayTime } from "../../compConfig";
+import { delayTime } from "../../compConfig";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const emit = defineEmits(["compFocus"]);
 const compStore = useSelectCompStore();

@@ -6,12 +6,12 @@
           <img src="@/assets/images/form-editor/callback.svg" alt="" />
         </div>
         <div class="title-data">
-          <el-text class="name">问卷: {{ projectName }} </el-text>
+          <el-text class="name">{{ projectName }} </el-text>
         </div>
         <div class="control" v-if="showBtn">
           <div class="cont-item">
             <el-button type="primary" :icon="Finished" v-auth="['survey:project:saveAll']" @click="saveSurvey">
-              <span class="name">保存</span>
+              <span class="name">{{ $t("survey.form.submit") }}</span>
             </el-button>
           </div>
           <!-- <div class="cont-item">

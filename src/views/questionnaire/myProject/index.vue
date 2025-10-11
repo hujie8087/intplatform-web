@@ -155,8 +155,8 @@
         </el-form>
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="handleClose">取消</el-button>
-            <el-button type="primary" @click="updatePage">确定</el-button>
+            <el-button @click="handleClose">{{ $t("main.cancel") }}</el-button>
+            <el-button type="primary" @click="updatePage">{{ $t("main.confirm") }}</el-button>
           </div>
         </template>
       </el-dialog>

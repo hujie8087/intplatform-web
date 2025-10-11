@@ -8,7 +8,7 @@
       :placeholder="$t('main.selectPlaceholder')"
       style="width: 120px"
     >
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+      <el-option v-for="item in options" :key="item.value" :label="$t(`survey.form.options.${item.label}`)" :value="item.value" />
     </el-select>
   </div>
 </template>

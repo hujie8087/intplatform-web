@@ -408,6 +408,45 @@ export default {
       stopped: "Dihentikan"
     },
     form: {
+      tab: {
+        questionBank: "Bank Soal",
+        sample: "Conto h",
+        setting: "Penga turan",
+        publish: "Publik asikan",
+        stat: "Statisti k"
+      },
+      options: {
+        left: "Kiri",
+        center: "Tengah",
+        right: "Kanan",
+        small: "Kecil",
+        middle: "Sedang",
+        large: "Besar",
+        solid: "Garis Lurus",
+        dashed: "Garis Putus-putus"
+      },
+      def: {
+        description: "Deskripsi",
+        buttonText: "Kirim",
+        dividerValue: "Pemisah",
+        tName: "Nama Judul",
+        defTDesc:
+          "Untuk memberikan layanan yang lebih baik, kami harap Anda dapat meluangkan beberapa menit untuk berbagi pengalaman dan saran dengan kami. Kami menghargai pendapat berharga setiap pengguna dan menantikan partisipasi Anda! Mari mulai sekarang!",
+        name: "Silakan masukkan nama",
+        gender: "Silakan pilih jenis kelamin",
+        phone: "Silakan masukkan nomor HP",
+        telePhone: "Silakan masukkan nomor telepon tetap",
+        workNumber: "Silakan masukkan nomor karyawan",
+        email: "Silakan masukkan email",
+        wx: "Silakan masukkan ID WeChat",
+        select: "Silakan pilih",
+        option: "Pilihan",
+        other: "Lainnya",
+        optionOne: "Pilihan Satu",
+        optionTwo: "Pilihan Dua",
+        optionThree: "Pilihan Tiga",
+        batchDataPlaceholder: "Silakan masukkan data operasi batch (satu data per baris)"
+      },
       showComp: "Tampilan",
       title: "Judul",
       image: "Gambar",
@@ -458,6 +497,7 @@ export default {
       addOther: "Tambah Lainnya",
       batchOper: "Operasi Batch",
       logicTip: "Jika jawaban untuk soal ini",
+      disableInputByDev: "Input tidak didukung dalam mode edit",
       // 标题组件国际化
       titleComp: {
         tName: "Nama Judul",
@@ -468,8 +508,6 @@ export default {
         tSize: "Ukuran judul",
         showTDesc: "Tampilkan deskripsi judul",
         tDesc: "Deskripsi judul",
-        defTDesc:
-          "Untuk memberikan layanan yang lebih baik, kami harap Anda dapat meluangkan beberapa menit untuk berbagi pengalaman dan saran dengan kami. Kami menghargai pendapat berharga setiap pengguna dan menantikan partisipasi Anda! Mari mulai sekarang!",
         tPosition: "Posisi (judul + deskripsi)"
       },
       // 按钮组件
@@ -518,6 +556,13 @@ export default {
         MaxSelect: "Pilihan maksimum",
         minVal: "Nilai minimum",
         maxVal: "Nilai maksimum"
+      },
+      // 预览组件
+      previewComp: {
+        formPreview: "Pratinjau Formulir",
+        Mobile: "Mobile",
+        PC: "Desktop",
+        nullDataTip: "Formulir kosong, silakan kembali ke editor untuk mengkonfigurasi konten"
       }
     },
     project: {

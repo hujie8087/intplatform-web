@@ -408,6 +408,45 @@ export default {
       stopped: "Stopped"
     },
     form: {
+      tab: {
+        questionBank: "Question Bank",
+        sample: "Sample",
+        setting: "Settings",
+        publish: "Publish",
+        stat: "Statistic s"
+      },
+      options: {
+        left: "Left",
+        center: "Center",
+        right: "Right",
+        small: "Small",
+        middle: "Medium",
+        large: "Large",
+        solid: "Solid",
+        dashed: "Dashed"
+      },
+      def: {
+        description: "description",
+        buttonText: "submit",
+        dividerValue: "Divider",
+        tName: "Title Name",
+        defTDesc:
+          "To provide you with better service, we hope you can take a few minutes to share your feelings and suggestions with us. We value each user's valuable opinions and look forward to your participation! Let's start right now!",
+        name: "Please enter name",
+        gender: "Please select gender",
+        phone: "Please enter mobile number",
+        telePhone: "Please enter landline number",
+        workNumber: "Please enter employee ID",
+        email: "Please enter email",
+        wx: "Please enter WeChat ID",
+        select: "Please select",
+        option: "Option",
+        other: "Other",
+        optionOne: "Option One",
+        optionTwo: "Option Two",
+        optionThree: "Option Three",
+        batchDataPlaceholder: "Please enter batch operation data (one piece of data per line)"
+      },
       showComp: "Show",
       title: "Title",
       image: "Image",
@@ -458,6 +497,7 @@ export default {
       addOther: "Add Others",
       batchOper: "Batch Operations",
       logicTip: "If the answer to this question",
+      disableInputByDev: "Input is not supported in edit mode",
       // 标题组件国际化
       titleComp: {
         tName: "Title Name",
@@ -468,8 +508,6 @@ export default {
         tSize: "Title size",
         showTDesc: "Show title description",
         tDesc: "Title description",
-        defTDesc:
-          "To provide you with better service, we hope you can take a few minutes to share your feelings and suggestions with us. We value each user's valuable opinions and look forward to your participation! Let's start right now!",
         tPosition: "Position(title+description)"
       },
       // 按钮组件
@@ -518,6 +556,13 @@ export default {
         MaxSelect: "Maximum Select",
         minVal: "Minimum Value",
         maxVal: "Maximum Value"
+      },
+      // 预览组件
+      previewComp: {
+        formPreview: "Form Preview",
+        Mobile: "Mobile",
+        PC: "Desktop",
+        nullDataTip: "Form is empty, please return to the editor to configure content"
       }
     },
     project: {
