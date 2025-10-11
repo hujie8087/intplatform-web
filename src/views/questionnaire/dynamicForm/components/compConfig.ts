@@ -147,9 +147,9 @@ export const getCompConfig = (type: CompType, t: any) => {
         dataValue: [],
         dataList: [
           {
-            label: "标题",
-            value: "标题",
-            desc: "描述",
+            label: t("survey.form.imageSelection.title"),
+            value: t("survey.form.imageSelection.title"),
+            desc: t("survey.form.imageSelection.desc"),
             imageUrl: "",
             id: uuidv4()
           }

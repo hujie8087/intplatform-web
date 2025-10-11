@@ -498,6 +498,7 @@ export default {
       batchOper: "批量操作",
       logicTip: "如果本题回答",
       disableInputByDev: "编辑模式不支持输入",
+      itemSort: "选项排序",
       // 标题组件国际化
       titleComp: {
         tName: "标题名称",
@@ -563,6 +564,20 @@ export default {
         Mobile: "移动端",
         PC: "桌面端",
         nullDataTip: "表单为空，请返回编辑器配置内容"
+      },
+      // 多图设置组件
+      imageSelection: {
+        MultiImageSettings: "多图设置",
+        addItem: "添加选项",
+        editItem: "修改选项",
+        title: "标题",
+        desc: "描述",
+        close: "关闭",
+        imgSet: "图片设置",
+        vote: "为TA投票",
+        voted: "您已投票",
+        minSelect: "请至少选择{size}项",
+        maxSelect: "最多只能选择{size}项"
       }
     },
     project: {

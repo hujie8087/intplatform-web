@@ -498,6 +498,7 @@ export default {
       batchOper: "Batch Operations",
       logicTip: "If the answer to this question",
       disableInputByDev: "Input is not supported in edit mode",
+      itemSort: "Option Sorting",
       // 标题组件国际化
       titleComp: {
         tName: "Title Name",
@@ -563,6 +564,19 @@ export default {
         Mobile: "Mobile",
         PC: "Desktop",
         nullDataTip: "Form is empty, please return to the editor to configure content"
+      },
+      imageSelection: {
+        MultiImageSettings: "Multi-image Settings",
+        addItem: "Add Option",
+        editItem: "Edit Option",
+        title: "Title",
+        desc: "Description",
+        close: "Close",
+        imgSet: "Image Settings",
+        vote: "vote",
+        voted: "Voted",
+        minVal: "Minimum {size} items required",
+        maxVal: "Maximum {size} items allowed"
       }
     },
     project: {

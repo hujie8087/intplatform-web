@@ -498,6 +498,7 @@ export default {
       batchOper: "Operasi Batch",
       logicTip: "Jika jawaban untuk soal ini",
       disableInputByDev: "Input tidak didukung dalam mode edit",
+      itemSort: "Penyortiran Opsi",
       // 标题组件国际化
       titleComp: {
         tName: "Nama Judul",
@@ -563,6 +564,19 @@ export default {
         Mobile: "Mobile",
         PC: "Desktop",
         nullDataTip: "Formulir kosong, silakan kembali ke editor untuk mengkonfigurasi konten"
+      },
+      imageSelection: {
+        MultiImageSettings: "Pengaturan Gambar Banyak",
+        addItem: "Tambah Opsi",
+        editItem: "Edit Opsi",
+        title: "Judul",
+        desc: "Deskripsi",
+        close: "Tutup",
+        imgSet: "Pengaturan Gambar",
+        vote: "Memilih",
+        voted: "Telah Memilih",
+        minVal: "Minimum {size} item diperlukan",
+        maxVal: "Maksimum {size} item diizinkan"
       }
     },
     project: {
