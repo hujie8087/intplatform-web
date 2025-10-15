@@ -1,6 +1,6 @@
 <template>
   <div class="setting-item h-42">
-    <el-text class="mx-1" size="default">自定错误提示</el-text>
+    <el-text class="mx-1" size="default">{{ $t("survey.form.validateComp.customErrorTip") }}</el-text>
     <el-switch size="default" v-model="comp.isCustomErrorMessage" @change="handleChangeInput" />
   </div>
 </template>

@@ -400,5 +400,281 @@ export default {
       // KitchenPrepping	餐厅备餐中	Persiapan Dapur
       // OutForDelivery	取餐配送中	Dalam Pengiriman
     }
+  },
+  survey: {
+    statusOptions: {
+      unpublished: "未发布",
+      inCollection: "收集中",
+      stopped: "已停止"
+    },
+    form: {
+      tab: {
+        questionBank: "题库",
+        sample: "样本",
+        setting: "设置",
+        publish: "发布",
+        stat: "统计"
+      },
+      options: {
+        left: "左",
+        center: "中",
+        right: "右",
+        small: "小",
+        middle: "中",
+        large: "大",
+        solid: "直线",
+        dashed: "虚线"
+      },
+      def: {
+        description: "描述",
+        buttonText: "提交",
+        dividerValue: "分割线",
+        tName: "标题名称",
+        defTDesc:
+          "为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，我们非常重视每位 用户的宝贵意见，期待您的参与！现在我们就马上开始吧！",
+        name: "请输入姓名",
+        gender: "请选择性别",
+        phone: "请输入手机号",
+        telePhone: "请输入固话",
+        workNumber: "请输入工号",
+        email: "请输入邮件",
+        wx: "请输入微信",
+        select: "请选择",
+        option: "选项",
+        other: "其它",
+        optionOne: "选项一",
+        optionTwo: "选项二",
+        optionThree: "选项三",
+        batchDataPlaceholder: "请输入批次操作数据（每行一条数据）"
+      },
+      showComp: "展示",
+      title: "标题",
+      image: "图片展示",
+      reply: "问卷回复",
+      personaComp: "个人信息",
+      name: "姓名",
+      workNumber: "工号",
+      phone: "手机号",
+      wx: "微信号",
+      email: "邮箱",
+      baseComp: "基础",
+      input: "单行输入",
+      textarea: "多行输入",
+      radio: "单选",
+      checkout: "多选",
+      select: "下拉选择",
+      number: "数字",
+      imageMultiSelect: "多图选择",
+      rankComp: "评分和满意度",
+      rate: "评分",
+      nps: "NPS",
+      selectRate: "下拉评分",
+      dateComp: "日期和时间",
+      date: "日期",
+      dateRange: "日期范围",
+      time: "时间",
+      timeRange: "时间范围",
+      layoutComp: "布局",
+      divider: "分割线",
+      advancedComp: "高级组件",
+      sign: "电子签名",
+      uploadImg: "上传图片",
+      // 其他的国际化，上面都是表单组件
+      preview: "预览",
+      submit: "提交",
+      emptyFormTip: "点击左侧题目/拖拽题目到次区域",
+      formSetting: "表单配置",
+      baseSetting: "基础配置",
+      formVerify: "表单验证",
+      globalSetting: "全局表单配置",
+      compDesc: "组件描述",
+      compSerialNum: "组件序号",
+      waterMarker: "水印",
+      waterMarkerPlaceholder: "请输入水印（不超过15个字符）",
+      logic: "逻辑",
+      copy: "复制",
+      addItem: "添加单项",
+      addOther: "添加其它",
+      batchOper: "批量操作",
+      logicTip: "如果本题回答",
+      disableInputByDev: "编辑模式不支持输入",
+      itemSort: "选项排序",
+      // 标题组件国际化
+      titleComp: {
+        tName: "标题名称",
+        tNamePlaceHolder: "请输入标题文字（最多30个字）",
+        showTImg: "显示标题图片",
+        tImg: "标题图片",
+        tImgPlaceholder: "请输入图片URL",
+        tSize: "标题大小",
+        showTDesc: "显示标题描述",
+        tDesc: "标题描述",
+        tPosition: "位置(标题+描述)"
+      },
+      // 按钮组件
+      buttonComp: {
+        btnTitle: "按钮文字",
+        btnTitlePlaceholder: "请输入按钮文字（最多30个字）",
+        showIcon: "显示图标"
+      },
+      // 图片组件
+      ImageComp: {
+        imgSet: "图片设置"
+      },
+      // 回复组件
+      replyComp: {
+        selectReply: "选择问卷回复",
+        historyReply: "历史回复"
+      },
+      // 评分组件
+      rateComp: {
+        num: "数量",
+        isHalf: "允许半选",
+        numRange: "取值范围",
+        numRangeTip: "开始值可以选择0，结束值最小值为3"
+      },
+      // 分割线组件
+      dividerComp: {
+        dividerText: "分割线文本",
+        dividerType: "分割线类型"
+      },
+      // 共用组件
+      commonComp: {
+        position: "位置",
+        size: "大小",
+        title: "标题",
+        descOrRemark: "描述/备注",
+        inputPlaceholder: "输入框提示"
+      },
+      // 校验组件
+      validateComp: {
+        required: "必填",
+        customErrorTip: "自定义错误提示",
+        customErrorTipPlaceholder: "请输入自定义错误提示",
+        format: "格式",
+        formatPlaceholder: "请输入自定义正则表达式",
+        minSelect: "最少应选",
+        MaxSelect: "最多可选",
+        minVal: "最小值",
+        maxVal: "最大值"
+      },
+      // 预览组件
+      previewComp: {
+        formPreview: "表单预览",
+        Mobile: "移动端",
+        PC: "桌面端",
+        nullDataTip: "表单为空，请返回编辑器配置内容"
+      },
+      // 多图设置组件
+      imageSelection: {
+        MultiImageSettings: "多图设置",
+        addItem: "添加选项",
+        editItem: "修改选项",
+        title: "标题",
+        desc: "描述",
+        close: "关闭",
+        imgSet: "图片设置",
+        vote: "为TA投票",
+        voted: "您已投票",
+        minSelect: "请至少选择{size}项",
+        maxSelect: "最多只能选择{size}项"
+      }
+    },
+    project: {
+      questionnaireName: "问卷名称",
+      questionnaireNamePlaceholder: "请输入问卷名称",
+      collectionQuantity: "收集答卷数（份）",
+      status: "状态",
+      createTime: "创建时间",
+      operate: "操作",
+      stat: "答题数据",
+      setting: "问卷设置",
+      share: "答卷地址",
+      begin: "开始收集",
+      stop: "结束收集",
+      copy: "复制问卷",
+      copyTip: "是否需要复制该问卷?",
+      publishTip: "确定要发布该问卷吗？",
+      publishTipSuccess: "发布问卷成功",
+      stopTip: "确定要停止收集该问卷吗?",
+      stopTipSuccess: "停止收集成功"
+    },
+    reply: {
+      image: "图片",
+      belong: "所属问卷",
+      belongPlaceholder: "请选择绑定的项目名称",
+      replyTitle: "回复内容",
+      replyTitlePlaceholder: "请输入问卷回复名称",
+      remarkPlaceholder: "请输入备注"
+    },
+    recycle: {
+      questionnaireName: "问卷名称",
+      status: "问卷状态",
+      restore: "恢复",
+      restoreTip: "确认恢复该问卷吗",
+      deleteTip: "确认删除该问卷吗"
+    },
+    share: {
+      address: "答卷地址",
+      urlTip: "复制下面的问卷链接到QQ、Email等工具中直接发给用户",
+      copy: "复制地址",
+      copySuccess: "地址复制成功",
+      copyFailed: "地址复制失败，请手动复制",
+      open: "打开问卷",
+      qrCode: "二维码地址",
+      qrCodeTip: "通过手机扫一扫，或下载二维码，即可进行问卷数据收集",
+      downloadQrCode: "下载二维码",
+      unpublished: "尚未发布",
+      publish: "点击发布问卷"
+    },
+    setting: {
+      settingTitle: "问卷设置",
+      settingDesc: "配置问卷的收集规则",
+      submitSetting: "提交设置",
+      showTipWord: "显示提示文字",
+      showTipWordDefault: "提交成功",
+      jumpWebsite: "跳转网页地址",
+      jumpWebsitePlaceholder: "请输入提交后跳转的网页地址",
+      validationNumberAndName: "校验工号姓名",
+      validationNumberAndNamePlaceholder: "请输入工号姓名验证失败提示",
+      isEveryoneWriteOnce: "每人限填写一次",
+      isEveryoneDayWriteOnce: "每人每天限填写一次",
+      recycleSetting: "回收设置",
+      timedAndquantitative: "定时/定量收集表单",
+      collectTime: "收集时间",
+      timedNotEnabledPromptText: "未启用提示语",
+      timedDeactivatePromptText: "停用后提示语",
+      quantitativeCollect: "定量收集",
+      quantitativeCollectTotal: "定量收集数量",
+      timedEndPromptText: "收集完成提示语",
+      submitSuccessTip: "设置成功"
+    },
+    stat: {
+      refresh: "点击刷新",
+      orderNo: "序号",
+      listViewTab: "列表视图",
+      submitTime: "提交时间",
+      ipAddress: "IP地址",
+      completedTime: "完成时间",
+      source: "来源",
+      statViewTab: "统计视图",
+      recyclingOverview: "回收概览",
+      effectiveRecyclingQuantity: "有效回收数量",
+      totalViews: "总浏览量",
+      averageCompletionTime: "平均完成时间",
+      commonUsedDevices: "常用设备",
+      sourceChannel: "来源渠道",
+      dataAnalyzeTab: "数据分析",
+      dataAnalyzeOverview: "分析概览",
+      barChart: "柱状图",
+      pieChart: "饼图",
+      lineChart: "折线图",
+      voteRankTab: "投票排名",
+      voteRankOverview: "投票概览"
+    },
+    sample: {
+      name: "用户姓名",
+      employeeNo: "用户工号"
+    }
   }
 };

@@ -4,14 +4,14 @@
       <div class="survey-container">
         <!-- 卡片头部：统一使用 Element Plus 组件样式 -->
         <div class="card-header">
-          <h3 class="header-title">问卷属性设置</h3>
-          <p class="header-desc">配置问卷答卷时的收集规则</p>
+          <h3 class="header-title">{{ $t("survey.setting.settingTitle") }}</h3>
+          <p class="header-desc">{{ $t("survey.setting.settingDesc") }}</p>
         </div>
         <!-- 表单：补充校验、优化布局结构 -->
         <el-form ref="settingFormRef" :model="form" label-width="120px" class="setting-form">
           <!-- 提交设置区域 -->
           <el-divider border-style="dashed" content-position="left">
-            <h4>提交设置</h4>
+            <h4>{{ $t("survey.setting.submitSetting") }}</h4>
           </el-divider>
           <div class="submit-setting-layout">
             <!-- 左侧表单组 -->
@@ -19,7 +19,7 @@
               <!-- 显示提示文字 -->
               <el-form-item class="checkbox-input-group">
                 <el-checkbox v-model="setting.showPromptText" label="显示提示文字">
-                  <el-text>显示提示文字</el-text>
+                  <el-text>{{ $t("survey.setting.showTipWord") }}</el-text>
                   <el-input
                     v-model="form.submitPromptText"
                     placeholder="请填写提交成功反馈文字"
@@ -34,10 +34,10 @@
               <!-- 跳转网页地址 -->
               <el-form-item class="checkbox-input-group">
                 <el-checkbox v-model="setting.showSubmitJumpUrl" label="跳转网页地址">
-                  <el-text>跳转网页地址</el-text>
+                  <el-text>{{ $t("survey.setting.jumpWebsite") }}</el-text>
                   <el-input
                     v-model="form.submitJumpUrl"
-                    placeholder="请输入提交后跳转的网页地址"
+                    :placeholder="$t('survey.setting.jumpWebsitePlaceholder')"
                     :disabled="!setting.showSubmitJumpUrl"
                     class="inline-input"
                     maxlength="255"
@@ -50,10 +50,10 @@
               <!-- 校验工号姓名 -->
               <el-form-item class="checkbox-input-group">
                 <el-checkbox v-model="form.isValidEmployeeNo" label="校验工号姓名">
-                  <el-text>校验工号姓名</el-text>
+                  <el-text>{{ $t("survey.setting.validationNumberAndName") }}</el-text>
                   <el-input
                     v-model="form.validEmployeeNoPromptText"
-                    placeholder="请输入工号姓名验证失败提示"
+                    :placeholder="$t('survey.setting.validationNumberAndNamePlaceholder')"
                     :disabled="!form.isValidEmployeeNo"
                     class="inline-input"
                     maxlength="100"
@@ -69,33 +69,37 @@
                 <el-checkbox v-model="form.isPublicResult" label="公开反馈结果" />
               </el-form-item> -->
               <el-form-item>
-                <el-checkbox v-model="form.isEveryoneWriteOnce" label="每人限填写一次" />
+                <el-checkbox v-model="form.isEveryoneWriteOnce" :label="$t('survey.setting.isEveryoneWriteOnce')" />
               </el-form-item>
               <el-form-item>
-                <el-checkbox v-model="form.isEveryoneDayWriteOnce" label="每人每天限填写一次" />
+                <el-checkbox v-model="form.isEveryoneDayWriteOnce" :label="$t('survey.setting.isEveryoneDayWriteOnce')" />
               </el-form-item>
             </div>
           </div>
 
           <!-- 回收设置区域 -->
           <el-divider border-style="dashed" content-position="left">
-            <h4>回收设置</h4>
+            <h4>{{ $t("survey.setting.recycleSetting") }}</h4>
           </el-divider>
           <el-form-item>
             <div class="recycle-setting">
               <!-- 定时收集开关 -->
-              <el-checkbox v-model="setting.timingCollectForm" label="定时/定量收集表单" class="timing-switch" />
+              <el-checkbox
+                v-model="setting.timingCollectForm"
+                :label="$t('survey.setting.timedAndquantitative')"
+                class="timing-switch"
+              />
               <!-- 定时收集配置（条件渲染） -->
               <el-form v-if="setting.timingCollectForm" class="timing-config-form" :model="form">
                 <!-- 收集时间范围 -->
-                <el-form-item label="收集时间" class="timing-form-item">
+                <el-form-item :label="$t('survey.setting.collectTime')" class="timing-form-item">
                   &nbsp; &nbsp; &nbsp; &nbsp;
                   <el-date-picker
                     v-model="timingTime"
                     type="datetimerange"
-                    range-separator="至"
-                    start-placeholder="开始时间"
-                    end-placeholder="结束时间"
+                    :range-separator="$t('main.to')"
+                    :start-placeholder="$t('main.startTime')"
+                    :end-placeholder="$t('main.endTime')"
                     :disabled="!setting.timingCollectForm"
                     value-format="YYYY-MM-DD HH:mm:ss"
                     required
@@ -103,7 +107,7 @@
                 </el-form-item>
 
                 <!-- 未启用提示语 -->
-                <el-form-item label="未启用提示语" class="timing-form-item">
+                <el-form-item :label="$t('survey.setting.timedNotEnabledPromptText')" class="timing-form-item">
                   <el-input
                     v-model="form.timedNotEnabledPromptText"
                     :disabled="!setting.timingCollectForm"
@@ -113,7 +117,7 @@
                 </el-form-item>
 
                 <!-- 停用后提示语 -->
-                <el-form-item label="停用后提示语" class="timing-form-item">
+                <el-form-item :label="$t('survey.setting.timedDeactivatePromptText')" class="timing-form-item">
                   <el-input
                     v-model="form.timedDeactivatePromptText"
                     :disabled="!setting.timingCollectForm"
@@ -123,12 +127,16 @@
                 </el-form-item>
 
                 <!-- 定量收集开关 -->
-                <el-form-item label="定量收集" class="timing-form-item">
+                <el-form-item :label="$t('survey.setting.quantitativeCollect')" class="timing-form-item">
                   <el-switch v-model="setting.timingQuantitativeForm" :disabled="!setting.timingCollectForm" />
                 </el-form-item>
 
                 <!-- 定量配置（条件渲染） -->
-                <el-form-item v-if="setting.timingQuantitativeForm" label="定量填写数量" class="timing-form-item">
+                <el-form-item
+                  v-if="setting.timingQuantitativeForm"
+                  :label="$t('survey.setting.quantitativeCollectTotal')"
+                  class="timing-form-item"
+                >
                   <el-input-number
                     v-model="form.timedQuantitativeQuantity"
                     :min="0"
@@ -139,7 +147,11 @@
                 </el-form-item>
 
                 <!-- 收集完成提示语 -->
-                <el-form-item v-if="setting.timingQuantitativeForm" label="收集完成提示语" class="timing-form-item">
+                <el-form-item
+                  v-if="setting.timingQuantitativeForm"
+                  :label="$t('survey.setting.timedEndPromptText')"
+                  class="timing-form-item"
+                >
                   <el-input
                     v-model="form.timedEndPromptText"
                     :disabled="!setting.timingQuantitativeForm"
@@ -162,7 +174,7 @@
               @click="handleUpdateSetting"
               :loading="isSubmitting"
             >
-              保存
+              {{ $t("main.confirm") }}
             </el-button>
           </el-form-item>
         </el-form>
@@ -179,6 +191,9 @@ import { Check } from "@element-plus/icons-vue";
 import { useRoute } from "vue-router";
 const route = useRoute();
 const key = route.query.key as string | undefined;
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+
 // -------------------------- 1. 类型定义（提升类型安全） --------------------------
 /** 后端返回的问卷设置类型 */
 interface SurveySettingResponse {
@@ -301,7 +316,7 @@ const handleUpdateSetting = async () => {
   try {
     isSubmitting.value = true;
     await save(submitData); // 假设后端更新接口
-    ElMessage.success("问卷设置更新成功");
+    ElMessage.success(t("survey.setting.submitSuccessTip"));
   } finally {
     isSubmitting.value = false; // 无论成功失败，关闭加载
   }
@@ -443,7 +458,7 @@ $spacing-lg: 24px;
   display: flex;
   align-items: center;
   .inline-input {
-    width: 260px;
+    width: 340px;
     margin-left: $spacing-md;
   }
 }

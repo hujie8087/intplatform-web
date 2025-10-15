@@ -13,10 +13,10 @@
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
           <el-button type="primary" :icon="Plus" v-auth="['survey:reply:add']" @click="addSurveyReplyList('新增')">
-            新建回复
+            {{ $t("main.add") }}
           </el-button>
           <el-button type="success" :icon="Download" v-auth="['survey:reply:export']" @click="exportSurveyReply">
-            导出回复
+            {{ $t("main.downloadClick") }}
           </el-button>
           <el-button
             type="danger"
@@ -25,7 +25,7 @@
             v-auth="['survey:reply:remove']"
             @click="batchDelete(scope.selectedListIds)"
           >
-            批量删除
+            {{ $t("main.batchDelete") }}
           </el-button>
         </template>
         <!-- 表格操作 -->
@@ -36,35 +36,46 @@
             :icon="EditPen"
             v-auth="['survey:reply:edit']"
             @click="addSurveyReplyList('修改', scope.row)"
-            >修改</el-button
           >
+            {{ $t("main.edit") }}
+          </el-button>
           <el-button type="danger" :icon="Delete" link v-auth="['survey:reply:remove']" @click="deleteSurveyReplyList(scope.row)">
-            删除
+            {{ $t("main.delete") }}
           </el-button>
         </template>
       </ProTable>
       <el-dialog v-model="dialogShow" :title="dialogTitle" width="30%" class="survey-reply-dialog">
-        <el-form ref="surveyReplyFormRef" :model="surverReplyForm" :rules="rules" label-width="100">
-          <el-form-item label="归属问卷" prop="projectKey">
-            <el-select v-model="surverReplyForm.projectKey" placeholder="请选择绑定的项目名称" clearable filterable>
+        <el-form ref="surveyReplyFormRef" :model="surverReplyForm" :rules="rules" label-width="120">
+          <el-form-item :label="$t('survey.reply.belong')" prop="projectKey">
+            <el-select
+              v-model="surverReplyForm.projectKey"
+              :placeholder="$t('survey.reply.belongPlaceholder')"
+              clearable
+              filterable
+            >
               <el-option v-for="item in projectOption" :label="item.label" :value="item.value" :key="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item label="回复名称" prop="title">
-            <el-input v-model="surverReplyForm.title" placeholder="请输入问卷回复名称" clearable />
+          <el-form-item :label="$t('survey.reply.replyTitle')" prop="title">
+            <el-input v-model="surverReplyForm.title" :placeholder="$t('survey.reply.replyTitlePlaceholder')" clearable />
           </el-form-item>
-          <el-form-item label="回复内容">
+          <el-form-item :label="$t('survey.reply.image')">
             <UploadImg v-model:image-url="surverReplyForm.url" :file-size="5" width="100px" height="100px">
-              <template #tip> 上传图片最大为 5M </template>
+              <template #tip> {{ $t("main.uploadSizeErrorMsg", { size: "5M" }) }} </template>
             </UploadImg>
           </el-form-item>
-          <el-form-item label="备注">
-            <el-input v-model="surverReplyForm.remark" type="textarea" :rows="5" placeholder="请输入备注" />
+          <el-form-item :label="$t('main.remark')">
+            <el-input
+              v-model="surverReplyForm.remark"
+              type="textarea"
+              :rows="5"
+              :placeholder="$t('survey.reply.remarkPlaceholder')"
+            />
           </el-form-item>
         </el-form>
         <template #footer>
-          <el-button @click="resetForm(surveyReplyFormRef)">取消</el-button>
-          <el-button type="primary" @click="submitForm(surveyReplyFormRef)"> 确认 </el-button>
+          <el-button @click="resetForm(surveyReplyFormRef)">{{ $t("main.cancel") }}</el-button>
+          <el-button type="primary" @click="submitForm(surveyReplyFormRef)"> {{ $t("main.confirm") }} </el-button>
         </template>
       </el-dialog>
     </div>
@@ -83,21 +94,24 @@ import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 const proTable = ref();
 const fileUrl = import.meta.env.VITE_APP_BASE_FILE;
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+
 const columns = reactive([
   { type: "selection", fixed: "left", width: 50 },
-  { type: "index", label: "序号", width: 80 },
+  // { type: "index", label: "序号", width: 80 },
   {
     prop: "projectName",
-    label: "归属问卷"
+    label: "survey.reply.belong"
   },
   {
     prop: "title",
-    label: "回复",
+    label: "survey.reply.replyTitle",
     search: { el: "input", defaultValue: "" }
   },
   {
     prop: "url",
-    label: "图片",
+    label: "survey.reply.image",
     render: scope => {
       const src = `${fileUrl}${scope.row.url}`;
       return (
@@ -109,9 +123,9 @@ const columns = reactive([
   },
   {
     prop: "remark",
-    label: "备注"
+    label: "main.remark"
   },
-  { prop: "operation", label: "操作", width: 170, fixed: "right" }
+  { prop: "operation", label: "main.operation", width: 170, fixed: "right" }
 ]);
 const dataCallback = data => {
   return {
@@ -120,7 +134,7 @@ const dataCallback = data => {
   };
 };
 const dialogShow = ref(false);
-const dialogTitle = ref("新增问卷回复");
+const dialogTitle = ref();
 const surveyReplyFormRef = ref();
 type SurveyPopForm = {
   projectKey: string;
@@ -138,11 +152,11 @@ const surverReplyForm = reactive<SurveyPopForm>({
   type: "新增"
 });
 const rules = reactive({
-  title: [{ required: true, message: "请输入问卷回复名称", trigger: "blur" }],
+  title: [{ required: true, message: t("survey.reply.replyTitlePlaceholder"), trigger: "blur" }],
   projectKey: [
     {
       required: true,
-      message: "请选择绑定的项目名称",
+      message: t("survey.reply.belongPlaceholder"),
       trigger: "change"
     }
   ]
@@ -156,12 +170,12 @@ const addSurveyReplyList = (type, row?: any) => {
   dialogShow.value = true;
   surverReplyForm.type = type;
   if (type == "新增") {
-    dialogTitle.value = "新增问卷回复";
+    dialogTitle.value = t("main.add");
     delete surverReplyForm.id;
   } else {
     let { projectKey, title, replyDate, url, remark, id } = row;
     Object.assign(surverReplyForm, { projectKey, title, replyDate, url, remark, id });
-    dialogTitle.value = "修改问卷回复";
+    dialogTitle.value = t("main.edit");
   }
 };
 const submitForm = formEl => {
@@ -189,18 +203,18 @@ const resetForm = formEl => {
 
 // 批量删除
 const batchDelete = async (ids: number[]) => {
-  await useHandleData(deleteSurveyReply, ids, `批量删除问卷回复数据`);
+  await useHandleData(deleteSurveyReply, ids, t("main.deleteBatchMsg"));
   proTable.value?.clearSelection();
   proTable.value?.getTableList();
 };
 // 删除单条
 const deleteSurveyReplyList = async params => {
-  await useHandleData(deleteSurveyReply, params.id.toString(), `删除【${params.title}】这条数据`);
+  await useHandleData(deleteSurveyReply, params.id.toString(), t("main.deleteMsg", { title: params.title }));
   proTable.value?.getTableList();
 };
 const exportSurveyReply = async () => {
   const baseUrl = import.meta.env.VITE_API_URL;
-  ElMessageBox.confirm("确认导出问卷回复?", "温馨提示", { type: "warning" }).then(() =>
+  ElMessageBox.confirm(t("main.exportMsg"), t("main.tips"), { type: "warning" }).then(() =>
     useDownload(`${baseUrl}survey/project/reply/export`, "回复列表", true, ".xlsx", "post", proTable.value?.searchParam)
   );
 };

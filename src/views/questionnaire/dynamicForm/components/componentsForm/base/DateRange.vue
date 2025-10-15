@@ -3,20 +3,20 @@
     <el-date-picker
       style="width: 330px"
       type="daterange"
-      range-separator="至"
+      :range-separator="$t('main.to')"
       :disabled="isDev && isSelected"
       v-model="dataValue"
       value-format="YYYY-MM-DD"
       @focus="handleFocus"
       @blur="inputBlur"
-      :start-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '开始日期'"
-      :end-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '结束日期'"
+      :start-placeholder="isDev && isSelected ? $t('survey.form.disableInputByDev') : placeholder || $t('main.startTime')"
+      :end-placeholder="isDev && isSelected ? $t('survey.form.disableInputByDev') : placeholder || $t('main.endTime')"
     ></el-date-picker>
   </div>
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { disableInputByDev, delayTime } from "../../compConfig";
+import { delayTime } from "../../compConfig";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const emit = defineEmits(["compFocus"]);
 const compStore = useSelectCompStore();

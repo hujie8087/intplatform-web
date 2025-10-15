@@ -1,6 +1,6 @@
 <template>
   <div class="setting-item h-42">
-    <el-text class="mx-1" size="default">必填</el-text>
+    <el-text class="mx-1" size="default">{{ $t("survey.form.validateComp.required") }}</el-text>
     <el-switch size="default" v-model="comp.isRequired" @change="handleChangeInput($event)" />
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="setting-item h-42">
-    <el-text class="mx-1" size="default">水印</el-text>
+    <el-text class="mx-1" size="default">{{ $t("survey.form.waterMarker") }}</el-text>
     <el-switch size="default" v-model="form.displayWaterMark" @change="changeValue($event)" />
   </div>
   <el-input
@@ -8,7 +8,7 @@
     class="mb-10"
     :bordered="false"
     v-if="compStore.currentCompConfig && form.displayWaterMark"
-    placeholder="请输入水印（最多15个字）"
+    :placeholder="$t('survey.form.waterMarkerPlaceholder')"
     v-model="form.waterMarkText"
     @input="handleChangeInput"
     :maxlength="15"

@@ -11,15 +11,12 @@
         :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
       >
         <template #tableHeader>
-          <el-button type="warning" :icon="Download" @click="exportFile">批量导出</el-button>
+          <el-button type="warning" :icon="Download" @click="exportFile">{{ $t("main.download") }}</el-button>
         </template>
         <template #operation="scope">
-          <el-tooltip placement="top" effect="dark" content="查看问卷">
+          <el-tooltip placement="top" effect="dark" :content="$t('main.view')">
             <el-button link type="success" :icon="View" @click="showDetail(scope.row)" />
           </el-tooltip>
-          <!-- <el-tooltip placement="top" effect="dark" content="导出结果">
-            <el-button link type="primary" :icon="Document" @click="showDetail(scope.row)" />
-          </el-tooltip> -->
         </template>
       </ProTable>
     </div>
@@ -32,22 +29,25 @@ import ProTable from "@/components/ProTable/index.vue";
 import { getAnswerList, exportAnswerResult } from "@/api/modules/questionnaire/answer";
 import { View, Download } from "@element-plus/icons-vue";
 import { useRoute, useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+
 const route = useRoute();
 const key = route.query.key as string;
 const router = useRouter();
+const { t } = useI18n();
 
 const columns = reactive([
   { type: "selection", label: "", width: 80 },
-  { prop: "serialNumber", label: "序号", width: 120, align: "center" },
-  { prop: "submitRequestIp", label: "回答IP", align: "left" },
+  { prop: "serialNumber", label: "survey.stat.orderNo", width: 120, align: "center" },
+  { prop: "submitRequestIp", label: "survey.stat.ipAddress", align: "left" },
   {
     prop: "completeTime",
-    label: "完成时间/秒",
+    label: "survey.stat.completedTime",
     align: "left"
   },
   {
     prop: "submitOs",
-    label: "来源",
+    label: "survey.stat.source",
     align: "left",
     render: scope => {
       let submitOs = scope.row.submitOs;
@@ -62,11 +62,21 @@ const columns = reactive([
   {
     prop: "createTime",
     sortable: true,
-    search: { el: "date-picker", span: 2, props: { type: "datetimerange", valueFormat: "YYYY-MM-DD HH:mm:ss" } },
-    label: "提交时间",
+    search: {
+      el: "date-picker",
+      span: 2,
+      props: {
+        type: "datetimerange",
+        startPlaceholder: t("main.startTime"),
+        endPlaceholder: t("main.endTime"),
+        rangeSeparator: t("main.to"),
+        valueFormat: "YYYY-MM-DD HH:mm:ss"
+      }
+    },
+    label: "survey.stat.submitTime",
     align: "left"
   },
-  { prop: "operation", label: "操作" }
+  { prop: "operation", label: "main.operation" }
 ]);
 const treeFilterValues = reactive({ pageNum: 1, pageSize: 20 });
 const dataCallback = (data: any) => {

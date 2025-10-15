@@ -11,7 +11,7 @@
       <div id="risk" class="map"></div>
     </template>
     <template v-else>
-      <div id="meal" class="map"></div>
+      <mealService />
     </template>
     <!-- 顶部导航 -->
     <div class="logistics-dashboard-header">
@@ -44,8 +44,13 @@
         </div>
       </div>
     </div>
-    <!-- 主体区域：动态组件 -->
-    <component ref="childCompRef" :is="pages[activePage]" :set-function="setMapFun" @child-click-event="childEvent" />
+    <component
+      v-if="activePage !== 'meal'"
+      ref="childCompRef"
+      :is="pages[activePage]"
+      :set-function="setMapFun"
+      @child-click-event="childEvent"
+    />
     <el-dialog v-model="dialogShow" width="60%" class="person-info-dialog">
       <template #title>
         <div class="dialog-title">
@@ -67,7 +72,7 @@ import PagePerson from "./personInfo/index.vue";
 import MaintenanceReport from "./maintenanceReport/index.vue";
 import RiskInspection from "./riskInspection/index.vue";
 import mealService from "./mealService/index.vue";
-import { useMap, maintainMap, riskMap, mealMap, showDailogFun } from "./utils/useMap";
+import { useMap, maintainMap, riskMap, showDailogFun } from "./utils/useMap";
 import { getRegionAllList } from "@/api/modules/system/drawArea";
 import enlargeImg from "./images/fangda.png";
 import narrowImg from "./images/suoxiao.png";
@@ -83,15 +88,12 @@ const pages = {
 const { initializeMap, personZoom } = useMap(); // 人员信息的地图
 const { initMaintainMap, maintainZoom } = maintainMap(); // 维修统计的地图
 const { initRsikMap, riskZoom } = riskMap(); // 排查隐患地图
-const { initMealMap, setMarker, setTrucks, mealZoom } = mealMap(); // 报餐送餐
-let setMapFun = { setMarker, setTrucks };
 const { getCardDataFun, dialogShow, dialogTitle, deptPath, personBarChart } = showDailogFun();
 // 各个页面地图初始化方法
 const objFun = {
   person: initializeMap,
   maintenance: initMaintainMap,
-  risk: initRsikMap,
-  meal: initMealMap
+  risk: initRsikMap
 };
 const activePage = ref("person"); // 当前显示哪个页面
 const regionList = reactive([]);
@@ -99,6 +101,9 @@ const clickTab = type => {
   // 页签切换
   activePage.value = type;
   nextTick(() => {
+    if (type == "meal") return;
+    console.log(type, "type");
+
     const initMap = objFun[type];
     initMap(regionList);
   });

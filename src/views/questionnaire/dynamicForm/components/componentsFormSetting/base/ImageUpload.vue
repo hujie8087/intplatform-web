@@ -1,9 +1,9 @@
 <template>
   <div class="setting-item">
-    <el-text size="default" class="block-title">图片设置</el-text>
+    <el-text size="default" class="block-title">{{ $t("survey.form.ImageComp.imgSet") }}</el-text>
     <div class="setting-item-img">
       <UploadImg class="mb-10" :api="uploadSurvey" v-model:image-url="imageUrl" :file-size="5" width="100px" height="100px">
-        <template #tip> 上传图片最大为 5M </template>
+        <template #tip> {{ $t("main.uploadSizeErrorMsg", { size: "3m" }) }} </template>
       </UploadImg>
     </div>
   </div>

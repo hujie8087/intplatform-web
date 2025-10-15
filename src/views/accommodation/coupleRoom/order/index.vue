@@ -12,7 +12,7 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
-          <el-button type="warning" :icon="Download">导出</el-button>
+          <el-button type="warning" :icon="Download" @click="exportHandler">导出</el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
@@ -133,10 +133,11 @@ import { computed } from "vue";
 import { ElMessage } from "element-plus";
 import { getUserInfoByUsername } from "@/api/modules/system/user";
 import { sendMessage } from "@/api/modules/system/notice";
+import { useDownload } from "@/hooks/useDownload";
 
 const userStore = useUserStore();
 const username = computed(() => userStore.userInfo.user.nickName);
-
+const baseUrl = import.meta.env.VITE_API_URL;
 const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
   if (newParams.startTime) {
@@ -349,6 +350,21 @@ const handleAuditSubmit = async () => {
   } else {
     ElMessage.error("请填写理由");
   }
+};
+
+const exportHandler = async () => {
+  let newParams = JSON.parse(JSON.stringify(proTable.value?.searchParam));
+  if (newParams.startTime) {
+    newParams.beginStartTime = newParams.startTime[0];
+    newParams.endStartTime = newParams.startTime[1];
+    delete newParams.startTime;
+  }
+  if (newParams.endTime) {
+    newParams.beginEndTime = newParams.endTime[0];
+    newParams.endEndTime = newParams.endTime[1];
+    delete newParams.endTime;
+  }
+  await useDownload(`${baseUrl}/coupleRoom/room/order/export`, "客房订单", true, ".xlsx", "post", newParams);
 };
 
 // 退款

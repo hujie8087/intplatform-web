@@ -400,5 +400,280 @@ export default {
       // KitchenPrepping	餐厅备餐中	Persiapan Dapur
       // OutForDelivery	取餐配送中	Dalam Pengiriman
     }
+  },
+  survey: {
+    statusOptions: {
+      unpublished: "Belum Diterbitkan",
+      inCollection: "Mengumpulkan",
+      stopped: "Dihentikan"
+    },
+    form: {
+      tab: {
+        questionBank: "Bank Soal",
+        sample: "Conto h",
+        setting: "Penga turan",
+        publish: "Publik asikan",
+        stat: "Statisti k"
+      },
+      options: {
+        left: "Kiri",
+        center: "Tengah",
+        right: "Kanan",
+        small: "Kecil",
+        middle: "Sedang",
+        large: "Besar",
+        solid: "Garis Lurus",
+        dashed: "Garis Putus-putus"
+      },
+      def: {
+        description: "Deskripsi",
+        buttonText: "Kirim",
+        dividerValue: "Pemisah",
+        tName: "Nama Judul",
+        defTDesc:
+          "Untuk memberikan layanan yang lebih baik, kami harap Anda dapat meluangkan beberapa menit untuk berbagi pengalaman dan saran dengan kami. Kami menghargai pendapat berharga setiap pengguna dan menantikan partisipasi Anda! Mari mulai sekarang!",
+        name: "Silakan masukkan nama",
+        gender: "Silakan pilih jenis kelamin",
+        phone: "Silakan masukkan nomor HP",
+        telePhone: "Silakan masukkan nomor telepon tetap",
+        workNumber: "Silakan masukkan nomor karyawan",
+        email: "Silakan masukkan email",
+        wx: "Silakan masukkan ID WeChat",
+        select: "Silakan pilih",
+        option: "Pilihan",
+        other: "Lainnya",
+        optionOne: "Pilihan Satu",
+        optionTwo: "Pilihan Dua",
+        optionThree: "Pilihan Tiga",
+        batchDataPlaceholder: "Silakan masukkan data operasi batch (satu data per baris)"
+      },
+      showComp: "Tampilan",
+      title: "Judul",
+      image: "Gambar",
+      reply: "Balasan",
+      personaComp: "Info Pribadi",
+      name: "Nama",
+      workNumber: "NIP", // NIP是Nomor Induk Pegawai的缩写，印尼常用
+      phone: "Telepon",
+      wx: "WeChat",
+      email: "Email",
+      baseComp: "Dasar",
+      input: "Input",
+      textarea: "Textarea",
+      radio: "Radio",
+      checkout: "Checkbox",
+      select: "Pilihan",
+      number: "Angka",
+      imageMultiSelect: "PilihGambar",
+      rankComp: "Penilaian",
+      rate: "Rating",
+      nps: "NPS",
+      selectRate: "PilihRating",
+      dateComp: "Tanggal&Waktu",
+      date: "PilihTanggal",
+      dateRange: "RentangTanggal",
+      time: "PilihWaktu",
+      timeRange: "RentangWaktu",
+      layoutComp: "Tata Letak",
+      divider: "Pemisah",
+      advancedComp: "Lanjutan",
+      sign: "TandaTangan",
+      uploadImg: "UnggahGambar",
+      // --其他的国际化，上面都是表单组件
+      preview: "Pratinjau",
+      submit: "Kirim",
+      emptyFormTip: "Klik atau seret soal dari kiri ke area ini",
+      formSetting: "Pengaturan Formulir",
+      baseSetting: "Pengaturan Dasar",
+      formVerify: "Validasi Formulir",
+      globalSetting: "Pengaturan Global Formulir",
+      compDesc: "Deskripsi Komponen",
+      compSerialNum: "Nomor Urut Komponen",
+      waterMarker: "Tanda Air",
+      waterMarkerPlaceholder: "Masukkan tanda air (maks 15 karakter)",
+      logic: "Logika",
+      copy: "Salin",
+      addItem: "Tambah Item",
+      addOther: "Tambah Lainnya",
+      batchOper: "Operasi Batch",
+      logicTip: "Jika jawaban untuk soal ini",
+      disableInputByDev: "Input tidak didukung dalam mode edit",
+      itemSort: "Penyortiran Opsi",
+      // 标题组件国际化
+      titleComp: {
+        tName: "Nama Judul",
+        tNamePlaceHolder: "Masukkan teks judul (maks 30 karakter)",
+        showTImg: "Tampilkan gambar judul",
+        tImg: "Gambar judul",
+        tImgPlaceholder: "Masukkan URL gambar",
+        tSize: "Ukuran judul",
+        showTDesc: "Tampilkan deskripsi judul",
+        tDesc: "Deskripsi judul",
+        tPosition: "Posisi (judul + deskripsi)"
+      },
+      // 按钮组件
+      buttonComp: {
+        btnTitle: "Teks Tombol",
+        btnTitlePlaceholder: "Masukkan teks tombol (maks 30 karakter)",
+        showIcon: "Tampilkan Ikon"
+      },
+      // 图片组件
+      ImageComp: {
+        imgSet: "Pengaturan Gambar"
+      },
+      // 回复组件
+      replyComp: {
+        selectReply: "Pilih Balasan Kuesioner",
+        historyReply: "Balasan Riwayat"
+      },
+      // 评分组件
+      rateComp: {
+        num: "Jumlah",
+        isHalf: "Izinkan pilihan setengah",
+        numRange: "Rentang nilai",
+        numRangeTip: "Nilai awal bisa 0, nilai akhir minimal 3"
+      },
+      // 分割线组件
+      dividerComp: {
+        dividerText: "Teks Pemisah",
+        dividerType: "Jenis Pemisah"
+      },
+      // 共用组件
+      commonComp: {
+        position: "Posisi",
+        size: "Ukuran",
+        title: "Judul",
+        descOrRemark: "Deskripsi/Catatan",
+        inputPlaceholder: "Petunjuk Kotak Input"
+      },
+      // 校验组件
+      validateComp: {
+        required: "Wajib diisi",
+        customErrorTip: "Petunjuk Kesalahan Kustom",
+        customErrorTipPlaceholder: "Masukkan petunjuk kesalahan kustom",
+        format: "Format",
+        formatPlaceholder: "Masukkan ekspresi reguler kustom",
+        minSelect: "Pilihan minimum",
+        MaxSelect: "Pilihan maksimum",
+        minVal: "Nilai minimum",
+        maxVal: "Nilai maksimum"
+      },
+      // 预览组件
+      previewComp: {
+        formPreview: "Pratinjau Formulir",
+        Mobile: "Mobile",
+        PC: "Desktop",
+        nullDataTip: "Formulir kosong, silakan kembali ke editor untuk mengkonfigurasi konten"
+      },
+      imageSelection: {
+        MultiImageSettings: "Pengaturan Gambar Banyak",
+        addItem: "Tambah Opsi",
+        editItem: "Edit Opsi",
+        title: "Judul",
+        desc: "Deskripsi",
+        close: "Tutup",
+        imgSet: "Pengaturan Gambar",
+        vote: "Memilih",
+        voted: "Telah Memilih",
+        minVal: "Minimum {size} item diperlukan",
+        maxVal: "Maksimum {size} item diizinkan"
+      }
+    },
+    project: {
+      questionnaireName: "Judul",
+      questionnaireNamePlaceholder: "Silakan masuk",
+      collectionQuantity: "Jumlah Koleksi",
+      status: "Status",
+      stat: "Statistik",
+      setting: "Pengaturan",
+      share: "Bagikan",
+      begin: "Mulai",
+      stop: "Berhenti",
+      copy: "Salin",
+      copyTip: "Apakah Anda ingin menyalin kuesioner ini?",
+      publishTip: "Apakah Anda yakin ingin menerbitkan kuesioner ini?",
+      publishTipSuccess: "Kuesioner berhasil diterbitkan",
+      stopTip: "Apakah Anda yakin ingin menghentikan pengumpulan kuesioner ini?",
+      stopTipSuccess: "Pengumpulan berhasil dihentikan"
+    },
+    reply: {
+      image: "Gambar",
+      belong: "Milik",
+      belongPlaceholder: "Silakan pilih",
+      replyTitle: "Judul Balasan",
+      replyTitlePlaceholder: "Silakan masuk",
+      remarkPlaceholder: "Silakan masuk"
+    },
+    recycle: {
+      questionnaireName: "Judul",
+      deleteTime: "Waktu Penghapusan",
+      status: "Status",
+      restore: "Pulihkan",
+      restoreTip: "Apakah Anda yakin ingin memulihkan kuesioner ini?",
+      deleteTip: "Apakah Anda yakin ingin menghapus kuesioner ini?"
+    },
+    share: {
+      address: "Alamat Kuesioner",
+      urlTip: "Salin tautan kuesioner di bawah ke QQ, Email dan alat lainnya untuk dikirim langsung ke pengguna",
+      copy: "Salin Alamat",
+      copySuccess: "Alamat berhasil disalin",
+      copyFailed: "Gagal menyalin alamat, silakan salin secara manual",
+      open: "Buka Kuesioner",
+      qrCode: "Alamat Kode QR",
+      qrCodeTip: "Pindai dengan ponsel Anda atau unduh kode QR untuk mengumpulkan data kuesioner",
+      downloadQrCode: "Unduh Kode QR",
+      unpublished: "Belum Diterbitkan",
+      publish: "Klik untuk Menerbitkan Kuesioner",
+      publishTip: ""
+    },
+    setting: {
+      settingTitle: "Pengaturan Kuesioner",
+      settingDesc: "Konfigurasikan aturan pengumpulan kuesioner",
+      submitSetting: "Kirim Pengaturan",
+      showTipWord: "Tampilkan teks petunjuk",
+      showTipWordDefault: "Pengiriman berhasil",
+      jumpWebsite: "Alamat situs web untuk dialihkan",
+      jumpWebsitePlaceholder: "Silakan masukkan alamat situs web untuk dialihkan setelah pengiriman",
+      validationNumberAndName: "Validasi ID karyawan dan nama",
+      validationNumberAndNamePlaceholder: "Silakan masukkan petunjuk untuk validasi ID karyawan dan nama yang gagal",
+      isEveryoneWriteOnce: "Setiap orang hanya boleh mengisi sekali",
+      isEveryoneDayWriteOnce: "Setiap orang hanya boleh mengisi sekali per hari",
+      recycleSetting: "Pengaturan Pengumpulan",
+      timedAndquantitative: "Pengumpulan terjadwal/kuantitatif",
+      collectTime: "Waktu pengumpulan",
+      timedNotEnabledPromptText: "Teks petunjuk ketika tidak diaktifkan",
+      timedDeactivatePromptText: "Teks petunjuk setelah dinonaktifkan",
+      quantitativeCollect: "Pengumpulan kuantitatif",
+      quantitativeCollectTotal: "Jumlah total untuk pengumpulan kuantitatif",
+      timedEndPromptText: "Teks petunjuk ketika pengumpulan selesai",
+      submitSuccessTip: "Pengaturan berhasil disimpan"
+    },
+    stat: {
+      refresh: "Klik untuk memuat ulang",
+      orderNo: "Nomor Urut",
+      listViewTab: "Tampilan Daftar",
+      submitTime: "Waktu Pengiriman",
+      ipAddress: "Alamat IP",
+      completedTime: "Waktu Penyelesaian",
+      source: "Sumber",
+      statViewTab: "Tampilan Statistik",
+      recyclingOverview: "Ringkasan Pengumpulan",
+      effectiveRecyclingQuantity: "Jumlah Pengumpulan Efektif",
+      totalViews: "Total Tampilan",
+      averageCompletionTime: "Rata-rata Waktu Penyelesaian",
+      commonUsedDevices: "Perangkat yang Sering Digunakan",
+      sourceChannel: "Saluran Sumber",
+      dataAnalyzeTab: "Analisis Data",
+      dataAnalyzeOverview: "Ringkasan Analisis",
+      barChart: "Grafik Batang",
+      pieChart: "Grafik Lingkaran",
+      lineChart: "Grafik Garis",
+      voteRankTab: "Peringkat Voting",
+      voteRankOverview: "Ringkasan Voting"
+    },
+    sample: {
+      name: "Nama Pengguna",
+      employeeNo: "ID Karyawan"
+    }
   }
 };

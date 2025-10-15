@@ -1,7 +1,7 @@
 <template>
   <div class="setting-item">
     <div style="margin-bottom: 10px">
-      <el-text size="default">选项排序</el-text>
+      <el-text size="default">{{ $t("survey.form.itemSort") }}</el-text>
     </div>
     <draggable
       v-if="comp.dataList.length"

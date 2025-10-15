@@ -8,7 +8,7 @@
     step="00:01"
     end="23:59"
     format="hh:mm A"
-    :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
+    :placeholder="isDev && isSelected ? $t('survey.form.disableInputByDev') : placeholder || '提示信息'"
     value-format="HH:mm:ss"
     @focus="handleFocus"
     @blur="inputBlur"
@@ -16,7 +16,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { disableInputByDev, delayTime } from "../../compConfig";
+import { delayTime } from "../../compConfig";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const emit = defineEmits(["compFocus"]);
 const compStore = useSelectCompStore();

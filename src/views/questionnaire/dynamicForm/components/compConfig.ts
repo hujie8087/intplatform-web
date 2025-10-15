@@ -89,7 +89,6 @@ export const JustShowCompType: CompType[] = [
   CompType.paging,
   CompType.button
 ];
-
 // 有设置操作的类型
 export const HasSettingTypeList = ["radio", "checkout", "select"];
 // 没有添加其它选项的类型
@@ -115,7 +114,7 @@ export const isRate: CompType[] = [CompType.rate];
 export const isNPS: CompType[] = [CompType.nps, CompType.selectRate];
 export const isButton: CompType[] = [CompType.button];
 
-export const getCompConfig = (type: CompType) => {
+export const getCompConfig = (type: CompType, t: any) => {
   let compConfig: any = {};
 
   if (dataListType.includes(type)) {
@@ -125,18 +124,18 @@ export const getCompConfig = (type: CompType) => {
         layoutType: "vertical",
         dataList: [
           {
-            label: "选项一",
-            value: "选项一",
+            label: t("survey.form.def.optionOne"),
+            value: t("survey.form.def.optionOne"),
             _index: 0
           },
           {
-            label: "选项二",
-            value: "选项二",
+            label: t("survey.form.def.optionTwo"),
+            value: t("survey.form.def.optionTwo"),
             _index: 1
           },
           {
-            label: "选项三",
-            value: "选项三",
+            label: t("survey.form.def.optionThree"),
+            value: t("survey.form.def.optionThree"),
             _index: 2
           }
         ]
@@ -148,9 +147,9 @@ export const getCompConfig = (type: CompType) => {
         dataValue: [],
         dataList: [
           {
-            label: "标题",
-            value: "标题",
-            desc: "描述",
+            label: t("survey.form.imageSelection.title"),
+            value: t("survey.form.imageSelection.title"),
+            desc: t("survey.form.imageSelection.desc"),
             imageUrl: "",
             id: uuidv4()
           }
@@ -165,7 +164,7 @@ export const getCompConfig = (type: CompType) => {
       ...compConfig,
       isRequired: false,
       isCustomErrorMessage: false,
-      description: "描述"
+      description: t("survey.form.def.description")
     };
   }
 
@@ -175,7 +174,7 @@ export const getCompConfig = (type: CompType) => {
       ...compConfig,
       type,
       title: "提交按钮",
-      buttonText: "提交",
+      buttonText: t("survey.form.def.buttonText"),
       size: "large",
       position: "center",
       buttonIconShowBool: true
@@ -192,7 +191,7 @@ export const getCompConfig = (type: CompType) => {
           pageSubDescription: ""
         }
       : {
-          dividerValue: "分割线",
+          dividerValue: t("survey.form.def.dividerValue"),
           position: "center",
           dividerBorderType: "solid"
         };
@@ -208,7 +207,7 @@ export const getCompConfig = (type: CompType) => {
   if (hasPlaceholderType.includes(type)) {
     compConfig = {
       ...compConfig,
-      placeholder: getCompPlaceHolderDataByType(type) || "请输入"
+      placeholder: getCompPlaceHolderDataByType(type, t) || t("main.inputPlaceholder")
     };
   }
 
@@ -216,10 +215,9 @@ export const getCompConfig = (type: CompType) => {
   if (isFormTitle.includes(type)) {
     compConfig = {
       type,
-      titleValue: "标题名称",
+      titleValue: t("survey.form.def.tName"),
       titleSize: "middle",
-      titleDescription:
-        "为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，我们非常重视每位 用户的宝贵意见，期待您的参与！现在我们就马上开始吧！",
+      titleDescription: t("survey.form.def.defTDesc"),
       titleImageUrl: "bg.png",
       titleDescriptionShow: true,
       titleImageShow: true,
@@ -280,21 +278,21 @@ export const getCompConfig = (type: CompType) => {
   return compConfig;
 };
 
-export const getCompPlaceHolderDataByType = (type: string) => {
+export const getCompPlaceHolderDataByType = (type: string, t: any) => {
   const placeholderObject: any = {
-    name: "请输入姓名",
-    gender: "请选择性别",
-    phone: "请输入手机号",
-    telePhone: "请输入固话",
-    workNumber: "请输入工号",
-    email: "请输入邮件",
-    wx: "请输入微信",
-    select: "请选择"
+    name: t("survey.form.def.name"),
+    gender: t("survey.form.def.gender"),
+    phone: t("survey.form.def.phone"),
+    telePhone: t("survey.form.def.telePhone"),
+    workNumber: t("survey.form.def.workNumber"),
+    email: t("survey.form.def.email"),
+    wx: t("survey.form.def.wx"),
+    select: t("survey.form.def.select")
   };
   return placeholderObject[type];
 };
 
-export const getDefaultConfig = (type: CompType | CompType[], ignoreDefault: boolean = false) => {
+export const getDefaultConfig = (type: CompType | CompType[], ignoreDefault: boolean = false, t: any) => {
   let configData = ignoreDefault
     ? {}
     : {
@@ -302,14 +300,14 @@ export const getDefaultConfig = (type: CompType | CompType[], ignoreDefault: boo
       };
   if (Array.isArray(type)) {
     type.map(itemType => {
-      const compConfig = getCompConfig(itemType);
+      const compConfig = getCompConfig(itemType, t);
       configData = {
         ...configData,
         ...compConfig
       };
     });
   } else {
-    const compConfig = getCompConfig(type);
+    const compConfig = getCompConfig(type, t);
     configData = {
       ...configData,
       ...compConfig
@@ -323,8 +321,6 @@ export const getDefaultConfig = (type: CompType | CompType[], ignoreDefault: boo
 export const verifyRegularityCompList = () => {
   return [CompType.input];
 };
-// 不需要填的标识
-export const optionalType = ["formTitle", "img", "divider", "paging"];
 
 export function cleanData<T>(obj: T, seen = new WeakSet()): T {
   // 处理 ref / reactive

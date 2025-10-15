@@ -1,6 +1,6 @@
 <template>
   <div class="comp-img">
-    <el-image class="img_box" :src="getImageUrl(props.dataValue)">
+    <el-image class="img_box" :src="getImageUrl(props.value)">
       <template #error>
         <div class="image-slot">
           <el-icon style="font-size: 80px"><icon-picture /></el-icon>
@@ -8,10 +8,15 @@
       </template>
     </el-image>
 
-    <el-button style="margin-top: 10px" v-if="isDev && !props.dataValue" @click="openDialog" type="primary"
-      >选择问卷回复</el-button
+    <el-button style="margin-top: 10px" v-if="isDev && !props.value" @click="openDialog" type="primary">{{
+      $t("survey.form.replyComp.selectReply")
+    }}</el-button>
+    <el-dialog
+      v-model="dialogVisible"
+      :style="{ top: `${editorScrollInfo.scrollTop}px` }"
+      :title="$t('survey.form.replyComp.historyReply')"
+      width="500"
     >
-    <el-dialog v-model="dialogVisible" :style="{ top: `${editorScrollInfo.scrollTop}px` }" title="历史问卷回复" width="500">
       <div class="item-container">
         <!-- 元素1 -->
         <div
@@ -39,8 +44,8 @@
       </div>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="selectData"> 选择 </el-button>
+          <el-button @click="dialogVisible = false">{{ $t("main.cancel") }}</el-button>
+          <el-button type="primary" @click="selectData"> {{ $t("main.confirm") }} </el-button>
         </div>
       </template>
     </el-dialog>
@@ -58,7 +63,7 @@ const compStore = useSelectCompStore();
 const filePath = import.meta.env.VITE_APP_BASE_FILE;
 interface Props {
   id: string;
-  dataValue: string;
+  value: string;
   alt?: string;
   isDev: boolean;
   editorScrollInfo: any;
@@ -91,7 +96,7 @@ const selectData = () => {
   dialogVisible.value = false;
   // 修改数据
   setTimeout(() => {
-    compStore.updateCurrentComp({ dataValue: selectedItem.value?.url, id: props.id });
+    compStore.updateCurrentComp({ value: selectedItem.value?.url, id: props.id });
   }, delayTime);
 };
 

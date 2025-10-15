@@ -1,8 +1,13 @@
 <template>
   <div class="setting-item h-50">
-    <el-text size="default">大小</el-text>
-    <el-select size="default" v-model="comp.size" @change="handleChange" placeholder="Select" style="width: 120px">
-      <el-option v-for="item in orientationList" :key="item.value" :label="item.label" :value="item.value" />
+    <el-text size="default">{{ $t("survey.form.commonComp.size") }}</el-text>
+    <el-select size="default" v-model="comp.size" @change="handleChange" style="width: 120px">
+      <el-option
+        v-for="item in orientationList"
+        :key="item.value"
+        :label="$t(`survey.form.options.${item.label}`)"
+        :value="item.value"
+      />
     </el-select>
   </div>
 </template>

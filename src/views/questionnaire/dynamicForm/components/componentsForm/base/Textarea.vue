@@ -8,14 +8,13 @@
       class="item-comp"
       @focus="handleFocus"
       @blur="inputBlur"
-      :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
+      :placeholder="isDev && isSelected ? $t('survey.form.disableInputByDev') : placeholder || '提示信息'"
     ></el-input>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { disableInputByDev } from "../../compConfig";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { delayTime } from "../../compConfig";
 const emit = defineEmits(["compFocus"]);

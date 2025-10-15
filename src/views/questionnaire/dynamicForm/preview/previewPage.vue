@@ -15,11 +15,11 @@
     >
       <template #header="{ titleId, titleClass }">
         <div class="drawer-header">
-          <span :id="titleId" :class="titleClass">表单预览</span>
+          <span :id="titleId" :class="titleClass">{{ $t("survey.form.previewComp.formPreview") }}</span>
           <div class="controls">
             <el-radio-group size="default" v-model="previewType">
-              <el-radio-button label="Phone">移动端</el-radio-button>
-              <el-radio-button label="PC">桌面端</el-radio-button>
+              <el-radio-button label="Phone">{{ $t("survey.form.previewComp.Mobile") }}</el-radio-button>
+              <el-radio-button label="PC">{{ $t("survey.form.previewComp.PC") }}</el-radio-button>
             </el-radio-group>
           </div>
         </div>
@@ -84,7 +84,7 @@
           </div>
           <div v-else class="no-data">
             <img src="@/assets/images/form-editor/no_data.svg" alt="" />
-            <div class="description">表单为空，请返回编辑器配置内容</div>
+            <div class="description">{{ $t("survey.form.previewComp.nullDataTip") }}</div>
           </div>
           <SupportComp />
         </el-watermark>
@@ -98,8 +98,8 @@ import { ref, watch, reactive, nextTick } from "vue";
 import { Check } from "@element-plus/icons-vue";
 import FormComponent from "../components/componentsForm/index.vue";
 import SupportComp from "./component/SupportComp.vue";
-import { useSelectCompStore } from "@/stores/modules/selectCompStore";
-const useCompStore = useSelectCompStore();
+// import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+// const useCompStore = useSelectCompStore();
 
 const formShowConfig = ref({
   formTitle: "表单预览",
@@ -181,7 +181,8 @@ const getLineheight = () => {
 
 // 组件选中
 const selectComp = (item: any) => {
-  useCompStore.initCurrentComp(item);
+  console.log(item, "item");
+  // useCompStore.initCurrentComp(item);
 };
 </script>
 

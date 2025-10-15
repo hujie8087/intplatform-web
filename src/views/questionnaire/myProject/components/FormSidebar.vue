@@ -15,7 +15,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Icon from "../../dynamicForm/components/compIcon";
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 interface Props {
   currentSideItemType?: "questionBank" | "theme" | "logic" | "sample" | "publish" | "stat" | "setting" | string;
 }
@@ -30,27 +31,27 @@ const props = defineProps<Props>();
 
 const classifyList = ref<ClassifyType[]>([
   {
-    label: "题库",
+    label: t("survey.form.tab.questionBank"),
     icon: Icon.Question,
     type: "questionBank"
   },
   {
-    label: "样本",
+    label: t("survey.form.tab.sample"),
     icon: Icon.Sample,
     type: "sample"
   },
   {
-    label: "设置",
+    label: t("survey.form.tab.setting"),
     icon: Icon.Setting,
     type: "setting"
   },
   {
-    label: "发布",
+    label: t("survey.form.tab.publish"),
     icon: Icon.Publish,
     type: "publish"
   },
   {
-    label: "统计",
+    label: t("survey.form.tab.stat"),
     icon: Icon.Stats,
     type: "stat"
   }

@@ -3,7 +3,7 @@
     :disabled="isDev && props.isSelected"
     v-model="dataValue"
     class="item-comp"
-    :placeholder="isDev && props.isSelected ? disableInputByDev : placeholder || '提示信息'"
+    :placeholder="isDev && props.isSelected ? $t('survey.form.disableInputByDev') : placeholder || '提示信息'"
     @blur="inputBlur"
     @focus="handleFocus"
   ></el-input>
@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { disableInputByDev, delayTime, regexRule, regexRuleMesg } from "../../compConfig";
+import { delayTime, regexRule, regexRuleMesg } from "../../compConfig";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const compStore = useSelectCompStore();
 const emit = defineEmits(["compFocus"]);

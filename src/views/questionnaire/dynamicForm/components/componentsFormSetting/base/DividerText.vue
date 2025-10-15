@@ -1,10 +1,10 @@
 <template>
-  <el-text size="default">分割线文本</el-text>
+  <el-text size="default">{{ $t("survey.form.dividerComp.dividerText") }}</el-text>
   <el-input
     size="default"
     class="comp"
     v-if="compStore.currentCompConfig"
-    placeholder="输入分割线文本"
+    :placeholder="$t('main.inputPlaceholder')"
     clearable
     v-model="comp.dividerValue"
     @input="handleChangeInput"

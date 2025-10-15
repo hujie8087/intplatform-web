@@ -1,6 +1,6 @@
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
-import { DataVisualize } from "../interface/dashboard";
+import { CarListItem, DataVisualize, SiteInformationList } from "../interface/dashboard";
 
 /**
  * @name 数据可视化模块
@@ -42,15 +42,20 @@ export const getMealService = (params: { dateType?: string; ancestors?: string }
 };
 // 报餐送餐-站点信息
 export const getSiteInformation = (params: { date?: string; foodName?: string }) => {
-  return http.get<DataVisualize.SiteInformation>(PORT1 + `/order/statistics/site`, params, { loading: false });
+  return http.get<SiteInformationList[]>(PORT1 + `/order/statistics/site`, params, { loading: false });
 };
 
 // 报餐送餐-货车轨迹
 export const getCarLine = (params: { date?: string; foodName?: string; fcName?: string }) => {
-  return http.get<DataVisualize.CarLine>(PORT1 + `/order/statistics/car/line`, params, { loading: false });
+  return http.get<CarListItem[]>(PORT1 + `/order/statistics/car/line`, params, { loading: false });
 };
 
 // 报餐送餐-指定车辆数据
 export const getCarMessge = (params: { date?: string; foodName?: string; fcName?: string }) => {
   return http.get<DataVisualize.CarMessge>(PORT1 + `/order/statistics/car/data`, params, { loading: false });
+};
+
+// 报餐送餐-站点货物信息
+export const getSiteInformationOfGoods = params => {
+  return http.get<SiteInformationList[]>(PORT1 + `/order/statistics/queryFoodSiteOrderListOfSite`, params);
 };
