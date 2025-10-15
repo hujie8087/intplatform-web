@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div class="comp-item-description" v-if="displaySection && formConfig?.displayDescription">
+    <div class="comp-item-description" v-if="displaySection && formConfig?.displayDescription && component?.description">
       <div type="secondary" v-if="(component?.id !== selectedComp?.id && isDev) || renderType">
         <div class="description">{{ component.description }}</div>
       </div>
@@ -59,7 +59,7 @@
           <div class="add-item">
             <div class="item" @click="addItem('new')">
               <el-icon :style="{ fontSize: '16px', color: '#646a73' }"><Plus /></el-icon>
-              <span>添加单项</span>
+              <span>{{ $t("survey.form.addItem") }}</span>
             </div>
             <div
               v-if="!HasSettingTypeListAndNoOther.includes(compConfig.type)"
@@ -68,17 +68,17 @@
               @click="!checkAddOtherClass() && addItem('other')"
             >
               <el-icon :style="{ fontSize: '16px', color: '#646a73' }"><Plus /></el-icon>
-              <span>添加其他</span>
+              <span>{{ $t("survey.form.addOther") }}</span>
             </div>
             <div class="item" @click="batchChangeData">
               <el-icon :style="{ fontSize: '16px', color: '#646a73' }"><Operation /></el-icon>
-              <span>批量操作</span>
+              <span>{{ $t("survey.form.batchOper") }}</span>
             </div>
           </div>
         </div>
         <span class="setting-item">
           <el-switch class="switch" v-model="localComponent.isRequired" @change="handleChangeRequired"> </el-switch>
-          <label for="">必填</label>
+          <label for="">{{ $t("survey.form.validateComp.required") }}</label>
         </span>
       </div>
     </div>
@@ -86,13 +86,13 @@
       <img src="/src/assets/images/form-editor/drag.svg" alt="" />
     </div>
     <div class="active-comp-setting-side-bar" v-if="compConfig.id === selectedComp?.id">
-      <el-tooltip placement="right" content="复制">
+      <el-tooltip placement="right" :content="$t('survey.form.copy')">
         <el-icon :size="16" class="control" @click="compControl('copy')"><CopyDocument /></el-icon>
       </el-tooltip>
-      <el-tooltip placement="right" content="逻辑">
+      <el-tooltip v-if="dataListType.includes(selectedComp?.type)" placement="right" :content="$t('survey.form.logic')">
         <el-icon :size="16" class="control" @click="compControl('logic')"><Magnet /></el-icon>
       </el-tooltip>
-      <el-tooltip placement="right" content="删除" :color="'#f50'">
+      <el-tooltip placement="right" :content="$t('main.delete')" :color="'#f50'">
         <el-icon :size="16" class="control" @click="compControl('delete')"><Delete /></el-icon>
       </el-tooltip>
     </div>
@@ -110,7 +110,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue";
-import { HasSettingTypeList, HasSettingTypeListAndNoOther, JustShowCompType } from "../compConfig";
+import { dataListType, HasSettingTypeList, HasSettingTypeListAndNoOther, JustShowCompType } from "../compConfig";
 // 显示组件
 import FormTitleComponent from "./show/FormTitle.vue";
 import ImageComponent from "./show/Image.vue";

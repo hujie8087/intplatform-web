@@ -21,11 +21,13 @@
             style="width: 100%"
             icon="Star"
             type="primary"
-            >Voting / 为TA投票</el-button
+            >{{ $t("survey.form.imageSelection.vote") }}</el-button
           >
           <div class="btn_group" v-else>
-            <el-button style="width: 62%" disabled icon="Star" type="primary"> 您已投票 </el-button>
-            <el-button @click="cancelVoting(item)" style="width: 34%" type="danger">取消</el-button>
+            <el-button style="width: 62%" disabled icon="Star" type="primary">
+              {{ $t("survey.form.imageSelection.voted") }}
+            </el-button>
+            <el-button @click="cancelVoting(item)" style="width: 34%" type="danger">{{ $t("main.cancel") }}</el-button>
           </div>
         </div>
       </div>
@@ -38,6 +40,9 @@ import { ref, watch, computed } from "vue";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 import { delayTime } from "../../compConfig";
 import { ElMessage } from "element-plus";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+
 const emit = defineEmits(["scrollToBottom"]);
 const compStore = useSelectCompStore();
 const filePath = import.meta.env.VITE_APP_BASE_FILE;
@@ -75,9 +80,9 @@ const showLimitMessage = computed(() => {
 // 计算属性：限制提示信息
 const limitMessage = computed(() => {
   if (currentCount.value < props.minValue) {
-    return `请至少选择${props.minValue}项`;
+    return t("survey.form.imageSelection.minVal", { size: props.minValue });
   } else if (currentCount.value > props.maxValue) {
-    return `最多只能选择${props.maxValue}项`;
+    return t("survey.form.imageSelection.maxVal", { size: props.maxValue });
   }
   return "";
 });

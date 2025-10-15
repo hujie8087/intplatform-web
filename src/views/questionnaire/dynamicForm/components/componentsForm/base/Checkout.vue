@@ -15,7 +15,7 @@
           {{ item.label }}
         </span>
         <span class="other-val" v-if="item.subType === 'other'">
-          <el-input style="width: 240px" :disabled="isDev" class="item-comp" v-model="item.value" placeholder="待填表者更新" />
+          <el-input style="width: 240px" :disabled="isDev" class="item-comp" v-model="item.value" placeholder="" />
         </span>
       </div>
     </el-checkbox>

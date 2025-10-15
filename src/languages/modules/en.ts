@@ -400,5 +400,279 @@ export default {
       // KitchenPrepping	餐厅备餐中	Persiapan Dapur
       // OutForDelivery	取餐配送中	Dalam Pengiriman
     }
+  },
+  survey: {
+    statusOptions: {
+      unpublished: "Unpublished",
+      inCollection: "In Collection",
+      stopped: "Stopped"
+    },
+    form: {
+      tab: {
+        questionBank: "Question Bank",
+        sample: "Sample",
+        setting: "Settings",
+        publish: "Publish",
+        stat: "Statistic s"
+      },
+      options: {
+        left: "Left",
+        center: "Center",
+        right: "Right",
+        small: "Small",
+        middle: "Medium",
+        large: "Large",
+        solid: "Solid",
+        dashed: "Dashed"
+      },
+      def: {
+        description: "description",
+        buttonText: "submit",
+        dividerValue: "Divider",
+        tName: "Title Name",
+        defTDesc:
+          "To provide you with better service, we hope you can take a few minutes to share your feelings and suggestions with us. We value each user's valuable opinions and look forward to your participation! Let's start right now!",
+        name: "Please enter name",
+        gender: "Please select gender",
+        phone: "Please enter mobile number",
+        telePhone: "Please enter landline number",
+        workNumber: "Please enter employee ID",
+        email: "Please enter email",
+        wx: "Please enter WeChat ID",
+        select: "Please select",
+        option: "Option",
+        other: "Other",
+        optionOne: "Option One",
+        optionTwo: "Option Two",
+        optionThree: "Option Three",
+        batchDataPlaceholder: "Please enter batch operation data (one piece of data per line)"
+      },
+      showComp: "Show",
+      title: "Title",
+      image: "Image",
+      reply: "Reply",
+      personaComp: "Personal Information",
+      name: "Name",
+      workNumber: "WorkNumber",
+      phone: "Phone",
+      wx: "Wechat",
+      email: "Email",
+      baseComp: "Base",
+      input: "Input",
+      textarea: "Textarea",
+      radio: "Radio",
+      checkout: "Checkbox",
+      select: "Select",
+      number: "Number",
+      imageMultiSelect: "ImageSelection",
+      rankComp: "Ratings and satisfaction",
+      rate: "Rate",
+      nps: "NPS",
+      selectRate: "SelectRate",
+      dateComp: "Date And Time",
+      date: "DatePicker",
+      dateRange: "DateRange",
+      time: "TimePicker",
+      timeRange: "TimeRange",
+      layoutComp: "Layout",
+      divider: "Divider",
+      advancedComp: "Advanced",
+      sign: "Sign",
+      uploadImg: "UploadImage",
+      // --其他的国际化，上面都是表单组件
+      preview: "preview",
+      submit: "Submit",
+      emptyFormTip: "Click or drag questions from the left to this area",
+      formSetting: "Form Settings",
+      baseSetting: "Basic Settings",
+      formVerify: "Form Validation",
+      globalSetting: "Global Form Settings",
+      compDesc: "Component Description",
+      compSerialNum: "Component Serial Number",
+      waterMarker: "Watermark",
+      waterMarkerPlaceholder: "Please enter watermark (max 15 characters)",
+      logic: "Logic",
+      copy: "Copy",
+      addItem: "Add Items",
+      addOther: "Add Others",
+      batchOper: "Batch Operations",
+      logicTip: "If the answer to this question",
+      disableInputByDev: "Input is not supported in edit mode",
+      itemSort: "Option Sorting",
+      // 标题组件国际化
+      titleComp: {
+        tName: "Title Name",
+        tNamePlaceHolder: "Please enter title text (max 30 characters)",
+        showTImg: "Show title image",
+        tImg: "Title image",
+        tImgPlaceholder: "Please enter image URL",
+        tSize: "Title size",
+        showTDesc: "Show title description",
+        tDesc: "Title description",
+        tPosition: "Position(title+description)"
+      },
+      // 按钮组件
+      buttonComp: {
+        btnTitle: "Button Text",
+        btnTitlePlaceholder: "Please enter button text (max 30 characters)",
+        showIcon: "Show Icon"
+      },
+      // 图片组件
+      ImageComp: {
+        imgSet: "Image Settings"
+      },
+      // 回复组件
+      replyComp: {
+        selectReply: "Select Questionnaire Reply",
+        historyReply: "Historical Replies"
+      },
+      // 评分组件
+      rateComp: {
+        num: "Quantity",
+        isHalf: "Allow half selection",
+        numRange: "Value range",
+        numRangeTip: "Start value can be 0, minimum end value is 3"
+      },
+      // 分割线组件
+      dividerComp: {
+        dividerText: "Divider Text",
+        dividerType: "Divider Type"
+      },
+      // 共用组件
+      commonComp: {
+        position: "Position",
+        size: "Size",
+        title: "Title",
+        descOrRemark: "Description/Remark",
+        inputPlaceholder: "Input Box Prompt"
+      },
+      // 校验组件
+      validateComp: {
+        required: "Required",
+        customErrorTip: "Custom Error Prompt",
+        customErrorTipPlaceholder: "Please enter custom error prompt",
+        format: "Format",
+        formatPlaceholder: "Please enter custom regular expression",
+        minSelect: "Minimum Select",
+        MaxSelect: "Maximum Select",
+        minVal: "Minimum Value",
+        maxVal: "Maximum Value"
+      },
+      // 预览组件
+      previewComp: {
+        formPreview: "Form Preview",
+        Mobile: "Mobile",
+        PC: "Desktop",
+        nullDataTip: "Form is empty, please return to the editor to configure content"
+      },
+      imageSelection: {
+        MultiImageSettings: "Multi-image Settings",
+        addItem: "Add Option",
+        editItem: "Edit Option",
+        title: "Title",
+        desc: "Description",
+        close: "Close",
+        imgSet: "Image Settings",
+        vote: "vote",
+        voted: "Voted",
+        minVal: "Minimum {size} items required",
+        maxVal: "Maximum {size} items allowed"
+      }
+    },
+    project: {
+      questionnaireName: "Title",
+      questionnaireNamePlaceholder: "Please enter",
+      collectionQuantity: "Collection Quantity",
+      status: "Status",
+      stat: "Statistics",
+      setting: "Settings",
+      share: "Share",
+      begin: "Begin",
+      stop: "Stop",
+      copy: "Copy",
+      copyTip: "Would you like to copy this questionnaire?",
+      publishTip: "Are you sure you want to publish this questionnaire?",
+      publishTipSuccess: "Questionnaire published successfully",
+      stopTip: "Are you sure you want to stop collecting this questionnaire?",
+      stopTipSuccess: "Collection stopped successfully"
+    },
+    reply: {
+      image: "image",
+      belong: "belong",
+      belongPlaceholder: "Please select",
+      replyTitle: "title",
+      replyTitlePlaceholder: "Please enter",
+      remarkPlaceholder: "Please enter"
+    },
+    recycle: {
+      questionnaireName: "Title",
+      deleteTime: "Delete Time",
+      status: "status",
+      restore: "Restore",
+      restoreTip: "Confirm to restore this questionnaire?",
+      deleteTip: "Confirm to delete this questionnaire?"
+    },
+    share: {
+      address: "Questionnaire Address",
+      urlTip: "Copy the questionnaire link below to QQ, Email and other tools to send directly to users",
+      copy: "Copy Address",
+      copySuccess: "Address copied successfully",
+      copyFailed: "Failed to copy address, please copy manually",
+      open: "Open Questionnaire",
+      qrCode: "QR Code Address",
+      qrCodeTip: "Scan with your mobile phone or download the QR code to collect questionnaire data",
+      downloadQrCode: "Download QR Code",
+      unpublished: "Not Yet Published",
+      publish: "Click to Publish Questionnaire"
+    },
+    setting: {
+      settingTitle: "Questionnaire Settings",
+      settingDesc: "Configure questionnaire collection rules",
+      submitSetting: "Submit Settings",
+      showTipWord: "Show prompt text",
+      showTipWordDefault: "Submission successful",
+      jumpWebsite: "Jump to website address",
+      jumpWebsitePlaceholder: "Please enter the website address to jump to after submission",
+      validationNumberAndName: "Verify employee ID and name",
+      validationNumberAndNamePlaceholder: "Please enter the prompt for failed verification of employee ID and name",
+      isEveryoneWriteOnce: "Each person can fill in once",
+      isEveryoneDayWriteOnce: "Each person can fill in once per day",
+      recycleSetting: "Collection Settings",
+      timedAndquantitative: "Timed/quantitative collection",
+      collectTime: "Collection time",
+      timedNotEnabledPromptText: "Prompt text when not enabled",
+      timedDeactivatePromptText: "Prompt text after deactivation",
+      quantitativeCollect: "Quantitative collection",
+      quantitativeCollectTotal: "Total quantity for quantitative collection",
+      timedEndPromptText: "Prompt text when collection is complete",
+      submitSuccessTip: "Settings saved successfully"
+    },
+    stat: {
+      refresh: "Click to refresh",
+      orderNo: "Serial Number",
+      listViewTab: "List View",
+      submitTime: "Submission Time",
+      ipAddress: "IP Address",
+      completedTime: "Completion Time",
+      source: "Source",
+      statViewTab: "Statistics View",
+      recyclingOverview: "Collection Overview",
+      effectiveRecyclingQuantity: "Effective Collection Quantity",
+      totalViews: "Total Views",
+      averageCompletionTime: "Average Completion Time",
+      commonUsedDevices: "Commonly Used Devices",
+      sourceChannel: "Source Channel",
+      dataAnalyzeTab: "Data Analysis",
+      dataAnalyzeOverview: "Analysis Overview",
+      barChart: "Bar Chart",
+      pieChart: "Pie Chart",
+      lineChart: "Line Chart",
+      voteRankTab: "Voting Rank",
+      voteRankOverview: "Voting Overview"
+    },
+    sample: {
+      name: "User Name",
+      employeeNo: "Employee ID"
+    }
   }
 };

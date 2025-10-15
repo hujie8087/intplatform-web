@@ -1,6 +1,6 @@
 <template>
   <div class="setting-item h-50">
-    <el-text class="mx-1" size="default">格式</el-text>
+    <el-text class="mx-1" size="default">{{ $t("survey.form.validateComp.format") }}</el-text>
     <el-select v-model="comp.formValidationFormat" style="width: 120px" size="default" class="abs-r" @change="handleChangeInput">
       <el-option :value="item.value" :label="item.label" :key="index" v-for="(item, index) in systemFormatList"></el-option>
     </el-select>
@@ -9,7 +9,7 @@
     <el-input
       size="default"
       v-model="comp.formValidationFormatRegex"
-      placeholder="请输入自定义正则表达式"
+      :placeholder="$t('survey.form.validateComp.formatPlaceholder')"
       allow-clear
       clearable
       maxlength="40"

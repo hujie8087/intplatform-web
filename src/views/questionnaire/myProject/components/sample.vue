@@ -13,19 +13,23 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
-          <el-button type="primary" :icon="CirclePlus" v-auth="['survey:project:saveAll']" @click="openDrawer('新增')"
-            >新增样本</el-button
-          >
+          <el-button type="primary" :icon="CirclePlus" v-auth="['survey:project:saveAll']" @click="openDrawer('新增')">{{
+            $t("main.add")
+          }}</el-button>
           <el-button
             type="danger"
             :icon="Delete"
             @click="deleteDeptHandle"
             v-auth="['survey:project:saveAll']"
             :disabled="isAllDelete"
-            >批量删除</el-button
+            >{{ $t("main.batchDelete") }}</el-button
           >
-          <el-button type="success" :icon="Upload" v-auth="['survey:project:saveAll']" @click="importFile">导入</el-button>
-          <el-button type="warning" :icon="Download" v-auth="['survey:project:saveAll']" @click="exportFile">导出</el-button>
+          <el-button type="success" :icon="Upload" v-auth="['survey:project:saveAll']" @click="importFile">
+            {{ $t("main.import") }}
+          </el-button>
+          <el-button type="warning" :icon="Download" v-auth="['survey:project:saveAll']" @click="exportFile">
+            {{ $t("main.download") }}
+          </el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
@@ -35,7 +39,7 @@
             link
             :icon="EditPen"
             @click="openDrawer('编辑', scope.row)"
-            >编辑</el-button
+            >{{ $t("main.edit") }}</el-button
           >
           <el-button
             type="danger"
@@ -45,24 +49,24 @@
             :icon="Delete"
             @click="deleteDeptHandle(scope.row)"
           >
-            删除
+            {{ $t("main.delete") }}
           </el-button>
         </template>
       </ProTable>
       <ImportExcel ref="dialogRef" />
       <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500" :before-close="handleClose">
         <el-form ref="ruleFormRef" :model="dialogForm" :rules="rules">
-          <el-form-item label="工号" prop="employeeNo">
-            <el-input v-model="dialogForm.employeeNo" placeholder="请输入工号" clearable />
+          <el-form-item :label="$t('survey.sample.employeeNo')" prop="employeeNo">
+            <el-input v-model="dialogForm.employeeNo" :placeholder="$t('main.inputPlaceholder')" clearable />
           </el-form-item>
-          <el-form-item label="姓名" prop="name">
-            <el-input v-model="dialogForm.name" placeholder="请输入姓名" clearable />
+          <el-form-item :label="$t('survey.sample.name')" prop="name">
+            <el-input v-model="dialogForm.name" :placeholder="$t('main.inputPlaceholder')" clearable />
           </el-form-item>
         </el-form>
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="handleClose">取消</el-button>
-            <el-button type="primary" @click="updatePage">确定</el-button>
+            <el-button @click="handleClose">{{ $t("main.cancel") }}</el-button>
+            <el-button type="primary" @click="updatePage">{{ $t("main.confirm") }}</el-button>
           </div>
         </template>
       </el-dialog>
@@ -87,17 +91,22 @@ import ImportExcel from "./ImoportExcel.vue";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useDownload } from "@/hooks/useDownload";
 import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const route = useRoute();
 const key = route.query.key as string | undefined;
-
 const proTable = ref();
 const columns = reactive([
   { type: "selection", label: "", width: 80 },
-  { prop: "employeeNo", label: "用户工号", search: { el: "input" } },
-  { prop: "name", label: "用户姓名", search: { el: "input" } },
-  { prop: "createTime", label: "创建时间" },
-  { prop: "updateTime", label: "最后更新时间" },
-  { prop: "operation", label: "操作", width: 230, fixed: "right" }
+  {
+    prop: "employeeNo",
+    label: "survey.sample.employeeNo",
+    search: { el: "input", props: { placeholder: t("main.inputPlaceholder") } }
+  },
+  { prop: "name", label: "survey.sample.name", search: { el: "input", props: { placeholder: t("main.inputPlaceholder") } } },
+  { prop: "createTime", label: "main.createTime" },
+  { prop: "updateTime", label: "main.updateTime" },
+  { prop: "operation", label: "main.operation", width: 230, fixed: "right" }
 ]);
 interface dialogFormType {
   employeeNo: string;
@@ -132,8 +141,8 @@ const dialogForm = reactive<dialogFormType>({
 });
 const ruleFormRef = ref();
 const rules = reactive({
-  employeeNo: [{ required: true, message: "请输入工号" }],
-  name: [{ required: true, message: "请输入姓名" }]
+  employeeNo: [{ required: true, message: t("main.inputError", { msg: t("survey.sample.employeeNo") }) }],
+  name: [{ required: true, message: t("main.inputError", { msg: t("survey.sample.name") }) }]
 });
 const dialogRef = ref(null);
 const dataCallback = (data: any) => {
@@ -196,7 +205,6 @@ const deleteDeptHandle = async _row => {
 // 导入数据
 const importFile = () => {
   const params = {
-    title: "用户",
     tempApi: "/survey/project/sample/template",
     importApi: importSample,
     getTableList: proTable.value?.getTableList,
@@ -212,7 +220,7 @@ const exportFile = () => {
     projectKey: key
   };
   console.log(params, "params");
-  ElMessageBox.confirm("确认导出样本数据?", "温馨提示", { type: "warning" }).then(() =>
+  ElMessageBox.confirm(t("main.exportMsg"), t("main.tips"), { type: "warning" }).then(() =>
     useDownload(`${baseUrl}/survey/project/sample/export`, "样本列表", true, ".xlsx", "post", params)
   );
 };

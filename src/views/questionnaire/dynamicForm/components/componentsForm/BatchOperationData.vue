@@ -5,22 +5,22 @@
     :show-close="false"
     :close-on-click-modal="false"
     class="dialog-wrapper-center"
-    title="批次操作数据"
+    :title="$t('survey.form.batchOper')"
   >
     <template #footer>
       <div class="content">
         <el-input
           size="default"
           type="textarea"
-          placeholder="请输入批次操作数据（每行一条数据）"
+          :placeholder="$t('survey.form.def.batchDataPlaceholder')"
           allow-clear
           v-model="batchDataValue"
           :autosize="{ minRows: 3, maxRows: 30 }"
         ></el-input>
       </div>
       <div class="dialog-footer">
-        <el-button @click="handleSubmit('cancel')">取消</el-button>
-        <el-button type="primary" @click="handleSubmit('ok')"> 确定 </el-button>
+        <el-button @click="handleSubmit('cancel')">{{ $t("main.cancel") }}</el-button>
+        <el-button type="primary" @click="handleSubmit('ok')"> {{ $t("main.confirm") }} </el-button>
       </div>
     </template>
   </el-dialog>

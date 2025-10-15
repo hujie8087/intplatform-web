@@ -1,11 +1,12 @@
 <template>
   <div class="setting-item h-42">
-    <el-text size="default">最小值</el-text>
+    <el-text size="default">{{ $t("survey.form.validateComp.minVal") }}</el-text>
     <el-input-number
       class="input_number"
       size="default"
+      style="width: 100px"
       controls-position="right"
-      placeholder="最小值"
+      :placeholder="$t('main.inputPlaceholder')"
       clearable
       v-model="comp.minValue"
       @change="handleChangeInput($event, 'minValue')"
@@ -13,13 +14,14 @@
   </div>
 
   <div class="setting-item h-42">
-    <el-text size="default">最大值</el-text>
+    <el-text size="default">{{ $t("survey.form.validateComp.maxVal") }}</el-text>
     <el-input-number
       size="default"
       class="input_number"
+      style="width: 100px"
       controls-position="right"
       clearable
-      placeholder="最大值"
+      :placeholder="$t('main.inputPlaceholder')"
       v-model="comp.maxValue"
       @change="handleChangeInput($event, 'maxValue')"
     />

@@ -1,40 +1,40 @@
 export const optionData = [
   {
-    label: "左",
+    label: "left",
     value: "left"
   },
   {
-    label: "中",
+    label: "center",
     value: "center"
   },
   {
-    label: "右",
+    label: "right",
     value: "right"
   }
 ];
 
 export const textOrButtonSizeData = [
   {
-    label: "小",
+    label: "small",
     value: "small"
   },
   {
-    label: "中",
+    label: "middle",
     value: "middle"
   },
   {
-    label: "大",
+    label: "large",
     value: "large"
   }
 ];
 
 export const dividerBorderTypeData = [
   {
-    label: "直线",
+    label: "solid",
     value: "solid"
   },
   {
-    label: "虚线",
+    label: "dashed",
     value: "dashed"
   }
 ];

@@ -36,9 +36,9 @@
         </div>
       </div>
       <div class="editor" ref="editorRef">
-        <div class="preview-control" title="预览" @click="preview">
+        <div class="preview-control" @click="preview">
           <img :src="Icon.preview" alt="" />
-          <div class="label">预览</div>
+          <div class="label">{{ $t("survey.form.preview") }}</div>
         </div>
         <el-icon v-show="showBackTop" class="back-top-btn" @click="backToTop"><ArrowUp /></el-icon>
         <div
@@ -80,7 +80,7 @@
                               'has-data': pageCompList.length
                             }"
                           >
-                            点击左侧题目 / 拖拽题目到此区域
+                            {{ $t("survey.form.emptyFormTip") }}
                           </span>
                         </div>
                       </div>
@@ -134,7 +134,7 @@
                   style="width: 76%"
                   :style="{ padding: getSize(), lineHeight: getLineHeight() }"
                 >
-                  {{ pageFooter.buttonText || "提交" }}
+                  {{ pageFooter.buttonText || $t("survey.form.submit") }}
                 </el-button>
               </div>
             </el-watermark>
@@ -160,10 +160,10 @@
       </PreviewPage>
 
       <!-- 逻辑弹窗 -->
-      <el-dialog v-model="dialogVisible" :title="dialogTitle" width="550" @close="logicDialogCancel">
+      <el-dialog v-model="dialogVisible" :title="dialogTitle" width="700" @close="logicDialogCancel">
         <div class="dialog-form">
           <div v-for="(item, index) in logicArr" :key="index" class="logic-row">
-            <span class="label">如果本题回答</span>
+            <span class="label">{{ $t("survey.form.logicTip") }} </span>
             <el-select v-model="item.optionValue" placeholder="请选择选项">
               <el-option :label="elItem?.label" :value="elItem?.value" v-for="elItem in logicTopicSelect" :key="elItem?.value" />
             </el-select>
@@ -194,8 +194,8 @@
         </div>
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="logicDialogCancel">取消</el-button>
-            <el-button type="primary" @click="logicDialogSure"> 保存</el-button>
+            <el-button @click="logicDialogCancel">{{ $t("main.cancel") }}</el-button>
+            <el-button type="primary" @click="logicDialogSure"> {{ $t("main.confirm") }}</el-button>
           </div>
         </template>
       </el-dialog>
@@ -205,8 +205,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, inject, nextTick, reactive, onBeforeUnmount } from "vue";
-import { CompListData, CompType, IgnoreLineNumberTypeList } from "./components/compData";
-import { getDefaultConfig, optionalType } from "./components/compConfig";
+import { createCompListData, CompCategoryType, CompType, IgnoreLineNumberTypeList } from "./components/compData";
+import { getDefaultConfig, JustShowCompType } from "./components/compConfig";
 import Icon from "./components/compIcon";
 import { Check, Delete, CirclePlus } from "@element-plus/icons-vue";
 import FormSetting from "./components/FormSetting.vue";
@@ -219,9 +219,14 @@ import { ElMessage } from "element-plus";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
 import { topicSaves, editSurverTopic, getSurverDetail } from "@/api/modules/questionnaire/surveySetting";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const openDraw = ref(false);
-const compList = ref([...CompListData]); // 组件列表
+
+// const compList = ref([...CompListData]); // 组件列表
+const compList = ref<CompCategoryType[]>([]);
+
 const route = useRoute(); // 先获取路由实例
 const pageCompList = ref<any[]>([]); // 页面组件内容
 const dialogVisible = ref(false); // 逻辑弹窗
@@ -256,7 +261,7 @@ const createCompByClick = (item: any) => {
 };
 
 const createByClickOrClone = (element: any) => {
-  const defaultComp: any = getDefaultConfig(element.type);
+  const defaultComp: any = getDefaultConfig(element.type, false, t);
   const item = {
     ...defaultComp,
     ...element.value,
@@ -317,12 +322,12 @@ const addItem = (type: "new" | "other", item: any, index: number) => {
   const isNewBool = type === "new";
   const newDataItem = isNewBool
     ? {
-        label: "选项",
-        value: "选项"
+        label: t("survey.form.def.option"),
+        value: t("survey.form.def.option")
       }
     : {
         subType: "other",
-        label: "其他",
+        label: t("survey.form.def.other"),
         value: ""
       };
   if (["new", "other"].includes(type)) {
@@ -572,9 +577,10 @@ const scrollToBottom = async () => {
 };
 
 onMounted(async () => {
+  compList.value = createCompListData(t);
   useCompStore.initGlobalFormConfig({ ...defaultFormConfig });
   globalData.value = useCompStore.currentGlobalFormConfig;
-  pageFooter.value = getDefaultConfig(CompType.button);
+  pageFooter.value = getDefaultConfig(CompType.button, false, t);
   pageFooter.value.id = uuidv4();
   let topicList: any = await editSurverTopic(projectKey);
   topicList.data.forEach(el => {
@@ -664,7 +670,7 @@ const saveSurveryFun = async projectKey => {
       title: item.title,
       description: item.description,
       // 是否显示类型，不需要用户操作的组件，单纯为了展示的组件
-      isDisplayType: optionalType.includes(item.type),
+      isDisplayType: JustShowCompType.includes(item.type),
       required: item?.isRequired ?? false,
       expand: item
     };
@@ -717,7 +723,7 @@ defineExpose({
 }
 .editor-content {
   display: grid;
-  grid-template-columns: 270px 1fr 260px;
+  grid-template-columns: 290px 1fr 260px;
   height: 100%;
   padding: 0;
 
@@ -803,6 +809,7 @@ defineExpose({
       flex-direction: row;
       align-items: center;
       justify-content: flex-start;
+      font-size: 14px;
       .icon {
         margin-right: 5px;
       }

@@ -3,12 +3,12 @@
     <el-time-picker
       style="width: 330px"
       is-range
-      range-separator="至"
+      :range-separator="$t('main.to')"
       :disabled="isDev && isSelected"
       v-model="dataValue"
       value-format="HH:mm:ss"
-      :start-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '开始时间'"
-      :end-placeholder="isDev && isSelected ? disableInputByDev : placeholder || '结束时间'"
+      :start-placeholder="isDev && isSelected ? $t('survey.form.disableInputByDev') : placeholder || $t('main.startTime')"
+      :end-placeholder="isDev && isSelected ? $t('survey.form.disableInputByDev') : placeholder || $t('main.endTime')"
       @focus="handleFocus"
       @blur="inputBlur"
     />
@@ -16,7 +16,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { disableInputByDev, delayTime } from "../../compConfig";
+import { delayTime } from "../../compConfig";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
 const compStore = useSelectCompStore();
 const emit = defineEmits(["compFocus"]);

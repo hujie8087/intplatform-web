@@ -1,28 +1,28 @@
 <template>
   <div class="setting-item h-42">
-    <el-text class="mx-1" size="default">显示标题图片</el-text>
+    <el-text class="mx-1" size="default">{{ $t("survey.form.titleComp.showTImg") }}</el-text>
     <el-switch v-model="comp.titleImageShow" size="default" @change="changeValue($event, 'titleImageShow')" />
   </div>
-  <el-text class="mx-1" size="default">标题图片</el-text>
+  <el-text class="mx-1" size="default">{{ $t("survey.form.titleComp.tImg") }}</el-text>
   <el-input
     size="default"
     class="mb-10"
-    placeholder="请输入图片URL"
+    :placeholder="$t('survey.form.titleComp.tImgPlaceholder')"
     v-model="comp.titleImageUrl"
     @input="handleChangeInput($event, 'titleImageUrl')"
     :maxlength="400"
   ></el-input>
-  <el-text class="mx-1" size="default">表单标题</el-text>
+  <el-text class="mx-1" size="default">{{ $t("survey.form.titleComp.tName") }}</el-text>
   <el-input
     size="default"
     class="mb-10"
-    placeholder="请输入标题文字（最多30个字）"
+    :placeholder="$t('survey.form.titleComp.tNamePlaceHolder')"
     v-model="comp.titleValue"
     @input="handleChangeInput"
     :maxlength="30"
   ></el-input>
   <div class="setting-item h-50">
-    <el-text class="mx-1" size="default">标题大小</el-text>
+    <el-text class="mx-1" size="default">{{ $t("survey.form.titleComp.tSize") }}</el-text>
     <el-select
       size="default"
       clearable
@@ -31,35 +31,45 @@
       class="abs-r"
       @change="changeSelect($event, 'titleSize')"
     >
-      <el-option :value="item.value" :label="item.label" v-for="(item, index) in orientationList" :key="index" />
+      <el-option
+        :value="item.value"
+        :label="$t(`survey.form.options.${item.label}`)"
+        v-for="(item, index) in orientationList"
+        :key="index"
+      />
     </el-select>
   </div>
   <div class="setting-item h-42">
-    <el-text class="mx-1" size="default">显示标题描述</el-text>
+    <el-text class="mx-1" size="default">{{ $t("survey.form.titleComp.showTDesc") }}</el-text>
     <el-switch v-model="comp.titleDescriptionShow" size="default" @change="changeValue($event, 'titleDescriptionShow')" />
   </div>
-  <el-text class="mx-1" size="default">标题描述</el-text>
+  <el-text class="mx-1" size="default">{{ $t("survey.form.titleComp.tDesc") }}</el-text>
   <el-input
     class="mb-10 m-b-10"
-    placeholder="请输入描述"
+    :placeholder="$t('main.inputPlaceholder')"
     size="default"
     v-model="comp.titleDescription"
     :autosize="{ minRows: 3, maxRows: 5 }"
     type="textarea"
     show-word-limit
     @input="handleChangeInput($event, 'titleDescription')"
-    :maxlength="200"
+    :maxlength="250"
   />
   <div class="setting-item h-50">
-    <el-text class="mx-1" size="default">位置(标题+描述)</el-text>
+    <el-text class="mx-1" size="default">{{ $t("survey.form.titleComp.tPosition") }}</el-text>
     <el-select
       size="default"
       v-model="comp.titleDescriptionPosition"
-      style="width: 120px"
+      style="width: 70px"
       class="abs-r"
       @change="changeSelect($event, 'titleDescriptionPosition')"
     >
-      <el-option :value="item.value" :label="item.label" v-for="(item, index) in positionList" :key="index" />
+      <el-option
+        :value="item.value"
+        :label="$t(`survey.form.options.${item.label}`)"
+        v-for="(item, index) in positionList"
+        :key="index"
+      />
     </el-select>
   </div>
 </template>

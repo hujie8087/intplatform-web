@@ -5,7 +5,7 @@
     v-model="dataValue"
     @focus="handleFocus"
     @blur="inputBlur"
-    :placeholder="isDev && isSelected ? disableInputByDev : placeholder || '提示信息'"
+    :placeholder="isDev && isSelected ? $t('survey.form.disableInputByDev') : placeholder || '提示信息'"
   >
     <template #prefix>
       <img class="icon" :src="WX" alt="" />
@@ -16,7 +16,7 @@
 import { ref, watch } from "vue";
 import WX from "@/assets/images/form-editor/wx.svg";
 import { useSelectCompStore } from "@/stores/modules/selectCompStore";
-import { disableInputByDev, delayTime, isEmpty } from "../../compConfig";
+import { delayTime, isEmpty } from "../../compConfig";
 const compStore = useSelectCompStore();
 const emit = defineEmits(["compFocus"]);
 interface Props {

@@ -3,12 +3,14 @@
     <div class="comp-name">
       <div class="title-val">
         <img v-if="currCompIcon" :src="currCompIcon" class="compIcon" alt="" />
-        <span class="name"> {{ selectComp?.name || (selectComp?.type === "button" && "提交按钮") || "表单配置" }} </span>
+        <span class="name">
+          {{ selectComp?.name || (selectComp?.type === "button" && "提交按钮") || $t("survey.form.formSetting") }}
+        </span>
       </div>
     </div>
     <div class="setting-base">
       <template v-if="currentCompId">
-        <div class="category-name">基础设置</div>
+        <div class="category-name">{{ $t("survey.form.baseSetting") }}</div>
         <div class="content m-b-0">
           <!--标题-->
           <FormTitle v-if="selectComp.type === 'formTitle'" :comp="selectComp" :key="selectComp._selectedId" />
@@ -47,7 +49,9 @@
           <!--数据列表排序，删除，修改功能-->
           <DataList v-if="showParams('dataList')" :comp="selectComp"> </DataList>
         </div>
-        <div class="category-name" v-if="selectComp?.type && !JustShowCompType.includes(selectComp?.type)">表单验证</div>
+        <div class="category-name" v-if="selectComp?.type && !JustShowCompType.includes(selectComp?.type)">
+          {{ $t("survey.form.formVerify") }}
+        </div>
         <div class="content">
           <!-- 数字区间 最大值最小值控制 -->
           <NumberConfig v-if="selectComp?.type === 'number'" :comp="selectComp" />
@@ -63,7 +67,7 @@
           <CustomText v-if="selectComp?.isCustomErrorMessage" :comp="selectComp" />
         </div>
       </template>
-      <div class="category-name">全局表单配置</div>
+      <div class="category-name">{{ $t("survey.form.globalSetting") }}</div>
       <div class="content" v-if="selectForm">
         <DisplaySerialNumber :form="selectForm" />
         <DisplayDescription :form="selectForm" />

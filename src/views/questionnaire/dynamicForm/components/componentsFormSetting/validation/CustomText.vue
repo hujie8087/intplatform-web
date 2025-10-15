@@ -5,7 +5,7 @@
       size="default"
       v-model="comp.customErrorMessage"
       :maxlength="40"
-      :placeholder="'请输入自定义错误提示'"
+      :placeholder="$t('survey.form.validateComp.customErrorTipPlaceholder')"
       @input="handleChangeInput"
       clearable
       show-word-limit

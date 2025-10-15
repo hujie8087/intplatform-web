@@ -1,12 +1,12 @@
 <template>
   <div class="setting-item">
-    <el-text size="default" class="block-title">多图设置</el-text>
+    <el-text size="default" class="block-title">{{ $t("survey.form.imageSelection.MultiImageSettings") }}</el-text>
     <div class="setting-item-img">
       <el-text size="small" class="add-title" @click="addItem">
-        <el-icon><Plus /></el-icon>添加选项
+        <el-icon><Plus /></el-icon>{{ $t("survey.form.imageSelection.addItem") }}
       </el-text>
       <el-text size="small" class="add-title" style="margin-left: 16px" @click="editImages">
-        <el-icon><Edit /></el-icon>修改选项
+        <el-icon><Edit /></el-icon>{{ $t("survey.form.imageSelection.editItem") }}
       </el-text>
     </div>
   </div>
@@ -40,16 +40,16 @@
       </draggable>
     </div>
   </div>
-  <el-dialog v-model="dialogVisible" title="图片配置" width="35%">
+  <el-dialog v-model="dialogVisible" :title="$t('survey.form.imageSelection.imgSet')" width="35%">
     <div class="setting-container">
-      <el-empty v-if="comp.dataList.length < 1" description="暂无数据" />
+      <el-empty v-if="comp.dataList.length < 1" :description="$t('main.noData')" />
       <el-card v-else class="list-item" v-for="(item, index) in comp.dataList" :key="index">
         <el-input
           style="width: 380px; margin-bottom: 10px"
           class="title-input"
           show-word-limit
           maxlength="50"
-          placeholder="请输入标题名称"
+          :placeholder="$t('main.inputPlaceholder')"
           v-model="item.label"
           @input="item.value = item.label"
           size="default"
@@ -63,18 +63,24 @@
           height="90px"
         >
           <template #tip>
-            <span class="upload-tip">上传图片最大为 5M</span>
+            <span class="upload-tip">{{ $t("main.uploadSizeErrorMsg", { size: "5M" }) }}</span>
           </template>
         </UploadImg>
-        <el-input class="desc-textarea" type="textarea" v-model="item.desc" placeholder="请输入简介" size="default"></el-input>
-        <el-tooltip class="box-item" effect="dark" content="删除该项" placement="bottom-start">
+        <el-input
+          class="desc-textarea"
+          type="textarea"
+          v-model="item.desc"
+          :placeholder="$t('main.inputPlaceholder')"
+          size="default"
+        ></el-input>
+        <el-tooltip class="box-item" effect="dark" :content="$t('main.delete')" placement="bottom-start">
           <el-icon class="del-icon" @click="delItem(index)"><Remove /></el-icon>
         </el-tooltip>
       </el-card>
     </div>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="dialogVisible = false"> 关闭 </el-button>
+        <el-button type="primary" @click="dialogVisible = false"> {{ $t("survey.form.imageSelection.close") }} </el-button>
       </span>
     </template>
   </el-dialog>
@@ -84,15 +90,17 @@ import { ref } from "vue";
 import UploadImg from "@/components/Upload/Img.vue";
 import { uploadSurvey } from "@/api/modules/upload";
 import { v4 as uuidv4 } from "uuid";
-// import { useSelectCompStore } from "@/stores/modules/selectCompStore";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+
 interface Props {
   comp: any;
 }
 const dialogVisible = ref(false);
 const imageData = ref({
-  label: "标题",
-  value: "标题",
-  desc: "描述",
+  label: t("survey.form.imageSelection.title"),
+  value: t("survey.form.imageSelection.title"),
+  desc: t("survey.form.imageSelection.desc"),
   imageUrl: ""
 });
 

@@ -2,10 +2,10 @@
   <div class="publish-page">
     <div class="content-card">
       <div class="survey-container" v-if="dialogForm.status === 2 || dialogForm.status === 3">
-        <!-- 内网答卷地址 -->
+        <!-- 外网答卷地址 -->
         <div class="address-group">
-          <h3>内网答卷地址</h3>
-          <p>复制下面的问卷链接到QQ、Email等工具中直接发给被用户</p>
+          <h3>{{ $t("survey.share.address") }}</h3>
+          <p>{{ $t("survey.share.urlTip") }}</p>
           <div class="address-input-group">
             <el-input style="width: 520px" v-model="intranetUrl" readonly></el-input>
             <el-button
@@ -14,15 +14,17 @@
               @click="copyAddress('intranet')"
               :icon="Connection"
               v-auth="['survey:project:add']"
-              >复制地址</el-button
+              >{{ $t("survey.share.copy") }}</el-button
             >
-            <el-button type="primary" style="margin: 0 20px 0 0" @click="openSurvey('intranet')" :icon="Link">打开问卷</el-button>
+            <el-button type="primary" style="margin: 0 20px 0 0" @click="openSurvey('intranet')" :icon="Link">
+              {{ $t("survey.share.open") }}
+            </el-button>
           </div>
         </div>
         <!-- 外网答卷地址 -->
         <!-- <div class="address-group">
           <h3>外网答卷地址</h3>
-          <p>复制下面的问卷链接到QQ、Email等工具中直接发给被用户</p>
+          <p>复制下面的问卷链接到QQ、Email等工具中直接发给用户</p>
           <div class="address-input-group">
             <el-input style="width: 520px" size="large" v-model="extranetAddress" readonly></el-input>
             <el-button style="margin: 0 20px" size="large" @click="copyAddress('extranet')" :icon="Connection"
@@ -32,19 +34,15 @@
           </div>
         </div> -->
         <div class="qr-code-box">
-          <!-- 内网二维码地址 -->
+          <!-- 外网二维码地址 -->
           <div class="qr-code-group">
-            <h3>内网二维码地址</h3>
-            <p>通过手机扫一扫，或下载二维码，即可进行问卷数据收集。</p>
+            <h3>{{ $t("survey.share.qrCode") }}</h3>
+            <p>{{ $t("survey.share.qrCodeTip") }}</p>
             <div class="qr-code-wrapper">
               <QrCode v-if="intranetUrl" :value="intranetUrl" :size="240" class="qr-code" ref="intranetQrCodeRef" />
-              <el-button
-                type="primary"
-                style="width: 120px; margin-left: 10px"
-                @click="downloadQrCode('intranet')"
-                :icon="Download"
-                >下载二维码</el-button
-              >
+              <el-button type="primary" style="margin-left: 20px" @click="downloadQrCode('intranet')" :icon="Download">{{
+                $t("survey.share.downloadQrCode")
+              }}</el-button>
             </div>
           </div>
           <!-- 外网二维码地址 -->
@@ -61,9 +59,14 @@
         </div>
       </div>
       <div class="survey-container" v-if="dialogForm.status === 1">
-        <el-empty description="问卷尚未发布" :image="noDataImage" :image-size="500">
-          <el-button @click="publishSurvey" size="large" type="primary" style="width: 320px" v-auth="['survey:project:saveAll']"
-            >点击发布问卷</el-button
+        <el-empty :description="$t('survey.share.unpublished')" :image="noDataImage" :image-size="500">
+          <el-button
+            @click="publishSurvey"
+            size="large"
+            type="primary"
+            style="width: 320px"
+            v-auth="['survey:project:saveAll']"
+            >{{ $t("survey.share.publish") }}</el-button
           >
         </el-empty>
       </div>
@@ -80,6 +83,8 @@ import { publishIntranetAddress, publishExtranetAddress } from "@/views/question
 import { useRoute } from "vue-router";
 import noDataImage from "@/assets/images/form-editor/no_data.svg";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const route = useRoute();
 const key = route.query.key;
@@ -117,9 +122,9 @@ const queryProjectDetail = async () => {
 // 发布问卷
 const publishSurvey = async () => {
   try {
-    await ElMessageBox.confirm("确定要发布该问卷吗?", "提示", {
-      confirmButtonText: "确定",
-      cancelButtonText: "稍后再发",
+    await ElMessageBox.confirm(t("survey.project.publishTip"), t("main.tips"), {
+      confirmButtonText: t("main.confirm"),
+      cancelButtonText: t("main.cancel"),
       type: "warning"
     });
     let res: any = await publishProject(key);
@@ -143,11 +148,11 @@ const copyAddress = type => {
   navigator.clipboard
     .writeText(textToCopy)
     .then(() => {
-      ElMessage.success("地址复制成功");
+      ElMessage.success(t("survey.share.copySuccess"));
     })
     .catch(err => {
       console.error("复制失败：", err);
-      ElMessage.success("地址复制失败，请手动复制");
+      ElMessage.success(t("survey.share.copyFailed"));
     });
 };
 
@@ -169,10 +174,10 @@ const downloadQrCode = type => {
   let fileName = "";
   if (type === "intranet") {
     qrCodeDataURL = intranetQrCodeRef.value.qrBase64; // 假设QrCode组件内用qrBase64存储dataURL
-    fileName = "内网问卷二维码";
+    fileName = "问卷二维码";
   } else if (type === "extranet") {
     qrCodeDataURL = extranetQrCodeRef.value.qrBase64; // 假设QrCode组件内用qrBase64存储dataURL
-    fileName = "外网问卷二维码";
+    fileName = "问卷二维码";
   }
   if (qrCodeDataURL) {
     const link = document.createElement("a");
@@ -233,7 +238,7 @@ $spacing-lg: 24px;
   }
 }
 .survey-container {
-  min-height: 595px;
+  min-height: 100%;
   padding: 20px 40px;
   .address-group,
   .qr-code-group {

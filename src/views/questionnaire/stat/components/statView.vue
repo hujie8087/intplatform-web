@@ -1,24 +1,24 @@
 <template>
   <div class="stat-view">
     <div class="header">
-      <el-text size="large" class="title">回收概览</el-text>
+      <el-text size="large" class="title">{{ $t("survey.stat.recyclingOverview") }}</el-text>
       <div class="refresh">
-        <el-tooltip class="box-item" effect="dark" content="点击刷新" placement="top-start">
+        <el-tooltip class="box-item" effect="dark" :content="$t('survey.stat.refresh')" placement="top-start">
           <el-icon @click="refresh" :class="{ rotating: isRotating }"><RefreshRight /></el-icon>
         </el-tooltip>
       </div>
     </div>
     <div class="stat-menu">
       <div class="menu-item">
-        <el-text>有效回收量</el-text>
+        <el-text>{{ $t("survey.stat.effectiveRecyclingQuantity") }}</el-text>
         <span class="huishou-tongji">{{ statData?.completeCount ?? "-" }}</span>
       </div>
       <div class="menu-item">
-        <el-text>总浏览量</el-text>
+        <el-text>{{ $t("survey.stat.totalViews") }}</el-text>
         <span class="huishou-tongji second-tongji">{{ statData?.viewCount ?? "-" }}</span>
       </div>
       <div class="menu-item">
-        <el-text>平均完成时间</el-text>
+        <el-text>{{ $t("survey.stat.averageCompletionTime") }}</el-text>
         <span class="huishou-tongji last-tongji">{{ statData?.avgCompleteTime ?? "-" }}</span>
       </div>
     </div>
@@ -27,11 +27,11 @@
     </div>
     <div class="bottom-chart">
       <div class="item device">
-        <el-text class="tit" size="large">常用设备</el-text>
+        <el-text class="tit" size="large">{{ $t("survey.stat.commonUsedDevices") }}</el-text>
         <ECharts ref="deviceChartRef" :option="deviceOption" />
       </div>
       <div class="item source">
-        <el-text class="tit" size="large">来源渠道</el-text>
+        <el-text class="tit" size="large">{{ $t("survey.stat.sourceChannel") }}</el-text>
         <ECharts ref="sourceChartRef" :option="sourceOption" />
       </div>
     </div>
@@ -293,7 +293,7 @@ const refresh = () => {
   .stat-menu {
     display: flex;
     width: 100%;
-    height: 65px;
+    height: 85px;
     background: #ffffff;
     .menu-item {
       display: flex;
@@ -338,6 +338,7 @@ const refresh = () => {
   }
 }
 .huishou-tongji {
+  margin-top: 10px;
   font-size: 20px;
   font-weight: bold;
   color: #333333;

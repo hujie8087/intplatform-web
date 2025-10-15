@@ -25,10 +25,10 @@
             @click="recoverSurver(scope.row)"
             link
             :icon="Refresh"
-            >恢复</el-button
+            >{{ $t("survey.recycle.restore") }}</el-button
           >
           <el-button type="danger" @click="deleteSurvey(scope.row)" link :icon="Delete" v-auth="['survey:project:recycle:del']">
-            删除
+            {{ $t("main.delete") }}
           </el-button>
         </template>
       </ProTable>
@@ -44,7 +44,10 @@ import { getProjectList, undeleteQuestionnaire, deleteProject } from "@/api/modu
 import { RecyclingStation } from "@/api/interface/questionnaire/recyclingStation";
 import { surveyType } from "@/utils/questionnaire";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const proTable = ref();
+
 const treeFilterValues = reactive({
   pageNum: 1,
   pageSize: 20
@@ -57,36 +60,40 @@ const dataCallback = (data: RecyclingStation.ProjectList) => {
 };
 const columns = reactive([
   { type: "selection", label: "", width: 80 },
-  { type: "index", label: "序号", width: 80 },
-  { prop: "projectName", label: "问卷名称", search: { el: "input" }, align: "left" },
+  { prop: "projectName", label: "survey.recycle.questionnaireName", search: { el: "input" }, align: "left" },
   {
     prop: "createTime",
-    label: "创建时间",
+    label: "main.createTime",
     align: "left"
   },
   {
     prop: "updateTime",
-    label: "删除时间",
+    label: "survey.recycle.deleteTime",
     align: "left"
   },
   {
     width: 180,
     prop: "status",
-    label: "问卷状态",
+    label: "survey.recycle.status",
     tag: true,
     enum: surveyType,
     render: scope => {
       let status = scope.row.status;
-      let text = status == 1 ? "未发布" : status == 2 ? "收集中" : "停止发布";
+      let text =
+        status == 1
+          ? t("survey.statusOptions.unpublished")
+          : status == 2
+            ? t("survey.statusOptions.inCollection")
+            : t("survey.statusOptions.stopped");
       return <span>{<el-tag type={status === 1 ? "primary" : status === 2 ? "success" : "danger"}>{text}</el-tag>}</span>;
     }
   },
-  { prop: "operation", label: "操作", fixed: "right" }
+  { prop: "operation", label: "main.operation", fixed: "right" }
 ]);
 const deleteSurvey = async row => {
-  ElMessageBox.confirm(`确认删除该问卷吗?删除后将无法恢复`, "温馨提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t("survey.recycle.deleteTip"), t("main.tips"), {
+    confirmButtonText: t("main.confirm"),
+    cancelButtonText: t("main.cancel"),
     type: "warning",
     draggable: true
   })
@@ -103,9 +110,9 @@ const deleteSurvey = async row => {
 };
 // 恢复问卷
 const recoverSurver = async row => {
-  ElMessageBox.confirm(`确认恢复该问卷吗？`, "温馨提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t("survey.recycle.restoreTip"), t("main.tips"), {
+    confirmButtonText: t("main.confirm"),
+    cancelButtonText: t("main.cancel"),
     type: "warning",
     draggable: true
   })

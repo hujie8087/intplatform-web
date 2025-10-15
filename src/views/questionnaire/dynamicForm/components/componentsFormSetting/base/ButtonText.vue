@@ -1,16 +1,16 @@
 <template>
-  <el-text size="default">按钮文字</el-text>
+  <el-text size="default">{{ $t("survey.form.buttonComp.btnTitle") }}</el-text>
   <el-input
     size="default"
     class="mb-10 comp"
     v-if="compStore.currentCompConfig"
-    placeholder="请输入按钮文字（最多30个字）"
+    :placeholder="$t('survey.form.buttonComp.btnTitlePlaceholder')"
     v-model="comp.buttonText"
     @input="handleChangeInput"
     :max="30"
   ></el-input>
   <div class="setting-item h-32 mb-10">
-    <el-text size="default">显示图标</el-text>
+    <el-text size="default">{{ $t("survey.form.buttonComp.showIcon") }}</el-text>
     <el-switch size="default" v-model="comp.buttonIconShowBool" @change="changeValue($event)" />
   </div>
 </template>
