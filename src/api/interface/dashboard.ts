@@ -46,11 +46,6 @@ export namespace DataVisualize {
     code: number;
     data: SiteInformationList[];
   }
-  export interface CarLine {
-    msg: string;
-    code: number;
-    data: CarListItem[];
-  }
   export interface CarMessge {
     msg: string;
     code: number;
@@ -85,8 +80,8 @@ interface YearDataItem {
   loginCount: number; // 登录数
   registerCount: number; // 注册数
 }
-interface SiteInformationList {
-  fsId: number;
+export interface SiteInformationList {
+  fsIds: string;
   fsAddressId: string;
   latitude: number | null;
   longitude: number | null;
@@ -95,6 +90,7 @@ interface SiteInformationList {
   goodsCount: number;
   remainingGoodsCount: number;
   receivedGoodsCount: number;
+  kitchenPreppingCount: number;
 }
 type Coordinate = [number, number];
 interface CarListItem {
