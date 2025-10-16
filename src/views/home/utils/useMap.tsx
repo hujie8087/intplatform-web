@@ -1,18 +1,17 @@
 /* eslint-disable */
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import "leaflet-draw";
 import { getRepairStatistics, getPersonCardBar } from "@/api/modules/dashboard";
 import echarts, { ECOption } from "@/components/ECharts/config";
-type ParamsType = { date: string; foodName: string; fcName: string };
-const isHttps = window.location.protocol === "https:";
 const convertToLatLng = polygons => {
   return polygons.map(
     ring => ring.map(([lng, lat]) => [lat, lng]) // 交换顺序
   );
 };
+import imageUrl from "@/assets/images/south-all.webp";
 // 人员信息函数
 export const useMap = (regionList = []) => {
   let map: L.Map | null = null;
@@ -32,19 +31,10 @@ export const useMap = (regionList = []) => {
     });
     // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
     L.tileLayer("https://www.google.com/maps/vt?lyrs=s@189&gl=en&x={x}&y={y}&z={z}").addTo(map);
-    const bounds = [
-      [0.462128, 127.883903],
-      [0.554159, 128.047638]
-    ];
-    const customTileLayer = L.tileLayer(
-      (isHttps ? import.meta.env.VITE_MAP_TILES_URL_https : import.meta.env.VITE_MAP_TILES_URL) + "/{z}/{x}_{y}.webp",
-      {
-        maxZoom: 19,
-        minZoom: 10,
-        bounds: bounds, // 限制瓦片层显示范围
-        attribution: "© Custom Tiles"
-      }
-    ).addTo(map);
+    L.imageOverlay(imageUrl, [
+      [0.462128, 128.047638],
+      [0.554159, 127.883903]
+    ]).addTo(map);
     personZoom();
     // layer.imageOverlay = customTileLayer;
     // L.imageOverlay(image3, bounds, { opacity: 1 }).addTo(map);
@@ -82,22 +72,10 @@ export const maintainMap = () => {
     drawnItems 就是一个变量，用来保存你绘制出来的所有图层。 */
     drawnItems = new L.FeatureGroup();
     map.addLayer(drawnItems);
-    /*  表示图片在地图上覆盖的地理范围,它是一个二维数组，包含两个点：左上角（或西南角）经纬度：[0.462128, 127.883903]
-      右下角（或东北角）经纬度：[0.554159, 128.047638],这样 Leaflet 就知道这张图片对应地图上的哪一块区域。
-    */
-    const bounds = [
-      [0.462128, 127.883903],
-      [0.554159, 128.047638]
-    ];
-    const customTileLayer = L.tileLayer(
-      (isHttps ? import.meta.env.VITE_MAP_TILES_URL_https : import.meta.env.VITE_MAP_TILES_URL) + "/{z}/{x}_{y}.webp",
-      {
-        maxZoom: 19,
-        minZoom: 10,
-        bounds: bounds, // 限制瓦片层显示范围
-        attribution: "© Custom Tiles"
-      }
-    ).addTo(map);
+    L.imageOverlay(imageUrl, [
+      [0.462128, 128.047638],
+      [0.554159, 127.883903]
+    ]).addTo(map);
     // layer.imageOverlay = customTileLayer;
     // L.imageOverlay(image3, bounds, { opacity: 1 }).addTo(map);
     interface arrType {
@@ -246,16 +224,10 @@ export const riskMap = () => {
     /*   L.FeatureGroup()：Leaflet 提供的一种 图层组（Layer Group）。
     它可以用来存放多个绘制的图形对象（点、线、面、矩形、多边形等）。
     drawnItems 就是一个变量，用来保存你绘制出来的所有图层。 */
-    const bounds = [
-      [0.462128, 127.883903],
-      [0.554159, 128.047638]
-    ];
-    L.tileLayer((isHttps ? import.meta.env.VITE_MAP_TILES_URL_https : import.meta.env.VITE_MAP_TILES_URL) + "/{z}/{x}_{y}.webp", {
-      maxZoom: 19,
-      minZoom: 10,
-      bounds: bounds, // 限制瓦片层显示范围
-      attribution: "© Custom Tiles"
-    }).addTo(map);
+    L.imageOverlay(imageUrl, [
+      [0.462128, 128.047638],
+      [0.554159, 127.883903]
+    ]).addTo(map);
   };
   const riskZoom = () => {
     map.invalidateSize && map.invalidateSize();
