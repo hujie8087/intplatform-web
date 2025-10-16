@@ -41,7 +41,7 @@ export const getMealService = (params: { dateType?: string; ancestors?: string }
   return http.get<DataVisualize.MealService>(PORT1 + `order/statistics/count`, params, { loading: false });
 };
 // 报餐送餐-站点信息
-export const getSiteInformation = (params: { date?: string; foodName?: string }) => {
+export const getSiteInformation = (params: { date?: string; foodName?: string; fcName?: string }) => {
   return http.get<SiteInformationList[]>(PORT1 + `/order/statistics/site`, params, { loading: false });
 };
 

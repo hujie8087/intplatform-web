@@ -160,6 +160,7 @@ import { MdcOrder } from "@/api/interface/mealDelivery/order";
 import { DictOptions } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 
+import imageUrl from "@/assets/images/south-all.webp";
 const filePath = import.meta.env.VITE_API_URL;
 const formatter = number => {
   const numbers = number.toString().split("").reverse();
@@ -377,7 +378,6 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
   }
 ]);
 const siteInformationOfGoods = ref<any[]>([]);
-
 const isShow = ref(true);
 const seachParams = reactive({
   date: dayjs().format("YYYY-MM-DD"),
@@ -426,6 +426,11 @@ const initMap = () => {
     maxZoom: 19
   });
   L.tileLayer("https://www.google.com/maps/vt?lyrs=s@189&gl=en&x={x}&y={y}&z={z}").addTo(map.value);
+
+  L.imageOverlay(imageUrl, [
+    [0.462128, 128.047638],
+    [0.554159, 127.883903]
+  ]).addTo(map.value);
   drawnItems = new L.FeatureGroup();
   map.value.addLayer(drawnItems);
   map.value.invalidateSize && map.value.invalidateSize();
@@ -452,7 +457,7 @@ const measureWidth = (text, chosenIcon) => {
 // 查询站点信息
 const siteInformationData = ref<SiteInformationList[]>([]);
 const siteInformation = async () => {
-  const res = await getSiteInformation({ date: seachParams.date, foodName: seachParams.foodName });
+  const res = await getSiteInformation({ date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcId });
   siteInformationData.value = res.data.filter(item => item.latitude && item.longitude);
 };
 // 在模块/组件的外层作用域（只声明一次）
