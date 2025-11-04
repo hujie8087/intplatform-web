@@ -12,10 +12,12 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" v-auth="['other:show:add']" :icon="CirclePlus" @click="openDrawer('新增')"> 新增 </el-button>
+          <el-button type="primary" v-auth="['clean:project:add']" :icon="CirclePlus" @click="openDrawer('新增')">
+            新增
+          </el-button>
           <el-button
             type="danger"
-            v-auth="['other:show:delete']"
+            v-auth="['clean:project:remove']"
             :disabled="!scope.isSelected"
             :icon="Delete"
             @click="batchDelete(scope.selectedListIds)"
@@ -26,10 +28,10 @@
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button type="warning" link :icon="Edit" v-auth="['other:show:edit']" @click="openDrawer('编辑', scope.row)">
+          <el-button type="warning" link :icon="Edit" v-auth="['clean:project:edit']" @click="openDrawer('编辑', scope.row)">
             编辑
           </el-button>
-          <el-button type="danger" link :icon="Delete" v-auth="['other:show:delete']" @click="deleteCleanHandle(scope.row)">
+          <el-button type="danger" link :icon="Delete" v-auth="['clean:project:remove']" @click="deleteCleanHandle(scope.row)">
             删除
           </el-button>
         </template>

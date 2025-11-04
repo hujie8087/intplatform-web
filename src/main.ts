@@ -37,6 +37,8 @@ import errorHandler from "@/utils/errorHandler";
 import DataVVue3 from "@kjgl77/datav-vue3"; // 导入 DataV Vue3 组件
 // firebase
 // import "@/firebase";
+import vue3TreeOrg from "vue3-tree-org";
+import "vue3-tree-org/lib/vue3-tree-org.css";
 const app = createApp(App);
 
 app.config.errorHandler = errorHandler;
@@ -46,4 +48,4 @@ Object.keys(Icons).forEach(key => {
   app.component(key, Icons[key as keyof typeof Icons]);
 });
 
-app.use(ElementPlus).use(directives).use(router).use(I18n).use(pinia).use(DataVVue3).mount("#app");
+app.use(ElementPlus).use(directives).use(router).use(I18n).use(pinia).use(DataVVue3).use(vue3TreeOrg).mount("#app");

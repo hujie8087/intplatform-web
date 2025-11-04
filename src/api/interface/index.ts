@@ -19,6 +19,13 @@ export interface ResPage<T> {
   total: number;
 }
 
+export interface ResPageData<T> {
+  records: T[];
+  pageNum: number;
+  pageSize: number;
+  total: number;
+}
+
 // 分页请求参数
 export interface ReqPage {
   pageNum: number;
@@ -39,7 +46,9 @@ export namespace Login {
     password: string;
   }
   export interface ResLogin {
-    access_token: string;
+    accessToken: string;
+    refreshToken: string;
+    code: string;
   }
   export interface ResAuthButtons {
     [key: string]: string[];
@@ -143,7 +152,7 @@ export namespace User {
     email: string;
     address: string;
     createTime: string;
-    status: number;
+    status: number | string;
     avatar: string;
     photo: any[];
     children?: ResUserList[];

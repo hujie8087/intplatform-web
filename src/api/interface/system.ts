@@ -100,6 +100,16 @@ export namespace Account {
     code: number;
     msg: string;
   }
+  export interface ReqRoleUserParams extends ReqPage {
+    roleId: number;
+  }
+  export interface ResRoleUserList {
+    roleId: number;
+    roleName: string;
+    userId: number;
+    userName: string;
+    nickName: string;
+  }
 }
 
 // 部门管理模块
@@ -217,6 +227,7 @@ export namespace Role {
     repairAreaId?: string;
     prId?: number;
     children?: ResRole[];
+    sysUser?: Account.ResAccountList[];
   }
   export interface ResMenu {
     id: number;
@@ -232,6 +243,14 @@ export namespace Role {
     status?: number;
     type?: number;
     children?: ResMenu[];
+  }
+  export interface ResRoleUser {
+    roleId: number;
+    prId: number;
+    roleName: string;
+    level: number;
+    num: number;
+    children: ResRoleUser[];
   }
 }
 

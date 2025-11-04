@@ -1,5 +1,6 @@
 import { DictOptions, Login } from "@/api/interface";
 import { Building } from "@/api/interface/productDisplay/building";
+import { SosChart } from "@/api/interface/sosAlart";
 import { Menu } from "@/api/interface/system";
 
 export type LayoutType = "vertical" | "classic" | "transverse" | "columns";
@@ -32,6 +33,7 @@ export interface GlobalState {
 /* UserState */
 export interface UserState {
   token: string;
+  refreshToken: string;
   userInfo: Login.ResUserInfo;
 }
 
@@ -81,4 +83,18 @@ export interface MessageState {
   messageCount: number;
   notificationCount: number;
   todoCount: number;
+}
+
+export interface ChatState {
+  currentSession: SosChart.ResChatSessionList | null;
+  sessions: SosChart.ResChatSessionList[];
+  messages: SosChart.ResChatMessageList[];
+  isConnected: boolean;
+  isLoading: boolean;
+  unreadCount: number;
+  sessionPolling: ReturnType<typeof setInterval> | null;
+  pollingFailCount: number;
+  maxFailCount: number;
+  unreadPolling: ReturnType<typeof setInterval> | null;
+  currentFilterParams: any;
 }

@@ -16,12 +16,15 @@
         ></el-input>
       </el-form-item>
       <el-form-item :label="`${$t('system.role.parentRole')}`" prop="prId">
-        <el-select
+        <el-tree-select
           v-model="drawerProps.rowData.prId"
+          :data="[{ roleId: 0, roleName: 'IWIP后勤综合服务平台', children: drawerProps.roleList }]"
           :placeholder="`${$t('main.inputError', { msg: $t('system.role.parentRole') })}`"
+          value-key="roleId"
+          :check-strictly="true"
+          :props="{ label: 'roleName', children: 'children' }"
         >
-          <el-option v-for="item in drawerProps.roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId" />
-        </el-select>
+        </el-tree-select>
       </el-form-item>
       <el-form-item :label="`${$t('system.role.roleKey')}`" prop="roleKey">
         <el-input
