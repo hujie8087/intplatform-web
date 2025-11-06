@@ -68,11 +68,11 @@ export const cancelAuth = ({ roleId, userName }: { roleId: number; userName: str
 };
 
 // * 批量取消用户授权角色
-export const cancelAuthAll = ({ userNames }: { userNames: string }) => {
-  return http.put(PORT1 + `/system/role/authUser/cancelAll`, { userNames });
+export const cancelAuthAll = ({ roleId, userIds }: { roleId: string; userIds: string[] }) => {
+  return http.put(PORT1 + `/system/role/authUser/cancelAll?roleId=${roleId}`, userIds);
 };
 
 // * 新增用户授权角色
-export const addAuth = (userInfo: [{ userName: number; userId: string }]) => {
-  return http.put(PORT1 + `/system/role/authUser/selectAll`, userInfo);
+export const addAuth = (params: any) => {
+  return http.put(PORT1 + `/system/role/authUser/selectAll?roleId=${params.roleId}`, params.userInfo);
 };

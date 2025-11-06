@@ -118,7 +118,7 @@ const rules = reactive({
   handleBy: [{ required: true, message: t("main.selectError", { msg: "处理人" }) }],
   handleTime: [{ required: true, message: t("main.selectError", { msg: "处理时间" }) }],
   progress: [{ required: true, message: t("main.selectError", { msg: "处理进度" }) }],
-  handleResult: [{ required: true, message: t("main.selectError", { msg: "处理结果" }) }]
+  handleResult: [{ required: true, message: t("main.inputError", { msg: "处理结果" }) }]
 });
 
 interface DrawerProps {

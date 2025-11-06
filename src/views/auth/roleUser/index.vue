@@ -56,7 +56,7 @@
           :columns="columns"
           :request-api="getRoleUserList"
           :data-callback="dataCallback"
-          row-key="userId"
+          row-key="userName"
           :tool-button="false"
           :init-param="initParam"
         >
@@ -72,12 +72,12 @@
             >
           </template>
           <template #operation="scope">
-            <el-button type="warning" @click="handleCancelAuth(scope.row)">取消授权</el-button>
+            <el-button type="danger" @click="handleCancelAuth(scope.row)">取消授权</el-button>
           </template>
         </ProTable>
       </div>
       <template #footer>
-        <el-button @click="dialogVisible = false">关闭</el-button>
+        <el-button @click="closeDialog">关闭</el-button>
       </template>
     </el-dialog>
   </div>
@@ -125,10 +125,6 @@ const columns = computed((): ColumnProps<User.ResUserList>[] => [
     label: "用户姓名"
   },
   {
-    prop: "userId",
-    label: "用户编号"
-  },
-  {
     prop: "operation",
     label: "操作",
     width: 120,
@@ -138,16 +134,7 @@ const columns = computed((): ColumnProps<User.ResUserList>[] => [
 
 const getRoleTreeList = async () => {
   const { data } = await getRoleUserNumber();
-  roleListData.value = {
-    roleId: 0,
-    prId: 0,
-    roleName: "IWIP后勤综合服务平台",
-    level: 0,
-    num: 0,
-    children: data || []
-  };
-
-  console.log(roleListData.value);
+  roleListData.value = { ...data[0] };
 };
 
 getRoleTreeList();
@@ -160,14 +147,20 @@ const filterNodeMethod = (value, data) => {
   if (!value) return true;
   return data.label.indexOf(value) !== -1;
 };
+const checkNode = ref();
 const onNodeClick = async (e, data) => {
   dialogVisible.value = true;
+  checkNode.value = data;
   initParam.value.roleId = data.roleId;
   setTimeout(() => {
     proTable.value?.getTableList();
   }, 100);
 };
 
+const closeDialog = async () => {
+  dialogVisible.value = false;
+  await getRoleTreeList();
+};
 const handleCancelAuth = async (row: Account.ResRoleUserList) => {
   const result = await cancelAuth({ roleId: row.roleId, userName: row.userName });
   if (result.code === 200) {
@@ -180,7 +173,10 @@ const handleCancelAuth = async (row: Account.ResRoleUserList) => {
 };
 
 const handleCancelAuthAll = async (selectedListIds: number[]) => {
-  const result = await cancelAuthAll({ userNames: selectedListIds.join(",") });
+  const result = await cancelAuthAll({
+    roleId: initParam.value.roleId.toString(),
+    userIds: selectedListIds.map(item => item.toString())
+  });
   if (result.code === 200) {
     ElMessage.success("批量取消授权成功");
     proTable.value?.getTableList();
@@ -195,7 +191,7 @@ const handleAddAuth = async () => {
     title: "新增授权",
     isView: false,
     api: addAuth,
-    rowData: {},
+    rowData: checkNode.value,
     getTableList: proTable.value?.getTableList
   };
   addUserDrawer.value?.acceptParams(params);

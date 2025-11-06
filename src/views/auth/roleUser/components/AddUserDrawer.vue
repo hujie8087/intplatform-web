@@ -1,12 +1,19 @@
 <template>
-  <el-dialog v-model="drawerVisible" :destroy-on-close="true" :title="`${drawerProps.title}用户`" width="1000px">
+  <el-dialog
+    v-model="drawerVisible"
+    :destroy-on-close="true"
+    :title="`${drawerProps.title}-${drawerProps.rowData.roleName}-用户`"
+    width="1200px"
+    :draggable="true"
+  >
     <ProTable
-      ref="proTable"
+      ref="proUserTable"
       :columns="columns"
       :request-api="getTableList"
       :data-callback="dataCallback"
       row-key="userId"
       :tool-button="false"
+      :search-col="4"
       :init-param="initParam"
     >
     </ProTable>
@@ -19,7 +26,7 @@
 
 <script setup lang="ts" name="ApplyDrawer">
 import { computed, ref } from "vue";
-import { ElMessage, FormInstance } from "element-plus";
+import { ElMessage } from "element-plus";
 import { useI18n } from "vue-i18n";
 import ProTable from "@/components/ProTable/index.vue";
 import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
@@ -29,26 +36,65 @@ const { t } = useI18n(); // 解构出t方法
 
 const initParam = ref<any>({});
 
-const proTable = ref<ProTableInstance>();
+const proUserTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
   return {
-    list: data.rows,
-    total: data.total
+    list: data.data.list,
+    total: data.data.total
   };
 };
-const columns = computed((): ColumnProps<Account.ResAccountList>[] => [
+
+const userStatus = [
+  { label: "未知", value: 0, tagType: "danger" },
+  { label: "正常", value: 1, tagType: "success" },
+  { label: "未激活", value: 2, tagType: "primary" },
+  { label: "禁用", value: 3, tagType: "danger" },
+  { label: "锁定", value: 4, tagType: "warning" },
+  { label: "离职", value: 5, tagType: "info" },
+  { label: "退休", value: 6, tagType: "info" },
+  { label: "黑名单", value: 7, tagType: "danger" }
+];
+
+const columns = computed((): ColumnProps<Account.ResThirdUser>[] => [
   { type: "selection", fixed: "left", width: 50 },
   {
-    prop: "userName",
-    label: "用户帐号"
+    prop: "account",
+    label: "用户帐号",
+    width: 120,
+    search: { el: "input" }
   },
   {
-    prop: "nickName",
-    label: "用户姓名"
+    prop: "name",
+    label: "用户姓名",
+    width: 160,
+    search: { el: "input" }
   },
   {
-    prop: "userId",
-    label: "用户编号"
+    prop: "sex",
+    label: "性别",
+    width: 100
+  },
+  {
+    prop: "tel",
+    label: "电话",
+    width: 120
+  },
+  {
+    prop: "postName",
+    label: "岗位",
+    width: 160
+  },
+  {
+    prop: "formatOrganizeName",
+    label: "所属组织"
+  },
+  {
+    prop: "status",
+    label: "状态",
+    enum: userStatus,
+    width: 100,
+    tag: true,
+    search: { el: "select", props: { filterable: true } }
   }
 ]);
 const getTableList = (params: any) => {
@@ -64,6 +110,7 @@ interface DrawerProps {
   isView: boolean;
   rowData: Partial<Account.ResRoleUserList>;
   api?: (params: any) => Promise<any>;
+  getTableList?: () => Promise<any>;
 }
 
 // drawer框状态
@@ -76,28 +123,35 @@ const drawerProps = ref<DrawerProps>({
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
+  console.log(drawerProps.value.rowData);
   drawerVisible.value = true;
 };
 
 // 提交数据（新增/编辑）
-const ruleFormRef = ref<FormInstance>();
-const handleSubmit = () => {
-  ruleFormRef.value!.validate(async valid => {
-    if (!valid) return;
-    const formData = {
-      ...drawerProps.value.rowData
-    };
-    try {
-      await drawerProps.value.api!(formData);
-      ElMessage.success({
-        message: t("main.successMsg", { title: "住宿申请流程", method: `${drawerProps.value.title}` })
-      });
-      proTable.value?.getTableList();
-      drawerVisible.value = false;
-    } catch (error) {
-      console.log(error);
-    }
-  });
+const handleSubmit = async () => {
+  if (proUserTable.value?.selectedList.length === 0) {
+    ElMessage.warning("请选择用户");
+    return;
+  }
+  const formData = {
+    roleId: drawerProps.value.rowData.roleId,
+    userInfo: proUserTable.value?.selectedList?.map(item => {
+      return {
+        userId: item.id,
+        userName: item.account
+      };
+    })
+  };
+  try {
+    await drawerProps.value.api!(formData);
+    ElMessage.success({
+      message: t("main.successMsg", { title: "绑定用户成功", method: `${drawerProps.value.title}` })
+    });
+    drawerProps.value.getTableList?.();
+    drawerVisible.value = false;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 defineExpose({

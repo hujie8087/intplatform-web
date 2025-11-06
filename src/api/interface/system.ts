@@ -110,6 +110,18 @@ export namespace Account {
     userName: string;
     nickName: string;
   }
+
+  export interface ResThirdUser {
+    id: number;
+    account: string;
+    avatar: string;
+    name: string;
+    sex: string;
+    tel: string;
+    postName: string;
+    formatOrganizeName: string;
+    status: number;
+  }
 }
 
 // 部门管理模块
