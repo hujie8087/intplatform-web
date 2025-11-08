@@ -66,6 +66,12 @@
           <el-option v-for="item in drawerProps.buildingOptions" :label="item.title" :value="item.id" :key="item.id"> </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item :label="`${$t('system.role.building')}`" prop="canteenId">
+        <el-select v-model="canteenIds" multiple collapse-tags collapse-tags-tooltip :max-collapse-tags="5" placeholder="请选择">
+          <el-option v-for="item in drawerProps.canteenList" :label="item.label" :value="item.value" :key="item.label">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item :label="`${$t('system.role.status')}`" prop="status">
         <el-switch
           v-model="drawerProps.rowData.status"
@@ -96,6 +102,7 @@ import { ElMessage, FormInstance } from "element-plus";
 import { useI18n } from "vue-i18n";
 import { Role } from "@/api/interface/system";
 import { Building } from "@/api/interface/productDisplay/building";
+import { DictOptions } from "@/api/interface";
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({
@@ -104,6 +111,7 @@ const rules = reactive({
   roleKey: [{ required: true, message: t("main.inputError", { msg: t("system.role.roleKey") }) }]
 });
 const repairAreaIds = ref<number[]>([]);
+const canteenIds = ref<number[]>([]);
 interface DrawerProps {
   title: string;
   isView: boolean;
@@ -114,6 +122,7 @@ interface DrawerProps {
   menuIds: number[];
   roleList?: Role.ResRole[];
   buildingOptions?: Building.ResBuilding[];
+  canteenList?: DictOptions[];
 }
 // drawer框状态
 const drawerVisible = ref(false);

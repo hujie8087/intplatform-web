@@ -98,6 +98,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 import { useDict } from "@/hooks/useDict";
 import PrintDrawer from "./components/PrintDrawer.vue";
+import { EpPropMergeType } from "element-plus/es/utils";
 
 const printDrawerRef = ref<InstanceType<typeof PrintDrawer> | null>(null);
 
@@ -119,7 +120,13 @@ useDict("order_type_status", "order_print_status").then(res => {
   orderPrintOptions.value = res.order_print_status.map(item => ({ ...item, value: +item.value }));
 });
 
-const tagTypeList = ref<string[]>(["warning", "success", "danger", "info", "primary"]);
+const tagTypeList = ref<EpPropMergeType<StringConstructor, "success" | "warning" | "info" | "primary" | "danger", unknown>[]>([
+  "warning",
+  "success",
+  "danger",
+  "info",
+  "primary"
+]);
 
 // 取餐类型
 const pickupTypeOptions = ref<DictOptions[]>([]);

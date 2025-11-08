@@ -61,7 +61,9 @@ export default {
       tips: "Pengingat",
       canteen: "Restoran",
       userChinaseEnglish: "Nama Akun",
-      accountType: "Kategori Nomor Akun"
+      accountType: "Kategori Nomor Akun",
+      postName: "Posisi",
+      formatOrganizeName: "Nama Organisasi"
     },
     dept: {
       deptList: "Daftar Departemen",

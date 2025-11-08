@@ -61,7 +61,9 @@ export default {
       tips: "温馨提示",
       canteen: "餐厅",
       userChinaseEnglish: "姓名(+拼音)",
-      accountType: "账号类别"
+      accountType: "账号类别",
+      postName: "岗位",
+      formatOrganizeName: "所属组织"
     },
     dept: {
       deptList: "部门列表",

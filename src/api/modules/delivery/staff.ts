@@ -19,13 +19,13 @@ export const editDeliveryStaff = (params: DeliveryStaff.ReqDeliveryStaffParams) 
 };
 
 // * 删除配送员
-export const deleteDeliveryStaff = (id: number) => {
-  return http.delete(PORT1 + `/delivery/staff/${id}`);
+export const deleteDeliveryStaff = (username: string) => {
+  return http.delete(PORT1 + `/delivery/staff/${username}`);
 };
 
 // * 获取配送员信息
-export const getDeliveryStaffById = (id: number) => {
-  return http.get<DeliveryStaff.ResDeliveryStaff>(PORT1 + `/delivery/staff/getStaffDetails/${id}`);
+export const getDeliveryStaffById = (username: string) => {
+  return http.get<DeliveryStaff.ResDeliveryStaff>(PORT1 + `/delivery/staff/getStaffDetails/${username}`);
 };
 
 // * 导出配送员信息
