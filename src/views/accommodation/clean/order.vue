@@ -1,51 +1,65 @@
 <template>
   <div class="main-box">
-    <TreeFilter
-      ref="treeFilterRef"
-      title="区域列表(多选)"
-      multiple
-      label="title"
-      :request-api="getAllBuildingTree"
-      :default-value="treeFilterValues.ancestors"
-      :check-strictly="true"
-      @change="changeTreeFilter"
-    />
-    <div class="table-box">
-      <ProTable
-        ref="proTable"
-        highlight-current-row
-        :columns="columns"
-        :request-api="getCleanOrderList"
-        :data-callback="dataCallback"
-        :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
-        :init-param="initParam"
-        row-key="id"
-      >
-        <!-- 表格操作 -->
-        <template #operation="scope">
-          <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button
-            type="warning"
-            link
-            v-auth="['clean:order:edit']"
-            :disabled="scope.row.orderStatus !== 0"
-            @click="openHandleDrawer(scope.row)"
-          >
-            处理
-          </el-button>
-          <!-- 退款 -->
-          <el-button
-            type="danger"
-            link
-            v-auth="['clean:order:refund']"
-            :disabled="scope.row.orderStatus !== 0"
-            @click="refundHandler(scope.row)"
-          >
-            退款
-          </el-button>
-        </template>
-      </ProTable>
-      <CleanOrderDrawer ref="cleanOrderDrawerRef" />
+    <div class="main-content-split">
+      <div class="tree-panel" :style="{ width: leftWidth + 'px' }">
+        <TreeFilter
+          ref="treeFilterRef"
+          title="区域列表(多选)"
+          multiple
+          label="title"
+          :request-api="getAllBuildingTree"
+          :default-value="treeFilterValues.ancestors"
+          :check-strictly="true"
+          @change="changeTreeFilter"
+        />
+      </div>
+      <div class="splitter" @mousedown="onSplitterMouseDown"></div>
+      <div class="table-box">
+        <ProTable
+          ref="proTable"
+          highlight-current-row
+          :columns="columns"
+          :request-api="getCleanOrderList"
+          :data-callback="dataCallback"
+          :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
+          :init-param="initParam"
+          row-key="id"
+        >
+          <!-- 表格操作 -->
+          <template #operation="scope">
+            <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+            <el-button
+              type="success"
+              link
+              v-auth="['clean:order:handle']"
+              v-if="scope.row.orderStatus === 0"
+              :icon="Check"
+              @click="openAcceptDrawer(scope.row)"
+              >接单</el-button
+            >
+            <el-button
+              type="warning"
+              link
+              v-if="scope.row.orderStatus === 4"
+              v-auth="['clean:order:edit']"
+              @click="openHandleDrawer(scope.row)"
+            >
+              处理
+            </el-button>
+            <!-- 退款 -->
+            <el-button
+              type="danger"
+              link
+              v-auth="['clean:order:refund']"
+              v-if="scope.row.orderStatus === 4"
+              @click="refundHandler(scope.row)"
+            >
+              退款
+            </el-button>
+          </template>
+        </ProTable>
+        <CleanOrderDrawer ref="cleanOrderDrawerRef" />
+      </div>
     </div>
     <el-dialog v-model="handleDialogVisible" title="办理保洁订单" width="500" destroy-on-close center>
       <el-form :model="checkOrder" label-width="100px" :rules="rules" ref="checkOrderRef">
@@ -73,13 +87,14 @@ import { ref, reactive } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
 import CleanOrderDrawer from "./components/CleanOrderDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { View } from "@element-plus/icons-vue";
+import { View, Check } from "@element-plus/icons-vue";
 import {
   getCleanOrderList,
   editCleanOrder,
   getCleanOrderById,
   getCleanList,
-  refundCleanOrder
+  refundCleanOrder,
+  handleCleanOrder
 } from "@/api/modules/service/accommodation";
 import { Accommodation } from "@/api/interface/service/accommodation";
 import { DictOptions } from "@/api/interface";
@@ -90,10 +105,6 @@ import { useHandleData } from "@/hooks/useHandleData";
 import { sendMessage } from "@/api/modules/system/notice";
 import { getUserInfoByUsername } from "@/api/modules/system/user";
 import { ElForm } from "element-plus";
-
-import { useUserStore } from "@/stores/modules/user";
-
-const userStore = useUserStore();
 
 const handleDialogVisible = ref(false);
 const checkOrder = ref<Accommodation.ResCleanOrder>();
@@ -153,6 +164,11 @@ const dataCallback = (data: any) => {
   };
 };
 
+const openAcceptDrawer = async (row: Accommodation.ResCleanOrder) => {
+  checkOrder.value = row;
+  await useHandleData(handleCleanOrder, checkOrder.value!.id, `接收订单${row.contacts}-${row.clArea}`);
+  proTable.value?.getTableList();
+};
 const openHandleDrawer = async (row: Accommodation.ResCleanOrder) => {
   checkOrder.value = row;
   handleDialogVisible.value = true;
@@ -163,11 +179,7 @@ const openHandleDrawer = async (row: Accommodation.ResCleanOrder) => {
 const handleConfirm = async () => {
   checkOrderRef.value?.validate(async valid => {
     if (valid) {
-      await useHandleData(
-        editCleanOrder,
-        { ...checkOrder.value, orderStatus: 1, handler: userStore.userInfo.user.userName },
-        "办理保洁订单"
-      );
+      await useHandleData(editCleanOrder, { ...checkOrder.value, orderStatus: 1 }, "办理保洁订单");
       handleDialogVisible.value = false;
       checkOrderRef.value?.resetFields();
       if (checkOrder.value) {
@@ -218,7 +230,7 @@ const columns = reactive<ColumnProps<Accommodation.ResCleanOrder>[]>([
     search: { el: "select", props: { filterable: true } }
   },
   { prop: "createTime", label: "创建时间", width: 160 },
-  { prop: "operation", label: "操作", width: 230, fixed: "right" }
+  { prop: "operation", label: "操作", width: 200, fixed: "right" }
 ]);
 
 // 退款
@@ -247,4 +259,64 @@ const openDrawer = async (title: string, row: Partial<Accommodation.ResCleanOrde
 };
 
 const treeFilterRef = ref<InstanceType<typeof TreeFilter>>();
+const leftWidth = ref(260); // 初始宽度
+let dragging = false;
+
+const onSplitterMouseDown = (e: MouseEvent) => {
+  dragging = true;
+  document.body.style.cursor = "col-resize";
+  const startX = e.clientX;
+  const startWidth = leftWidth.value;
+
+  const onMouseMove = (moveEvent: MouseEvent) => {
+    if (!dragging) return;
+    const delta = moveEvent.clientX - startX;
+    let newWidth = startWidth + delta;
+    // 限制最小/最大宽度
+    newWidth = Math.max(180, Math.min(newWidth, 600));
+    leftWidth.value = newWidth;
+  };
+
+  const onMouseUp = () => {
+    dragging = false;
+    document.body.style.cursor = "";
+    window.removeEventListener("mousemove", onMouseMove);
+    window.removeEventListener("mouseup", onMouseUp);
+  };
+
+  window.addEventListener("mousemove", onMouseMove);
+  window.addEventListener("mouseup", onMouseUp);
+};
 </script>
+<style scoped>
+.main-content-split {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+}
+.tree-panel {
+  min-width: 180px;
+  max-width: 600px;
+  overflow: auto;
+  background: #ffffff;
+  border-right: 1px solid #eeeeee;
+  transition: width 0.1s;
+}
+.splitter {
+  z-index: 2;
+  width: 6px;
+  cursor: col-resize;
+  background: #f5f5f5;
+  transition: background 0.2s;
+}
+.splitter:hover {
+  background: #b3d8fd;
+}
+.table-box {
+  flex: 1;
+  min-width: 0;
+  margin-left: 0;
+  overflow: auto;
+  background: #ffffff;
+}
+</style>
