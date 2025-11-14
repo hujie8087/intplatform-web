@@ -59,14 +59,14 @@ export const saveUserMobilePhoneId = (params: { mobilePhoneId: string }) => {
 };
 
 // 修改密码
-export const changePassword = (params: { oldPassword: string; newPassword: string; confirmPassword: string }) => {
+export const changePassword = (params: { oldPassword: string; password: string; confirmPassword: string }) => {
   return http.put<Result>(PORT1 + `/home/upms/home/user/putUserPassword`, params, { baseURL: baseURL });
 };
 // 首次登录修改密码
 export const firstLoginChangePassword = (params: {
   code: string;
   account: string;
-  newPassword: string;
+  password: string;
   confirmPassword: string;
 }) => {
   return http.put<Result>(PORT1 + `/home/sso/home/sso/resetFirstPassword`, params, { baseURL: baseURL });
