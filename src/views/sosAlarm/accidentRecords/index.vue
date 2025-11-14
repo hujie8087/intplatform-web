@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <el-form ref="formRef" :inline="true" :model="form" class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px]">
+    <!-- <el-form ref="formRef" :inline="true" :model="form" class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px]">
       <el-form-item label="报警地点：" prop="reportLocation">
         <el-input v-model="form.reportLocation" placeholder="请输入报警地点" clearable class="!w-[180px]" />
       </el-form-item>
@@ -42,20 +42,20 @@
           @page-current-change="handleCurrentChange"
         ></pure-table>
       </template>
-    </PureTableBar>
+    </PureTableBar> -->
   </div>
 </template>
 
 <script setup lang="ts" name="AccidentRecords">
-import { ref } from "vue";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { PureTableBar } from "@/components/RePureTableBar";
-import { useAccidentRecords } from "./utils/hook";
-import Search from "@iconify-icons/ep/search";
-import Refresh from "@iconify-icons/ep/refresh";
+// import { ref } from "vue";
+// import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+// import { PureTableBar } from "@/components/RePureTableBar";
+// import { useAccidentRecords } from "./utils/hook";
+// import Search from "@iconify-icons/ep/search";
+// import Refresh from "@iconify-icons/ep/refresh";
 
-const formRef = ref();
+// const formRef = ref();
 
-const { form, loading, columns, dataList, pagination, onSearch, resetForm, handleSizeChange, handleCurrentChange } =
-  useAccidentRecords();
+// const { form, loading, columns, dataList, pagination, onSearch, resetForm, handleSizeChange, handleCurrentChange } =
+//   useAccidentRecords();
 </script>
