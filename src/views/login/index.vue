@@ -20,8 +20,8 @@
         :rules="firstLoginChangePasswordRules"
         label-width="100px"
       >
-        <el-form-item label="新密码" prop="newPassword">
-          <el-input v-model="firstLoginChangePasswordForm.newPassword" type="password" />
+        <el-form-item label="新密码" prop="password">
+          <el-input v-model="firstLoginChangePasswordForm.password" type="password" />
         </el-form-item>
         <el-form-item label="确认密码" prop="confirmPassword">
           <el-input v-model="firstLoginChangePasswordForm.confirmPassword" type="password" />
@@ -46,14 +46,14 @@ const title = import.meta.env.VITE_GLOB_APP_TITLE;
 const router = useRouter();
 const firstLoginChangePasswordDialog = ref(false);
 const firstLoginChangePasswordForm = ref({
-  newPassword: "",
+  password: "",
   confirmPassword: "",
   code: "",
   account: ""
 });
 
 const firstLoginChangePasswordRules = ref({
-  newPassword: [{ required: true, message: "请输入新密码", trigger: "blur" }],
+  password: [{ required: true, message: "请输入新密码", trigger: "blur" }],
   confirmPassword: [{ required: true, message: "请确认密码", trigger: "blur" }]
 });
 const firstLoginChangePasswordFormRef = ref<FormInstance>();
