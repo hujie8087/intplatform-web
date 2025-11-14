@@ -170,7 +170,7 @@ const importCoupleRoomStaffExcel = () => {
   dialogRef.value?.acceptParams({
     title: "人员",
     importApi: importCoupleRoomStaff,
-    tempApi: "",
+    tempApi: "/coupleRoom/room/staff/exportImp",
     getTableList: proTable.value?.getTableList
   });
 };

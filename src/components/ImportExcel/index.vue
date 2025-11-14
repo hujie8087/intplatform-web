@@ -44,6 +44,7 @@ import { ref } from "vue";
 import { useDownload } from "@/hooks/useDownload";
 import { Download } from "@element-plus/icons-vue";
 import { ElNotification, UploadRequestOptions, UploadRawFile } from "element-plus";
+const baseUrl = import.meta.env.VITE_API_URL;
 
 export interface ExcelParameterProps {
   title: string; // 标题
@@ -76,7 +77,7 @@ const acceptParams = (params: ExcelParameterProps) => {
 // Excel 导入模板下载
 const downloadTemp = () => {
   if (!parameter.value.tempApi) return;
-  useDownload(parameter.value.tempApi, `${parameter.value.title}模板`, true, ".xlsx", "get");
+  useDownload(baseUrl + parameter.value.tempApi, `${parameter.value.title}模板`, true, ".xlsx", "post");
 };
 
 // 文件上传

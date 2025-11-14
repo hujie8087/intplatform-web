@@ -66,7 +66,7 @@
           <el-option v-for="item in drawerProps.buildingOptions" :label="item.title" :value="item.id" :key="item.id"> </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item :label="`${$t('system.role.building')}`" prop="canteenId">
+      <el-form-item label="餐厅权限" prop="canteenId">
         <el-select v-model="canteenIds" multiple collapse-tags collapse-tags-tooltip :max-collapse-tags="5" placeholder="请选择">
           <el-option v-for="item in drawerProps.canteenList" :label="item.label" :value="item.value" :key="item.label">
           </el-option>

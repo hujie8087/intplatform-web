@@ -15,7 +15,6 @@ defineProps<Props>();
 
 <style lang="scss" scoped>
 .text-message {
-
   // 宽度为文本宽度
   width: fit-content;
   font-size: 12px;
