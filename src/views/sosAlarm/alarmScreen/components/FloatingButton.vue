@@ -13,13 +13,13 @@
     </el-badge>
   </div>
   <!-- 客服聊天组件 -->
-  <CustomerChat v-model="chatVisible" v-if="chatVisible" @close="handleChatClose" />
+  <!-- <CustomerChat v-model="chatVisible" v-if="chatVisible" @close="handleChatClose" /> -->
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { ChatDotRound } from "@element-plus/icons-vue";
-import CustomerChat from "./index.vue";
+// import CustomerChat from "./";
 import { useChatStore } from "@/stores/modules/chat";
 
 const chatVisible = ref(false);
@@ -188,15 +188,15 @@ const openChat = () => {
 };
 
 // 关闭聊天
-const handleChatClose = () => {
-  if (triggerTimer.value) {
-    clearTimeout(triggerTimer.value);
-  }
-  // triggerTimer.value = setTimeout(() => {
-  //   triggerTimer.value = false;
-  // }, 400);
-  console.log("客服聊天已关闭");
-};
+// const handleChatClose = () => {
+//   if (triggerTimer.value) {
+//     clearTimeout(triggerTimer.value);
+//   }
+//   // triggerTimer.value = setTimeout(() => {
+//   //   triggerTimer.value = false;
+//   // }, 400);
+//   console.log("客服聊天已关闭");
+// };
 
 onMounted(() => {
   chatStore.startUnreadPolling();
