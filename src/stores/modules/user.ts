@@ -8,6 +8,7 @@ export const useUserStore = defineStore({
   id: "logistics-user",
   state: (): UserState => ({
     token: "",
+    refreshToken: "",
     userInfo: {
       permissions: [],
       roles: [],
@@ -23,6 +24,9 @@ export const useUserStore = defineStore({
     // Set Token
     setToken(token: string) {
       this.token = token;
+    },
+    setRefreshToken(refreshToken: string) {
+      this.refreshToken = refreshToken;
     },
     // Set setUserInfo
     setUserInfo(userInfo: UserState["userInfo"]) {

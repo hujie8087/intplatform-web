@@ -50,6 +50,13 @@ class RequestHttp {
         config.loading && showFullScreenLoading();
         if (config.headers && typeof config.headers.set === "function") {
           config.headers.set("Authorization", "Bearer " + userStore.token);
+          config.headers.set("access_token", userStore.token);
+          config.headers.set("refresh_token", userStore.refreshToken);
+          config.headers.set("product_code", "intplatform");
+          config.headers.set("platform", "pc");
+          config.headers.set("version_name", "1.0.0");
+          config.headers.set("version_code", "1");
+          config.headers.set("os", "web");
         }
         return config;
       },
@@ -73,13 +80,13 @@ class RequestHttp {
         if (data.code == ResultEnum.OVERDUE || data.code == ResultEnum.UNPROCESSABLE_ENTITY) {
           userStore.setToken("");
           router.replace(LOGIN_URL);
-          ElMessage.error(data.msg);
+          ElMessage.error(data.msg || data.message);
           return Promise.reject(data);
         }
         // 全局错误信息拦截（防止下载文件的时候返回数据流，没有 code 直接报错）
         if (data.code && data.code !== ResultEnum.SUCCESS) {
           if (config.method === "post") {
-            ElMessageBox.confirm(data.msg, "系统提示", {
+            ElMessageBox.confirm(data.msg || data.message, "系统提示", {
               confirmButtonText: "确认",
               showCancelButton: false,
               type: "warning",
@@ -87,7 +94,7 @@ class RequestHttp {
               dangerouslyUseHTMLString: true
             });
           } else {
-            ElMessage.error(data.msg);
+            ElMessage.error(data.msg || data.message);
           }
           return Promise.reject(data);
         }

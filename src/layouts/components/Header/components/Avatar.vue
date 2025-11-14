@@ -1,7 +1,7 @@
 <template>
   <el-dropdown trigger="click">
     <div class="avatar">
-      <img :src="avatar === '' ? avatarBaseUrl : filePath + avatar" alt="avatar" />
+      <img :src="avatar === null || avatar === '' ? avatarBaseUrl : filePath + avatar" alt="avatar" />
     </div>
     <template #dropdown>
       <el-dropdown-menu>

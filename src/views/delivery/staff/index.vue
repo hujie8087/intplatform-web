@@ -67,6 +67,7 @@ import { DeliveryStaff } from "@/api/interface/delivery/staff";
 // import { addDeliveryOrder } from "@/api/modules/delivery/deliveryOrder";
 import { getDeliveryStation } from "@/api/modules/delivery/station";
 import { DeliveryStation } from "@/api/interface/delivery/station";
+import { EpPropMergeType } from "element-plus/es/utils";
 
 const { t } = useI18n(); // 解构出t方法
 
@@ -82,7 +83,13 @@ const staffTypeOptions = ref<DictOptions[]>([
   { label: "打包员", value: "1", tagType: "danger" }
 ]);
 
-const tagTypeOptions = ref<string[]>(["success", "danger", "warning", "info", "primary", "error"]);
+const tagTypeOptions = ref<EpPropMergeType<StringConstructor, "success" | "primary" | "danger" | "warning" | "info", unknown>[]>([
+  "success",
+  "danger",
+  "warning",
+  "info",
+  "primary"
+]);
 
 const getSourceTypeOptions = async () => {
   const res = await getDeliveryStation();
@@ -163,7 +170,7 @@ const columns = reactive<ColumnProps<DeliveryStaff.ResDeliveryStaff>[]>([
 
 // 删除反馈
 const deleteDeliveryStaffHandle = async (params: DeliveryStaff.ResDeliveryStaff) => {
-  await useHandleData(deleteDeliveryStaff, params.userId, `删除【${params.nickName}】配送员`);
+  await useHandleData(deleteDeliveryStaff, params.userName, `删除【${params.nickName}】配送员`);
   proTable.value?.getTableList();
 };
 
@@ -177,8 +184,8 @@ const batchDelete = async (ids: number[]) => {
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof DeliveryStaffDrawer> | null>(null);
 const openDrawer = async (title: string, row: Partial<DeliveryStaff.ResDeliveryStaff> = {}) => {
-  if (row.userId) {
-    const res = await getDeliveryStaffById(row.userId);
+  if (row.userName) {
+    const res = await getDeliveryStaffById(row.userName);
     row = res.data;
   }
   const params = {

@@ -16,6 +16,7 @@ const errorHandler = (error: any) => {
     URIError: "URI错误"
   };
   let errorName = errorMap[error.name] || "未知错误";
+  console.log("errorHandler", error);
   ElNotification({
     title: errorName,
     message: error,

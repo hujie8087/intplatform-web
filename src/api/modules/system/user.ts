@@ -80,8 +80,8 @@ export const getUserInfoByUsername = (username: string) => {
 };
 
 // * 撤销用户授权
-export const revokeAuthorization = (userId: string) => {
-  return http.put<Account.RevokeAuthorizationMsg>(PORT1 + `/system/user/revokeUserAuthorizeWithMeal?userId=${userId}`);
+export const revokeAuthorization = (username: string) => {
+  return http.put<Account.RevokeAuthorizationMsg>(PORT1 + `/system/user/revokeUserAuthorizeWithMeal?username=${username}`);
 };
 // * 用户授权
 export const userAuthorization = params => {

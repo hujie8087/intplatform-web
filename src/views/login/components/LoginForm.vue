@@ -41,7 +41,7 @@ import { HOME_URL } from "@/config";
 import { getTimeState } from "@/utils";
 import { Login } from "@/api/interface";
 import { ElNotification } from "element-plus";
-import { loginApi } from "@/api/modules/login";
+import { loginApi, putLoginUser } from "@/api/modules/login";
 import { useUserStore } from "@/stores/modules/user";
 import { useTabsStore } from "@/stores/modules/tabs";
 import { useKeepAliveStore } from "@/stores/modules/keepAlive";
@@ -53,7 +53,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const tabsStore = useTabsStore();
 const keepAliveStore = useKeepAliveStore();
-
+const emit = defineEmits(["firstLoginChangePassword"]);
 type FormInstance = InstanceType<typeof ElForm>;
 const loginFormRef = ref<FormInstance>();
 const loginRules = reactive({
@@ -76,23 +76,32 @@ const login = (formEl: FormInstance | undefined) => {
     try {
       // 1.执行登录接口
       const { data } = await loginApi({ ...loginForm });
-      userStore.setToken(data.access_token);
 
-      // 2.添加动态路由
-      await initDynamicRouter();
+      if (data.code !== null) {
+        emit("firstLoginChangePassword", { code: data.code, account: loginForm.username });
+        return;
+      } else {
+        userStore.setToken(data.accessToken);
+        userStore.setRefreshToken(data.refreshToken);
 
-      // 3.清空 tabs、keepAlive 数据
-      tabsStore.setTabs([]);
-      keepAliveStore.setKeepAliveName([]);
+        await putLoginUser({ username: loginForm.username, password: "" });
 
-      // 4.跳转到首页
-      router.push(HOME_URL);
-      ElNotification({
-        title: getTimeState(),
-        message: "欢迎登录 后勤服务综合平台",
-        type: "success",
-        duration: 3000
-      });
+        // 2.添加动态路由
+        await initDynamicRouter();
+
+        // 3.清空 tabs、keepAlive 数据
+        tabsStore.setTabs([]);
+        keepAliveStore.setKeepAliveName([]);
+
+        // 4.跳转到首页
+        router.push(HOME_URL);
+        ElNotification({
+          title: getTimeState(),
+          message: "欢迎登录 后勤服务综合平台",
+          type: "success",
+          duration: 3000
+        });
+      }
     } finally {
       loading.value = false;
     }

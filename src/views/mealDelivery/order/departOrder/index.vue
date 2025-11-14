@@ -104,6 +104,13 @@ const selectedList = computed(() => {
   return proTable.value?.selectedList.filter(item => item.orderNo) ?? [];
 });
 
+// 字典数据
+const packageTypeOptions = ref<DictOptions[]>([
+  { label: "打包袋", value: "0", tagType: "primary" },
+  { label: "餐盒", value: "1", tagType: "success" },
+  { label: "桶装", value: "2", tagType: "warning" }
+]);
+
 const foodNameMap = ref<DictOptions[]>([
   { label: "早餐", value: "0", tagType: "primary" },
   { label: "午餐", value: "1", tagType: "success" },
@@ -324,7 +331,7 @@ const columns = reactive<ColumnProps<MdcOrder.ResMdcOrder>[]>([
       }
     }
   },
-  // { prop: "deliveryType", label: "配送方式", width: 70, enum: deliveryTypeOptions, tag: true, search: { el: "select" } },
+  { prop: "packageType", label: "打包类型", width: 70, enum: packageTypeOptions, tag: true, search: { el: "select" } },
   {
     prop: "fcName",
     label: "车号",

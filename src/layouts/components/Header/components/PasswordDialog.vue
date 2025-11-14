@@ -24,8 +24,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { ElForm, ElFormItem, ElInput, ElMessage } from "element-plus";
-import { changePassword } from "@/api/modules/user";
-import { logoutApi } from "@/api/modules/login";
+import { changePassword, logoutApi } from "@/api/modules/login";
 import { useUserStore } from "@/stores/modules/user";
 import { useRouter } from "vue-router";
 import { LOGIN_URL } from "@/config";
@@ -65,7 +64,8 @@ const handleSubmit = async () => {
     if (valid) {
       changePassword({
         oldPassword: form.value.oldPassword,
-        newPassword: form.value.newPassword
+        newPassword: form.value.newPassword,
+        confirmPassword: form.value.confirmPassword
       }).then(async res => {
         if (+res.code === 200) {
           dialogVisible.value = false;

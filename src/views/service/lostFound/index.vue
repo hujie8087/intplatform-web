@@ -12,10 +12,10 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" v-auth="['other:show:add']" :icon="CirclePlus" @click="openDrawer('新增')"> 新增 </el-button>
+          <el-button type="primary" v-auth="['other:found:add']" :icon="CirclePlus" @click="openDrawer('新增')"> 新增 </el-button>
           <el-button
             type="danger"
-            v-auth="['other:show:delete']"
+            v-auth="['other:found:delete']"
             :disabled="!scope.isSelected"
             :icon="Delete"
             @click="batchDelete(scope.selectedListIds)"
@@ -26,10 +26,10 @@
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button type="warning" link :icon="Edit" v-auth="['other:show:edit']" @click="openDrawer('编辑', scope.row)">
+          <el-button type="warning" link :icon="Edit" v-auth="['other:found:edit']" @click="openDrawer('编辑', scope.row)">
             编辑
           </el-button>
-          <el-button type="danger" link :icon="Delete" v-auth="['other:show:delete']" @click="deleteFoundHandle(scope.row)">
+          <el-button type="danger" link :icon="Delete" v-auth="['other:found:delete']" @click="deleteFoundHandle(scope.row)">
             删除
           </el-button>
           <!-- 审核 -->
@@ -37,7 +37,7 @@
             type="success"
             v-if="scope.row.reviewStatus === 0"
             link
-            v-auth="['other:show:audit']"
+            v-auth="['other:found:audit']"
             :icon="Check"
             @click="openReviewDrawer('审核', scope.row)"
             >审核</el-button

@@ -61,7 +61,9 @@ export default {
       tips: "Tips",
       canteen: "Canteen",
       userChinaseEnglish: "Username",
-      accountType: "Account Type"
+      accountType: "Account Type",
+      postName: "Post Name",
+      formatOrganizeName: "Format Organize Name"
     },
     dept: {
       deptList: "Department List",

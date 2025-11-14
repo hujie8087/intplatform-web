@@ -80,6 +80,7 @@ import { Menu } from "@/api/interface/system";
 import { Building } from "@/api/interface/productDisplay/building";
 import { DictOptions } from "@/api/interface";
 import { useDict } from "@/hooks/useDict";
+import { getCanteenListOptions } from "@/api/modules/productDisplay/marketCanteen";
 const { t } = useI18n(); // 解构出t方法
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref();
@@ -117,7 +118,12 @@ const getBuildingList = async () => {
 };
 
 getBuildingList();
-
+const canteenList = ref<DictOptions[]>([]);
+const getCanteenList = async () => {
+  const res = await getCanteenListOptions();
+  canteenList.value = [{ label: "全部", value: 0 }, ...res.data.map(item => ({ label: item.name, value: item.id }))];
+};
+getCanteenList();
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // const { BUTTONS } = useAuthButtons();
 const columns = computed((): ColumnProps[] => [
@@ -209,7 +215,8 @@ const openDrawer = async (num: number, rowData: Partial<Role.ResRole> = {}) => {
     menuList: roleMenuTreeselect.value,
     menuIds: menuIds.value,
     buildingOptions: buildingOptions.value,
-    roleList: proTable.value.tableData
+    roleList: proTable.value.tableData,
+    canteenList: canteenList.value
   };
   drawerRef.value.acceptParams(params);
 };

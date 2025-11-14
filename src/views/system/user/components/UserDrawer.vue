@@ -32,9 +32,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="`${$t('system.user.username')}`" prop="userName">
+          <el-form-item :label="`${$t('system.user.username')}`" prop="account">
             <el-input
-              v-model="drawerProps.rowData!.userName"
+              v-model="drawerProps.rowData!.account"
               :placeholder="`${$t('main.inputError', { msg: $t('system.user.username') })}`"
               clearable
             ></el-input>
@@ -43,64 +43,38 @@
         <el-col :span="12">
           <el-form-item :label="`${$t('system.user.name')}`" prop="nickName">
             <el-input
-              v-model="drawerProps.rowData!.nickName"
+              v-model="drawerProps.rowData!.name"
               :placeholder="`${$t('main.inputError', { msg: $t('system.user.name') })}`"
               clearable
             ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="`${$t('system.user.userType')}`" prop="userType">
-            <el-select
-              v-model="drawerProps.rowData!.userType"
-              :placeholder="`${$t('main.selectError', { msg: $t('system.user.userType') })}`"
-              clearable
-              style="width: 100%"
-            >
-              <el-option v-for="item in userType" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item :label="`${$t('system.user.mobile')}`" prop="phonenumber">
+          <el-form-item :label="`${$t('system.user.mobile')}`" prop="tel">
             <el-input
-              v-model="drawerProps.rowData!.phonenumber"
+              v-model="drawerProps.rowData!.tel"
               :placeholder="`${$t('main.inputError', { msg: $t('system.user.mobile') })}`"
               clearable
             ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="`${$t('system.user.card')}`" prop="card">
+          <el-form-item :label="`${$t('system.user.postName')}`" prop="postName">
             <el-input
-              v-model="drawerProps.rowData!.card"
-              :placeholder="`${$t('main.inputError', { msg: $t('system.user.card') })}`"
+              v-model="drawerProps.rowData!.postName"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.user.postName') })}`"
               clearable
             ></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item :label="`${$t('system.user.email')}`" prop="email">
+        <el-col :span="24">
+          <el-form-item :label="`${$t('system.user.formatOrganizeName')}`" prop="formatOrganizeName">
             <el-input
-              v-model="drawerProps.rowData!.email"
-              :placeholder="`${$t('main.inputError', { msg: $t('system.user.email') })}`"
+              v-model="drawerProps.rowData!.formatOrganizeName"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.user.formatOrganizeName') })}`"
               clearable
             >
             </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item :label="`${$t('system.user.dept')}`" prop="deptId">
-            <el-tree-select
-              ref="deptTreeRef"
-              v-model="drawerProps.rowData!.deptId"
-              :data="drawerProps.deptList"
-              check-strictly
-              value-key="id"
-              :placeholder="`${$t('main.selectError', { msg: $t('system.user.dept') })}`"
-              filterable
-              style="width: 100%"
-            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -116,72 +90,26 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="`${$t('system.user.role')}`" prop="roleIds">
-            <el-select
-              v-model="drawerProps.rowData!.roleIds"
-              :placeholder="`${$t('main.selectError', { msg: $t('system.user.role') })}`"
-              multiple
-              collapse-tags
-              collapse-tags-tooltip
-              :max-collapse-tags="3"
-              clearable
-              style="width: 100%"
-            >
-              <el-option v-for="item in drawerProps.roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item :label="`${$t('system.user.canteen')}`" prop="canteenId">
-            <el-select
-              v-model="canteenIds"
-              :placeholder="`${$t('main.selectError', { msg: $t('system.user.canteen') })}`"
-              clearable
-              multiple
-              style="width: 100%"
-            >
-              <el-option v-for="item in drawerProps.canteenList" :label="item.label" :value="item.value" :key="item.label" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item :label="`${$t('main.remark')}`" prop="remark">
-            <el-input
-              v-model="drawerProps.rowData!.remark"
-              :placeholder="`${$t('main.inputError', { msg: $t('main.remark') })}`"
-              clearable
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item :label="`${$t('system.user.status')}`" prop="status">
-            <el-switch
-              v-model="drawerProps.rowData!.status"
-              inline-prompt
-              active-value="0"
-              inactive-value="1"
-              :active-text="`${$t('dict.enable')}`"
-              :inactive-text="`${$t('dict.disable')}`"
-            />
+            <el-tag :type="drawerProps.rowData!.status === 1 ? 'success' : 'danger'">{{
+              drawerProps.rowData!.status === 1 ? "正常" : "禁用"
+            }}</el-tag>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
     <template #footer>
-      <el-button @click="drawerVisible = false">{{ $t("main.cancel") }}</el-button>
-      <el-button type="primary" v-show="!drawerProps.isView" @click="handleSubmit">{{ $t("main.confirm") }}</el-button>
+      <el-button type="primary" v-show="!drawerProps.isView" @click="drawerVisible = false">{{ $t("main.confirm") }}</el-button>
     </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts" name="UserDrawer">
 import { ref, reactive } from "vue";
-import { genderType, userType } from "@/utils/serviceDict";
-import { ElMessage, FormInstance } from "element-plus";
-import { Account, Role } from "@/api/interface/system";
+import { genderType } from "@/utils/serviceDict";
+import { Account } from "@/api/interface/system";
 import { useI18n } from "vue-i18n";
 import UploadImg from "@/components/Upload/Img.vue";
-import { updateRole } from "@/api/modules/system/user";
 import { DictOptions } from "@/api/interface";
 const { t } = useI18n(); // 解构出t方法
 
@@ -196,71 +124,21 @@ const rules = reactive({
 interface DrawerProps {
   title: string;
   isView: boolean;
-  rowData?: Partial<Account.ResAccountList>;
+  rowData?: Partial<Account.ResThirdUser>;
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
-  deptList?: {
-    [key: string]: any;
-  }[];
-  roleList?: Role.ResRole[];
-  canteenList?: DictOptions[];
+  userStatus?: DictOptions[];
 }
-const canteenIds = ref<number[]>([]);
 // drawer框状态
 const drawerVisible = ref(false);
 const drawerProps = ref<DrawerProps>({
   isView: false,
-  title: "",
-  deptList: []
+  title: ""
 });
-const deptListOptions = ref<{ label: string; value: string }[]>([]);
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
-  if (params.title === "新增") {
-    drawerProps.value.rowData = {
-      status: "0"
-    };
-  }
-  if (drawerProps.value.rowData?.roles) {
-    drawerProps.value.rowData.roleIds = drawerProps.value.rowData.roles.map(item => item.roleId);
-  }
-  if (drawerProps.value.rowData?.canteenId) {
-    canteenIds.value = drawerProps.value.rowData.canteenId.split(",").map(Number);
-  }
-  deptListOptions.value = drawerProps.value.deptList!.map(item => {
-    return {
-      label: item.deptName,
-      value: item.deptId
-    };
-  });
-};
-
-// 提交数据（新增/编辑）
-const ruleFormRef = ref<FormInstance>();
-const handleSubmit = () => {
-  ruleFormRef.value!.validate(async valid => {
-    if (!valid) return;
-    try {
-      await drawerProps.value.api!({ ...drawerProps.value.rowData, canteenId: canteenIds.value.join(",") });
-      ElMessage.success({
-        message: t("main.successMsg", { title: t("system.user.user"), method: `${drawerProps.value.title}` })
-      });
-      // 如果用户有角色，更新用户角色
-      if (drawerProps.value.rowData?.roles && drawerProps.value.rowData.roleIds && drawerProps.value.rowData.roleIds.length > 0) {
-        await updateRole({
-          userId: drawerProps.value.rowData.userId,
-          roleIds: drawerProps.value.rowData.roleIds,
-          userName: drawerProps.value.rowData.userName
-        });
-      }
-      drawerProps.value.getTableList!();
-      drawerVisible.value = false;
-    } catch (error) {
-      console.log(error);
-    }
-  });
 };
 
 defineExpose({

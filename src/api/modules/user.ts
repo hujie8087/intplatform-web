@@ -1,14 +1,16 @@
-import { ResPage, Result, User } from "@/api/interface/index";
+import { ResPage, User } from "@/api/interface/index";
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
-import { Menu } from "../interface/system";
+import { Account, Menu } from "../interface/system";
+const baseURL = import.meta.env.VITE_API_HOME_URL;
 
 /**
  * @name 用户管理模块
  */
 // 获取用户列表
 export const getUserList = (params: User.ReqUserParams) => {
-  return http.get<ResPage<User.ResUserList>>(PORT1 + `/system/user/list`, params);
+  // return http.get<ResPage<User.ResUserList>>(PORT1 + `/system/user/list`, params);
+  return http.get<ResPage<Account.ResAccountList>>(`/mis/upms/mis/user/page`, params, { baseURL: baseURL });
 };
 
 // 获取树形用户列表
@@ -94,9 +96,4 @@ export const editMenu = (params: Menu.MetaProps) => {
 // 删除菜单
 export const deleteMenu = (id: string) => {
   return http.delete(PORT1 + `/system/menu/${id}`);
-};
-
-// 修改密码
-export const changePassword = (params: { oldPassword: string; newPassword: string }) => {
-  return http.put<Result>(PORT1 + `/system/user/profile/updatePwd`, params);
 };

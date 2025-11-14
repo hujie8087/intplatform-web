@@ -120,8 +120,7 @@ const isFullScreen = () => {
   let zoomMethodObj = {
     person: personZoom,
     maintenance: maintainZoom,
-    risk: riskZoom,
-    meal: mealZoom
+    risk: riskZoom
   };
   if (isFull.value) {
     imgUrl.value = narrowImg;

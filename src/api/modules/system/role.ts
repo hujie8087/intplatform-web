@@ -3,7 +3,7 @@ import { ResPage } from "@/api/interface/index";
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
 import { Building } from "@/api/interface/productDisplay/building";
-import { Role } from "@/api/interface/system";
+import { Account, Role } from "@/api/interface/system";
 
 /**
  * @name 角色管理模块
@@ -50,4 +50,29 @@ export const getBuildingFirstList = () => {
 // * 获取角色下拉列表
 export const getRoleSelectList = () => {
   return http.get<Role.ResRole[]>(PORT1 + `/system/role/listAll`);
+};
+
+// * 获取角色帐号树结构
+export const getRoleUserNumber = () => {
+  return http.get<Role.ResRoleUser[]>(PORT1 + `/system/user/role/list`);
+};
+
+// * 获取角色下用户列表
+export const getRoleUserList = (params: Account.ReqRoleUserParams) => {
+  return http.getRow<Account.ResRoleUserList>(PORT1 + `/system/role/userList/${params.roleId}`, params);
+};
+
+// * 取消用户授权角色
+export const cancelAuth = ({ roleId, userName }: { roleId: number; userName: string }) => {
+  return http.put(PORT1 + `/system/role/authUser/cancel`, { roleId, userName });
+};
+
+// * 批量取消用户授权角色
+export const cancelAuthAll = ({ roleId, userIds }: { roleId: string; userIds: string[] }) => {
+  return http.put(PORT1 + `/system/role/authUser/cancelAll?roleId=${roleId}`, userIds);
+};
+
+// * 新增用户授权角色
+export const addAuth = (params: any) => {
+  return http.put(PORT1 + `/system/role/authUser/selectAll?roleId=${params.roleId}`, params.userInfo);
 };

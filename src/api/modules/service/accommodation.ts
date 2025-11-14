@@ -131,3 +131,8 @@ export const getCleanOrderById = (id: number) => {
 export const refundCleanOrder = (id: number) => {
   return http.get(PORT1 + `/maintenance/clean/order/refund`, { id });
 };
+
+// * 办理保洁订单
+export const handleCleanOrder = (id: number) => {
+  return http.get(PORT1 + `/maintenance/clean/order/deduction/${id}`);
+};

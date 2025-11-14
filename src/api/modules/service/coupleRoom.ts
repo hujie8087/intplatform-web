@@ -137,3 +137,8 @@ export const importCoupleRoomStaff = (params: CoupleRoom.ReqStaffParams) => {
 export const exportCoupleRoomStaff = (params: CoupleRoom.ReqStaffParams) => {
   return http.get(PORT1 + `/coupleRoom/room/staff/export`, params);
 };
+
+// * 导入人员模版
+export const templateCoupleRoomStaff = (params: CoupleRoom.ReqStaffParams) => {
+  return http.post(PORT1 + `/coupleRoom/room/staff/exportImp`, params);
+};

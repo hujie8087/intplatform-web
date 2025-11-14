@@ -1,246 +1,191 @@
 <template>
   <div class="main-box">
-    <TreeFilter
-      ref="treeFilterRef"
-      title="部门列表"
-      label="label"
-      :request-api="getUserDepartment"
-      :default-value="treeFilterValues.deptId"
-      @change="changeTreeFilter"
-    />
-    <div class="table-box">
-      <ProTable
-        ref="proTable"
-        highlight-current-row
-        :columns="columns"
-        :request-api="getUserList"
-        :init-param="treeFilterValues"
-        :data-callback="dataCallback"
-        :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
-      >
-        <!-- 表格 header 按钮 -->
-        <template #tableHeader>
-          <el-button type="primary" v-auth="['system:user:add']" :icon="CirclePlus" @click="openDrawer('新增')">
-            新增用户
-          </el-button>
-          <el-button type="primary" v-auth="['system:user:import']" :icon="Upload" plain @click="batchAdd">
-            批量添加用户
-          </el-button>
-          <el-button type="warning" v-auth="['system:user:export']" :icon="Download" plain @click="downloadFile">
-            导出用户数据
-          </el-button>
-        </template>
-        <!-- 表格操作 -->
-        <template #operation="scope">
-          <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button
-            type="warning"
-            link
-            v-if="scope.row.userId !== 1"
-            :icon="EditPen"
-            v-auth="['system:user:edit']"
-            @click="openDrawer('编辑', scope.row)"
-          >
-            编辑
-          </el-button>
-          <el-dropdown v-if="scope.row.userId !== 1" style="display: inline-block; margin-left: 10px; vertical-align: middle">
-            <el-button type="success" link :icon="DArrowRight">更多</el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item>
-                  <el-button type="primary" link :icon="Refresh" v-auth="['system:user:resetPwd']" @click="resetPass(scope.row)"
-                    >重置密码</el-button
-                  >
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-button
-                    type="primary"
-                    link
-                    :icon="CircleCheck"
-                    v-auth="['system:user:edit']"
-                    @click="handleAuthRole(scope.row)"
-                    >分配角色</el-button
-                  >
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-button type="success" link :icon="Lock" v-auth="['system:user:edit']" @click="getUserInfo(scope.row)"
-                    >关联账号</el-button
-                  >
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-button type="danger" link :icon="Delete" v-auth="['system:user:remove']" @click="deleteAccount(scope.row)"
-                    >删除</el-button
-                  >
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </template>
-      </ProTable>
-      <UserDrawer ref="drawerRef" />
-      <RoleDrawer ref="roleDrawerRef" />
-      <ImportExcel ref="dialogRef" />
-      <!-- 🔔 解绑原因弹窗 -->
-      <el-dialog v-model="unbindDialogVisible" :title="isAuthorize ? '用户授权' : '解除绑定'" width="600px" @close="cancelUnbind">
-        <div v-if="isAuthorize">
-          <el-form ref="authorizeFormRef" :model="authorizeForm" :rules="rules" label-width="60">
-            <el-form-item label="用户名" prop="username">
-              <el-input v-model.trim="authorizeForm.username" placeholder="请输入用户名" clearable />
-            </el-form-item>
-            <el-form-item label="密码" prop="password">
-              <el-input type="password" v-model="authorizeForm.password" placeholder="请输入密码" show-password />
-            </el-form-item>
-          </el-form>
-        </div>
-        <div v-else>
-          <el-descriptions class="margin-top" title="" :column="2" border>
-            <el-descriptions-item :span="2">
-              <template #label>
-                <div class="cell-item">
-                  <el-icon>
-                    <office-building />
-                  </el-icon>
-                  部门
-                </div>
-              </template>
-              {{ userInfo.deptName }}
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template #label>
-                <div class="cell-item">
-                  <el-icon>
-                    <user />
-                  </el-icon>
-                  用户姓名
-                </div>
-              </template>
-              {{ userInfo?.nickName }}
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template #label>
-                <div class="cell-item">
-                  <el-icon>
-                    <user />
-                  </el-icon>
-                  用户帐号
-                </div>
-              </template>
-              {{ userInfo?.userName }}
-            </el-descriptions-item>
-          </el-descriptions>
-        </div>
-        <template #footer>
-          <el-button @click="cancelUnbind">取消</el-button>
-          <template v-if="isAuthorize">
-            <el-button type="danger" @click="submitUnbind"> 账户授权</el-button>
+    <div class="main-content-split">
+      <div class="tree-panel" :style="{ width: leftWidth + 'px' }">
+        <TreeFilter
+          ref="treeFilterRef"
+          title="部门列表"
+          label="label"
+          :request-api="getUserDepartment"
+          :default-value="treeFilterValues.deptId"
+          @change="changeTreeFilter"
+        />
+      </div>
+      <div class="splitter" @mousedown="onSplitterMouseDown"></div>
+      <div class="table-box">
+        <ProTable
+          ref="proTable"
+          highlight-current-row
+          :columns="columns"
+          :request-api="getUserList"
+          :init-param="treeFilterValues"
+          :data-callback="dataCallback"
+          :search-col="{ xs: 1, sm: 1, md: 3, lg: 6, xl: 6 }"
+        >
+          <!-- 表格 header 按钮 -->
+          <template #tableHeader>
+            <el-button type="primary" v-auth="['system:user:add']" :icon="CirclePlus" @click="openDrawer('新增')">
+              新增用户
+            </el-button>
+            <el-button type="primary" v-auth="['system:user:import']" :icon="Upload" plain @click="batchAdd">
+              批量添加用户
+            </el-button>
+            <el-button type="warning" v-auth="['system:user:export']" :icon="Download" plain @click="downloadFile">
+              导出用户数据
+            </el-button>
           </template>
-          <template v-else>
-            <el-button type="danger" @click="submitUnbind"> 解除绑定</el-button>
+          <!-- 表格操作 -->
+          <template #operation="scope">
+            <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+            <el-button type="success" link :icon="Lock" v-auth="['system:user:edit']" @click="getUserInfo(scope.row)"
+              >关联账号</el-button
+            >
           </template>
-        </template>
-      </el-dialog>
+        </ProTable>
+        <UserDrawer ref="drawerRef" />
+        <!-- 🔔 解绑原因弹窗 -->
+        <el-dialog
+          v-model="unbindDialogVisible"
+          :title="isAuthorize ? '用户授权' : '解除绑定'"
+          width="600px"
+          @close="cancelUnbind"
+        >
+          <div v-if="isAuthorize">
+            <el-form ref="authorizeFormRef" :model="authorizeForm" :rules="rules" label-width="60">
+              <el-form-item label="用户名" prop="username">
+                <el-input v-model.trim="authorizeForm.username" placeholder="请输入用户名" clearable />
+              </el-form-item>
+              <el-form-item label="密码" prop="password">
+                <el-input type="password" v-model="authorizeForm.password" placeholder="请输入密码" show-password />
+              </el-form-item>
+            </el-form>
+          </div>
+          <div v-else>
+            <el-descriptions class="margin-top" title="" :column="2" border>
+              <el-descriptions-item :span="2">
+                <template #label>
+                  <div class="cell-item">
+                    <el-icon>
+                      <office-building />
+                    </el-icon>
+                    部门
+                  </div>
+                </template>
+                {{ userInfo.deptName }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template #label>
+                  <div class="cell-item">
+                    <el-icon>
+                      <user />
+                    </el-icon>
+                    用户姓名
+                  </div>
+                </template>
+                {{ userInfo?.nickName }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template #label>
+                  <div class="cell-item">
+                    <el-icon>
+                      <user />
+                    </el-icon>
+                    用户帐号
+                  </div>
+                </template>
+                {{ userInfo?.userName }}
+              </el-descriptions-item>
+            </el-descriptions>
+          </div>
+          <template #footer>
+            <el-button @click="cancelUnbind">取消</el-button>
+            <el-button type="danger" @click="submitUnbind"> {{ isAuthorize ? "账户授权" : "解除绑定" }}</el-button>
+          </template>
+        </el-dialog>
+      </div>
     </div>
   </div>
 </template>
 <script setup lang="tsx" name="useSelectFilter">
-import { ref, reactive, watch } from "vue";
+import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { useHandleData } from "@/hooks/useHandleData";
 import { useDownload } from "@/hooks/useDownload";
 import ProTable from "@/components/ProTable/index.vue";
 import TreeFilter from "@/components/TreeFilter/index.vue";
 import ImportExcel from "@/components/ImportExcel/index.vue";
 import UserDrawer from "./components/UserDrawer.vue";
-import RoleDrawer from "./components/RoleDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import {
-  CirclePlus,
-  Delete,
-  EditPen,
-  Download,
-  Upload,
-  View,
-  Refresh,
-  CircleCheck,
-  DArrowRight,
-  Lock,
-  OfficeBuilding
-} from "@element-plus/icons-vue";
-import {
-  getUserList,
-  deleteUser,
-  editUser,
-  addUser,
-  resetUserPassWord,
-  BatchAddUser,
-  getUserDepartment
-} from "@/api/modules/user";
+import { CirclePlus, Download, Upload, View, Lock, OfficeBuilding } from "@element-plus/icons-vue";
+import { getUserList, editUser, addUser, BatchAddUser, getUserDepartment } from "@/api/modules/user";
 import { Account, Role } from "@/api/interface/system";
-import { getUserRole, updateRole, changeUserStatus, revokeAuthorization, userAuthorization } from "@/api/modules/system/user";
-import { genderType, userStatus, activeStateOption } from "@/utils/serviceDict";
-import { useAuthButtons } from "@/hooks/useAuthButtons";
+import { getUserRole, revokeAuthorization, userAuthorization } from "@/api/modules/system/user";
 import { getRoleSelectList } from "@/api/modules/system/role";
-import { getCanteenListOptions } from "@/api/modules/productDisplay/marketCanteen";
-import { DictOptions } from "@/api/interface";
 import { getConfigData } from "@/api/modules/system/config";
-const { BUTTONS } = useAuthButtons();
+import { DictOptions } from "@/api/interface";
 const baseUrl = import.meta.env.VITE_API_URL;
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
+  console.log(data);
   return {
-    list: data.rows,
-    total: data.total,
-    current: data.current,
-    size: data.size
+    list: data.data.list,
+    total: data.data.total
   };
 };
+const userStatus = ref<DictOptions[]>([
+  { label: "未知", value: 0, tagType: "danger" },
+  { label: "正常", value: 1, tagType: "success" },
+  { label: "未激活", value: 2, tagType: "primary" },
+  { label: "禁用", value: 3, tagType: "danger" },
+  { label: "锁定", value: 4, tagType: "warning" },
+  { label: "离职", value: 5, tagType: "info" },
+  { label: "退休", value: 6, tagType: "info" },
+  { label: "黑名单", value: 7, tagType: "danger" }
+]);
 // 部门树形选择实例
 const treeFilterRef = ref<InstanceType<typeof TreeFilter>>();
 // 表格配置项
 const columns = reactive<ColumnProps<Account.ResAccountList>[]>([
-  { type: "selection", label: "", width: 80 },
-  { type: "index", label: "用户编号", width: 80 },
-  { prop: "userName", label: "用户帐号", search: { el: "input" }, width: 120 },
-  { prop: "nickName", label: "用户姓名", search: { el: "input" }, width: 120 },
-  { prop: "dept.deptName", label: "部门", width: 120 },
-  { prop: "phonenumber", label: "手机号" },
-  { prop: "sex", label: "性别", enum: genderType },
-  { prop: "email", label: "邮箱", width: 120 },
+  { type: "selection", fixed: "left", width: 50 },
+  {
+    prop: "account",
+    label: "用户帐号",
+    width: 120,
+    search: { el: "input" }
+  },
+  {
+    prop: "name",
+    label: "用户姓名",
+    width: 160,
+    search: { el: "input" }
+  },
+  {
+    prop: "sex",
+    label: "性别",
+    width: 100
+  },
+  {
+    prop: "tel",
+    label: "电话",
+    width: 120
+  },
+  {
+    prop: "postName",
+    label: "岗位",
+    width: 160
+  },
+  {
+    prop: "formatOrganizeName",
+    label: "所属组织"
+  },
   {
     prop: "status",
-    label: "用户状态",
-    tag: true,
+    label: "状态",
     enum: userStatus,
     width: 100,
-    search: { el: "select" },
-    render: scope => {
-      return (
-        <span>
-          {BUTTONS.value["system:user:edit"] ? (
-            <el-switch
-              model-value={scope.row.status}
-              active-text={scope.row.status ? "启用" : "禁用"}
-              active-value={"0"}
-              inactive-value={"1"}
-              onClick={() => changeStatus(scope.row)}
-            />
-          ) : (
-            <el-tag type={scope.row.status === "0" ? "success" : "danger"}>{scope.row.status === "0" ? "启用" : "禁用"}</el-tag>
-          )}
-        </span>
-      );
-    }
-  },
-  {
-    prop: "isLogin",
-    label: "是否激活",
-    width: 120,
     tag: true,
-    enum: activeStateOption,
-    search: { el: "select" }
+    search: { el: "select", props: { filterable: true } }
   },
-  { prop: "createTime", label: "创建时间", width: 180, sortable: true },
   { prop: "operation", label: "操作", width: 230, fixed: "right" }
 ]);
 
@@ -255,38 +200,6 @@ const treeFilterValues = reactive({ deptId: 0 });
 const changeTreeFilter = (val: number) => {
   proTable.value!.pageable.pageNum = 1;
   treeFilterValues.deptId = val;
-};
-
-const canteenList = ref<DictOptions[]>([]);
-const getCanteenList = async () => {
-  const res = await getCanteenListOptions();
-  canteenList.value = [{ label: "全部", value: 0 }, ...res.data.map(item => ({ label: item.name, value: item.id }))];
-};
-getCanteenList();
-
-watch(
-  () => proTable.value?.radio,
-  () => proTable.value?.radio && ElMessage.success(`选中 id 为【${proTable.value?.radio}】的数据`)
-);
-// 切换用户状态
-const changeStatus = async (row: Account.ResAccountList) => {
-  await useHandleData(
-    changeUserStatus,
-    { userId: row.userId, status: row.status == "1" ? "0" : "1" },
-    `切换【${row.userName}】用户状态`
-  );
-  proTable.value?.getTableList();
-};
-// 删除用户信息
-const deleteAccount = async (params: Account.ResAccountList) => {
-  await useHandleData(deleteUser, { id: [params.userId] }, `删除【${params.userName}】用户`);
-  proTable.value?.getTableList();
-};
-
-// 重置用户密码
-const resetPass = async (params: Account.ResAccountList) => {
-  await useHandleData(resetUserPassWord, { userId: params.userId, password: "123456" }, `重置【${params.userName}】用户密码`);
-  proTable.value?.getTableList();
 };
 
 // 导出用户列表
@@ -310,38 +223,18 @@ const batchAdd = () => {
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
-const openDrawer = async (title: string, row: Partial<Account.ResAccountList> = {}) => {
-  let rowData = { ...row };
-  if (rowData.userId) {
-    const res = await getUserRole(rowData.userId);
-    rowData = res.user;
-    rowData.roleIds = rowData.roles ? rowData.roles.map(item => item.roleId) : [];
-  }
+const openDrawer = async (title: string, row: Partial<Account.ResThirdUser> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    rowData: { ...rowData },
+    rowData: row,
     api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
     getTableList: proTable.value?.getTableList,
-    deptList: treeFilterRef.value?.treeData,
-    roleList: roleList.value,
-    canteenList: canteenList.value
+    userStatus: userStatus.value
   };
   drawerRef.value?.acceptParams(params);
 };
 
-// 分配角色
-const roleDrawerRef = ref<InstanceType<typeof RoleDrawer> | null>(null);
-const handleAuthRole = async (params: Account.ResAccountList) => {
-  const res = await getUserRole(params.userId);
-  roleDrawerRef.value?.acceptParams({
-    title: "分配角色",
-    isView: false,
-    api: updateRole,
-    rowData: res.user,
-    roleList: res.roles
-  });
-};
 const userInfo = reactive({
   deptName: "",
   nickName: "",
@@ -367,7 +260,7 @@ const rules = {
 };
 
 const getUserInfo = async params => {
-  authorizationID = params.userId;
+  authorizationID = params.account;
   const response: any = await getUserRole(authorizationID);
   let mealRole = response.mealRole;
   // mealId有值证明是历史用户，走解绑逻辑，没值则走授权逻辑
@@ -392,7 +285,7 @@ const submitUnbind = async () => {
     // 授权
     authorizeFormRef.value.validate(async (valid, fields) => {
       if (valid) {
-        await userAuthorization({ userId: authorizationID, username: authorizeForm.username, password: authorizeForm.password });
+        await userAuthorization({ username: authorizeForm.username, password: authorizeForm.password });
         unbindDialogVisible.value = false;
         ElMessage.success("授权成功");
         authorizeForm.username = "";
@@ -404,7 +297,7 @@ const submitUnbind = async () => {
     });
   } else {
     // 解绑
-    await revokeAuthorization(authorizationID.toString());
+    await revokeAuthorization(userInfo.userName);
     unbindDialogVisible.value = false;
     ElMessage.success("解绑成功");
     proTable.value?.getTableList();
@@ -418,4 +311,65 @@ const cancelUnbind = () => {
   }
   unbindDialogVisible.value = false;
 };
+
+const leftWidth = ref(260); // 初始宽度
+let dragging = false;
+
+const onSplitterMouseDown = (e: MouseEvent) => {
+  dragging = true;
+  document.body.style.cursor = "col-resize";
+  const startX = e.clientX;
+  const startWidth = leftWidth.value;
+
+  const onMouseMove = (moveEvent: MouseEvent) => {
+    if (!dragging) return;
+    const delta = moveEvent.clientX - startX;
+    let newWidth = startWidth + delta;
+    // 限制最小/最大宽度
+    newWidth = Math.max(180, Math.min(newWidth, 600));
+    leftWidth.value = newWidth;
+  };
+
+  const onMouseUp = () => {
+    dragging = false;
+    document.body.style.cursor = "";
+    window.removeEventListener("mousemove", onMouseMove);
+    window.removeEventListener("mouseup", onMouseUp);
+  };
+
+  window.addEventListener("mousemove", onMouseMove);
+  window.addEventListener("mouseup", onMouseUp);
+};
 </script>
+<style scoped>
+.main-content-split {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+}
+.tree-panel {
+  min-width: 180px;
+  max-width: 600px;
+  overflow: auto;
+  background: #ffffff;
+  border-right: 1px solid #eeeeee;
+  transition: width 0.1s;
+}
+.splitter {
+  z-index: 2;
+  width: 6px;
+  cursor: col-resize;
+  background: #f5f5f5;
+  transition: background 0.2s;
+}
+.splitter:hover {
+  background: #b3d8fd;
+}
+.table-box {
+  flex: 1;
+  min-width: 0;
+  margin-left: 0;
+  overflow: auto;
+  background: #ffffff;
+}
+</style>
