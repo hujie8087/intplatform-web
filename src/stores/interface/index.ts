@@ -35,6 +35,7 @@ export interface UserState {
   token: string;
   refreshToken: string;
   userInfo: Login.ResUserInfo;
+  thirdUserInfo: Login.ResThirdUserInfo;
 }
 
 /* tabsMenuProps */

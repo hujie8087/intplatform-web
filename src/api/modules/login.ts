@@ -21,6 +21,10 @@ export const loginApi = (params: Login.ReqLoginForm) => {
 
 // 获取用户信息
 export const getUserInfoApi = () => {
+  return http.get<Login.ResThirdUserInfo>(PORT1 + `/home/upms/home/user/findInfo`, {}, { baseURL: baseURL });
+};
+// 获取用户权限信息
+export const getUserPermissionInfoApi = () => {
   return http.get<Login.ResUserInfo>(PORT1 + `/system/user/getInfo`);
 };
 
@@ -59,7 +63,7 @@ export const saveUserMobilePhoneId = (params: { mobilePhoneId: string }) => {
 };
 
 // 修改密码
-export const changePassword = (params: { oldPassword: string; password: string; confirmPassword: string }) => {
+export const changePassword = (params: { oldPassword: string; newPassword: string; confirmPassword: string }) => {
   return http.put<Result>(PORT1 + `/home/upms/home/user/putUserPassword`, params, { baseURL: baseURL });
 };
 // 首次登录修改密码
@@ -70,4 +74,11 @@ export const firstLoginChangePassword = (params: {
   confirmPassword: string;
 }) => {
   return http.put<Result>(PORT1 + `/home/sso/home/sso/resetFirstPassword`, params, { baseURL: baseURL });
+};
+
+// 刷新token
+export const refreshToken = (params: { refreshToken: string }) => {
+  return http.put<Login.ResLogin>(PORT1 + `/mis/sso/mis/sso/refreshToken?refreshToken=${params.refreshToken}`, params, {
+    baseURL: baseURL
+  });
 };

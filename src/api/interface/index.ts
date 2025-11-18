@@ -57,31 +57,31 @@ export namespace Login {
     permissions: string[];
     roles: string[];
     user: {
-      createBy: string;
-      createTime: string;
-      updateBy: null;
-      updateTime: null;
-      remark: string;
-      userId: number;
-      deptId: number;
-      userName: string;
-      nickName: string;
-      userType: string;
-      email: string;
-      phonenumber: string;
-      card: string;
-      sex: string;
-      avatar: string;
-      status: string;
-      delFlag: string;
-      loginIp: string;
-      loginDate: string;
-      dept: User.ResDepartment;
-      roles: User.ResRole[];
-      roleIds: string;
-      postIds: string;
-      roleId: string;
-      admin: boolean;
+      createBy?: string;
+      createTime?: string;
+      updateBy?: null;
+      updateTime?: null;
+      remark?: string;
+      userId?: number;
+      deptId?: number;
+      userName?: string;
+      nickName?: string;
+      userType?: string;
+      email?: string;
+      phonenumber?: string;
+      card?: string;
+      sex?: string;
+      avatar?: string;
+      status?: string;
+      delFlag?: string;
+      loginIp?: string;
+      loginDate?: string;
+      dept?: User.ResDepartment;
+      roles?: User.ResRole[];
+      roleIds?: string;
+      postIds?: string;
+      roleId?: string;
+      admin?: boolean;
     };
     mealUser: {
       userId: number;
@@ -129,6 +129,17 @@ export namespace Login {
         admin: boolean;
       };
     };
+  }
+  export interface ResThirdUserInfo {
+    account: string;
+    avatar: string;
+    card: string | null;
+    formatOrganizeName: string | null;
+    id: number;
+    name: string;
+    postName: string | null;
+    sex: number;
+    tel: string;
   }
 }
 
