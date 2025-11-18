@@ -2,17 +2,28 @@ import { Login } from "@/api/interface/index";
 import { defineStore } from "pinia";
 import { UserState } from "@/stores/interface";
 import piniaPersistConfig from "@/stores/helper/persist";
-import { getUserInfoApi } from "@/api/modules/login";
+import { getUserInfoApi, getUserPermissionInfoApi } from "@/api/modules/login";
 import { useAuthStore } from "./auth";
 export const useUserStore = defineStore({
   id: "logistics-user",
   state: (): UserState => ({
     token: "",
     refreshToken: "",
+    thirdUserInfo: {
+      account: "",
+      avatar: "",
+      card: "",
+      formatOrganizeName: "",
+      id: 0,
+      name: "",
+      postName: "",
+      sex: 0,
+      tel: ""
+    },
     userInfo: {
       permissions: [],
       roles: [],
-      user: {} as Login.ResUserInfo["user"],
+      user: {},
       mealUser: {} as Login.ResUserInfo["mealUser"]
     }
   }),
@@ -32,13 +43,18 @@ export const useUserStore = defineStore({
     setUserInfo(userInfo: UserState["userInfo"]) {
       this.userInfo = userInfo;
     },
+    setThirdUserInfo(userInfo: Login.ResThirdUserInfo) {
+      this.thirdUserInfo = userInfo;
+    },
     async getUserInfo() {
       const res = await getUserInfoApi();
-      this.setUserInfo(res.data);
+      const permissionRes = await getUserPermissionInfoApi();
       const authStore = useAuthStore();
-      authStore.getAuthButtonList(res.data.permissions);
-      if (res.data.mealUser) {
-        authStore.getMealDeliveryAuthButtonList(res.data.mealUser.permissions);
+      authStore.getAuthButtonList(permissionRes.data?.permissions || []);
+      this.setUserInfo(permissionRes.data);
+      this.setThirdUserInfo(res.data);
+      if (permissionRes.data?.mealUser) {
+        authStore.getMealDeliveryAuthButtonList(permissionRes.data.mealUser.permissions);
       }
     }
   },

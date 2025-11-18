@@ -69,7 +69,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   // await userStore.getUserInfo();
-  if (!userStore.userInfo.user.nickName) {
+  if (!userStore.thirdUserInfo.name) {
     await userStore.getUserInfo();
     return next();
   }

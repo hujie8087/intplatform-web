@@ -11,6 +11,12 @@ export const genderType = [
   { label: computed(() => I18n.global.t("dict.unknown")).value, value: "2" }
 ];
 
+export const sexType = [
+  { label: computed(() => I18n.global.t("dict.man")).value, value: 1 },
+  { label: computed(() => I18n.global.t("dict.woman")).value, value: 0 },
+  { label: computed(() => I18n.global.t("dict.unknown")).value, value: 2 }
+];
+
 /**
  * @description：用户类型
  */

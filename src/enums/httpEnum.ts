@@ -9,6 +9,8 @@ export enum ResultEnum {
   NOT_FOUND = 404,
   UNPROCESSABLE_ENTITY = 406,
   TIMEOUT = 30000,
+  TOKEN_EXPIRED = 10002,
+  REFRESH_TOKEN_EXPIRED = 10003,
   TYPE = "success"
 }
 

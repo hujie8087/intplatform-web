@@ -11,6 +11,7 @@ import router from "@/routers";
 import { markRaw } from "vue";
 import { Warning } from "@element-plus/icons-vue";
 import { tansParams } from "@/utils";
+import { refreshToken } from "./modules/login";
 
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   loading?: boolean;
@@ -70,12 +71,34 @@ class RequestHttp {
      *  服务器换返回信息 -> [拦截统一处理] -> 客户端JS获取到信息
      */
     this.service.interceptors.response.use(
-      (response: AxiosResponse & { config: CustomAxiosRequestConfig }) => {
+      async (response: AxiosResponse & { config: CustomAxiosRequestConfig }) => {
         const { data, config } = response;
 
         const userStore = useUserStore();
         axiosCanceler.removePending(config);
         config.loading && tryHideFullScreenLoading();
+        // token过期
+        if (data.code == ResultEnum.TOKEN_EXPIRED || data.code === ResultEnum.OVERDUE) {
+          // 刷新token
+          try {
+            const res = await refreshToken({ refreshToken: userStore.refreshToken });
+            if (+res.code === ResultEnum.SUCCESS) {
+              await userStore.setToken(res.data.accessToken);
+              await userStore.setRefreshToken(res.data.refreshToken);
+              // 重新刷新页面
+              window.location.reload();
+              return Promise.reject(res);
+            } else {
+              router.replace(LOGIN_URL);
+              ElMessage.error(res.data.code);
+              return Promise.reject(res);
+            }
+          } catch (error) {
+            router.replace(LOGIN_URL);
+            ElMessage.error("刷新token失败");
+            return Promise.reject({ code: ResultEnum.TOKEN_EXPIRED, msg: "刷新token失败" });
+          }
+        }
         // 登录失效
         if (data.code == ResultEnum.OVERDUE || data.code == ResultEnum.UNPROCESSABLE_ENTITY) {
           userStore.setToken("");

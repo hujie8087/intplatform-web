@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="dialogVisible" title="个人信息" width="700px" draggable>
     <div>
-      <el-form ref="ruleFormRef" label-width="120px" label-suffix=" :" :model="userInfo">
+      <el-form ref="ruleFormRef" label-width="120px" label-suffix=" :" :model="userInfo" :disabled="true">
         <el-row>
           <el-col :span="24">
             <el-form-item label="用户头像" prop="avatar">
@@ -16,7 +16,7 @@
           <el-col :span="12">
             <el-form-item :label="`${$t('system.user.username')}`" prop="userName">
               <el-input
-                v-model="userInfo.userName"
+                v-model="userInfo.account"
                 disabled
                 :placeholder="`${$t('main.inputError', { msg: $t('system.user.username') })}`"
                 clearable
@@ -26,7 +26,8 @@
           <el-col :span="12">
             <el-form-item :label="`${$t('system.user.name')}`" prop="nickName">
               <el-input
-                v-model="userInfo.nickName"
+                v-model="userInfo.name"
+                disabled
                 :placeholder="`${$t('main.inputError', { msg: $t('system.user.name') })}`"
                 clearable
               ></el-input>
@@ -35,44 +36,10 @@
           <el-col :span="12">
             <el-form-item :label="`${$t('system.user.mobile')}`" prop="phonenumber">
               <el-input
-                v-model="userInfo.phonenumber"
+                v-model="userInfo.tel"
                 :placeholder="`${$t('main.inputError', { msg: $t('system.user.mobile') })}`"
                 clearable
               ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item :label="`${$t('system.user.card')}`" prop="card">
-              <el-input
-                v-model="userInfo.card"
-                :placeholder="`${$t('main.inputError', { msg: $t('system.user.card') })}`"
-                clearable
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item :label="`${$t('system.user.email')}`" prop="email">
-              <el-input
-                v-model="userInfo.email"
-                :placeholder="`${$t('main.inputError', { msg: $t('system.user.email') })}`"
-                clearable
-              >
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item :label="`${$t('system.user.dept')}`" prop="deptId">
-              <el-tree-select
-                ref="deptTreeRef"
-                v-model="userInfo.deptId"
-                :data="deptList"
-                check-strictly
-                value-key="id"
-                :render-after-expand="false"
-                :placeholder="`${$t('main.selectError', { msg: $t('system.user.dept') })}`"
-                filterable
-                style="width: 100%"
-              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -83,15 +50,34 @@
                 clearable
                 style="width: 100%"
               >
-                <el-option v-for="item in genderType" :key="item.value" :label="item.label" :value="item.value" />
+                <el-option v-for="item in sexType" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :label="`${$t('main.remark')}`" prop="remark">
+            <el-form-item :label="`${$t('system.user.card')}`" prop="card">
               <el-input
-                v-model="userInfo.remark"
-                :placeholder="`${$t('main.inputError', { msg: $t('main.remark') })}`"
+                v-model="userInfo.card"
+                disabled
+                :placeholder="`${$t('main.inputError', { msg: $t('system.user.card') })}`"
+                clearable
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item :label="`${$t('system.user.postName')}`" prop="postName">
+              <el-input
+                v-model="userInfo.postName"
+                :placeholder="`${$t('main.inputError', { msg: $t('system.user.postName') })}`"
+                clearable
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item :label="`${$t('system.user.formatOrganizeName')}`" prop="formatOrganizeName">
+              <el-input
+                v-model="userInfo.formatOrganizeName"
+                :placeholder="`${$t('main.inputError', { msg: $t('system.user.formatOrganizeName') })}`"
                 clearable
               ></el-input>
             </el-form-item>
@@ -101,8 +87,7 @@
     </div>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmit">确认</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确认</el-button>
       </span>
     </template>
   </el-dialog>
@@ -113,12 +98,12 @@ import { useUserStore } from "@/stores/modules/user";
 import { ref } from "vue";
 import UploadImg from "@/components/Upload/Img.vue";
 import { Login, User } from "@/api/interface";
-import { genderType } from "@/utils/serviceDict";
+import { sexType } from "@/utils/serviceDict";
 import { getUserDepartment } from "@/api/modules/user";
 const userStore = useUserStore();
 const deptList = ref<User.ResDepartment[]>([]);
 // const filePath = import.meta.env.VITE_APP_BASE_FILE;
-const userInfo = ref<Login.ResUserInfo["user"]>({ ...userStore.userInfo.user });
+const userInfo = ref<Login.ResThirdUserInfo>(userStore.thirdUserInfo);
 const dialogVisible = ref(false);
 
 const getDeptList = async () => {
@@ -128,9 +113,6 @@ const getDeptList = async () => {
 getDeptList();
 const openDialog = () => {
   dialogVisible.value = true;
-};
-const handleSubmit = () => {
-  console.log(userInfo.value);
 };
 defineExpose({ openDialog });
 </script>

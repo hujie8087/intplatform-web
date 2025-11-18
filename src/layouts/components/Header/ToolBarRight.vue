@@ -25,7 +25,8 @@ import Fullscreen from "./components/Fullscreen.vue";
 import Avatar from "./components/Avatar.vue";
 
 const userStore = useUserStore();
-const username = computed(() => userStore.userInfo.user.nickName);
+console.log(userStore.userInfo);
+const username = computed(() => userStore.thirdUserInfo?.name || "");
 </script>
 
 <style scoped lang="scss">
