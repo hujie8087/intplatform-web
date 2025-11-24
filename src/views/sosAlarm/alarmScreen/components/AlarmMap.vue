@@ -10,6 +10,9 @@ import { onMounted, onUnmounted, ref } from "vue";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import geoJson from "@/assets/geojson/area4.json";
+import markerIcon2x from "@/assets/icons/marker-icon-2x.png";
+import markerIcon from "@/assets/icons/marker-icon.png";
+import markerShadow from "@/assets/icons/marker-shadow.png";
 
 interface AlarmData {
   id: number;
@@ -185,6 +188,12 @@ const openMarkerPopup = (alarm: AlarmData) => {
 };
 
 onMounted(() => {
+  delete L.Icon.Default.prototype._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: markerIcon2x,
+    iconUrl: markerIcon,
+    shadowUrl: markerShadow
+  });
   initMap();
 });
 
