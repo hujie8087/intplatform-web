@@ -135,11 +135,11 @@ const handleSubmit = () => {
       await drawerProps.value.api!({
         ...drawerProps.value.rowData,
         processingStatus: 1,
-        handleBy: userStore.userInfo?.user.nickName,
+        handleBy: userStore.thirdUserInfo.name,
         handleTime: dayjs().format("YYYY-MM-DD HH:mm:ss")
       });
       ElMessage.success({
-        message: t("main.successMsg", { title: "配送费", method: `${drawerProps.value.title}` })
+        message: t("main.successMsg", { title: "留言", method: `${drawerProps.value.title}` })
       });
       drawerProps.value.getTableList!();
       drawerVisible.value = false;

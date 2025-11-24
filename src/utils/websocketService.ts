@@ -54,7 +54,7 @@ class NativeWebSocketService {
         wsUrl = customWsUrl;
       } else {
         const baseUrl = import.meta.env.VITE_WEB_SOCKET_URL || "ws://localhost:8080/websocket/";
-        wsUrl = `${baseUrl}${userId}`;
+        wsUrl = `${baseUrl}kf_${userId}`;
       }
 
       console.log("最终使用的WebSocket URL:", wsUrl);
@@ -90,7 +90,6 @@ class NativeWebSocketService {
 
         // 接收消息
         this.socket.onmessage = event => {
-          console.log("WebSocket接收到原始数据:", event.data);
           this.handleMessage(event.data);
         };
 

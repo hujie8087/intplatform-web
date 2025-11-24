@@ -30,6 +30,7 @@ const currentZoom = ref<number | null>(null);
 let map: L.Map | null = null;
 let maskLayer: L.Layer | null = null;
 let markersLayer: L.LayerGroup | null = null;
+const markerMap = new Map<number, L.Marker>();
 
 const config = [
   {
@@ -139,6 +140,7 @@ const updateMarkers = (alarms: AlarmData[]) => {
   if (!markersLayer) return;
 
   markersLayer.clearLayers();
+  markerMap.clear();
 
   alarms.forEach(alarm => {
     if (alarm.latitude && alarm.longitude) {
@@ -159,6 +161,9 @@ const updateMarkers = (alarms: AlarmData[]) => {
       `;
       normalMarker.bindPopup(popupHtml);
 
+      // 保存标记引用
+      markerMap.set(alarm.id, normalMarker);
+
       normalMarker.on("click", () => {
         emit("markerSelect", alarm);
       });
@@ -169,6 +174,13 @@ const updateMarkers = (alarms: AlarmData[]) => {
 const centerOnLocation = (lat: number, lng: number) => {
   if (map) {
     map.setView([lat, lng], 18);
+  }
+};
+
+const openMarkerPopup = (alarm: AlarmData) => {
+  const marker = markerMap.get(alarm.id);
+  if (marker && map) {
+    marker.openPopup();
   }
 };
 
@@ -186,7 +198,8 @@ onUnmounted(() => {
 
 defineExpose({
   updateMarkers,
-  centerOnLocation
+  centerOnLocation,
+  openMarkerPopup
 });
 </script>
 

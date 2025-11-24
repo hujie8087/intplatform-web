@@ -33,23 +33,9 @@
               <el-form-item label="工号">
                 <el-input v-model="currentFilters.userName" placeholder="请输入工号" size="small" clearable />
               </el-form-item>
-
-              <el-form-item label="用户类型">
-                <el-select
-                  v-model="currentFilters.userType"
-                  placeholder="请选择用户类型"
-                  size="small"
-                  clearable
-                  :teleported="false"
-                >
-                  <el-option label="乘客" value="USER" />
-                  <el-option label="司机" value="DRIVER" />
-                  <!-- <el-option label="客服" value="AGENT" /> -->
-                </el-select>
-              </el-form-item>
             </el-form>
 
-            <div class="filter-actions">
+            <div class="filter-actions" style=" margin-top: 10px;text-align: right">
               <el-button size="small" @click="handleFilterReset"> 重置 </el-button>
               <el-button type="primary" size="small" :loading="searchLoading" @click="handleFilterConfirm"> 确定 </el-button>
             </div>
@@ -86,7 +72,7 @@
                   <div class="customer-details">
                     <div class="name-time-container">
                       <span class="customer-name">
-                        {{ record.userName || "未知客户" }}
+                        {{ record.nickName || "未知客户" }}
                       </span>
                       <div class="record-time">
                         {{ formatTime(record.updateTime || record.createTime) }}
@@ -94,19 +80,8 @@
                     </div>
                   </div>
                   <div class="user-info">
-                    <span class="user-name"> 工号: {{ record.userId || "未知" }} </span>
+                    <span class="user-name"> 工号: {{ record.userName || "未知" }} </span>
                   </div>
-                  <!--                  <div-->
-                  <!--                    class="order-no-container"-->
-                  <!--                    @click.stop="handleEditOrder(record)"-->
-                  <!--                  >-->
-                  <!--                    <span class="order-no">-->
-                  <!--                      订单号: {{ getOrderNumber(record) }}-->
-                  <!--                    </span>-->
-                  <!--                    <el-icon class="edit-icon">-->
-                  <!--                      <Edit />-->
-                  <!--                    </el-icon>-->
-                  <!--                  </div>-->
                 </div>
               </div>
 
@@ -359,6 +334,11 @@ const handleFilterConfirm = async () => {
 
 // 执行搜索的统一方法
 const performSearch = async () => {
+  const userStore = useUserStore();
+  const userId = userStore.thirdUserInfo?.id;
+  if (!userId) {
+    throw new Error("用户不存在");
+  }
   const { orderNumber, nickName, userName, userType } = currentFilters.value;
   const hasSearchCriteria = orderNumber.trim() || nickName.trim() || userName.trim() || userType.trim();
 
@@ -393,12 +373,6 @@ const performSearch = async () => {
     // 调用 store 的方法进行搜索
     // 注意：我们需要获取完整的响应数据，包括total等分页信息
     // 由于chatStore.loadChatSessions没有返回这些信息，我们需要修改调用方式
-    // 直接调用API获取完整响应
-    const userStore = useUserStore();
-    const userId = userStore.userInfo?.user?.userId?.toString();
-    if (!userId) {
-      throw new Error("用户ID不存在");
-    }
 
     const params: any = {
       userId,
@@ -522,9 +496,9 @@ const fetchChatRecords = async (loadMore = false) => {
   try {
     // 直接调用API获取完整响应，以便获取total信息
     const userStore = useUserStore();
-    const userId = userStore.userInfo?.user?.userId?.toString();
+    const userId = userStore.thirdUserInfo?.id;
     if (!userId) {
-      throw new Error("用户ID不存在");
+      throw new Error("用户不存在");
     }
 
     const pageNum = loadMore ? currentPage.value + 1 : 1;

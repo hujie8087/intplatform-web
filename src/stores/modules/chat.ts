@@ -90,7 +90,7 @@ export const useChatStore = defineStore({
     },
     handleWebSocketMessage(messageData: any) {
       try {
-        console.log("收到WebSocket消息:", messageData);
+        console.log("收到WebSocket消息1:", messageData);
 
         // 如果是新消息，添加到消息列表
         if (messageData.type === MessageType.NEW_MESSAGE || messageData.type === MessageType.AGENT_MESSAGE) {
@@ -139,7 +139,7 @@ export const useChatStore = defineStore({
       }
 
       // const userStore = useUserStore()
-      const userInfo = useUserStore().userInfo;
+      const userInfo = useUserStore().thirdUserInfo;
 
       if (!userInfo) {
         return false;
@@ -149,12 +149,12 @@ export const useChatStore = defineStore({
         const messageData: SosChart.ReqSendMessage = {
           sessionId: this.currentSession.sessionId,
           senderType: SenderType.AGENT, // web端默认为客服
-          senderId: userInfo.user.userId?.toString() || "",
-          senderName: userInfo.user.nickName || userInfo.user.userName || "客服",
+          senderId: userInfo.account || "",
+          senderName: userInfo.name || userInfo.account || "客服",
           type: MessageType.CHAT_MESSAGE,
-          userId: userInfo.user.userId?.toString() || "",
-          nickName: userInfo.user.nickName || userInfo.user.userName || "",
-          userName: userInfo.user.userName || "",
+          userId: userInfo.account || "",
+          nickName: userInfo.name || "",
+          userName: userInfo.account || "",
           userType: UserType.AGENT, // web端默认为客服
           contentType: contentType,
           content: content,
@@ -163,6 +163,8 @@ export const useChatStore = defineStore({
           targetUserType: this.currentSession.userType,
           orderId: this.currentSession.orderId?.toString() || ""
         };
+
+        console.log("发送消息参数:", messageData);
 
         // 先添加到本地消息列表
         const localMessage: SosChart.ResChatMessageList = {
@@ -258,17 +260,17 @@ export const useChatStore = defineStore({
         }
 
         // const userStore = useUserStore()
-        const userId = useUserStore().userInfo?.user?.userId?.toString();
+        const userName = useUserStore().thirdUserInfo?.id;
 
-        if (!userId) {
-          throw new Error("用户ID不存在");
+        if (!userName) {
+          throw new Error("用户不存在");
         }
 
         // 构建查询参数，优先使用传入的筛选参数，否则使用保存的筛选参数
         const finalFilterParams = filterParams !== undefined ? filterParams : this.currentFilterParams;
         const size = 100;
         const params: any = {
-          userId,
+          userName,
           page: loadMore ? Math.floor(this.sessions.length / size) + 1 : 1,
           size: size,
           ...(finalFilterParams || {})
@@ -501,7 +503,7 @@ export const useChatStore = defineStore({
      */
     async fetchUnreadCount() {
       try {
-        const response: any = await getAllUnreadMessageCount(this.currentSession?.userId?.toString() || "", "AGENT");
+        const response: any = await getAllUnreadMessageCount("AGENT");
 
         if (response?.code === 200 && response?.data) {
           const newUnreadCount = typeof response.data === "string" ? parseInt(response.data) || 0 : response.data || 0;

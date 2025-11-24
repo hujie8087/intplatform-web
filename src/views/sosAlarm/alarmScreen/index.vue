@@ -87,7 +87,7 @@
     >
       <el-form ref="processFormRef" :model="processForm" :rules="processRules" label-width="80px" class="process-form">
         <el-form-item label="处理人" prop="processingBy">
-          <el-input v-model="processForm.processingBy" placeholder="请输入处理人" clearable />
+          <el-input v-model="processForm.processingBy" disabled placeholder="请输入处理人" clearable />
         </el-form-item>
         <el-form-item label="处理结果" prop="processingResult">
           <el-input
@@ -263,12 +263,17 @@ const openChatForAlarm = async (alarm: any) => {
 
 const handleMarkerSelect = async (alarm: any) => {
   focusAlarmOnMap(alarm);
+  // 打开标记的 popup
+  if (alarmMapRef.value) {
+    alarmMapRef.value.openMarkerPopup(alarm);
+  }
   await openChatForAlarm(alarm);
 };
 
 const handleAlarmClick = async (alarm: any) => {
-  focusAlarmOnMap(alarm);
-  await openChatForAlarm(alarm);
+  // focusAlarmOnMap(alarm);
+  // await openChatForAlarm(alarm);
+  handleMarkerSelect(alarm);
 };
 
 const closeChatPanel = () => {

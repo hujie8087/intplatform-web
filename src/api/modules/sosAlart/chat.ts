@@ -15,7 +15,11 @@ export const createChatSession = (data: SosChart.ReqSendMessage) => {
  * 根据订单号获取聊天会话
  */
 export const getChatSessionByOrder = (orderNumber: string) => {
-  return http.get<SosChart.ResChatSessionList>(PORT1 + `/customer/chat/sessions/getSessionByOrder`, { orderNumber });
+  return http.get<SosChart.ResChatSessionList>(
+    PORT1 + `/customer/chat/sessions/getSessionByOrder`,
+    { orderNumber },
+    { loading: false }
+  );
 };
 
 /**
@@ -40,7 +44,9 @@ export const getUserChatSessions = (params: any) => {
  * @param params 分页参数
  */
 export const getChatHistory = (sessionId: string, params?: any) => {
-  return http.get<ResPage<SosChart.ResChatMessageList>>(PORT1 + `/customer/chat/messages/history/${sessionId}`, params);
+  return http.get<ResPage<SosChart.ResChatMessageList>>(PORT1 + `/customer/chat/messages/history/${sessionId}`, params, {
+    loading: false
+  });
 };
 
 /**
@@ -56,7 +62,7 @@ export const sendChatMessage = (data: SosChart.ReqSendMessage) => {
  * @param data 包含sessionId的请求数据
  */
 export const markMessagesAsRead = (data: { sessionId: string; senderType: string }) => {
-  return http.post<SosChart.ResChatMessageList>(PORT1 + `/customer/chat/messages/read`, data);
+  return http.post<SosChart.ResChatMessageList>(PORT1 + `/customer/chat/messages/read`, data, { loading: false });
 };
 
 /**
@@ -79,6 +85,6 @@ export const getUnreadMessageCount = (userId: string) => {
  * 获取所有未读消息数量的总和
  * @param params 请求参数
  */
-export const getAllUnreadMessageCount = (userId: string, userType: string) => {
-  return http.get<number>(PORT1 + `/customer/chat/messages/unreadCount`, { userId, userType }, { loading: false });
+export const getAllUnreadMessageCount = (userType: string) => {
+  return http.get<number>(PORT1 + `/customer/chat/messages/unreadCount`, { userType }, { loading: false });
 };

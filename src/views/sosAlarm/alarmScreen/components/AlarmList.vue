@@ -2,11 +2,52 @@
   <div class="alarm-list-panel">
     <div class="alarm-list-header">
       <h2 class="alarm-list-title">实时预警列表</h2>
-      <span v-if="alarms.length" class="alarm-list-count"> 共 {{ alarms.length }} 条 </span>
+      <!-- 筛选按钮 -->
+      <div class="filter-button">
+        <el-popover
+          v-model:visible="showFilterDialog"
+          placement="bottom-end"
+          :width="350"
+          trigger="click"
+          popper-class="filter-popover"
+        >
+          <template #reference>
+            <el-button type="primary" :icon="Filter" size="small" class="alarm-list-count">
+              筛选
+              <el-badge v-if="appliedFiltersCount > 0" :value="appliedFiltersCount" />
+            </el-button>
+          </template>
+
+          <!-- 筛选表单内容 -->
+          <div class="filter-panel">
+            <el-form ref="formRef" :model="currentFilters" label-width="80px" size="small" class="filter-form">
+              <el-form-item label="订单号">
+                <el-input v-model="currentFilters.orderNumber" placeholder="请输入订单号" size="small" clearable />
+              </el-form-item>
+
+              <el-form-item label="姓名">
+                <el-input v-model="currentFilters.nickName" placeholder="姓名" size="small" clearable />
+              </el-form-item>
+
+              <el-form-item label="工号">
+                <el-input v-model="currentFilters.userName" placeholder="请输入工号" size="small" clearable />
+              </el-form-item>
+            </el-form>
+
+            <div class="filter-actions">
+              <el-button size="small" @click="handleFilterReset"> 重置 </el-button>
+              <el-button type="primary" size="small" :loading="searchLoading" @click="handleFilterConfirm"> 确定 </el-button>
+            </div>
+          </div>
+        </el-popover>
+        <span v-if="filteredAlarms.length" class="alarm-list-count">
+          共 <span style=" font-weight: bold;color: red">{{ filteredAlarms.length }}</span> 条
+        </span>
+      </div>
     </div>
     <div class="alarm-list-content">
       <div
-        v-for="(alarm, index) in alarms"
+        v-for="(alarm, index) in filteredAlarms"
         :key="alarm.id ?? index"
         class="alarm-card"
         :class="getLevelClass(alarm.level)"
@@ -31,7 +72,23 @@
           </div>
           <div class="alarm-card__meta-item">
             <span class="meta-label">报警人</span>
-            <span class="meta-value">{{ alarm.reportBy || "未知" }}</span>
+            <span class="meta-value">{{ alarm.reportBy || "--" }}</span>
+          </div>
+          <div class="alarm-card__meta-item">
+            <span class="meta-label">工号</span>
+            <span class="meta-value">{{ alarm.createBy || "--" }}</span>
+          </div>
+          <div class="alarm-card__meta-item">
+            <span class="meta-label">设备号</span>
+            <span class="meta-value">{{ alarm.deviceType || "--" }}</span>
+          </div>
+          <div class="alarm-card__meta-item">
+            <span class="meta-label">联系电话</span>
+            <span class="meta-value">{{ alarm.tel || "--" }}</span>
+          </div>
+          <div class="alarm-card__meta-item">
+            <span class="meta-label">系统来源</span>
+            <span class="meta-value">{{ alarm.systemSource === 0 ? "后勤" : alarm.systemSource === 1 ? "安环" : "其他" }}</span>
           </div>
         </div>
 
@@ -45,37 +102,64 @@
         </p>
       </div>
 
-      <div v-if="alarms.length === 0" class="no-alarms">暂无未处理报警</div>
+      <div v-if="props.alarms.length === 0" class="no-alarms">暂无未处理报警</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from "vue";
+import { Filter } from "@element-plus/icons-vue";
+
 interface AlarmData {
-  id?: number;
-  level?: number;
-  reportDescription?: string;
-  reportBy?: string;
-  reportLocation?: string;
-  reportTime?: string;
-  tel?: string;
-  latitude?: number;
-  longitude?: number;
-  deviceNo?: string;
-  deviceCode?: string;
-  deviceId?: string;
-  orderNumber?: string;
-  orderNo?: string;
+  createBy: string;
+  delFlag: string;
+  deviceType: string;
+  id: number;
+  latitude: number;
+  level: number;
+  longitude: number;
+  orderNo: string;
+  params: any;
+  processingBy: string;
+  processingResult: string;
+  reportBy: string;
+  reportDescription: string;
+  reportLocation: string;
+  reportTime: string;
+  systemSource: number;
+  tel: string;
 }
 
 interface Props {
   alarms: AlarmData[];
 }
+// 高级筛选相关
+const showFilterDialog = ref(false);
+const currentFilters = ref({
+  orderNumber: "",
+  nickName: "",
+  userName: "",
+  userType: ""
+});
+const appliedFiltersCount = ref(0);
+const searchLoading = ref(false);
 
-const { alarms } = defineProps<Props>();
+const props = defineProps<Props>();
 const emit = defineEmits<{
   alarmClick: [alarm: AlarmData];
 }>();
+
+const filteredAlarms = computed(() => {
+  console.log("filteredAlarms:", props.alarms);
+  return props.alarms.filter(alarm => {
+    return (
+      alarm.orderNo.includes(currentFilters.value.orderNumber) &&
+      alarm.reportBy.includes(currentFilters.value.nickName) &&
+      alarm.createBy.includes(currentFilters.value.userName)
+    );
+  });
+});
 
 const levelLabels = ["常规预警", "一级预警", "二级预警", "三级预警"];
 
@@ -89,7 +173,7 @@ const formatDate = (value?: string) => {
 };
 
 const getOrderNumber = (alarm: AlarmData) => {
-  return alarm.orderNumber || alarm.orderNo || "未知订单";
+  return alarm.orderNo || "未知订单";
 };
 
 const getLevelLabel = (level?: number) => {
@@ -112,6 +196,35 @@ const formatLocation = (alarm: AlarmData) => {
   }
 
   return "未记录地点";
+};
+
+// 重置筛选
+const handleFilterReset = () => {
+  currentFilters.value = {
+    orderNumber: "",
+    nickName: "",
+    userName: "",
+    userType: ""
+  };
+  appliedFiltersCount.value = 0;
+  handleClearSearch();
+};
+// 清除搜索
+const handleClearSearch = () => {
+  showFilterDialog.value = false;
+};
+// 处理筛选确认
+const handleFilterConfirm = async () => {
+  // 计算应用的筛选条件数量
+  let count = 0;
+  if (currentFilters.value.orderNumber.trim()) count++;
+  if (currentFilters.value.nickName.trim()) count++;
+  if (currentFilters.value.userName.trim()) count++;
+  if (currentFilters.value.userType.trim()) count++;
+
+  appliedFiltersCount.value = count;
+
+  showFilterDialog.value = false;
 };
 </script>
 
@@ -142,6 +255,7 @@ const formatLocation = (alarm: AlarmData) => {
 }
 .alarm-list-count {
   padding: 4px 10px;
+  margin-left: 10px;
   font-size: 12px;
   color: rgb(210 233 255 / 78%);
   background: rgb(210 233 255 / 12%);
@@ -278,6 +392,10 @@ const formatLocation = (alarm: AlarmData) => {
 .level-3 .alarm-card__level-tag {
   color: #e2d6ff;
   background: rgb(169 128 255 / 22%);
+}
+.filter-actions {
+  margin-top: 10px;
+  text-align: right;
 }
 
 @media (width <= 768px) {

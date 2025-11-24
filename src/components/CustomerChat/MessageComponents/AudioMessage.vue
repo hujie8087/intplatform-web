@@ -20,7 +20,7 @@
     <!-- 隐藏的audio元素 -->
     <audio
       ref="audioRef"
-      :src="content"
+      :src="content.startsWith('http') ? content : filePath + content"
       preload="metadata"
       @loadedmetadata="handleAudioLoaded"
       @timeupdate="handleTimeUpdate"
@@ -45,6 +45,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   duration: 0
 });
+
+const filePath = import.meta.env.VITE_APP_BASE_FILE;
 
 const emit = defineEmits<{
   play: [audioUrl: string];
