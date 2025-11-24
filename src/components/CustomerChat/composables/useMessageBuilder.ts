@@ -7,7 +7,7 @@ import { getTripWaitingDetail } from "@/api/modules/sosAlart";
  * 统一处理各种类型消息的创建逻辑
  */
 export function useMessageBuilder() {
-  const userInfo = useUserStore().userInfo?.user || {};
+  const userInfo = useUserStore().thirdUserInfo || {};
   /**
    * 创建基础消息对象
    */
@@ -19,18 +19,17 @@ export function useMessageBuilder() {
       content: content,
       contentType: contentType,
       senderType: SenderType.AGENT, // web端默认为客服
-      senderName: userInfo?.nickName || "客服",
-      // senderId: userInfo?.userId?.toString() || '',
-      senderId: "AGENT",
+      senderName: userInfo?.name || userInfo?.account || "客服",
+      senderId: userInfo?.account || "",
       timestamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
       createTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
       avatar: "",
       status: "sent",
       // 必需字段
       type: MessageType.CHAT_MESSAGE,
-      userId: userInfo?.userId?.toString() || "",
-      nickName: userInfo?.nickName || "客服",
-      userName: userInfo?.userName || "",
+      userId: userInfo?.account || "",
+      nickName: userInfo?.name || "客服",
+      userName: userInfo?.account || "",
       userType: UserType.AGENT // web端默认为客服
     };
   };

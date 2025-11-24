@@ -59,9 +59,9 @@ export function useLoadMore() {
       );
 
       return newMessages;
-    } catch (error) {
+    } catch (error: any) {
       console.error("加载更多消息失败:", error);
-      ElMessage.error("加载更多消息失败");
+      ElMessage.error("加载更多消息失败1", error);
       throw error;
     } finally {
       loadingMore.value = false;

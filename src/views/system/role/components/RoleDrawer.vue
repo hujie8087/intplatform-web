@@ -165,7 +165,7 @@ const acceptParams = (params: DrawerProps): void => {
   drawerVisible.value = true;
   repairAreaIds.value = params.rowData.repairAreaId ? params.rowData.repairAreaId?.split("/").map(item => Number(item)) : [];
   drawerProps.value.menuIds = params.menuIds ?? [];
-  console.log(drawerProps.value.menuIds);
+  canteenIds.value = params.rowData.canteenId ? params.rowData.canteenId?.split("/").map(item => Number(item)) : [];
 };
 
 // 提交数据（新增/编辑）
@@ -183,7 +183,8 @@ const handleSubmit = () => {
         // menuIds: drawerProps.value.rowData.menuIds,
         menuIds: finalKeys,
         menuCheckStrictly: checkStrictly.value ? true : false,
-        repairAreaId: repairAreaIds.value.join("/")
+        repairAreaId: repairAreaIds.value.join("/"),
+        canteenId: canteenIds.value.join("/")
       });
       ElMessage.success({
         message: t("main.successMsg", { title: t("system.role.role"), method: `${drawerProps.value.title}` })

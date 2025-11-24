@@ -275,7 +275,7 @@ const loadInitialMessages = async (selectedSession: SosChart.ResChatSessionList)
     console.log("初始加载完成，开始同步CARD_WAIT消息状态");
     syncWaitCardMessagesByTweId(chatStore.messages, undefined, true);
   } catch (error) {
-    console.error("加载初始消息失败:", error);
+    // console.error("加载初始消息失败:", error);
   }
 };
 

@@ -88,19 +88,15 @@ class RequestHttp {
               // 重新刷新页面
               window.location.reload();
               return Promise.reject(res);
-            } else {
-              router.replace(LOGIN_URL);
-              ElMessage.error(res.data.code);
-              return Promise.reject(res);
             }
+            return Promise.reject(res);
           } catch (error) {
             router.replace(LOGIN_URL);
-            ElMessage.error("刷新token失败");
             return Promise.reject({ code: ResultEnum.TOKEN_EXPIRED, msg: "刷新token失败" });
           }
         }
         // 登录失效
-        if (data.code == ResultEnum.OVERDUE || data.code == ResultEnum.UNPROCESSABLE_ENTITY) {
+        if (data.code == ResultEnum.OVERDUE || data.code == ResultEnum.REFRESH_TOKEN_EXPIRED) {
           userStore.setToken("");
           router.replace(LOGIN_URL);
           ElMessage.error(data.msg || data.message);

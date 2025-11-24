@@ -17,8 +17,10 @@
           批量删除
         </el-button>
       </template>
-      <template #operation="">
+      <template #operation="scope">
         <el-button type="primary" link :icon="View">查看</el-button>
+        <!-- 查看聊天记录 -->
+        <el-button type="warning" link :icon="ChatDotRound" @click="openChatForAlarm(scope.row)"> 查看聊天记录 </el-button>
         <el-button type="danger" link :icon="Delete"> 删除 </el-button>
       </template>
     </ProTable>
@@ -26,16 +28,20 @@
       <el-button type="primary" @click="drawerVisible = false">关闭</el-button>
     </template>
   </el-dialog>
+  <AlarmChat ref="alarmChat" />
 </template>
 
 <script setup lang="ts" name="AlarmRecords">
 import { ref } from "vue";
-import { Delete, Download, View } from "@element-plus/icons-vue";
+import AlarmChat from "./AlarmChat.vue";
+import { ChatDotRound, Delete, Download, View } from "@element-plus/icons-vue";
 import ProTable from "@/components/ProTable/index.vue";
 import { ProTableInstance } from "@/components/ProTable/interface";
 import { listAlarm } from "@/api/modules/sosAlart/index";
+import { useDownload } from "@/hooks/useDownload";
 
 const baseUrl = import.meta.env.VITE_API_URL;
+const alarmChat = ref<InstanceType<typeof AlarmChat>>();
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
   return {
@@ -105,12 +111,16 @@ const batchDelete = (ids: number[]) => {
   console.log(ids);
 };
 const downloadFile = () => {
-  window.open(baseUrl + "/maintenance/report/export", "_blank");
+  useDownload(`${baseUrl}/maintenance/report/export`, "报警历史记录", true, ".xlsx", "post", proTable.value?.searchParam);
 };
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
+};
+
+const openChatForAlarm = async (alarm: any) => {
+  alarmChat.value?.acceptParams({ alarm });
 };
 
 defineExpose({

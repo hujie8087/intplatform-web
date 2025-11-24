@@ -219,6 +219,7 @@ export namespace Role {
   export interface ResRole {
     createBy?: string;
     createTime?: string;
+    canteenId?: string;
     updateBy?: string;
     updateTime?: string;
     remark: string;
