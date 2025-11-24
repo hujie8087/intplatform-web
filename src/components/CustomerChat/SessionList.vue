@@ -35,7 +35,7 @@
               </el-form-item>
             </el-form>
 
-            <div class="filter-actions" style=" margin-top: 10px;text-align: right">
+            <div class="filter-actions" style="margin-top: 10px; text-align: right">
               <el-button size="small" @click="handleFilterReset"> 重置 </el-button>
               <el-button type="primary" size="small" :loading="searchLoading" @click="handleFilterConfirm"> 确定 </el-button>
             </div>

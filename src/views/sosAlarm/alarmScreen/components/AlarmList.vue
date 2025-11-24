@@ -41,7 +41,7 @@
           </div>
         </el-popover>
         <span v-if="filteredAlarms.length" class="alarm-list-count">
-          共 <span style=" font-weight: bold;color: red">{{ filteredAlarms.length }}</span> 条
+          共 <span style="font-weight: bold; color: red">{{ filteredAlarms.length }}</span> 条
         </span>
       </div>
     </div>
