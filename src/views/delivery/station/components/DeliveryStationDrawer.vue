@@ -77,7 +77,7 @@
         <!-- 备注 -->
         <el-col :span="24">
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" rows="4" v-model="drawerProps.rowData.remark" placeholder="请输入备注" />
+            <el-input type="textarea" :rows="4" v-model="drawerProps.rowData.remark" placeholder="请输入备注" />
           </el-form-item>
         </el-col>
         <!-- 选择经纬度 -->
@@ -232,7 +232,7 @@ defineExpose({
 </script>
 <style scoped>
 #map {
-  height: 600px;
   width: 100%;
+  height: 600px;
 }
 </style>
