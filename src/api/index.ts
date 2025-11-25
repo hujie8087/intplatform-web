@@ -29,8 +29,45 @@ const config = {
 
 const axiosCanceler = new AxiosCanceler();
 
+// 请求队列：存储 token 过期时的请求
+interface PendingRequest {
+  resolve: (value?: any) => void;
+  reject: (reason?: any) => void;
+  config: CustomAxiosRequestConfig;
+}
+
 class RequestHttp {
   service: AxiosInstance;
+  // 是否正在刷新 token
+  private isRefreshing = false;
+  // 待重试的请求队列
+  private pendingQueue: PendingRequest[] = [];
+
+  /**
+   * @description 处理队列中的请求
+   * @param error 如果提供错误，则所有请求都会 reject
+   * @param newToken 新的 token，用于更新队列中请求的 headers
+   */
+  private processQueue(error: any = null, newToken?: string, newRefreshToken?: string) {
+    this.pendingQueue.forEach(({ resolve, reject, config }) => {
+      if (error) {
+        reject(error);
+      } else {
+        // 更新请求头中的 token（如果提供了新 token）
+        if (newToken && config.headers && typeof config.headers.set === "function") {
+          config.headers.set("Authorization", "Bearer " + newToken);
+          config.headers.set("access_token", newToken);
+          if (newRefreshToken) {
+            config.headers.set("refresh_token", newRefreshToken);
+          }
+        }
+        // 重新执行请求（请求拦截器会自动从 userStore 获取最新 token）
+        this.service.request(config).then(resolve).catch(reject);
+      }
+    });
+    this.pendingQueue = [];
+  }
+
   public constructor(config: AxiosRequestConfig) {
     // instantiation
     this.service = axios.create(config);
@@ -79,20 +116,50 @@ class RequestHttp {
         config.loading && tryHideFullScreenLoading();
         // token过期
         if (data.code == ResultEnum.TOKEN_EXPIRED || data.code === ResultEnum.OVERDUE) {
-          // 刷新token
+          // 如果正在刷新 token，将当前请求加入队列等待
+          if (this.isRefreshing) {
+            return new Promise((resolve, reject) => {
+              this.pendingQueue.push({ resolve, reject, config });
+            });
+          }
+
+          // 开始刷新 token
+          this.isRefreshing = true;
+
           try {
             const res = await refreshToken({ refreshToken: userStore.refreshToken });
             if (+res.code === ResultEnum.SUCCESS) {
               await userStore.setToken(res.data.accessToken);
               await userStore.setRefreshToken(res.data.refreshToken);
-              // 重新刷新页面
-              window.location.reload();
-              return Promise.reject(res);
+
+              // 更新请求头中的 token
+              if (config.headers && typeof config.headers.set === "function") {
+                config.headers.set("Authorization", "Bearer " + res.data.accessToken);
+                config.headers.set("access_token", res.data.accessToken);
+                config.headers.set("refresh_token", res.data.refreshToken);
+              }
+
+              // 处理队列中的请求（传入新 token）
+              this.processQueue(null, res.data.accessToken, res.data.refreshToken);
+              this.isRefreshing = false;
+
+              // 重新执行当前请求
+              return this.service.request(config);
+            } else {
+              // 刷新失败，处理队列并跳转登录
+              const error = { code: ResultEnum.TOKEN_EXPIRED, msg: res.msg || "刷新token失败" };
+              this.processQueue(error);
+              this.isRefreshing = false;
+              router.replace(LOGIN_URL);
+              return Promise.reject(error);
             }
-            return Promise.reject(res);
           } catch (error) {
+            // 刷新失败，处理队列并跳转登录
+            const refreshError = { code: ResultEnum.TOKEN_EXPIRED, msg: "刷新token失败" };
+            this.processQueue(refreshError);
+            this.isRefreshing = false;
             router.replace(LOGIN_URL);
-            return Promise.reject({ code: ResultEnum.TOKEN_EXPIRED, msg: "刷新token失败" });
+            return Promise.reject(refreshError);
           }
         }
         // 登录失效
