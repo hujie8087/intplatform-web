@@ -80,6 +80,7 @@ const handleSubmit = async () => {
 
           // 2.清除 Token
           userStore.setToken("");
+          userStore.setRefreshToken("");
 
           // 3.重定向到登陆页
           router.replace(LOGIN_URL);

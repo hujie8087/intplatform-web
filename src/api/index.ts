@@ -80,6 +80,8 @@ class RequestHttp {
     this.service.interceptors.request.use(
       (config: CustomAxiosRequestConfig) => {
         const userStore = useUserStore();
+        const token = userStore.token || localStorage.getItem("access_token");
+        const refreshToken = userStore.token || localStorage.getItem("refresh_token");
         // 重复请求不需要取消，在 api 服务中通过指定的第三个参数: { cancel: false } 来控制
         config.cancel ??= true;
         config.cancel && axiosCanceler.addPending(config);
@@ -87,9 +89,9 @@ class RequestHttp {
         config.loading ??= true;
         config.loading && showFullScreenLoading();
         if (config.headers && typeof config.headers.set === "function") {
-          config.headers.set("Authorization", "Bearer " + userStore.token);
-          config.headers.set("access_token", userStore.token);
-          config.headers.set("refresh_token", userStore.refreshToken);
+          config.headers.set("Authorization", "Bearer " + token);
+          config.headers.set("access_token", token);
+          config.headers.set("refresh_token", refreshToken);
           config.headers.set("product_code", "intplatform");
           config.headers.set("platform", "pc");
           config.headers.set("version_name", "1.0.0");
@@ -112,6 +114,7 @@ class RequestHttp {
         const { data, config } = response;
 
         const userStore = useUserStore();
+        const refresh_Token = userStore.refreshToken || localStorage.getItem("refresh_token") || "";
         axiosCanceler.removePending(config);
         config.loading && tryHideFullScreenLoading();
         // token过期
@@ -127,7 +130,7 @@ class RequestHttp {
           this.isRefreshing = true;
 
           try {
-            const res = await refreshToken({ refreshToken: userStore.refreshToken });
+            const res = await refreshToken({ refreshToken: refresh_Token });
             if (+res.code === ResultEnum.SUCCESS) {
               await userStore.setToken(res.data.accessToken);
               await userStore.setRefreshToken(res.data.refreshToken);
@@ -165,6 +168,7 @@ class RequestHttp {
         // 登录失效
         if (data.code == ResultEnum.OVERDUE || data.code == ResultEnum.REFRESH_TOKEN_EXPIRED) {
           userStore.setToken("");
+          userStore.setRefreshToken("");
           router.replace(LOGIN_URL);
           ElMessage.error(data.msg || data.message);
           return Promise.reject(data);
