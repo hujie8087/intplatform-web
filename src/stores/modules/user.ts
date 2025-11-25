@@ -29,15 +29,28 @@ export const useUserStore = defineStore({
   }),
   getters: {
     // Get userInfo
-    userInfoGet: state => state.userInfo
+    userInfoGet: state => state.userInfo,
+    accessTokenGet: () => localStorage.getItem("access_token") || "",
+    refreshTokenGet: () => localStorage.getItem("refresh_token") || ""
   },
   actions: {
     // Set Token
     setToken(token: string) {
       this.token = token;
+      // 同时存储到 localStorage 中
+      if (token) {
+        localStorage.setItem("access_token", token);
+      } else {
+        localStorage.removeItem("access_token");
+      }
     },
     setRefreshToken(refreshToken: string) {
       this.refreshToken = refreshToken;
+      if (refreshToken) {
+        localStorage.setItem("refresh_token", refreshToken);
+      } else {
+        localStorage.removeItem("refresh_token");
+      }
     },
     // Set setUserInfo
     setUserInfo(userInfo: UserState["userInfo"]) {

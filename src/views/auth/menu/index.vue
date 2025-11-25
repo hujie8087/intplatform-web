@@ -21,6 +21,7 @@ const userStore = useUserStore();
 
 const handleToLogin = () => {
   userStore.setToken("");
+  userStore.setRefreshToken("");
   router.push(LOGIN_URL);
 };
 </script>
