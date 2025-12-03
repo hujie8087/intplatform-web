@@ -99,6 +99,7 @@ import { useDownload } from "@/hooks/useDownload";
 import { useDict } from "@/hooks/useDict";
 import PrintDrawer from "./components/PrintDrawer.vue";
 import { EpPropMergeType } from "element-plus/es/utils";
+import dayjs from "dayjs";
 
 const printDrawerRef = ref<InstanceType<typeof PrintDrawer> | null>(null);
 
@@ -235,7 +236,7 @@ const columns = reactive<ColumnProps<Order.ResOrder>[]>([
       return (
         <div>
           <div>{scope.row.singlePlayer}</div>
-          <div>{scope.row.singleTime}</div>
+          {scope.row.singleTime ? <div>{dayjs(scope.row.singleTime).format("YYYY-MM-DD HH:mm:ss")}</div> : ""}
         </div>
       );
     }

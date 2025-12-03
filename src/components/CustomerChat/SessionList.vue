@@ -415,9 +415,7 @@ const getCustomerName = (record: any): string => {
 const getUserTypeText = (userType: string): string => {
   switch (userType) {
     case "USER":
-      return "乘客";
-    case "DRIVER":
-      return "司机";
+      return "用户";
     case "AGENT":
       return "客服";
     default:

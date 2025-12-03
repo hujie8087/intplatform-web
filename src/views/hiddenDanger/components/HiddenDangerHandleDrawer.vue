@@ -50,7 +50,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="处理人" prop="handleBy">
-            <el-input v-model="drawerProps.rowData!.handleBy" />
+            <el-input v-model="drawerProps.rowData!.handleBy" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -107,9 +107,13 @@
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance, UploadUserFile } from "element-plus";
 import { useI18n } from "vue-i18n";
-import { DictOptions } from "@/api/interface";
+import { DictOptions, Login } from "@/api/interface";
 import { HiddenDanger } from "@/api/interface/hiddenDanger";
 import UploadImgs from "@/components/Upload/Imgs.vue";
+import { useUserStore } from "@/stores/modules/user";
+
+const userStore = useUserStore();
+const userInfo = ref<Login.ResThirdUserInfo>(userStore.thirdUserInfo);
 const { t } = useI18n(); // 解构出t方法
 
 const fileUrl = import.meta.env.VITE_APP_BASE_FILE;
@@ -141,6 +145,7 @@ const drawerProps = ref<DrawerProps>({
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
+  drawerProps.value.rowData.handleBy = userInfo.value.name ?? "";
 };
 
 // 提交数据（新增/编辑）
