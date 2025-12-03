@@ -126,7 +126,7 @@
         </div>
       </template>
     </el-dialog>
-    <AlarmRecords ref="alarmRecordsRef" />
+    <AlarmRecords ref="alarmRecordsRef" @alarm-click="handleAlarmClick" />
   </div>
 </template>
 
@@ -162,7 +162,7 @@ const chatError = ref<string | null>(null);
 watch(alarmReports, newAlarms => {
   nextTick(() => {
     if (alarmMapRef.value) {
-      alarmMapRef.value.updateMarkers(newAlarms);
+      alarmMapRef.value.initMap(newAlarms);
     }
   });
 });
@@ -179,6 +179,7 @@ const formatAlarmTime = (value?: string) => {
 
 const focusAlarmOnMap = (alarm: any) => {
   if (alarmMapRef.value && alarm.latitude && alarm.longitude) {
+    console.log(alarm);
     alarmMapRef.value.centerOnLocation(alarm.latitude, alarm.longitude);
   }
 };

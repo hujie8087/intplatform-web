@@ -97,20 +97,13 @@
 import { useUserStore } from "@/stores/modules/user";
 import { ref } from "vue";
 import UploadImg from "@/components/Upload/Img.vue";
-import { Login, User } from "@/api/interface";
+import { Login } from "@/api/interface";
 import { sexType } from "@/utils/serviceDict";
-import { getUserDepartment } from "@/api/modules/user";
 const userStore = useUserStore();
-const deptList = ref<User.ResDepartment[]>([]);
 // const filePath = import.meta.env.VITE_APP_BASE_FILE;
 const userInfo = ref<Login.ResThirdUserInfo>(userStore.thirdUserInfo);
 const dialogVisible = ref(false);
 
-const getDeptList = async () => {
-  const res = await getUserDepartment();
-  deptList.value = res.data;
-};
-getDeptList();
 const openDialog = () => {
   dialogVisible.value = true;
 };

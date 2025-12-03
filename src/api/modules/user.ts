@@ -10,7 +10,18 @@ const baseURL = import.meta.env.VITE_API_HOME_URL;
 // 获取用户列表
 export const getUserList = (params: User.ReqUserParams) => {
   // return http.get<ResPage<User.ResUserList>>(PORT1 + `/system/user/list`, params);
-  return http.get<ResPage<Account.ResAccountList>>(`/mis/upms/mis/user/page`, params, { baseURL: baseURL });
+  const newParams = {
+    ...params,
+    current: params.pageNum || 1,
+    size: params.pageSize || 10
+  };
+  if (newParams.pageNum) {
+    delete (newParams as any).pageNum;
+  }
+  if (newParams.pageSize) {
+    delete (newParams as any).pageSize;
+  }
+  return http.get<ResPage<Account.ResAccountList>>(`/mis/upms/mis/user/page`, newParams, { baseURL: baseURL });
 };
 
 // 获取树形用户列表

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="drawerVisible" :destroy-on-close="true" :title="`${drawerProps.title}报警历史记录`" width="80%">
+  <el-dialog v-model="drawerVisible" :destroy-on-close="true" :title="`${drawerProps.title}`" width="80%">
     <ProTable
       ref="proTable"
       highlight-current-row
@@ -10,18 +10,14 @@
       row-key="id"
     >
       <!-- 表格 header 按钮 -->
-      <template #tableHeader="scope">
+      <template #tableHeader>
         <!-- 导出 -->
         <el-button type="warning" :icon="Download" @click="downloadFile"> 导出报警历史记录 </el-button>
-        <el-button type="danger" :disabled="!scope.isSelected" :icon="Delete" @click="batchDelete(scope.selectedListIds)">
-          批量删除
-        </el-button>
       </template>
       <template #operation="scope">
         <el-button type="primary" link :icon="View">查看</el-button>
         <!-- 查看聊天记录 -->
         <el-button type="warning" link :icon="ChatDotRound" @click="openChatForAlarm(scope.row)"> 查看聊天记录 </el-button>
-        <el-button type="danger" link :icon="Delete"> 删除 </el-button>
       </template>
     </ProTable>
     <template #footer>
@@ -31,19 +27,39 @@
   <AlarmChat ref="alarmChat" />
 </template>
 
-<script setup lang="ts" name="AlarmRecords">
+<script setup lang="tsx" name="AlarmRecords">
 import { ref } from "vue";
 import AlarmChat from "./AlarmChat.vue";
-import { ChatDotRound, Delete, Download, View } from "@element-plus/icons-vue";
+import { ChatDotRound, Download, View } from "@element-plus/icons-vue";
 import ProTable from "@/components/ProTable/index.vue";
-import { ProTableInstance } from "@/components/ProTable/interface";
+import { ProTableInstance, RenderScope } from "@/components/ProTable/interface";
 import { listAlarm } from "@/api/modules/sosAlart/index";
 import { useDownload } from "@/hooks/useDownload";
 
+interface AlarmData {
+  createBy: string;
+  delFlag: string;
+  deviceType: string;
+  id: number;
+  latitude: number;
+  level: number;
+  longitude: number;
+  orderNo: string;
+  params: any;
+  processingBy: string;
+  processingResult: string;
+  reportBy: string;
+  reportDescription: string;
+  reportLocation: string;
+  reportTime: string;
+  systemSource: number;
+  tel: string;
+}
 const baseUrl = import.meta.env.VITE_API_URL;
 const alarmChat = ref<InstanceType<typeof AlarmChat>>();
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
+  console.log(data);
   return {
     list: data.rows,
     total: data.total,
@@ -51,6 +67,14 @@ const dataCallback = (data: any) => {
     size: data.size
   };
 };
+const emit = defineEmits<{
+  alarmClick: [alarm: AlarmData];
+}>();
+const locationClick = row => {
+  drawerVisible.value = false;
+  emit("alarmClick", row);
+};
+
 const columns = [
   {
     label: "报警人",
@@ -64,7 +88,14 @@ const columns = [
   },
   {
     label: "报警地点",
-    prop: "reportLocation"
+    prop: "reportLocation",
+    render: (scope: RenderScope<AlarmData>) => {
+      return (
+        <el-link underline onClick={() => locationClick(scope.row)}>
+          {scope.row.reportLocation}
+        </el-link>
+      );
+    }
   },
   {
     label: "报警详情",
@@ -107,12 +138,10 @@ const drawerProps = ref<DrawerProps>({
   title: ""
 });
 
-const batchDelete = (ids: number[]) => {
-  console.log(ids);
-};
 const downloadFile = () => {
   useDownload(`${baseUrl}/maintenance/report/export`, "报警历史记录", true, ".xlsx", "post", proTable.value?.searchParam);
 };
+
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;

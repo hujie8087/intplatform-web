@@ -49,6 +49,7 @@ import { HiddenDanger } from "@/api/interface/hiddenDanger";
 import { DictOptions } from "@/api/interface";
 import { useDownload } from "@/hooks/useDownload";
 import { ElMessageBox } from "element-plus";
+import { useDict } from "@/hooks/useDict";
 const fileUrl = import.meta.env.VITE_APP_BASE_FILE;
 // 字典数据
 const hiddenDangerStateOptions = ref<DictOptions[]>([
@@ -56,6 +57,17 @@ const hiddenDangerStateOptions = ref<DictOptions[]>([
   { label: "处理中", value: 1, tagType: "primary" },
   { label: "已完成", value: 2, tagType: "warning" }
 ]);
+
+const hazardCollectionTypeOptions = ref<DictOptions[]>([]);
+useDict("hazard_collection_type").then(res => {
+  hazardCollectionTypeOptions.value = res.hazard_collection_type.map(item => {
+    return {
+      label: item.label,
+      value: +item.value,
+      tagType: item.tagType
+    };
+  });
+});
 
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
@@ -71,6 +83,7 @@ const dataCallback = (data: any) => {
 const columns = reactive<ColumnProps<HiddenDanger.ResHiddenDanger>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { type: "index", label: "序号", width: 50 },
+  { prop: "type", label: "隐患类型", enum: hazardCollectionTypeOptions, width: 100, tag: true, search: { el: "select" } },
   { prop: "name", label: "隐患名称", width: 140 },
   { prop: "location", label: "隐患地点" },
   { prop: "describes", label: "隐患描述" },
