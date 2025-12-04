@@ -38,37 +38,40 @@ const map = ref<any | null>(null);
 const currentZoom = ref<number | null>(null);
 // 存储当前打开的 marker info 元素，用于关闭其他已打开的
 const currentOpenInfoElement = ref<HTMLElement | null>(null);
+// 存储当前地图上的 DomMarker 实例，便于更新/清理
+const markers = ref<DomMarker[]>([]);
 
-const initMap = (assetTagsData: AlarmData[]) => {
-  if (map.value) {
-    map.value.dispose();
+const centerOnLocation = (lat: number, lng: number) => {
+  if (map.value?.amap) {
+    map.value.amap.setZoomAndCenter(21.5, [lng, lat], false);
+  }
+};
+
+const openMarkerPopup = (alarm: AlarmData) => {
+  // 查找对应的 alarm info 元素
+  const alarmInfo = document.getElementById(`alarm-${alarm.id}`) as HTMLElement | null;
+  document.querySelectorAll<HTMLElement>(".wxb-marker-info").forEach(el => (el.style.display = "none"));
+
+  if (!alarmInfo) {
+    console.warn(`未找到 ID 为 alarm-${alarm.id} 的元素`);
+    return;
   }
 
-  const mapInstance = new window.VgoMap.Map({
-    el: "mapContainer",
-    id: mapId
-  });
-  map.value = mapInstance;
-  currentZoom.value = mapInstance?.amap?.getZoom?.() ?? null;
-  mapInstance?.amap?.on?.("zoomchange", () => {
-    currentZoom.value = mapInstance?.amap?.getZoom?.() ?? null;
-  });
+  // 显示当前点击的 info
+  alarmInfo.style.display = "block";
 
-  let idx = 0;
-  let changeFocus = () => {
-    if (idx > assetTagsData.length - 1) idx = 0;
-    let item = assetTagsData[idx];
-    idx++;
+  // 可选：将地图中心定位到该 alarm 的位置
+  if (map.value && alarm.longitude && alarm.latitude) {
+    centerOnLocation(alarm.latitude, alarm.longitude);
+  }
 
-    console.log(item, "item");
-    // 等于1的则是室外直接聚焦
-    mapInstance.amap.setZoomAndCenter(21.5, [item.longitude, item.latitude], false);
-  };
-  document.querySelector("#function")?.addEventListener("click", changeFocus);
+  console.log("打开报警弹窗:", alarm, alarmInfo);
+};
 
-  function createMapMarker(item) {
-    const poiUrl = new URL("@/assets/images/marker-icon.png", import.meta.url).href;
-    let content = `
+// 统一的创建 DomMarker 的方法，供 initMap / updateMarkers 复用
+const createMapMarker = (mapInstance: any, item: any): DomMarker => {
+  const poiUrl = new URL("@/assets/images/marker-icon.png", import.meta.url).href;
+  let content = `
         <div class='wxb-custom-marker unselectable'>
           <div class="custom-marker-icon">
             <img class="wxb-marker-icon" src="${poiUrl}" />
@@ -92,60 +95,68 @@ const initMap = (assetTagsData: AlarmData[]) => {
         </div>
         `;
 
-    const marker = new DomMarker(mapInstance, item, item.floorId, content);
-    marker.create(item.position);
+  const marker = new DomMarker(mapInstance, item, item.floorId, content);
+  marker.create(item.position);
 
-    console.log(marker, "marker", item);
-    setTimeout(() => {
-      // marker.domElement: DomMarker 渲染的 DOM 节点
+  // 直接在当前 marker 的 DOM 上绑定关闭按钮事件，避免全局 querySelector 带来的不确定性
+  const markerRoot = (marker as any).element as HTMLElement | undefined;
+  const alarmInfo = markerRoot?.querySelector<HTMLElement>(`.wxb-marker-info#alarm-${item.id}`);
+  const closeBtn = alarmInfo?.querySelector<HTMLElement>(".alarm-close");
 
-      const alarmInfo = document.querySelector<HTMLElement>(`#alarm-${item.id}`);
-      const closeBtn = document.querySelector<HTMLElement>(".alarm-close");
-
-      if (closeBtn && alarmInfo) {
-        closeBtn.addEventListener("click", e => {
-          e.stopPropagation(); // 避免触发 marker 的点击事件
-          console.log(e, 12313123);
-          alarmInfo.style.display = "none";
-        });
-      }
-    });
-    // 绑定点击事件，控制 info 显示/隐藏
-    marker.on("click", e => {
-      e.stopPropagation?.();
-      e.preventDefault?.();
-
-      // 将地图中心定位到该位置
-      openMarkerPopup(item);
-      emit("markerSelect", item);
+  if (closeBtn && alarmInfo) {
+    closeBtn.addEventListener("click", e => {
+      e.stopPropagation(); // 避免触发 marker 的点击事件
+      alarmInfo.style.display = "none";
     });
   }
 
-  // function updateMarkers(item) {
-  //   const mapRenderer = window.VgoMap.Map;
-  //   if (!mapRenderer) return null;
+  // 绑定点击事件，控制 info 显示/隐藏
+  marker.on("click", e => {
+    e.stopPropagation?.();
+    e.preventDefault?.();
 
-  //   let customMarker = mapRenderer.addMarker(item.floorId, {
-  //     src: "./img/poi.png",
-  //     fillStyle: "#e03131", // 字体颜色
-  //     strokeStyle: "#fff", // 边框
-  //     // bgColor: '#C0C4CC', // 背景颜色 灰色
-  //     strokeWidth: 0.15,
-  //     isCollision: false, // 是否有碰撞体积
-  //     position: item.position,
-  //     // scale: 1, // 缩放
-  //     text: item.name,
-  //     fontSize: 14,
-  //     renderOrder: 10000 // 渲染优先级
-  //   });
-  //   customMarker.on("click", e => {
-  //     e.event?.stopPropagation?.();
-  //     e.event?.preventDefault?.();
-  //     console.log(e, "点击了标记");
-  //     // customMarker.dispose() // 销毁标记
-  //   });
-  //   return customMarker;
-  // }
+    // 将地图中心定位到该位置并打开弹窗
+    openMarkerPopup(item);
+    emit("markerSelect", item);
+  });
+
+  return marker;
+};
+
+// 清理当前所有 DomMarker
+const clearAllMarkers = () => {
+  markers.value.forEach(m => m.dispose());
+  markers.value = [];
+};
+
+const initMap = (assetTagsData: AlarmData[]) => {
+  if (map.value) {
+    map.value.dispose();
+  }
+
+  const mapInstance = new window.VgoMap.Map({
+    el: "mapContainer",
+    id: mapId
+  });
+  map.value = mapInstance;
+  currentZoom.value = mapInstance?.amap?.getZoom?.() ?? null;
+  // 地图重建时清空原有 marker 记录
+  clearAllMarkers();
+  mapInstance?.amap?.on?.("zoomchange", () => {
+    currentZoom.value = mapInstance?.amap?.getZoom?.() ?? null;
+  });
+
+  let idx = 0;
+  let changeFocus = () => {
+    if (idx > assetTagsData.length - 1) idx = 0;
+    let item = assetTagsData[idx];
+    idx++;
+
+    console.log(item, "item");
+    // 等于1的则是室外直接聚焦
+    mapInstance.amap.setZoomAndCenter(21.5, [item.longitude, item.latitude], false);
+  };
+  document.querySelector("#function")?.addEventListener("click", changeFocus);
 
   mapInstance.on("loaded", () => {
     console.log("地图加载成功");
@@ -182,42 +193,40 @@ const initMap = (assetTagsData: AlarmData[]) => {
 
       // 地图自带的渲染点位，性能较好适合渲染大量点位
       console.log(mapInstance.lngLatToCoord(item.longitude, item.latitude), "position");
-      createMapMarker(markerItem);
+      const marker = createMapMarker(mapInstance, markerItem);
+      markers.value.push(marker);
     });
   });
 };
 
-const centerOnLocation = (lat: number, lng: number) => {
-  if (map.value?.amap) {
-    map.value.amap.setZoomAndCenter(21.5, [lng, lat], false);
-  }
-};
+// 根据新的告警数据更新地图上的 markers
+function updateMarkers(item: AlarmData | AlarmData[]) {
+  if (!map.value) return;
 
-const openMarkerPopup = (alarm: AlarmData) => {
-  // 查找对应的 alarm info 元素
-  const alarmInfo = document.getElementById(`alarm-${alarm.id}`) as HTMLElement | null;
-  document.querySelectorAll<HTMLElement>(".wxb-marker-info").forEach(el => (el.style.display = "none"));
+  const mapInstance = map.value;
+  // 统一成数组，既兼容单个也兼容列表
+  const items = Array.isArray(item) ? item : [item];
 
-  if (!alarmInfo) {
-    console.warn(`未找到 ID 为 alarm-${alarm.id} 的元素`);
-    return;
-  }
+  // 清空旧点位
+  clearAllMarkers();
 
-  // 显示当前点击的 info
-  alarmInfo.style.display = "block";
-
-  // 可选：将地图中心定位到该 alarm 的位置
-  if (map.value && alarm.longitude && alarm.latitude) {
-    centerOnLocation(alarm.latitude, alarm.longitude);
-  }
-
-  console.log("打开报警弹窗:", alarm, alarmInfo);
-};
+  items.forEach(alarm => {
+    if (alarm.longitude == null || alarm.latitude == null) return;
+    const markerItem = {
+      ...alarm,
+      position: mapInstance.lngLatToCoord(alarm.longitude, alarm.latitude),
+      floorId: "1"
+    };
+    const marker = createMapMarker(mapInstance, markerItem);
+    markers.value.push(marker);
+  });
+}
 
 defineExpose({
   initMap,
   centerOnLocation,
-  openMarkerPopup
+  openMarkerPopup,
+  updateMarkers
 });
 </script>
 

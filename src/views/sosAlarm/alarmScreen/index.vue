@@ -152,6 +152,8 @@ const alarmRecordsRef = ref<InstanceType<typeof AlarmRecords>>();
 const isFullscreen = ref(false);
 const alarmMapRef = ref();
 const { alarmReports } = useAlarmWebSocket();
+// 标记地图是否已经初始化完成，避免每次数据变更都重新 initMap
+const mapInitialized = ref(false);
 const userStore = useUserStore();
 const chatStore = useChatStore();
 
@@ -159,14 +161,23 @@ const selectedAlarm = ref<any | null>(null);
 const isChatInitializing = ref(false);
 const chatError = ref<string | null>(null);
 
-watch(alarmReports, newAlarms => {
-  nextTick(() => {
-    if (alarmMapRef.value) {
-      alarmMapRef.value.initMap(newAlarms);
-    }
-  });
-});
-
+watch(
+  alarmReports,
+  newAlarms => {
+    nextTick(() => {
+      if (!alarmMapRef.value) return;
+      // 第一次有数据时初始化地图
+      if (!mapInitialized.value) {
+        alarmMapRef.value.initMap(newAlarms);
+        mapInitialized.value = true;
+      } else {
+        // 之后只更新 markers，避免和 initMap 重复/冲突
+        alarmMapRef.value.updateMarkers(newAlarms);
+      }
+    });
+  },
+  { deep: true }
+);
 const getOrderNumber = (alarm: any) => {
   if (!alarm) return "";
   return alarm.orderNumber || alarm.orderNo || alarm.order_id || alarm.orderId || "";
