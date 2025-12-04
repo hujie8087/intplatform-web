@@ -29,7 +29,7 @@
         <div v-if="isAuthorize">
           <el-form ref="authorizeFormRef" :model="authorizeForm" :rules="rules" label-width="60">
             <el-form-item label="用户名" prop="username">
-              <el-input v-model.trim="authorizeForm.username" placeholder="请输入用户名" clearable />
+              <el-input v-model.trim="authorizeForm.mealName" placeholder="请输入用户名" clearable />
             </el-form-item>
             <el-form-item label="密码" prop="password">
               <el-input type="password" v-model="authorizeForm.password" placeholder="请输入密码" show-password />
@@ -198,7 +198,8 @@ const isAuthorize = ref(true);
 const authorizeFormRef = ref();
 const authorizeForm = reactive({
   username: "",
-  password: ""
+  password: "",
+  mealName: ""
 });
 const rules = {
   username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
@@ -228,6 +229,7 @@ const getUserInfo = async params => {
     let userMesg = response.user;
     authorizeForm.username = userMesg.userName;
     authorizeForm.password = res.msg;
+    authorizeForm.mealName = response.user.userName;
   }
   unbindDialogVisible.value = true;
 };
@@ -237,11 +239,12 @@ const submitUnbind = async () => {
     // 授权
     authorizeFormRef.value.validate(async (valid, fields) => {
       if (valid) {
-        await userAuthorization({ username: authorizeForm.username, password: authorizeForm.password });
+        await userAuthorization(authorizeForm);
         unbindDialogVisible.value = false;
         ElMessage.success("授权成功");
         authorizeForm.username = "";
         authorizeForm.password = "";
+        authorizeForm.mealName = "";
         proTable.value?.getTableList();
       } else {
         console.log("error submit!", fields);
@@ -249,7 +252,7 @@ const submitUnbind = async () => {
     });
   } else {
     // 解绑
-    await revokeAuthorization(userInfo.userName);
+    await revokeAuthorization(authorizationID.toString());
     unbindDialogVisible.value = false;
     ElMessage.success("解绑成功");
     proTable.value?.getTableList();
