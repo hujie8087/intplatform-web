@@ -388,7 +388,8 @@ const submitProcessForm = async () => {
       processingBy: processForm.processingBy,
       processingResult: processForm.processingResult,
       processingTime: processForm.processingTime,
-      remark: processForm.remark
+      remark: processForm.remark,
+      status: "1"
     };
 
     const response: any = await processAlarm(payload);
