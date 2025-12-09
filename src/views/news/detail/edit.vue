@@ -172,7 +172,7 @@ const formData = ref<Notice.ResNotice>();
 
 // 提交数据（新增/编辑）
 const handleSubmit = async () => {
-  formData.value!.noticeContent = noticeContent.value;
+  formData.value!.noticeContent = removeParentPStyleForImages(noticeContent.value);
   if (formData.value!.approvalStatus === -1) {
     formData.value!.approvalStatus = 0;
   }
@@ -206,5 +206,38 @@ const handleDeleteVideo = () => {
 const handleVideoSuccess = (response: any) => {
   console.log(response.data);
   formData.value!.video = response.data.url;
+};
+const removeParentPStyleForImages = (html: string) => {
+  // 用 DOMParser 将字符串转为 DOM 结构
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+
+  // 找所有 img
+  const imgs = doc.querySelectorAll("img");
+
+  imgs.forEach(img => {
+    const parent = img.parentElement;
+
+    // 如果父节点是 p，且有 style 属性，则删除 style
+    if (parent && parent.tagName.toLowerCase() === "p") {
+      parent.removeAttribute("style");
+      const style = parent.getAttribute("style");
+      if (style) {
+        // 删除 text-indent: xxx; 支持各种单位与空格写法
+        const newStyle = style
+          .replace(/text-indent\s*:\s*[^;]+;?/gi, "") // 删除属性
+          .trim();
+
+        if (newStyle) {
+          parent.setAttribute("style", newStyle); // 保留其他 style
+        } else {
+          parent.removeAttribute("style"); // 如果空了就直接删掉
+        }
+      }
+    }
+  });
+
+  // 返回更新后的 HTML
+  return doc.body.innerHTML;
 };
 </script>

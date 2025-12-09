@@ -1,8 +1,8 @@
 <template>
   <div class="main-box">
     <div class="table-box">
-      <div class="card" style="padding-top: 0px; height: 100%">
-        <h3 style="position: sticky; top: 0px; background-color: #fff; z-index: 100; margin: 0; line-height: 60px">新增内容</h3>
+      <div class="card" style=" height: 100%;padding-top: 0">
+        <h3 style="position: sticky; top: 0; z-index: 100; margin: 0; line-height: 60px; background-color: #ffffff">新增内容</h3>
         <el-form ref="ruleFormRef" :model="formData" label-width="120px" label-suffix=" :" :rules="rules">
           <el-row>
             <el-col :span="24">
@@ -168,12 +168,12 @@ const formData = reactive<Notice.ReqCreateNoticeParams>({
 
 // 提交数据（新增/编辑）
 const handleSubmit = async () => {
-  formData.noticeContent = noticeContent.value;
+  formData.noticeContent = removeParentPStyleForImages(noticeContent.value);
   ruleFormRef.value?.validate(async valid => {
     if (!valid) return;
 
     try {
-      await addNotice({ ...formData, noticeContent: noticeContent.value });
+      await addNotice({ ...formData });
       ElMessage.success({
         message: t("main.successMsg", { title: "公告", method: "新增" })
       });
@@ -198,5 +198,37 @@ const handleCancel = () => {
   // 关闭当前页
   if (route.meta.isAffix) return;
   tabStore.removeTabs(route.fullPath);
+};
+const removeParentPStyleForImages = (html: string) => {
+  // 用 DOMParser 将字符串转为 DOM 结构
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+
+  // 找所有 img
+  const imgs = doc.querySelectorAll("img");
+
+  imgs.forEach(img => {
+    const parent = img.parentElement;
+    // 如果父节点是 p，且有 style 属性，则删除 style
+    if (parent && parent.tagName.toLowerCase() === "p") {
+      parent.removeAttribute("style");
+      const style = parent.getAttribute("style");
+      if (style) {
+        // 删除 text-indent: xxx; 支持各种单位与空格写法
+        const newStyle = style
+          .replace(/text-indent\s*:\s*[^;]+;?/gi, "") // 删除属性
+          .trim();
+
+        if (newStyle) {
+          parent.setAttribute("style", newStyle); // 保留其他 style
+        } else {
+          parent.removeAttribute("style"); // 如果空了就直接删掉
+        }
+      }
+    }
+  });
+
+  // 返回更新后的 HTML
+  return doc.body.innerHTML;
 };
 </script>

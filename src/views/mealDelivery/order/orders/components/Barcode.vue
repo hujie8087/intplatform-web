@@ -21,8 +21,11 @@ const props = defineProps({
       background: "transparent",
       displayValue: true,
       width: 1.5, // 条形码单条宽度
-      height: 30, // 条形码高度
-      margin: 2,
+      height: 28, // 条形码高度
+      marginTop: 0,
+      marginBottom: 0,
+      marginLeft: 20,
+      marginRight: 20,
       fontSize: 14,
       textMargin: 0
     })

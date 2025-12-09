@@ -54,6 +54,7 @@ interface AlarmData {
   reportTime: string;
   systemSource: number;
   tel: string;
+  status: string;
 }
 const baseUrl = import.meta.env.VITE_API_URL;
 const alarmChat = ref<InstanceType<typeof AlarmChat>>();
@@ -121,7 +122,14 @@ const columns = [
     prop: "remark",
     width: 120
   },
-
+  {
+    label: "状态",
+    prop: "status",
+    width: 120,
+    render: (scope: RenderScope<AlarmData>) => {
+      return scope.row.status ? <el-tag type="success">已处理</el-tag> : <el-tag type="danger">未处理</el-tag>;
+    }
+  },
   {
     label: "操作",
     prop: "operation",
