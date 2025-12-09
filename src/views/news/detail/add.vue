@@ -1,7 +1,7 @@
 <template>
   <div class="main-box">
     <div class="table-box">
-      <div class="card" style=" height: 100%;padding-top: 0">
+      <div class="card" style="height: 100%; padding-top: 0">
         <h3 style="position: sticky; top: 0; z-index: 100; margin: 0; line-height: 60px; background-color: #ffffff">新增内容</h3>
         <el-form ref="ruleFormRef" :model="formData" label-width="120px" label-suffix=" :" :rules="rules">
           <el-row>
