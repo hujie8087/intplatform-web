@@ -110,6 +110,7 @@ const handleSubmit = async () => {
   }
 
   const params = {
+    id: drawerProps.value.rowData?.id,
     menuDate: drawerProps.value.rowData?.menuDate,
     dids: {
       0: breakfastList.value.join(","),
