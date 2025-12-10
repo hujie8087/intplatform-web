@@ -55,7 +55,8 @@ const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({
   name: [{ required: true, message: t("main.inputError", { msg: "菜品名称" }) }],
-  status: [{ required: true, message: t("main.inputError", { msg: "状态" }) }]
+  status: [{ required: true, message: t("main.inputError", { msg: "状态" }) }],
+  imageUrl: [{ required: true, message: t("main.inputError", { msg: "图片" }) }]
 });
 
 interface DrawerProps {
