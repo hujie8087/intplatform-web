@@ -81,7 +81,7 @@
                 <el-upload
                   v-model:file-list="fileList"
                   class="upload-demo"
-                  :action="baseUrl + '/file/upload'"
+                  :action="baseUrl + '/file/uploadVideo'"
                   :headers="{
                     Authorization: 'Bearer ' + userStore.token
                   }"
