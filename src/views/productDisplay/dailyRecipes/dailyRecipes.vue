@@ -1,7 +1,22 @@
 <template>
   <div class="main-box">
     <div class="table-box card">
-      <el-calendar v-model="date" height="100%">
+      <el-calendar v-model="date" height="100%" ref="calendar">
+        <template #header="{ date }">
+          <div class="header-box">
+            <div class="header-left">
+              <span class="header-title" style="margin-right: 20px">{{ date }}</span>
+              <el-button type="danger" @click="importRecipes">导入菜谱</el-button>
+            </div>
+            <div class="header-right">
+              <el-button-group>
+                <el-button size="small" @click="selectDate('prev-month')"> 上个月 </el-button>
+                <el-button size="small" @click="selectDate('today')">今天</el-button>
+                <el-button size="small" @click="selectDate('next-month')"> 下个月 </el-button>
+              </el-button-group>
+            </div>
+          </div>
+        </template>
         <template #date-cell="{ data }">
           <div class="cell-box" @click="openDrawer(data)">
             <div class="cell-box-content">
@@ -20,17 +35,19 @@
       </el-calendar>
     </div>
     <DailyRecipeDrawer ref="drawerRef" />
+    <ImportExcel ref="dialogRef" />
   </div>
 </template>
 <script setup lang="tsx" name="DailyRecipe">
 import { ref, computed } from "vue";
 import DailyRecipeDrawer from "./components/DailyRecipeDrawer.vue";
-import { getDailyRecipeList } from "@/api/modules/productDisplay/dailyRecipe";
+import ImportExcel from "@/components/ImportExcel/index.vue";
+import { getDailyRecipeList, importDailyRecipe } from "@/api/modules/productDisplay/dailyRecipe";
 import { watch } from "vue";
 import { DailyRecipe } from "@/api/interface/productDisplay/dailyRecipe";
 import dayjs from "dayjs";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
-import { ElMessage } from "element-plus";
+import { CalendarDateType, CalendarInstance, ElMessage } from "element-plus";
 const { BUTTONS } = useAuthButtons();
 
 // 权限检查计算属性
@@ -129,6 +146,21 @@ const openDrawer = async (data: any) => {
   }
 };
 
+const calendar = ref<CalendarInstance>();
+const selectDate = (val: CalendarDateType) => {
+  if (!calendar.value) return;
+  calendar.value.selectDate(val);
+};
+// 导入菜谱
+const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
+const importRecipes = () => {
+  dialogRef.value?.acceptParams({
+    title: "菜谱",
+    importApi: importDailyRecipe,
+    tempApi: "other/daily/menu/exportImp",
+    getTableList: getDailyRecipeDataList
+  });
+};
 watch(date, () => {
   getDailyRecipeDataList();
 });
@@ -141,6 +173,25 @@ watch(date, () => {
     .el-calendar {
       width: 100%;
       height: 100%;
+      :deep(.el-calendar__header) {
+        padding: 10px 20px;
+        border-bottom: 1px solid #ebeef5;
+        .header-box {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          .header-left {
+            display: flex;
+            align-items: center;
+            .header-title {
+              font-size: 18px;
+              font-weight: bold;
+              color: #303133;
+            }
+          }
+        }
+      }
       :deep(.el-calendar__body) {
         width: 100%;
         height: calc(100% - 52px);

@@ -55,3 +55,8 @@ export const getDailyRecipeById = (id: number) => {
 export const getDailyRecipeList = (params: DailyRecipe.ReqDailyRecipeParams) => {
   return http.getRow<DailyRecipe.ResDailyRecipe>(PORT1 + `/other/daily/menu/list`, params);
 };
+
+// * 导入每日菜谱
+export const importDailyRecipe = (params: FormData) => {
+  return http.post(PORT1 + `/other/daily/menu/importDailyMenu`, params);
+};
