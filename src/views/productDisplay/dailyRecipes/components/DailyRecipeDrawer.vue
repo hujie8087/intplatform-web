@@ -69,12 +69,14 @@ const lunchList = ref<number[]>([]);
 const dinnerList = ref<number[]>([]);
 
 const rules = reactive({
-  name: [{ required: true, message: t("main.inputError", { msg: "菜品名称" }) }],
-  status: [{ required: true, message: t("main.inputError", { msg: "状态" }) }]
+  breakfastList: [{ required: true, message: t("main.inputError", { msg: "早餐" }) }],
+  lunchList: [{ required: true, message: t("main.inputError", { msg: "午餐" }) }],
+  dinnerList: [{ required: true, message: t("main.inputError", { msg: "晚餐" }) }]
 });
 
 interface DrawerProps {
   rowData?: Partial<DailyRecipe.ResDailyRecipe>;
+  getDailyRecipeDataList?: () => Promise<any>;
 }
 
 // drawer框状态
@@ -96,6 +98,17 @@ const acceptParams = (params: DrawerProps): void => {
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = async () => {
+  if (breakfastList.value.length === 0) {
+    ElMessage.error("请至少选择一餐的早餐");
+    return;
+  } else if (lunchList.value.length === 0) {
+    ElMessage.error("请至少选择一餐的午餐");
+    return;
+  } else if (dinnerList.value.length === 0) {
+    ElMessage.error("请至少选择一餐的晚餐");
+    return;
+  }
+
   const params = {
     menuDate: drawerProps.value.rowData?.menuDate,
     dids: {
@@ -107,9 +120,11 @@ const handleSubmit = async () => {
   if (drawerProps.value.rowData?.id) {
     await editDailyRecipe(params);
     ElMessage.success("编辑成功");
+    drawerProps.value.getDailyRecipeDataList?.();
   } else {
     await addDailyRecipe(params);
     ElMessage.success("新增成功");
+    drawerProps.value.getDailyRecipeDataList?.();
   }
   drawerVisible.value = false;
 };

@@ -120,7 +120,8 @@ const openDrawer = async (data: any) => {
     const existingData = dailyRecipeDataList.value.find(item => item.menuDate === data.day);
     const params = {
       rowData: existingData || { menuDate: data.day }, // 如果没有数据，创建新的
-      isEdit: !!existingData // 标记是否为编辑模式
+      isEdit: !!existingData, // 标记是否为编辑模式
+      getDailyRecipeDataList: getDailyRecipeDataList
     };
     drawerRef.value?.acceptParams(params);
   } else {
