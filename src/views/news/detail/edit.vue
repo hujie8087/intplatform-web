@@ -78,20 +78,27 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="附件" prop="file" style="width: 800px">
-                <el-upload
-                  v-model:file-list="fileList"
-                  class="upload-demo"
-                  :action="baseUrl + '/file/uploadVideo'"
-                  :headers="{
-                    Authorization: 'Bearer ' + userStore.token
-                  }"
-                  :limit="1"
-                  :show-file-list="false"
-                  :on-success="handleSuccess"
-                  style="display: inline-block; margin-right: 10px; vertical-align: middle"
-                >
-                  <el-button type="primary" :loading="progress !== 0 && progress !== 100" :icon="CirclePlus">上传文件</el-button>
-                </el-upload>
+                <el-input v-model="formData!.file" style="max-width: 600px" disabled>
+                  <template #append>
+                    <el-upload
+                      v-model:file-list="fileList"
+                      class="upload-demo"
+                      :action="baseUrl + 'file/upload'"
+                      :headers="{
+                        Authorization: 'Bearer ' + userStore.token
+                      }"
+                      name="files"
+                      :limit="1"
+                      :show-file-list="false"
+                      :on-success="handleSuccess"
+                      style="display: inline-block; margin-right: 10px; vertical-align: middle"
+                    >
+                      <el-button type="primary" :loading="progress !== 0 && progress !== 100" :icon="CirclePlus"
+                        >上传文件</el-button
+                      >
+                    </el-upload></template
+                  >
+                </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -160,6 +167,9 @@ const getNoticeInfo = async () => {
   if (res.data.video) {
     videoFileList.value = [{ url: res.data.video, name: res.data.noticeTitle }];
   }
+  // if (res.data.file) {
+  //   fileList.value = [{ url: res.data.file, name: res.data.noticeTitle }];
+  // }
 };
 getNoticeInfo();
 
@@ -192,7 +202,7 @@ const handleSubmit = async () => {
 };
 const handleSuccess = (response: any) => {
   console.log(response.data);
-  formData.value!.file = response.data.url;
+  formData.value!.file = response.data[0].url;
 };
 const handleCancel = () => {
   // 关闭当前页
