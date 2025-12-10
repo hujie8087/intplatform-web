@@ -35,6 +35,11 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="24">
+          <el-form-item label="菜谱说明" prop="remark">
+            <el-input type="textarea" :rows="4" v-model="drawerProps.rowData!.remark" placeholder="请输入菜谱说明" />
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
     <template #footer>
@@ -116,7 +121,8 @@ const handleSubmit = async () => {
       0: breakfastList.value.join(","),
       1: lunchList.value.join(","),
       2: dinnerList.value.join(",")
-    }
+    },
+    remark: drawerProps.value.rowData?.remark || ""
   };
   if (drawerProps.value.rowData?.id) {
     await editDailyRecipe(params);
