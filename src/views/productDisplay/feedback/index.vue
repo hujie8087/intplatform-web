@@ -71,6 +71,7 @@ import { DictOptions } from "@/api/interface";
 import { Complaint } from "@/api/interface/service/complaint";
 import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
+import dayjs from "dayjs";
 
 const { t } = useI18n(); // 解构出t方法
 const baseUrl = import.meta.env.VITE_API_URL;
@@ -104,7 +105,14 @@ const columns = reactive<ColumnProps<Complaint.ResComplaintMessage>[]>([
   { prop: "def2", label: "工号", width: 150, search: { el: "input" } },
   { prop: "def1", label: "标题", width: 150 },
   { prop: "content", label: "内容" },
-  { prop: "createTime", label: "提交时间", width: 150 },
+  {
+    prop: "createTime",
+    label: "提交时间",
+    width: 150,
+    render(scope) {
+      return <>{dayjs(scope.row.createTime).format("YYYY-MM-DD HH:mm:ss")}</>;
+    }
+  },
   { prop: "processingResults", label: "回复结果" },
   { prop: "handleBy", label: "回复人", search: { el: "input" } },
   { prop: "handleTime", label: "回复时间", width: 150 },

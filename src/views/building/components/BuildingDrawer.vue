@@ -107,6 +107,7 @@ interface DrawerProps {
   getTableList?: () => Promise<any>;
   tableData?: Building.ResBuilding;
   updateBuilding?: (id: number) => Promise<any>;
+  refreshLoadTree?: (id: number) => Promise<any>;
 }
 
 const buildingTreeProps = {
@@ -198,7 +199,8 @@ const handleSubmit = () => {
         ElMessage.success({
           message: t("main.successMsg", { title: "楼栋房间", method: `${drawerProps.value.title}` })
         });
-        drawerProps.value.getTableList!();
+        // drawerProps.value.getTableList!();
+        drawerProps.value.refreshLoadTree?.(drawerProps.value.rowData.pid);
         drawerVisible.value = false;
       }
     } catch (error) {

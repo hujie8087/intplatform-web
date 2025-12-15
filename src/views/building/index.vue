@@ -33,14 +33,6 @@
           <el-table-column prop="title" label="名称" />
           <el-table-column prop="code" label="编码" />
           <el-table-column prop="sort" label="排序" />
-          <el-table-column prop="status" label="状态">
-            <template #default="scope">
-              <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'">
-                {{ scope.row.status === 1 ? t("dict.enable") : t("dict.disable") }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column prop="remark" label="备注" />
           <el-table-column label="操作">
             <!-- 表格操作 -->
             <template #default="scope">
@@ -84,6 +76,7 @@ import { BuildingStore } from "@/stores/modules/building";
 import { findChildrenById } from "@/utils/index";
 const { t } = useI18n(); // 解构出t方法
 
+const maps = new Map();
 const buildingStore = BuildingStore();
 const tableData = ref();
 const tableRef = ref();
@@ -92,8 +85,9 @@ const tableRef = ref();
 const getTableList = async () => {
   const { data } = await getBuildingTree();
   buildingStore.setAllBuildingButtonList(data);
-  const newDta = findChildrenById(0, data);
-  tableData.value = newDta;
+  const newData = findChildrenById(0, data);
+  tableData.value = [...(newData || [])];
+  tableRef.value.$forceUpdate();
 };
 const multipleSelection = ref<number[]>([]);
 const selectionChange = (val: Building.ResBuilding[]) => {
@@ -103,7 +97,9 @@ const selectionChange = (val: Building.ResBuilding[]) => {
 // 删除楼栋信息
 const deleteAccount = async (params: Building.ResBuilding) => {
   await useHandleData(deleteBuilding, params.id, t("main.deleteMsg", { msg: params.title, title: "楼栋" }));
-  getTableList();
+  // getTableList();
+  tableRef.value.$forceUpdate();
+  refreshLoadTree(params.pid);
 };
 
 // 批量删除楼栋信息
@@ -141,19 +137,35 @@ const openDrawer = async (num: number, rowData: Partial<Building.ResBuilding> = 
     isView: false,
     isAdd: num === 1 || num === 2,
     api: num !== 3 ? addBuilding : editBuilding,
-    getTableList: getTableList
+    getTableList: getTableList,
+    refreshLoadTree: refreshLoadTree
   };
   drawerRef.value.acceptParams(params);
 };
-
+// 更新楼栋树指定节点
+const refreshLoadTree = async (parentId: number) => {
+  await getTableList();
+  if (maps.get(parentId)) {
+    const { tree, treeNode, resolve } = maps.get(parentId);
+    load(tree, treeNode, resolve);
+    if (tree.parentId) {
+      const a = maps.get(tree.parentId);
+      load(a.tree, a.treeNode, a.resolve);
+    }
+  }
+};
 const load = async (row: Building.ResBuilding, treeNode: unknown, resolve: (date: Building.ResBuilding[]) => void) => {
-  const data = findChildrenById(row.id, buildingStore.allBuildingList)?.map(item => ({
-    ...item,
-    hasChildren: !item.hasChildren
-  }));
-  resolve(data!);
-  // 解决懒加载数据重复问题
-  // resolve(newData);
+  try {
+    const data = findChildrenById(row.id, buildingStore.allBuildingList)?.map(item => ({
+      ...item,
+      hasChildren: !item.hasChildren
+    }));
+    resolve(data || []);
+    maps.set(row.id, { tree: row, treeNode, resolve });
+  } catch (error) {
+    console.error("加载子节点失败:", error);
+    resolve([]);
+  }
 };
 getTableList();
 </script>
