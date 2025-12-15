@@ -33,6 +33,14 @@
           <el-table-column prop="title" label="名称" />
           <el-table-column prop="code" label="编码" />
           <el-table-column prop="sort" label="排序" />
+          <el-table-column prop="status" label="状态">
+            <template #default="scope">
+              <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'">
+                {{ scope.row.status === 1 ? t("dict.enable") : t("dict.disable") }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="remark" label="备注" />
           <el-table-column label="操作">
             <!-- 表格操作 -->
             <template #default="scope">
