@@ -209,6 +209,7 @@ const removeParentPStyleForImages = (html: string) => {
 
   imgs.forEach(img => {
     const parent = img.parentElement;
+    img.removeAttribute("style");
     // 如果父节点是 p，且有 style 属性，则删除 style
     if (parent && parent.tagName.toLowerCase() === "p") {
       parent.removeAttribute("style");

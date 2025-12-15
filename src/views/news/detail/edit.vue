@@ -183,6 +183,7 @@ const formData = ref<Notice.ResNotice>();
 // 提交数据（新增/编辑）
 const handleSubmit = async () => {
   formData.value!.noticeContent = removeParentPStyleForImages(noticeContent.value);
+
   if (formData.value!.approvalStatus === -1) {
     formData.value!.approvalStatus = 0;
   }
@@ -227,7 +228,7 @@ const removeParentPStyleForImages = (html: string) => {
 
   imgs.forEach(img => {
     const parent = img.parentElement;
-
+    img.removeAttribute("style");
     // 如果父节点是 p，且有 style 属性，则删除 style
     if (parent && parent.tagName.toLowerCase() === "p") {
       parent.removeAttribute("style");
