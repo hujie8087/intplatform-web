@@ -263,9 +263,15 @@ const handlePrintDish = async (row: Order.ResOrder) => {
 };
 // 导出
 const handleExport = async () => {
-  ElMessageBox.confirm("确认导出订单数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload(`${baseUrl}/productdisplay/food/order/export`, "订单数据", true, ".xlsx", "post", proTable.value?.searchParam)
-  );
+  ElMessageBox.confirm("确认导出订单数据?", "温馨提示", { type: "warning" }).then(() => {
+    let newParams = JSON.parse(JSON.stringify(proTable.value?.searchParam));
+    if (newParams.createTime) {
+      newParams.createTime && (newParams.startQueryTime = newParams.createTime[0]);
+      newParams.createTime && (newParams.endQueryTime = newParams.createTime[1]);
+      delete newParams.createTime;
+    }
+    useDownload(`${baseUrl}productdisplay/food/order/export`, "订单数据", true, ".xlsx", "post", newParams);
+  });
 };
 // 退款
 const handleRefund = async (row: Order.ResOrder) => {
