@@ -131,7 +131,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, reactive, ref, watch } from "vue";
+import { nextTick, onMounted, reactive, ref, watch } from "vue";
 import { ElMessage, FormInstance, FormRules } from "element-plus";
 import { Close, Loading } from "@element-plus/icons-vue";
 import ChatInterfaceRefactored from "@/components/CustomerChat/ChatInterfaceRefactored.vue";
@@ -178,6 +178,10 @@ watch(
   },
   { deep: true }
 );
+onMounted(() => {
+  alarmMapRef.value.initMap([]);
+});
+
 const getOrderNumber = (alarm: any) => {
   if (!alarm) return "";
   return alarm.orderNumber || alarm.orderNo || alarm.order_id || alarm.orderId || "";

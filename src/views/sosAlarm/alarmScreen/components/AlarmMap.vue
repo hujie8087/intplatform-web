@@ -146,18 +146,6 @@ const initMap = (assetTagsData: AlarmData[]) => {
     currentZoom.value = mapInstance?.amap?.getZoom?.() ?? null;
   });
 
-  let idx = 0;
-  let changeFocus = () => {
-    if (idx > assetTagsData.length - 1) idx = 0;
-    let item = assetTagsData[idx];
-    idx++;
-
-    console.log(item, "item");
-    // 等于1的则是室外直接聚焦
-    mapInstance.amap.setZoomAndCenter(21.5, [item.longitude, item.latitude], false);
-  };
-  document.querySelector("#function")?.addEventListener("click", changeFocus);
-
   mapInstance.on("loaded", () => {
     console.log("地图加载成功");
     window.VgoMap.Map = mapInstance;
@@ -180,22 +168,23 @@ const initMap = (assetTagsData: AlarmData[]) => {
     });
 
     console.log("点位数据---", assetTagsData);
+    if (assetTagsData.length > 0) {
+      assetTagsData.forEach(item => {
+        let markerItem = {
+          ...item,
+          // 转换坐标系将火星坐标系转换成坐标轴系
+          position: mapInstance.lngLatToCoord(item.longitude, item.latitude),
+          floorId: "1"
+        };
+        // 创建DOM标记，DOM标记自由度相当较高，但是性能较差，如果渲染点位较多请使用map自带的渲染点位
+        // createDomMarker(markerItem)
 
-    assetTagsData.forEach(item => {
-      let markerItem = {
-        ...item,
-        // 转换坐标系将火星坐标系转换成坐标轴系
-        position: mapInstance.lngLatToCoord(item.longitude, item.latitude),
-        floorId: "1"
-      };
-      // 创建DOM标记，DOM标记自由度相当较高，但是性能较差，如果渲染点位较多请使用map自带的渲染点位
-      // createDomMarker(markerItem)
-
-      // 地图自带的渲染点位，性能较好适合渲染大量点位
-      console.log(mapInstance.lngLatToCoord(item.longitude, item.latitude), "position");
-      const marker = createMapMarker(mapInstance, markerItem);
-      markers.value.push(marker);
-    });
+        // 地图自带的渲染点位，性能较好适合渲染大量点位
+        console.log(mapInstance.lngLatToCoord(item.longitude, item.latitude), "position");
+        const marker = createMapMarker(mapInstance, markerItem);
+        markers.value.push(marker);
+      });
+    }
   });
 };
 
