@@ -113,13 +113,19 @@ const columns = reactive<ColumnProps<Found.ResFound>[]>([
     width: 100,
     render: row => {
       return (
-        <el-image
-          src={fileUrl + row.row.photo.split(",")[0]}
-          preview-src-list={row.row.photo.split(",").map(item => fileUrl + item)}
-          fit="cover"
-          preview-teleported
-          style={{ height: "80px" }}
-        />
+        <span>
+          {row.row.photo ? (
+            <el-image
+              src={fileUrl + row.row.photo.split(",")[0]}
+              preview-src-list={row.row.photo.split(",").map(item => fileUrl + item)}
+              fit="cover"
+              preview-teleported
+              style={{ height: "80px" }}
+            />
+          ) : (
+            ""
+          )}
+        </span>
       );
     }
   },

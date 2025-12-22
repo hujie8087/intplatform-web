@@ -25,7 +25,7 @@
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
-          <el-button type="primary" link :icon="Edit" @click="openDrawer('编辑', scope.row, 'berth')">编辑</el-button>
+          <el-button type="primary" link :icon="Edit" @click="openDrawer('编辑', scope.row)">编辑</el-button>
           <el-button
             type="danger"
             link
@@ -37,20 +37,20 @@
           </el-button>
         </template>
       </ProTable>
-      <Form ref="drawerRef" />
+      <DrawAreaForm ref="drawAreaFormRef" />
     </div>
   </div>
 </template>
-<script setup lang="tsx" name="DeliveryStaff">
+<script setup lang="tsx" name="DrawArea">
 import { ref, reactive } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
-import Form from "./components/Form.vue";
+import DrawAreaForm from "./components/DrawAreaForm.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { Delete, Edit, CirclePlus } from "@element-plus/icons-vue";
 import { getRegionList, deleteRegion } from "@/api/modules/system/drawArea";
 // import { useI18n } from "vue-i18n";
-import { DeliveryStaff } from "@/api/interface/delivery/staff";
 import { useHandleData } from "@/hooks/useHandleData";
+import { Area } from "@/api/interface/system";
 
 // const { t } = useI18n(); // 解构出t方法
 let treeData = [];
@@ -78,7 +78,7 @@ const dataCallback = (data: any) => {
 };
 
 // 表格配置项
-const columns = reactive<ColumnProps<DeliveryStaff.ResDeliveryStaff>[]>([
+const columns = reactive<ColumnProps<Area.ResArea>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { type: "index", label: "序号", width: 80 },
   { label: "区域名称", prop: "areaName", search: { el: "input" } },
@@ -95,17 +95,14 @@ const deleteDeliveryStaffHandle = async (params: any) => {
 };
 
 // 打开 drawer(新增、查看、编辑)
-const drawerRef = ref<InstanceType<typeof DeliveryStaffDrawer> | null>(null);
-const openDrawer = async (title: string, row: Partial<DeliveryStaff.ResDeliveryStaff> = {}, type: string) => {
+const drawAreaFormRef = ref<InstanceType<typeof DrawAreaForm> | null>(null);
+const openDrawer = async (title: string, row?: Partial<Area.ResArea>) => {
   const params = {
     title,
     rowData: { ...row },
-    // api: title === "新增" ? addRegion : title === "编辑" ? editRegion : undefined,
-    type: type || "dock",
     treeData,
-    fun: proTable.value?.getTableList
-    // getTableList: proTable.value?.getTableList,
+    getTableList: proTable.value?.getTableList
   };
-  drawerRef.value?.acceptParams(params);
+  drawAreaFormRef.value?.acceptParams(params);
 };
 </script>

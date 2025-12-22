@@ -270,7 +270,7 @@ const initGaugeChart = data => {
       }
     },
     {
-      value: 100 - finishRateIn24H,
+      value: (10000 - finishRateIn24H * 100) / 100,
       name: "24h外完成",
       title: {
         offsetCenter: ["40%", "85%"],
@@ -378,7 +378,7 @@ const formatPercent = value => {
   if (value.includes("%")) {
     num = value.replace("%", "");
   }
-  return num;
+  return +num;
 };
 const changeData = type => {
   activeType.value = type;
@@ -391,7 +391,7 @@ onMounted(() => {
 function formatter(number) {
   if (number === null || number === undefined) return "--";
   const numbers = number.toString().split("").reverse();
-  const segs = [];
+  const segs: string[] = [];
   while (numbers.length) segs.push(numbers.splice(0, 3).join(""));
   return segs.join(",").split("").reverse().join("");
 }

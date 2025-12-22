@@ -282,7 +282,7 @@ const zoomResize = () => {
 function formatter(number) {
   if (number === null || number === undefined) return "--";
   const numbers = number.toString().split("").reverse();
-  const segs = [];
+  const segs: any = [];
   while (numbers.length) segs.push(numbers.splice(0, 3).join(""));
   return segs.join(",").split("").reverse().join("");
 }
@@ -297,6 +297,7 @@ defineExpose({ zoomResize });
   z-index: 4;
   width: 100%;
   height: calc(100% - 130px);
+  pointer-events: none;
 
   /* pointer-events: none; */
 }

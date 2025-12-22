@@ -2,17 +2,18 @@
   <div class="logistics-dashboard">
     <!-- <full-screen-container> -->
     <template v-if="activePage == 'person'">
-      <div id="map" class="map"></div>
+      <PagePerson />
     </template>
     <template v-else-if="activePage == 'maintenance'">
-      <div id="maintenance" class="map"></div>
+      <MaintenanceReport />
     </template>
     <template v-else-if="activePage == 'risk'">
-      <div id="risk" class="map"></div>
+      <RiskInspection />
     </template>
     <template v-else>
-      <mealService />
+      <mealService @get-site-data="getSiteData" ref="mealServiceRef" @get-track-data="getTrackData" />
     </template>
+    <HomeMap ref="HomeMapRef" @show-site-info="showSiteInfo" @click-tab="clickTab" />
     <!-- 顶部导航 -->
     <div class="logistics-dashboard-header">
       <div class="logistics-dashboard-header-font">后勤综合服务数据大屏</div>
@@ -21,37 +22,37 @@
       </div>
       <div class="logistics-dashboard-header-btn">
         <div class="logistics-dashboard-header-btn-left">
-          <div
+          <!-- <div
             :class="['logistics-dashboard-header-menu-btn', activePage == 'person' ? 'active' : '']"
             @click="clickTab('person')"
           >
             人员信息
-          </div>
+          </div> -->
           <div
             :class="['logistics-dashboard-header-menu-btn', activePage == 'maintenance' ? 'active' : '']"
             @click="clickTab('maintenance')"
           >
             维修统计
           </div>
-        </div>
-        <div class="logistics-dashboard-header-btn-right">
           <div :class="['logistics-dashboard-header-menu-btn', activePage == 'risk' ? 'active' : '']" @click="clickTab('risk')">
             排查隐患
           </div>
+        </div>
+        <div class="logistics-dashboard-header-btn-right">
           <div :class="['logistics-dashboard-header-menu-btn', activePage == 'meal' ? 'active' : '']" @click="clickTab('meal')">
             报餐送餐
           </div>
         </div>
       </div>
     </div>
-    <component
+    <!-- <component
       v-if="activePage !== 'meal'"
       ref="childCompRef"
       :is="pages[activePage]"
       :set-function="setMapFun"
       @child-click-event="childEvent"
-    />
-    <el-dialog v-model="dialogShow" width="60%" class="person-info-dialog">
+    /> -->
+    <!-- <el-dialog v-model="dialogShow" width="60%" class="person-info-dialog">
       <template #title>
         <div class="dialog-title">
           <el-icon class="title-icon back-button-page" :size="22">
@@ -62,66 +63,77 @@
         </div>
       </template>
       <div class="person-dialog-chart" ref="personBarChart"></div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
-<script setup>
+<script setup lang="tsx" name="Home">
 import { ref, reactive, onMounted, onBeforeUnmount, nextTick } from "vue";
 import PagePerson from "./personInfo/index.vue";
 import MaintenanceReport from "./maintenanceReport/index.vue";
 import RiskInspection from "./riskInspection/index.vue";
 import mealService from "./mealService/index.vue";
-import { useMap, maintainMap, riskMap, showDailogFun } from "./utils/useMap";
 import { getRegionAllList } from "@/api/modules/system/drawArea";
 import enlargeImg from "./images/fangda.png";
 import narrowImg from "./images/suoxiao.png";
-import { Back } from "@element-plus/icons-vue";
+import HomeMap from "./HomeMap.vue";
+import { Area } from "@/api/interface/system";
+import { SiteInformationList } from "@/api/interface/dashboard";
+
 const isFull = ref(false);
 const imgUrl = ref(enlargeImg);
-const pages = {
-  person: PagePerson, // 人员信息
-  maintenance: MaintenanceReport, // 维修统计
-  risk: RiskInspection, // 排查隐患
-  meal: mealService // 报餐送餐
+const HomeMapRef = ref();
+const getSiteData = (data: SiteInformationList[]) => {
+  console.log(data);
+  HomeMapRef.value.destroyAllMarker();
+  HomeMapRef.value.loadMealStateData(data);
 };
-const { initializeMap, personZoom } = useMap(); // 人员信息的地图
-const { initMaintainMap, maintainZoom } = maintainMap(); // 维修统计的地图
-const { initRsikMap, riskZoom } = riskMap(); // 排查隐患地图
-const { getCardDataFun, dialogShow, dialogTitle, deptPath, personBarChart } = showDailogFun();
+// const pages = {
+//   person: PagePerson, // 人员信息
+//   maintenance: MaintenanceReport, // 维修统计
+//   risk: RiskInspection, // 排查隐患
+//   meal: mealService // 报餐送餐
+// };
 // 各个页面地图初始化方法
-const objFun = {
-  person: initializeMap,
-  maintenance: initMaintainMap,
-  risk: initRsikMap
-};
 const activePage = ref("person"); // 当前显示哪个页面
-const regionList = reactive([]);
+const regionList = reactive<Area.ResArea[]>([]);
 const clickTab = type => {
   // 页签切换
   activePage.value = type;
   nextTick(() => {
-    if (type == "meal") return;
-    console.log(type, "type");
-
-    const initMap = objFun[type];
-    initMap(regionList);
+    switch (type) {
+      case "person":
+        HomeMapRef.value.destroyAll();
+        HomeMapRef.value.destroyAllMarker();
+        HomeMapRef.value.destroyAllNavigation();
+        break;
+      case "maintenance":
+        HomeMapRef.value.loadAreaData(regionList);
+        HomeMapRef.value.destroyAllMarker();
+        HomeMapRef.value.destroyAllNavigation();
+        break;
+      case "risk":
+        HomeMapRef.value.destroyAll();
+        HomeMapRef.value.destroyAllMarker();
+        HomeMapRef.value.destroyAllNavigation();
+        break;
+      case "meal":
+        HomeMapRef.value.destroyAll();
+        HomeMapRef.value.loadAreaData([]);
+        break;
+      default:
+        break;
+    }
   });
 };
 const getRegionList = async () => {
   let { data = [] } = (await getRegionAllList()) || {};
   Object.assign(regionList, data);
-  clickTab("person");
 };
 const childCompRef = ref();
 const isFullScreen = () => {
   let el = document.querySelector(".el-main");
   isFull.value = !isFull.value;
-  let zoomMethodObj = {
-    person: personZoom,
-    maintenance: maintainZoom,
-    risk: riskZoom
-  };
   if (isFull.value) {
     imgUrl.value = narrowImg;
     el?.classList.add("full-screen");
@@ -129,20 +141,38 @@ const isFullScreen = () => {
     imgUrl.value = enlargeImg;
     el?.classList.remove("full-screen");
   }
-  zoomMethodObj[activePage.value](); // 地图缩放
   childCompRef.value?.zoomResize(isFull.value); // 各个页图表缩放
 };
-const childEvent = obj => {
-  if (activePage.value == "person") {
-    dialogShow.value = true;
-    dialogTitle.value = obj["title"];
-    getCardDataFun(obj);
-  }
+// const childEvent = obj => {
+//   if (activePage.value == "person") {
+//     dialogShow.value = true;
+//     dialogTitle.value = obj["title"];
+//     getCardDataFun(obj);
+//   }
+// };
+const mealServiceRef = ref();
+const showSiteInfo = (item: SiteInformationList) => {
+  mealServiceRef.value.showSiteInfo(item);
 };
-onMounted(() => {
+
+const getTrackData = (data: { coordinatesList: string | null; fcId: number; fcName: string; line: [number, number][] }) => {
+  const pathData =
+    data.line.length > 0
+      ? data.line.map(item => {
+          return { lat: item[0], lng: item[1], floorId: "1" };
+        })
+      : [];
+  HomeMapRef.value.destroyAllNavigation();
+  HomeMapRef.value.loadMealTracks({
+    pathData
+  });
+};
+
+onMounted(async () => {
   let el = document.querySelector(".el-main");
   el?.classList.add("no-padding");
   getRegionList();
+  await HomeMapRef.value.initMap();
 });
 onBeforeUnmount(() => {
   const el = document.querySelector(".el-main");
@@ -168,7 +198,7 @@ onBeforeUnmount(() => {
 }
 .logistics-dashboard-header {
   position: relative;
-  z-index: 2;
+  z-index: 1000;
   height: 96px;
 }
 .logistics-dashboard-header-font {
