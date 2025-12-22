@@ -49,7 +49,7 @@
       </el-row>
     </el-form>
     <div class="map-container" v-loading="!state.mapLoaded">
-      <div id="stationMap" class="manufacturer-map" style=" width: 100%;height: 100%"></div>
+      <div id="stationMap" class="manufacturer-map" style="width: 100%; height: 100%"></div>
     </div>
     <el-form-item class="draw-area-btn">
       <el-button @click="beforeClose">取消</el-button>
