@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div id="meal" class="map"></div>
     <div class="maintenance-report">
       <!-- 报餐送餐 -->
       <div class="maintenance-report-left">
@@ -159,6 +158,8 @@ import { ColumnProps } from "@/components/ProTable/interface";
 import { MdcOrder } from "@/api/interface/mealDelivery/order";
 import { DictOptions } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
+
+const emit = defineEmits(["getSiteData", "getTrackData"]);
 
 import imageUrl from "@/assets/images/south-all.webp";
 const filePath = import.meta.env.VITE_API_URL;
@@ -459,6 +460,7 @@ const siteInformationData = ref<SiteInformationList[]>([]);
 const siteInformation = async () => {
   const res = await getSiteInformation({ date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcId });
   siteInformationData.value = res.data.filter(item => item.latitude && item.longitude);
+  emit("getSiteData", siteInformationData.value);
 };
 // 在模块/组件的外层作用域（只声明一次）
 const setMarker = (data: SiteInformationList[] = []) => {
@@ -485,7 +487,7 @@ const setMarker = (data: SiteInformationList[] = []) => {
       popupAnchor: [0, -(height / 2 - 5)]
     });
     const marker = L.marker([lat, lng], { icon: transparentIcon });
-    marker.on("click", () => showDialog(item));
+    marker.on("click", () => showSiteInfo(item));
     // 将 marker 添加到图层组中
     layers.value.markers.addLayer(marker);
   });
@@ -498,9 +500,9 @@ const carLineArr = ref<CarListItem[]>([]);
 // 车辆路线
 const carLine = async () => {
   const res = await getCarLine({ date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcId });
-  let data = res.data;
-  carLineArr.value = data.filter(item => item.line.length > 0);
-  setTrucks(carLineArr.value, { date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcId }, layers);
+  const truck = res.data.find(item => item.fcName === seachParams.fcId);
+  if (!truck) return;
+  emit("getTrackData", truck);
 };
 
 // 查询所有数据
@@ -627,7 +629,7 @@ const setTrucks = (data: CarListItem[], obj: any, layers: any) => {
     map.value!.fitBounds(bounds, { padding: [50, 50] });
   }
 };
-const showDialog = async (item: SiteInformationList) => {
+const showSiteInfo = async (item: SiteInformationList) => {
   dialogSiteInformation.value = item;
   dialogShow.value = true;
   const res = await getSiteInformationOfGoods({ fsIds: item.fsIds, date: seachParams.date, foodName: seachParams.foodName });
@@ -657,7 +659,6 @@ onBeforeMount(async () => {
 
   nextTick(() => {
     initMap();
-    setMarker(siteInformationData.value);
   });
 });
 const datePickerStyle = computed(() => {
@@ -676,7 +677,7 @@ const buttonStyle = computed(() => {
 const zoomResize = value => {
   isZoomed.value = value;
 };
-defineExpose({ zoomResize });
+defineExpose({ zoomResize, showSiteInfo });
 </script>
 
 <style scoped>
@@ -692,7 +693,7 @@ defineExpose({ zoomResize });
   position: absolute;
   bottom: 0;
   left: 0;
-  z-index: 4;
+  z-index: 1000;
   width: 100%;
   height: calc(100% - 130px);
   pointer-events: none;

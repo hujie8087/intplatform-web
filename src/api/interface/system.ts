@@ -586,3 +586,17 @@ export namespace AppResource {
     updateTime: string;
   }
 }
+
+export namespace Area {
+  export interface ReqAreaParams extends ReqPage {
+    areaName?: string;
+  }
+  export interface ResArea {
+    id: number;
+    areaName: string;
+    buildingId: number;
+    geoJson: string;
+    buildName: string;
+    ancestors: string;
+  }
+}

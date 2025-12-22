@@ -41124,7 +41124,7 @@
           (this.lastLocationResult &&
             this.positionMarker.position.distanceTo(new Vector3().copy(this.status.route[0].point).setZ(0)) > 8)
         )
-          return console.log("当前不在该楼层或规划路线后移动"), await this.find(), void this.startNavi();
+          return console.log("当前不在该楼层或规划路线后移动"), await this.find();
         this.pathInfo.init(this.status.route, this.map),
           (this.status.isNavi = !0),
           this.object3d.add(this.arrow),

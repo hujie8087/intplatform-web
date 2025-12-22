@@ -114,7 +114,7 @@ import { sendMessage } from "@/api/modules/system/notice";
 import { getUserInfoByUsername } from "@/api/modules/system/user";
 const { t } = useI18n(); // 解构出t方法
 
-const userInfo = useUserStore().userInfo;
+const userInfo = useUserStore().thirdUserInfo;
 const filePath = import.meta.env.VITE_APP_BASE_FILE;
 const rules = reactive({
   repairType: [{ required: true, message: t("main.inputError", { msg: "维修类型" }) }],
@@ -156,8 +156,8 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     const formData = { ...drawerProps.value.rowData };
-    formData.repairMan = userInfo.user.nickName;
-    formData.repairManId = userInfo.user.userId;
+    formData.repairMan = userInfo.name;
+    formData.repairManId = userInfo.id;
     formData.readStatus = "1";
     try {
       await drawerProps.value.api!(formData);
