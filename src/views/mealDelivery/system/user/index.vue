@@ -229,9 +229,9 @@ const columns = reactive<ColumnProps<User.ResUser>[]>([
 
 // 默认 treeFilter 参数
 const treeFilterValues = reactive({ deptId: 0, pageSize: 50 });
-const changeTreeFilter = (val: number) => {
+const changeTreeFilter = (row: any) => {
   proTable.value!.pageable.pageNum = 1;
-  treeFilterValues.deptId = val;
+  treeFilterValues.deptId = row.id;
 };
 // 切换用户状态
 const changeStatus = async (row: User.ResUser) => {

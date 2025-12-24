@@ -121,10 +121,10 @@ const changeSelectFilter = (value: typeof selectFilterValues.value) => {
 
 // 默认 treeFilter 参数
 const treeFilterValues = reactive({ departmentId: ["11"] });
-const changeTreeFilter = (val: string[]) => {
+const changeTreeFilter = (rows: User.ResDepartment[]) => {
   ElMessage.success("请注意查看请求参数变化 🤔");
   proTable.value!.pageable.pageNum = 1;
-  treeFilterValues.departmentId = val;
+  treeFilterValues.departmentId = rows.map(item => item.deptId + "");
 };
 
 // 选择行

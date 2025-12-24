@@ -6,15 +6,10 @@
 </template>
 
 <script setup lang="ts">
-import "@/assets/css/VgoMap.umd.css";
 import { DomMarker } from "@/assets/js/DomMarker.js";
+import { createManufacturerMap, CreateManufacturerMapOptions, ManufacturerMapInstance } from "@/utils/mapUtils";
 import { ref } from "vue";
 
-declare global {
-  interface Window {
-    VgoMap: any;
-  }
-}
 interface AlarmData {
   id: number;
   latitude: number;
@@ -32,9 +27,7 @@ interface AlarmData {
 const emit = defineEmits<{
   markerSelect: [alarm: AlarmData];
 }>();
-
-const mapId = "1902300333347049472";
-const map = ref<any | null>(null);
+let mapInstance: ManufacturerMapInstance | null = null;
 const currentZoom = ref<number | null>(null);
 // 存储当前打开的 marker info 元素，用于关闭其他已打开的
 const currentOpenInfoElement = ref<HTMLElement | null>(null);
@@ -42,8 +35,8 @@ const currentOpenInfoElement = ref<HTMLElement | null>(null);
 const markers = ref<DomMarker[]>([]);
 
 const centerOnLocation = (lat: number, lng: number) => {
-  if (map.value?.amap) {
-    map.value.amap.setZoomAndCenter(21.5, [lng, lat], false);
+  if (mapInstance?.amap) {
+    mapInstance.amap.setZoomAndCenter(21.5, [lng, lat], false);
   }
 };
 
@@ -61,7 +54,7 @@ const openMarkerPopup = (alarm: AlarmData) => {
   alarmInfo.style.display = "block";
 
   // 可选：将地图中心定位到该 alarm 的位置
-  if (map.value && alarm.longitude && alarm.latitude) {
+  if (mapInstance && alarm.longitude && alarm.latitude) {
     centerOnLocation(alarm.latitude, alarm.longitude);
   }
 
@@ -95,23 +88,11 @@ const createMapMarker = (mapInstance: any, item: any): DomMarker => {
         </div>
         `;
 
-  const marker = new DomMarker(mapInstance, item, item.floorId, content);
-  marker.create(item.position);
+  // const marker = new DomMarker(mapInstance, item, item.floorId, content);
 
-  // 直接在当前 marker 的 DOM 上绑定关闭按钮事件，避免全局 querySelector 带来的不确定性
-  const markerRoot = (marker as any).element as HTMLElement | undefined;
-  const alarmInfo = markerRoot?.querySelector<HTMLElement>(`.wxb-marker-info#alarm-${item.id}`);
-  const closeBtn = alarmInfo?.querySelector<HTMLElement>(".alarm-close");
-
-  if (closeBtn && alarmInfo) {
-    closeBtn.addEventListener("click", e => {
-      e.stopPropagation(); // 避免触发 marker 的点击事件
-      alarmInfo.style.display = "none";
-    });
-  }
-
-  // 绑定点击事件，控制 info 显示/隐藏
-  marker.on("click", e => {
+  let dom = document.createElement("div");
+  dom.innerHTML = content;
+  dom.addEventListener("click", e => {
     e.stopPropagation?.();
     e.preventDefault?.();
 
@@ -119,6 +100,18 @@ const createMapMarker = (mapInstance: any, item: any): DomMarker => {
     openMarkerPopup(item);
     emit("markerSelect", item);
   });
+  const marker = mapInstance.addDomMarker("1", dom);
+  marker.position.copy(mapInstance.lngLatToCoord(item.longitude, item.latitude));
+
+  // 直接在当前 marker 的 DOM 上绑定关闭按钮事件，避免全局 querySelector 带来的不确定性
+  const alarmInfo = dom.querySelector<HTMLElement>(`.wxb-marker-info#alarm-${item.id}`);
+  const closeBtn = alarmInfo?.querySelector<HTMLElement>(".alarm-close");
+  if (closeBtn && alarmInfo) {
+    closeBtn.addEventListener("click", e => {
+      e.stopPropagation(); // 避免触发 marker 的点击事件
+      alarmInfo.style.display = "none";
+    });
+  }
 
   return marker;
 };
@@ -128,17 +121,11 @@ const clearAllMarkers = () => {
   markers.value.forEach(m => m.dispose());
   markers.value = [];
 };
-
-const initMap = (assetTagsData: AlarmData[]) => {
-  if (map.value) {
-    map.value.dispose();
-  }
-
-  const mapInstance = new window.VgoMap.Map({
-    el: "mapContainer",
-    id: mapId
-  });
-  map.value = mapInstance;
+const initMap = async (assetTagsData: AlarmData[]) => {
+  const options: CreateManufacturerMapOptions = {
+    el: "mapContainer"
+  };
+  mapInstance = await createManufacturerMap(options);
   currentZoom.value = mapInstance?.amap?.getZoom?.() ?? null;
   // 地图重建时清空原有 marker 记录
   clearAllMarkers();
@@ -148,8 +135,21 @@ const initMap = (assetTagsData: AlarmData[]) => {
 
   mapInstance.on("loaded", () => {
     console.log("地图加载成功");
-    window.VgoMap.Map = mapInstance;
-
+    // 设置指南针
+    new window.VgoMap.Compass({
+      map: mapInstance,
+      id: "1902300333347049472"
+    });
+    // 缩放组件
+    new window.VgoMap.ZoomControl({
+      map: mapInstance,
+      id: "1902300333347049472"
+    });
+    new window.VgoMap.ViewModeControl({
+      map: mapInstance,
+      style: "inset: auto 20px 200px auto;"
+    });
+    mapInstance.vmap.setZoom(15);
     // 监听地图点击事件，请勿多次监听
     // 解绑请使用map.off
     mapInstance.on("click", e => {
@@ -190,9 +190,8 @@ const initMap = (assetTagsData: AlarmData[]) => {
 
 // 根据新的告警数据更新地图上的 markers
 function updateMarkers(item: AlarmData | AlarmData[]) {
-  if (!map.value) return;
+  if (!mapInstance) return;
 
-  const mapInstance = map.value;
   // 统一成数组，既兼容单个也兼容列表
   const items = Array.isArray(item) ? item : [item];
 

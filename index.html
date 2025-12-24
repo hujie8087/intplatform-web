@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%- title %></title>
     <script src="https://map-prod.iwipwedabay.com:32735/sdk/VgoMap.umd.js"></script>
-    <script src="/vgomap/VgoMap.umd.js"></script>
+    <!-- <script src="/vgomap/VgoMap.umd.js"></script> -->
   </head>
   <body>
     <div id="app">
@@ -101,6 +101,11 @@
         dot.forEach(item => (item.style.background = globalState.primary));
         if (globalState.isDark) html.style.background = "#141414";
       }
+    </script>
+    <script>
+      window.$config = {
+        api: "https://map-prod.iwipwedabay.com:32735/"
+      };
     </script>
     <script type="module" src="/src/main.ts"></script>
   </body>

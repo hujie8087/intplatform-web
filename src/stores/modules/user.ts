@@ -2,7 +2,7 @@ import { Login } from "@/api/interface/index";
 import { defineStore } from "pinia";
 import { UserState } from "@/stores/interface";
 import piniaPersistConfig from "@/stores/helper/persist";
-import { getUserInfoApi, getUserPermissionInfoApi } from "@/api/modules/login";
+import { getUserInfoApi, getUserPermissionInfoApi, putLoginUser } from "@/api/modules/login";
 import { useAuthStore } from "./auth";
 export const useUserStore = defineStore({
   id: "logistics-user",
@@ -61,6 +61,10 @@ export const useUserStore = defineStore({
     },
     async getUserInfo() {
       const res = await getUserInfoApi();
+      await putLoginUser({
+        username: this.thirdUserInfo.account,
+        password: ""
+      });
       const permissionRes = await getUserPermissionInfoApi();
       const authStore = useAuthStore();
       authStore.getAuthButtonList(permissionRes.data?.permissions || []);

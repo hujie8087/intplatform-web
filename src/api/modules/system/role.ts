@@ -3,7 +3,7 @@ import { ResPage } from "@/api/interface/index";
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
 import { Building } from "@/api/interface/productDisplay/building";
-import { Account, Role } from "@/api/interface/system";
+import { Account, Menu, Role } from "@/api/interface/system";
 
 /**
  * @name 角色管理模块
@@ -75,4 +75,14 @@ export const cancelAuthAll = ({ roleId, userIds }: { roleId: string; userIds: st
 // * 新增用户授权角色
 export const addAuth = (params: any) => {
   return http.put(PORT1 + `/system/role/authUser/selectAll?roleId=${params.roleId}`, params.userInfo);
+};
+
+// * 获取角色详情
+export const getRoleMenuTreeselect = (roleId: number) => {
+  return http.get<Menu.ResMenu[]>(PORT1 + `/system/menu/roleMenu/${roleId}`);
+};
+
+// * 获取角色详情
+export const getUserRole = (roleId: number) => {
+  return http.get<Role.ResRoleUserDetail>(PORT1 + `/system/role/getUserRole/${roleId}`);
 };
