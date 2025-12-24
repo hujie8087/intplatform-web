@@ -42,13 +42,15 @@ interface TreeFilterProps {
   defaultValue?: any; // 默认选中的值 ==> 非必传
   checkStrictly?: boolean;
   defaultExpandedKeys?: number[]; // 展开的行 ==> 非必传
+  addAll?: boolean; // 是否显示全部
 }
 const props = withDefaults(defineProps<TreeFilterProps>(), {
   id: "id",
   label: "label",
   multiple: false,
   checkStrictly: false,
-  defaultExpandedKeys: () => []
+  defaultExpandedKeys: () => [],
+  addAll: true
 });
 
 const defaultProps = {
@@ -63,7 +65,9 @@ const treeAllData = ref<{ [key: string]: any }[]>([]);
 const selected = ref();
 const setSelected = () => {
   if (props.multiple) selected.value = Array.isArray(props.defaultValue) ? props.defaultValue : [props.defaultValue];
-  else selected.value = typeof props.defaultValue === "string" ? props.defaultValue : "";
+  else
+    selected.value =
+      props.defaultValue !== "" && props.defaultValue !== null && props.defaultValue !== undefined ? props.defaultValue : "";
 };
 
 onBeforeMount(async () => {
@@ -71,7 +75,7 @@ onBeforeMount(async () => {
   if (props.requestApi) {
     const { data } = await props.requestApi!();
     treeData.value = data;
-    treeAllData.value = [{ id: "", [props.label]: "全部" }, ...data];
+    treeAllData.value = props.addAll ? [{ id: "", [props.label]: "全部" }, ...data] : data;
   }
 });
 
@@ -107,7 +111,7 @@ watch(
   () => {
     if (props.data?.length) {
       treeData.value = props.data;
-      treeAllData.value = [{ id: "", [props.label]: "全部" }, ...props.data];
+      treeAllData.value = props.addAll ? [{ id: "", [props.label]: "全部" }, ...props.data] : props.data;
     }
   },
   { deep: true, immediate: true }
@@ -140,7 +144,7 @@ const emit = defineEmits<{
 // 单选
 const handleNodeClick = (data: { [key: string]: any }) => {
   if (props.multiple) return;
-  emit("change", data[props.id]);
+  emit("change", data);
 };
 
 // 多选

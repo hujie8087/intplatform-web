@@ -83,10 +83,10 @@ const getTreeFilter = async () => {
 };
 
 // 树形筛选切换
-const changeTreeFilter = (val: string) => {
+const changeTreeFilter = (row: any) => {
   ElMessage.success("请注意查看请求参数变化 🤔");
   proTable.value!.pageable.pageNum = 1;
-  initParam.departmentId = val;
+  initParam.departmentId = row.id;
 };
 
 // 模拟远程加载性别搜索框数据

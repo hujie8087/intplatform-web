@@ -112,10 +112,14 @@ const columns = reactive<ColumnProps<CoupleRoom.ResStaff>[]>([
     prop: "areaType",
     label: "区域",
     render(scope) {
-      return scope.row.areaType
-        .split(",")
-        .map(item => coupleRoomArea.value.find(area => area.value === +item)?.label)
-        .join(",");
+      console.log(scope.row.areaType.split(","), coupleRoomArea.value);
+
+      return scope.row.areaType !== ""
+        ? scope.row.areaType
+            .split(",")
+            .map(item => coupleRoomArea.value.find(area => area.value === +item)?.label)
+            .join(",")
+        : "";
     }
   },
   {

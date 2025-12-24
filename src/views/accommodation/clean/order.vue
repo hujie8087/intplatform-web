@@ -117,9 +117,9 @@ const treeFilterValues = reactive({ ancestors: [] as number[] });
 const changeTreeFilter = (val: number[]) => {
   proTable.value!.pageable.pageNum = 1;
   treeFilterValues.ancestors = val;
-  initParam.ancestors = treeFilterValues.ancestors.join(",");
+  initParam.ancestorsList = treeFilterValues.ancestors.join(",");
 };
-const initParam = reactive({ ancestors: "" });
+const initParam = reactive({ ancestorsList: "" });
 
 const cleanProjectOptions = ref<DictOptions[]>([]);
 

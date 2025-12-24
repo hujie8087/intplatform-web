@@ -265,6 +265,14 @@ export namespace Role {
     num: number;
     children: ResRoleUser[];
   }
+  export interface ResRoleUserDetail {
+    roleName: string;
+    parentName: string;
+    roleKey: string;
+    createBy: string;
+    createTime: string;
+    userCount: number;
+  }
 }
 
 // 岗位管理模块

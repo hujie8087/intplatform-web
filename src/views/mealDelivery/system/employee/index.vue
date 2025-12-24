@@ -88,6 +88,7 @@ import { listDeptTreeWithEmployeeCount } from "@/api/modules/mdc/system/dept";
 import { queryCompanyOptionList } from "@/api/modules/mdc/system/company";
 import { getPostList } from "@/api/modules/system/post";
 import { useDict } from "@/hooks/useDict";
+import { Dept } from "@/api/interface/mealDelivery/system/dept";
 const { BUTTONS } = useAuthButtons();
 const baseUrl = import.meta.env.VITE_API_URL;
 // ProTable 实例
@@ -209,9 +210,9 @@ const columns = reactive<ColumnProps<Employee.ResEmployee>[]>([
 
 // 默认 treeFilter 参数
 const treeFilterValues = reactive({ deptId: 0, pageSize: 50 });
-const changeTreeFilter = (val: number) => {
+const changeTreeFilter = (Row: Dept.ResEmployeeTree) => {
   proTable.value!.pageable.pageNum = 1;
-  treeFilterValues.deptId = val;
+  treeFilterValues.deptId = Row.id;
 };
 const defaultExpandedKeys = computed(() => {
   const keys = [];

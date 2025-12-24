@@ -32,6 +32,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
 import { Account } from "@/api/interface/system";
 import { getUnallocatedUserList } from "@/api/modules/login";
+import { DictOptions } from "@/api/interface";
 const { t } = useI18n(); // 解构出t方法
 
 const initParam = ref<any>({});
@@ -44,16 +45,16 @@ const dataCallback = (data: any) => {
   };
 };
 
-const userStatus = [
+const userStatus = ref<DictOptions[]>([
   { label: "未知", value: 0, tagType: "danger" },
-  { label: "正常", value: 1, tagType: "success" },
-  { label: "未激活", value: 2, tagType: "primary" },
+  { label: "未激活", value: 1, tagType: "success" },
+  { label: "正常", value: 2, tagType: "primary" },
   { label: "禁用", value: 3, tagType: "danger" },
   { label: "锁定", value: 4, tagType: "warning" },
   { label: "离职", value: 5, tagType: "info" },
   { label: "退休", value: 6, tagType: "info" },
   { label: "黑名单", value: 7, tagType: "danger" }
-];
+]);
 
 const columns = computed((): ColumnProps<Account.ResThirdUser>[] => [
   { type: "selection", fixed: "left", width: 50 },

@@ -11,7 +11,7 @@ import router from "@/routers";
 import { markRaw } from "vue";
 import { Warning } from "@element-plus/icons-vue";
 import { tansParams } from "@/utils";
-import { refreshToken } from "./modules/login";
+import { putLoginUser, refreshToken } from "./modules/login";
 
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   loading?: boolean;
@@ -135,6 +135,10 @@ class RequestHttp {
               await userStore.setToken(res.data.accessToken);
               await userStore.setRefreshToken(res.data.refreshToken);
 
+              await putLoginUser({
+                username: userStore.thirdUserInfo.account,
+                password: ""
+              });
               // 更新请求头中的 token
               if (config.headers && typeof config.headers.set === "function") {
                 config.headers.set("Authorization", "Bearer " + res.data.accessToken);

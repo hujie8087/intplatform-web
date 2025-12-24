@@ -432,7 +432,6 @@ const submitProcessForm = async () => {
   height: 100%;
   margin: 0 !important;
   overflow: hidden;
-  color: #ffffff;
 }
 .map-wrapper {
   position: absolute;

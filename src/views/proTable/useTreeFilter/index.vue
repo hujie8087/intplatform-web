@@ -75,10 +75,10 @@ const proTable = ref<ProTableInstance>();
 const initParam = reactive({ departmentId: "1" });
 
 // 树形筛选切换
-const changeTreeFilter = (val: string) => {
+const changeTreeFilter = (row: User.ResDepartment) => {
   ElMessage.success("请注意查看请求参数变化 🤔");
   proTable.value!.pageable.pageNum = 1;
-  initParam.departmentId = val;
+  initParam.departmentId = row.deptId + "";
 };
 
 // 表格配置项
