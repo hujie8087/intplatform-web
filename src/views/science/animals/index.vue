@@ -147,11 +147,11 @@ const columns = computed((): ColumnProps[] => [
       return (
         <el-image
           style="width: 50px; height: 50px"
-          src={imageUrl + scope.row.picture}
+          src={imageUrl + scope.row.picture.split(",")[0]}
           zoom-rate={1.2}
           max-scale={7}
           min-scale={0.2}
-          preview-src-list={[imageUrl + scope.row.picture]}
+          preview-src-list={scope.row.picture.split(",").map(item => imageUrl + item)}
           initial-index={4}
           fit="cover"
           preview-teleported
