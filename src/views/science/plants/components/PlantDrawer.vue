@@ -12,6 +12,16 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="drawerProps.rowData!.name" :placeholder="`${$t('main.inputError', { msg: '名称' })}`"></el-input>
       </el-form-item>
+      <el-form-item label="分类" prop="oId">
+        <el-select v-model="drawerProps.rowData!.oId" :placeholder="`${$t('main.inputError', { msg: '分类' })}`">
+          <el-option
+            v-for="item in drawerProps.organismTypeOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="别名" prop="otherName">
         <el-input v-model="drawerProps.rowData!.otherName" :placeholder="`${$t('main.inputError', { msg: '别名' })}`"></el-input>
       </el-form-item>
@@ -104,7 +114,7 @@
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { useI18n } from "vue-i18n";
-import { Animals } from "@/api/interface/science/animals";
+import { Animals, OrganismType } from "@/api/interface/science/animals";
 import { DictOptions } from "@/api/interface";
 import { uploadFlora } from "@/api/modules/upload";
 const { t } = useI18n(); // 解构出t方法
@@ -123,6 +133,7 @@ interface DrawerProps {
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
   languageOptions?: DictOptions[];
+  organismTypeOptions?: OrganismType.ResOrganismType[];
 }
 // drawer框状态
 const drawerVisible = ref(false);

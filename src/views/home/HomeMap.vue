@@ -20,7 +20,7 @@ import { Area } from "@/api/interface/system";
 import { createManufacturerMap, type CreateManufacturerMapOptions, type ManufacturerMapInstance } from "@/utils/mapUtils";
 import "@/assets/css/VgoMap.umd.css";
 import { getRepairStatistics } from "@/api/modules/dashboard";
-import { reactive, ref } from "vue";
+import { reactive, ref, onBeforeUnmount } from "vue";
 import { DataVisualize, SiteInformationList } from "@/api/interface/dashboard";
 
 const emit = defineEmits(["showSiteInfo", "clickTab"]);
@@ -37,6 +37,12 @@ let mapInstance: ManufacturerMapInstance | null = null; // 地图实例，不要
 let wxbPolygonEdit = ref();
 // 存储导航实例，方便销毁
 const initMap = async () => {
+  // 如果已存在实例，先销毁
+  if (mapInstance) {
+    destroyAll();
+    mapInstance.dispose();
+    mapInstance = null;
+  }
   const options: CreateManufacturerMapOptions = {
     el: "mapContainer",
     mapId: "1902300333347049472"
@@ -60,7 +66,7 @@ const initMap = async () => {
       map: mapInstance,
       style: "inset: auto 20px 200px auto;"
     });
-    mapInstance.vmap.setZoom(15);
+    mapInstance!.vmap.setZoom(15);
     // 初始化多边形编辑插件
     wxbPolygonEdit.value = new WxbPolygonEdit(mapInstance);
     //注册多边形点击事件
@@ -114,6 +120,7 @@ const openInfo = (content, position) => {
 	</div>
   `;
   let fooldId = "1";
+  if (!mapInstance) return;
   let marker = mapInstance.addDomMarker(fooldId, dom);
   dom.querySelector(".point-info-close")?.addEventListener("click", closePointInfo);
   marker.position.copy(position);
@@ -161,6 +168,7 @@ const loadAreaData = async (regionList: Area.ResArea[]) => {
 let markerList = ref<any[]>([]);
 // 加载配送点数据
 const loadMealStateData = async (siteList: SiteInformationList[]) => {
+  if (!mapInstance) return;
   siteList.forEach(item => {
     let content = `
       <div class="meal-icon-tips ${
@@ -175,8 +183,8 @@ const loadMealStateData = async (siteList: SiteInformationList[]) => {
     dom.innerHTML = content;
     // 获取当前楼层ID
     dom.addEventListener("click", () => showSiteInfo(item));
-    let marker = mapInstance.addDomMarker("1", dom);
-    marker.position.copy(mapInstance.lngLatToCoord(item.longitude, item.latitude));
+    let marker = mapInstance!.addDomMarker("1", dom);
+    marker.position.copy(mapInstance!.lngLatToCoord(item.longitude, item.latitude));
     markerList.value.push(marker);
   });
 };
@@ -201,7 +209,7 @@ const loadMealTracks = async (track: {
     floorId: string;
   }[];
 }) => {
-  if (!track) return;
+  if (!track || !mapInstance) return;
   const module = await import("@/utils/navigation/js/navigation.js");
   const Navigation = module.Navigation;
 
@@ -225,6 +233,7 @@ const loadMealTracks = async (track: {
 const destroyAllNavigation = () => {
   showCard.value = false;
   navigation.value?.destroyTrajectoryLine();
+  navigation.value = null;
 };
 // 开始导航
 const startNavi = () => {
@@ -249,8 +258,20 @@ const stopNavi = () => {
 
 //  销毁全部编辑对象
 const destroyAll = () => {
-  wxbPolygonEdit.value.polygonShow?.removeAll?.();
+  wxbPolygonEdit.value?.polygonShow?.removeAll?.();
 };
+
+onBeforeUnmount(() => {
+  destroyAll();
+  destroyAllMarker();
+  closePointInfo();
+  destroyAllNavigation();
+  if (mapInstance) {
+    mapInstance?.destory?.();
+    mapInstance = null;
+  }
+});
+
 defineExpose({
   initMap,
   loadAreaData,

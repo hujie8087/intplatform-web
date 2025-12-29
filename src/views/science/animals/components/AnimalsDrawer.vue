@@ -12,11 +12,15 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="drawerProps.rowData!.name" :placeholder="`${$t('main.inputError', { msg: '名称' })}`"></el-input>
       </el-form-item>
-      <el-form-item label="分类" prop="peacockType">
-        <el-input
-          v-model="drawerProps.rowData!.peacockType"
-          :placeholder="`${$t('main.inputError', { msg: '分类' })}`"
-        ></el-input>
+      <el-form-item label="科属" prop="oId">
+        <el-select v-model="drawerProps.rowData!.oId" :placeholder="`${$t('main.inputError', { msg: '科属' })}`">
+          <el-option
+            v-for="item in drawerProps.organismTypeOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="图片" prop="picture">
         <UploadImg
@@ -127,6 +131,7 @@ interface DrawerProps {
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
   languageOptions?: DictOptions[];
+  organismTypeOptions?: DictOptions[];
 }
 // drawer框状态
 const drawerVisible = ref(false);

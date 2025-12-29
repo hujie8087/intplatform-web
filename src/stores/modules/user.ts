@@ -61,15 +61,12 @@ export const useUserStore = defineStore({
     },
     async getUserInfo() {
       const res = await getUserInfoApi();
-      await putLoginUser({
-        username: this.thirdUserInfo.account,
-        password: ""
-      });
+      this.setThirdUserInfo(res.data);
+      await putLoginUser();
       const permissionRes = await getUserPermissionInfoApi();
       const authStore = useAuthStore();
       authStore.getAuthButtonList(permissionRes.data?.permissions || []);
       this.setUserInfo(permissionRes.data);
-      this.setThirdUserInfo(res.data);
       if (permissionRes.data?.mealUser) {
         authStore.getMealDeliveryAuthButtonList(permissionRes.data.mealUser.permissions);
       }

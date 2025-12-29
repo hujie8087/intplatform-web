@@ -135,10 +135,7 @@ class RequestHttp {
               await userStore.setToken(res.data.accessToken);
               await userStore.setRefreshToken(res.data.refreshToken);
 
-              await putLoginUser({
-                username: userStore.thirdUserInfo.account,
-                password: ""
-              });
+              await putLoginUser();
               // 更新请求头中的 token
               if (config.headers && typeof config.headers.set === "function") {
                 config.headers.set("Authorization", "Bearer " + res.data.accessToken);
