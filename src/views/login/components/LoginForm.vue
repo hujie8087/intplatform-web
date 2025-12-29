@@ -84,7 +84,7 @@ const login = (formEl: FormInstance | undefined) => {
         userStore.setToken(data.accessToken);
         userStore.setRefreshToken(data.refreshToken);
 
-        await putLoginUser({ username: loginForm.username, password: "" });
+        await putLoginUser();
 
         // 2.添加动态路由
         await initDynamicRouter();

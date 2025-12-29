@@ -34,8 +34,8 @@ export const getUnallocatedUserList = (params: any) => {
 };
 
 // 登录成功回调
-export const putLoginUser = (params: { username: string; password: string }) => {
-  return http.post<Result>(PORT1 + `/auth/putLoginUser`, params);
+export const putLoginUser = () => {
+  return http.post<Result>(PORT1 + `/auth/putLoginUser`);
 };
 
 // 获取菜单列表

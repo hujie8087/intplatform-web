@@ -1,7 +1,7 @@
 // 公共便利服务
 import http from "@/api";
 import { PORT1 } from "@/api/config/servicePort";
-import { Animals } from "@/api/interface/science/animals";
+import { Animals, OrganismType } from "@/api/interface/science/animals";
 
 /**
  * @name 动物模块
@@ -35,4 +35,34 @@ export const getAnimalsList = (params: Animals.ReqAnimalsParams) => {
 // * 上传图片
 export const uploadImage = (params: FormData) => {
   return http.post(PORT1 + `/uploadFlora`, params);
+};
+
+// * 新增生物类型
+export const addOrganismType = (params: FormData) => {
+  return http.post(PORT1 + `/other/organismType`, params);
+};
+
+// * 编辑生物类型
+export const editOrganismType = (params: FormData) => {
+  return http.put(PORT1 + `/other/organismType`, params);
+};
+
+// * 获取生物类型信息
+export const getOrganismTypeById = (id: number) => {
+  return http.get<OrganismType.ResOrganismType>(PORT1 + `/other/organismType/${id}`);
+};
+
+// * 批量删除生物类型
+export const deleteMoreOrganismType = (ids: number[]) => {
+  return http.delete(PORT1 + `/other/organismType/${ids}`);
+};
+
+// * 获取生物类型列表
+export const getOrganismTypeList = (params: OrganismType.ReqOrganismTypeParams) => {
+  return http.getRow<OrganismType.ResOrganismType>(PORT1 + `/other/organismType/list`, params);
+};
+
+// * 获取生物类型树形列表
+export const getOrganismTypeTreeList = (type: number) => {
+  return http.getRow<OrganismType.ResOrganismType>(PORT1 + `/other/fauna/treeList/${type}`, { type: type });
 };

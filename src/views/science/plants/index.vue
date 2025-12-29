@@ -7,6 +7,7 @@
         :request-api="getTableList"
         :data-callback="dataCallback"
         :init-param="initParam"
+        :search-col="6"
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
@@ -56,11 +57,20 @@ import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import PlantDrawer from "./components/PlantDrawer.vue";
 import { CirclePlus, Delete, Download } from "@element-plus/icons-vue";
-import { getAnimalsList, deleteMoreAnimals, editAnimals, addAnimals, getAnimalsById } from "@/api/modules/science/animals";
+import {
+  getAnimalsList,
+  deleteMoreAnimals,
+  editAnimals,
+  addAnimals,
+  getAnimalsById,
+  getOrganismTypeList,
+  getOrganismTypeTreeList
+} from "@/api/modules/science/animals";
 
 import { useI18n } from "vue-i18n";
 import { Animals } from "@/api/interface/science/animals";
 import { DictOptions } from "@/api/interface";
+import { EpPropMergeType } from "element-plus/es/utils";
 const { t } = useI18n(); // 解构出t方法
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref();
@@ -87,6 +97,24 @@ const languageOptions = ref<DictOptions[]>([
   { label: "中文", value: "0", tagType: "success" },
   { label: "印尼", value: "1", tagType: "warning" }
 ]);
+const tagType = ref<EpPropMergeType<StringConstructor, "primary" | "danger" | "warning" | "success" | "info", unknown>[]>([
+  "success",
+  "warning",
+  "danger",
+  "info",
+  "primary"
+]);
+// 获取 organismType
+const organismTypeData = ref<DictOptions[]>([]);
+const getOrganismTypeData = async () => {
+  const res = await getOrganismTypeList({ pageNum: 1, pageSize: 9999, type: 1 });
+  organismTypeData.value = res.rows.map((item, index) => ({
+    label: item.name,
+    value: item.id,
+    tagType: tagType.value[index % tagType.value.length]
+  }));
+};
+getOrganismTypeData();
 
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getRoleList"
@@ -96,6 +124,12 @@ const getTableList = (params: any) => {
   return getAnimalsList(newParams);
 };
 
+const getTreeList = async () => {
+  const res = await getOrganismTypeTreeList(0);
+  console.log(res);
+};
+getTreeList();
+
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // const { BUTTONS } = useAuthButtons();
 const columns = computed((): ColumnProps[] => [
@@ -104,6 +138,13 @@ const columns = computed((): ColumnProps[] => [
     prop: "name",
     label: "名称",
     search: { el: "input" }
+  },
+  {
+    prop: "oId",
+    label: "类型",
+    enum: organismTypeData,
+    tag: true,
+    search: { el: "select" }
   },
   { prop: "otherName", label: "别名" },
   { prop: "code", label: "编码" },
@@ -220,7 +261,8 @@ const openDrawer = async (num: number, rowData: Partial<Animals.ResAnimals> = {}
     isView: num === 2,
     api: num === 1 ? addAnimals : num === 3 ? editAnimals : "",
     getTableList: proTable.value.getTableList,
-    languageOptions: languageOptions
+    languageOptions: languageOptions,
+    organismTypeOptions: organismTypeData.value
   };
   drawerRef.value.acceptParams(params);
 };

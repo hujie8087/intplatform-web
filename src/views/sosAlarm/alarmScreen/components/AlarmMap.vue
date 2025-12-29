@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { DomMarker } from "@/assets/js/DomMarker.js";
 import { createManufacturerMap, CreateManufacturerMapOptions, ManufacturerMapInstance } from "@/utils/mapUtils";
-import { ref } from "vue";
+import { ref, onBeforeUnmount } from "vue";
 
 interface AlarmData {
   id: number;
@@ -122,6 +122,11 @@ const clearAllMarkers = () => {
   markers.value = [];
 };
 const initMap = async (assetTagsData: AlarmData[]) => {
+  if (mapInstance) {
+    clearAllMarkers();
+    mapInstance?.destory?.();
+    mapInstance = null;
+  }
   const options: CreateManufacturerMapOptions = {
     el: "mapContainer"
   };
@@ -149,10 +154,10 @@ const initMap = async (assetTagsData: AlarmData[]) => {
       map: mapInstance,
       style: "inset: auto 20px 200px auto;"
     });
-    mapInstance.vmap.setZoom(15);
+    mapInstance!.vmap.setZoom(15);
     // 监听地图点击事件，请勿多次监听
     // 解绑请使用map.off
-    mapInstance.on("click", e => {
+    mapInstance!.on("click", e => {
       // 点击地图其他地方时，关闭已打开的 marker info
       if (currentOpenInfoElement.value) {
         currentOpenInfoElement.value.style.display = "none";
@@ -173,14 +178,14 @@ const initMap = async (assetTagsData: AlarmData[]) => {
         let markerItem = {
           ...item,
           // 转换坐标系将火星坐标系转换成坐标轴系
-          position: mapInstance.lngLatToCoord(item.longitude, item.latitude),
+          position: mapInstance!.lngLatToCoord(item.longitude, item.latitude),
           floorId: "1"
         };
         // 创建DOM标记，DOM标记自由度相当较高，但是性能较差，如果渲染点位较多请使用map自带的渲染点位
         // createDomMarker(markerItem)
 
         // 地图自带的渲染点位，性能较好适合渲染大量点位
-        console.log(mapInstance.lngLatToCoord(item.longitude, item.latitude), "position");
+        console.log(mapInstance!.lngLatToCoord(item.longitude, item.latitude), "position");
         const marker = createMapMarker(mapInstance, markerItem);
         markers.value.push(marker);
       });
@@ -202,13 +207,21 @@ function updateMarkers(item: AlarmData | AlarmData[]) {
     if (alarm.longitude == null || alarm.latitude == null) return;
     const markerItem = {
       ...alarm,
-      position: mapInstance.lngLatToCoord(alarm.longitude, alarm.latitude),
+      position: mapInstance!.lngLatToCoord(alarm.longitude, alarm.latitude),
       floorId: "1"
     };
     const marker = createMapMarker(mapInstance, markerItem);
     markers.value.push(marker);
   });
 }
+
+onBeforeUnmount(() => {
+  clearAllMarkers();
+  if (mapInstance) {
+    mapInstance?.destory?.();
+    mapInstance = null;
+  }
+});
 
 defineExpose({
   initMap,
