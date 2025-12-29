@@ -64,6 +64,7 @@ interface UploadFileProps {
   width?: string; // 组件宽度 ==> 非必传（默认为 150px）
   borderRadius?: string; // 组件边框圆角 ==> 非必传（默认为 8px）
   folderName?: string; // 文件夹名称 ==> 非必传（默认为 图片）
+  fileLabel?: string; // 文件标签 ==> 非必传（默认为 file）
 }
 
 const props = withDefaults(defineProps<UploadFileProps>(), {
@@ -76,7 +77,8 @@ const props = withDefaults(defineProps<UploadFileProps>(), {
   height: "150px",
   width: "150px",
   borderRadius: "8px",
-  folderName: "image"
+  folderName: "image",
+  fileLabel: "files"
 });
 
 // 获取 el-form 组件上下文
@@ -128,7 +130,7 @@ const beforeUpload: UploadProps["beforeUpload"] = rawFile => {
  * */
 const handleHttpUpload = async (options: UploadRequestOptions) => {
   let formData = new FormData();
-  formData.append("files", options.file);
+  formData.append(props.fileLabel, options.file);
   formData.append("fName", props.folderName);
   try {
     const api = props.api ?? uploadImg;
@@ -147,9 +149,25 @@ const handleHttpUpload = async (options: UploadRequestOptions) => {
 const emit = defineEmits<{
   "update:fileList": [value: UploadUserFile[]];
 }>();
-const uploadSuccess = (response: [{ url: string; name: string }] | undefined, uploadFile: UploadFile) => {
+const uploadSuccess = (response: { url: string; name: string } | [{ url: string; name: string }], uploadFile: UploadFile) => {
   if (!response) return;
-  uploadFile.url = response[0].url;
+  if (Array.isArray(response)) {
+    response.forEach(item => {
+      const index = _fileList.value.findIndex(item => item.uid === uploadFile.uid);
+      if (index !== -1) {
+        _fileList.value[index].url = item.url;
+      } else {
+        uploadFile.url = item.url;
+      }
+    });
+  } else {
+    const index = _fileList.value.findIndex(item => item.uid === uploadFile.uid);
+    if (index !== -1) {
+      _fileList.value[index].url = response.url;
+    } else {
+      uploadFile.url = response.url;
+    }
+  }
   emit("update:fileList", _fileList.value);
   // 调用 el-form 内部的校验方法（可自动校验）
   formItemContext?.prop && formContext?.validateField([formItemContext.prop as string]);

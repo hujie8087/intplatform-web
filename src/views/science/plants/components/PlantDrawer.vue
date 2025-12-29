@@ -16,9 +16,9 @@
         <el-select v-model="drawerProps.rowData!.oId" :placeholder="`${$t('main.inputError', { msg: '分类' })}`">
           <el-option
             v-for="item in drawerProps.organismTypeOptions"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -42,14 +42,15 @@
       </el-form-item>
       <el-form-item label="图片" prop="picture">
         <UploadImg
-          v-model:image-url="drawerProps.rowData!.picture"
-          :file-size="5"
+          v-model:file-list="fileList1"
+          :file-size="20"
           width="100px"
           height="100px"
           :api="uploadFlora"
           file-label="file"
+          @update:file-list="updateImage"
         >
-          <template #tip> 上传图片最大为 5M </template>
+          <template #tip> 上传图片最大为 20M </template>
         </UploadImg>
       </el-form-item>
       <el-form-item label="分布区域" prop="origin">
@@ -114,11 +115,11 @@
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { useI18n } from "vue-i18n";
-import { Animals, OrganismType } from "@/api/interface/science/animals";
+import { Animals } from "@/api/interface/science/animals";
 import { DictOptions } from "@/api/interface";
 import { uploadFlora } from "@/api/modules/upload";
 const { t } = useI18n(); // 解构出t方法
-import UploadImg from "@/components/Upload/Img.vue";
+import UploadImg from "@/components/Upload/Imgs.vue";
 
 const rules = reactive({
   name: [{ required: true, message: t("main.inputError", { msg: "名称" }) }],
@@ -129,11 +130,11 @@ const rules = reactive({
 interface DrawerProps {
   title: string;
   isView: boolean;
-  rowData?: Animals.ResAnimals;
+  rowData: Animals.ResAnimals;
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
   languageOptions?: DictOptions[];
-  organismTypeOptions?: OrganismType.ResOrganismType[];
+  organismTypeOptions?: DictOptions[];
 }
 // drawer框状态
 const drawerVisible = ref(false);
@@ -142,16 +143,34 @@ const drawerProps = ref<DrawerProps>({
   title: "",
   rowData: {} as Animals.ResAnimals
 });
+const fileList1 = ref<any[]>([]);
 
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
+  console.log(params.organismTypeOptions);
+
+  fileList1.value = drawerProps.value.rowData.picture
+    ? drawerProps.value.rowData.picture.split(",").map(item => ({
+        name: item,
+        url: item
+      }))
+    : [];
 };
 
+const updateImage = (value: any[]) => {
+  fileList1.value = value.map(item => {
+    return {
+      ...item,
+      url: item.response?.url || item.url
+    };
+  });
+};
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
+  drawerProps.value.rowData.picture = fileList1.value.map(item => item.url).join(",");
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     try {
