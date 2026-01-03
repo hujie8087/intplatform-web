@@ -157,7 +157,7 @@ const handleSubmit = () => {
     if (fileList.value.length !== 0) {
       drawerProps.value.rowData!.handlePhoto = fileList.value.map(item => item.url).join(",");
     }
-    const formData = { ...drawerProps.value.rowData };
+    const formData = { ...drawerProps.value.rowData, isRead: 1 };
     try {
       await drawerProps.value.api!(formData);
       ElMessage.success({

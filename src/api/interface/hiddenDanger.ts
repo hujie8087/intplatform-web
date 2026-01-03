@@ -33,5 +33,6 @@ export namespace HiddenDanger {
     createTime?: Date;
     updateBy?: string;
     updateTime?: Date;
+    isRead?: number;
   }
 }

@@ -16,22 +16,35 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="早餐" prop="breakfastList">
-            <el-select v-model="breakfastList" multiple>
-              <el-option v-for="item in dishList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-select v-model="breakfastList" multiple filterable>
+              <el-option-group v-for="item in dishOptions" :key="item.label" :label="item.label">
+                <el-option v-for="dish in item.options" :key="dish.id" :label="dish.name" :value="dish.id">
+                  <span style="float: left">{{ dish.name }}</span>
+                  <el-tag
+                    style="float: right"
+                    :type="dish.dishType === 0 ? 'success' : dish.dishType === 1 ? 'warning' : 'danger'"
+                    >{{ item.label }}</el-tag
+                  >
+                </el-option>
+              </el-option-group>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="24">
           <el-form-item label="午餐" prop="lunchList">
-            <el-select v-model="lunchList" multiple>
-              <el-option v-for="item in dishList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-select v-model="lunchList" multiple filterable>
+              <el-option-group v-for="item in dishOptions" :key="item.label" :label="item.label">
+                <el-option v-for="dish in item.options" :key="dish.id" :label="dish.name" :value="dish.id"></el-option>
+              </el-option-group>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="24">
           <el-form-item label="晚餐" prop="dinnerList">
-            <el-select v-model="dinnerList" multiple>
-              <el-option v-for="item in dishList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-select v-model="dinnerList" multiple filterable>
+              <el-option-group v-for="item in dishOptions" :key="item.label" :label="item.label">
+                <el-option v-for="dish in item.options" :key="dish.id" :label="dish.name" :value="dish.id"></el-option>
+              </el-option-group>
             </el-select>
           </el-form-item>
         </el-col>
@@ -54,16 +67,28 @@
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
 import { getDishList } from "@/api/modules/productDisplay/dailyRecipe";
-import { Dish, DailyRecipe } from "@/api/interface/productDisplay/dailyRecipe";
+import { DailyRecipe } from "@/api/interface/productDisplay/dailyRecipe";
 import { addDailyRecipe } from "@/api/modules/productDisplay/dailyRecipe";
 import { editDailyRecipe } from "@/api/modules/productDisplay/dailyRecipe";
-// import { DictOptions } from "@/api/interface";
 
 // 获取所有菜品
-const dishList = ref<Dish.ResDish[]>([]);
+const dishOptions = ref<any[]>([]);
 const getDishListData = async () => {
   const res = await getDishList({ pageNum: 1, pageSize: 10000 });
-  dishList.value = res.rows;
+  dishOptions.value = [
+    {
+      label: "主食",
+      options: res.rows.filter(item => item.dishType === 0)
+    },
+    {
+      label: "主菜",
+      options: res.rows.filter(item => item.dishType === 1)
+    },
+    {
+      label: "汤品",
+      options: res.rows.filter(item => item.dishType === 2)
+    }
+  ];
 };
 getDishListData();
 // 早餐

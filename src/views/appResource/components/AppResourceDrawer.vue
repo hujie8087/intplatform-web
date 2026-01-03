@@ -28,10 +28,34 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
+          <el-form-item label="内容类型" prop="contentType">
+            <!-- 选择报修人 -->
+            <el-select v-model="drawerProps.rowData.contentType" placeholder="请选择">
+              <el-option v-for="item in drawerProps.contentTypeOptions" :label="item.label" :value="item.value" :key="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24" v-if="drawerProps.rowData.contentType === 'IMAGE'">
           <el-form-item label="图片" prop="content">
             <UploadImg v-model:image-url="drawerProps.rowData.content" :file-size="5" width="100px" height="100px">
               <template #tip> 上传图片最大为 5M </template>
             </UploadImg>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24" v-if="drawerProps.rowData.contentType === 'TEXT'">
+          <el-form-item label="内容" prop="content">
+            <el-input :rows="5" v-model="drawerProps.rowData.content" type="textarea" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="24" v-if="drawerProps.rowData.contentType === 'LINK'">
+          <el-form-item label="链接" prop="content">
+            <el-input v-model="drawerProps.rowData.content" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="24" v-if="drawerProps.rowData.contentType === 'JSON'">
+          <el-form-item label="JSON" prop="content">
+            <el-input :rows="5" v-model="drawerProps.rowData.content" type="textarea" />
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -93,6 +117,7 @@ interface DrawerProps {
   getTableList?: () => Promise<any>;
   resourceTypeOptions?: DictOptions[];
   platformOptions?: DictOptions[];
+  contentTypeOptions?: DictOptions[];
 }
 
 // drawer框状态

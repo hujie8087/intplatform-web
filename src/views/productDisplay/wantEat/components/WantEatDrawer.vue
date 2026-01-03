@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="drawerVisible" :destroy-on-close="true" width="1000" :title="`${drawerProps.title}留言`">
+  <el-dialog v-model="drawerVisible" :destroy-on-close="true" width="1000" :title="`${drawerProps.title}我想吃`">
     <el-form
       ref="ruleFormRef"
       label-width="120px"
@@ -139,10 +139,11 @@ const handleSubmit = () => {
         ...drawerProps.value.rowData,
         processingStatus: 1,
         handleBy: userStore.userInfo?.user.nickName,
-        handleTime: dayjs().format("YYYY-MM-DD HH:mm:ss")
+        handleTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        isRead: 1
       });
       ElMessage.success({
-        message: t("main.successMsg", { title: "配送费", method: `${drawerProps.value.title}` })
+        message: t("main.successMsg", { title: "我想吃", method: `${drawerProps.value.title}` })
       });
       drawerProps.value.getTableList!();
       drawerVisible.value = false;

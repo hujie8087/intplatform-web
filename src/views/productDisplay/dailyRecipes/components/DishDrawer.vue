@@ -15,6 +15,18 @@
             <el-input v-model="drawerProps.rowData.name" :placeholder="`${$t('main.inputError', '名称')}`" clearable></el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="24">
+          <el-form-item label="餐食类型" prop="mealType">
+            <el-select v-model="drawerProps.rowData.mealType" placeholder="请选择餐食类型" clearable>
+              <el-option
+                v-for="item in drawerProps.mealTypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
         <!-- 状态 -->
         <el-col :span="24">
           <el-form-item label="状态" prop="status">
@@ -66,6 +78,7 @@ interface DrawerProps {
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
   statusOptions?: DictOptions[];
+  mealTypeOptions?: DictOptions[];
 }
 
 // drawer框状态
