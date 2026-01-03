@@ -10,6 +10,7 @@ export namespace Dish {
     id: number;
     name: string;
     status: number;
+    dishType: number;
     description: string;
     imageUrl: string;
     createTime: string;

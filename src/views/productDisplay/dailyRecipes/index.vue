@@ -64,6 +64,7 @@ import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
 import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
+import { useDict } from "@/hooks/useDict";
 
 const { t } = useI18n(); // 解构出t方法
 
@@ -81,6 +82,17 @@ const sys_normal_disable = ref<DictOptions[]>([
   { label: "禁用", value: 0 }
 ]);
 
+// 获取餐食类型字典
+const mealTypeOptions = ref<DictOptions[]>([]);
+useDict("meal_type_options").then(res => {
+  mealTypeOptions.value = res.meal_type_options.map(item => {
+    return {
+      ...item,
+      value: +item.value
+    };
+  });
+});
+
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 const dataCallback = (data: any) => {
@@ -96,6 +108,7 @@ const dataCallback = (data: any) => {
 const columns = reactive<ColumnProps<Dish.ResDish>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { prop: "name", label: "名称", search: { el: "input" } },
+  { prop: "mealType", label: "餐食类型", tag: true, enum: mealTypeOptions, search: { el: "select" } },
   { prop: "description", label: "描述" },
   // 图片
   {
@@ -187,7 +200,8 @@ const openDrawer = async (title: string, row: Partial<Dish.ResDish> = {}) => {
     rowData: { ...row },
     api: title === "新增" ? addDish : title === "编辑" ? editDish : undefined,
     getTableList: proTable.value?.getTableList,
-    statusOptions: sys_normal_disable.value
+    statusOptions: sys_normal_disable.value,
+    mealTypeOptions: mealTypeOptions.value
   };
   drawerRef.value?.acceptParams(params);
 };

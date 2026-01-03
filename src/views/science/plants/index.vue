@@ -63,8 +63,7 @@ import {
   editAnimals,
   addAnimals,
   getAnimalsById,
-  getOrganismTypeList,
-  getOrganismTypeTreeList
+  getOrganismTypeList
 } from "@/api/modules/science/animals";
 
 import { useI18n } from "vue-i18n";
@@ -123,12 +122,6 @@ const getTableList = (params: any) => {
   newParams.username && (newParams.username = "custom-" + newParams.username);
   return getAnimalsList(newParams);
 };
-
-const getTreeList = async () => {
-  const res = await getOrganismTypeTreeList(0);
-  console.log(res);
-};
-getTreeList();
 
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // const { BUTTONS } = useAuthButtons();

@@ -77,6 +77,13 @@ useDict("sys_normal_disable", "app_resource_type").then(res => {
   resourceTypeOptions.value = res.app_resource_type;
 });
 
+// 内容类型IMAGE-图片，TEXT-文本，LINK-链接，JSON-复杂结构
+const contentTypeOptions = ref<DictOptions[]>([
+  { label: "文本", value: "TEXT", tagType: "primary" },
+  { label: "图片", value: "IMAGE", tagType: "success" },
+  { label: "链接", value: "LINK", tagType: "warning" },
+  { label: "复杂结构", value: "JSON", tagType: "danger" }
+]);
 const platformOptions = ref<DictOptions[]>([
   { label: "全部", value: 0, tagType: "primary" },
   { label: "安卓", value: 1, tagType: "success" },
@@ -107,6 +114,13 @@ const columns = reactive<ColumnProps<AppResource.ResAppResource>[]>([
   },
   { prop: "resourceKey", label: "资源key", search: { el: "input" } },
   { prop: "resourceName", label: "名称", search: { el: "input" } },
+  {
+    prop: "contentType",
+    label: "内容类型",
+    enum: contentTypeOptions,
+    tag: true,
+    search: { el: "select", props: { filterable: true } }
+  },
   {
     prop: "content",
     label: "内容",
@@ -195,7 +209,8 @@ const openDrawer = async (title: string, row: Partial<AppResource.ResAppResource
     api: title === "新增" ? addAppResource : title === "编辑" ? editAppResource : undefined,
     getTableList: proTable.value?.getTableList,
     resourceTypeOptions: resourceTypeOptions.value,
-    platformOptions: platformOptions.value
+    platformOptions: platformOptions.value,
+    contentTypeOptions: contentTypeOptions.value
   };
   drawerRef.value?.acceptParams(params);
 };
