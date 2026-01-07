@@ -138,7 +138,7 @@ const handleSubmit = () => {
       await drawerProps.value.api!({
         ...drawerProps.value.rowData,
         processingStatus: 1,
-        handleBy: userStore.userInfo?.user.nickName,
+        handleBy: userStore.thirdUserInfo.name,
         handleTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
         isRead: 1
       });
