@@ -108,7 +108,7 @@ const dataCallback = (data: any) => {
 const columns = reactive<ColumnProps<Dish.ResDish>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { prop: "name", label: "名称", search: { el: "input" } },
-  { prop: "mealType", label: "餐食类型", tag: true, enum: mealTypeOptions, search: { el: "select" } },
+  { prop: "dishType", label: "餐食类型", tag: true, enum: mealTypeOptions, search: { el: "select" } },
   { prop: "description", label: "描述" },
   // 图片
   {
