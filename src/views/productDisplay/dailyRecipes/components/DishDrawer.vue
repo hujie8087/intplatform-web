@@ -16,8 +16,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="餐食类型" prop="mealType">
-            <el-select v-model="drawerProps.rowData.mealType" placeholder="请选择餐食类型" clearable>
+          <el-form-item label="餐食类型" prop="dishType">
+            <el-select v-model="drawerProps.rowData.dishType" placeholder="请选择餐食类型" clearable>
               <el-option
                 v-for="item in drawerProps.mealTypeOptions"
                 :key="item.value"
