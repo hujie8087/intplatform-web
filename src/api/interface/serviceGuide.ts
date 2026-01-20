@@ -62,6 +62,7 @@ export namespace Guide {
     def3?: string;
     def4?: string;
     def5?: string;
+    file?: string;
     createBy?: string;
     createTime?: Date;
     updateBy?: string;

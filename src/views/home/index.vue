@@ -84,7 +84,6 @@ const isFull = ref(false);
 const imgUrl = ref(enlargeImg);
 const HomeMapRef = ref();
 const getSiteData = (data: SiteInformationList[]) => {
-  console.log(data);
   HomeMapRef.value.destroyAllMarker();
   HomeMapRef.value.loadMealStateData(data);
 };
@@ -155,11 +154,16 @@ const showSiteInfo = (item: SiteInformationList) => {
   mealServiceRef.value.showSiteInfo(item);
 };
 
-const getTrackData = (data: { coordinatesList: string | null; fcId: number; fcName: string; line: [number, number][] }) => {
+const getTrackData = (data: {
+  coordinatesList: string | null;
+  fcId: number;
+  fcName: string;
+  line: [number, number, number][];
+}) => {
   const pathData =
     data.line.length > 0
       ? data.line.map(item => {
-          return { lat: item[0], lng: item[1], floorId: "1" };
+          return { lat: item[0], lng: item[1], floorId: "1", time: item[2] };
         })
       : [];
   HomeMapRef.value.destroyAllNavigation();

@@ -1,8 +1,10 @@
 <template>
   <div class="card filter">
-    <h4 v-if="title" class="title sle">
-      {{ title }}
-    </h4>
+    <slot name="title">
+      <h4 v-if="title" class="title sle">
+        {{ title }}
+      </h4>
+    </slot>
     <el-input v-model="filterText" placeholder="输入关键字进行过滤" clearable />
     <el-scrollbar :style="{ height: title ? `calc(100% - 95px)` : `calc(100% - 56px)` }">
       <el-tree
@@ -20,7 +22,7 @@
         :default-checked-keys="multiple ? selected : []"
         @node-click="handleNodeClick"
         @check="handleCheckChange"
-        :render-content="renderContent"
+        :render-content="renderContentTemplate || renderContent"
         :default-expanded-keys="defaultExpandedKeys"
       />
     </el-scrollbar>
@@ -43,6 +45,7 @@ interface TreeFilterProps {
   checkStrictly?: boolean;
   defaultExpandedKeys?: number[]; // 展开的行 ==> 非必传
   addAll?: boolean; // 是否显示全部
+  renderContentTemplate?: (h: any, { node, data }: any) => any;
 }
 const props = withDefaults(defineProps<TreeFilterProps>(), {
   id: "id",
@@ -50,7 +53,8 @@ const props = withDefaults(defineProps<TreeFilterProps>(), {
   multiple: false,
   checkStrictly: false,
   defaultExpandedKeys: () => [],
-  addAll: true
+  addAll: true,
+  renderContentTemplate: undefined
 });
 
 const defaultProps = {

@@ -134,6 +134,7 @@ const columns = reactive<ColumnProps<Notice.ResNotice>[]>([
   { type: "selection", fixed: "left", width: 50 },
   { type: "index", label: "序号", width: 80 },
   { prop: "noticeTitle", label: "标题", search: { el: "input" } },
+  { prop: "name", label: "姓名", search: { el: "input" } },
   { prop: "createDept", label: "发布部门", width: 120, search: { el: "input" } },
   {
     prop: "approvalStatus",

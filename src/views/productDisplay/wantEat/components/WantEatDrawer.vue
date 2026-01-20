@@ -63,6 +63,13 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
+          <el-form-item label="回复图片" prop="def3">
+            <UploadImg v-model:image-url="drawerProps.rowData.def3" :file-size="5" width="100px" height="100px">
+              <template #tip> 上传图片最大为 5M </template>
+            </UploadImg>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
           <el-form-item label="回复内容" prop="processingResults">
             <el-input type="textarea" :rows="4" v-model="drawerProps.rowData.processingResults" />
           </el-form-item>
@@ -94,9 +101,11 @@ import { ElMessage, FormInstance } from "element-plus";
 import { Complaint } from "@/api/interface/service/complaint";
 import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
-const { t } = useI18n(); // 解构出t方法
+import UploadImg from "@/components/Upload/Img.vue";
 import { useUserStore } from "@/stores/modules/user";
 import dayjs from "dayjs";
+
+const { t } = useI18n(); // 解构出t方法
 
 const userStore = useUserStore();
 

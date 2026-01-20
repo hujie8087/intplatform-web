@@ -35,12 +35,12 @@
           <template #tip> 上传图片最大为 20M </template>
         </UploadImg>
       </el-form-item>
-      <el-form-item label="产地" prop="origin">
+      <el-form-item label="分布" prop="origin">
         <el-input
           type="textarea"
           :rows="5"
           v-model="drawerProps.rowData!.origin"
-          :placeholder="`${$t('main.inputError', { msg: '产地' })}`"
+          :placeholder="`${$t('main.inputError', { msg: '分布' })}`"
         ></el-input>
       </el-form-item>
       <el-form-item label="习性" prop="habit">

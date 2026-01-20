@@ -1,26 +1,29 @@
 const { THREE, TWEEN } = window.VgoMap;
 const { MathUtils, Vector3, Vector2 } = THREE;
 const { RAD2DEG } = MathUtils;
+import dayjs from "dayjs";
 
 const arrowImg = new URL("../img/arrow.png", import.meta.url).href;
 const startImg = new URL("../img/start.png", import.meta.url).href;
 const endImg = new URL("../img/end.png", import.meta.url).href;
 const wayImg = new URL("../img/way.png", import.meta.url).href;
 
-function createArrowMarkDom() {
+function createArrowMarkDom(time) {
   let markerContent = `
+<div class="custom-marker">
+  ${time ? `<div class="custom-marker-text">时间: ${dayjs(time).format("HH:mm:ss")}</div>` : ""}
 <div class='custom-content-marker wxb-custom-marker'>
   <div class="custom-marker-icon arrow-marker">
     <img src="${arrowImg}" />
   </div>
 </div>
-  `;
+</div>  `;
   let dom = document.createElement("div");
   dom.innerHTML = markerContent;
   return dom;
 }
 
-const arrowDom = createArrowMarkDom();
+// const arrowDom = createArrowMarkDom();
 
 export class Navigation {
   map;
@@ -188,11 +191,11 @@ export class Navigation {
     }
   }
 
-  createArrowMark(center) {
+  createArrowMark(center, time) {
     if (this.arrowMark) {
       this.arrowMark.position.copy(center);
     } else {
-      this.arrowMark = this.map.addDomMarker("1", arrowDom);
+      this.arrowMark = this.map.addDomMarker("1", createArrowMarkDom(time));
       this.arrowMark.position.copy(center);
       this.arrowMark.center.y = 0.5;
     }
@@ -235,7 +238,9 @@ export class Navigation {
     let startPos = new Vector3(this.path[startIdx].x, this.path[startIdx].y, 0);
     let center = this.map.coordsToLngLat(startPos);
     this.map.amap.setCenter(center);
-    this.createArrowMark(startPos);
+    console.log(this.path[startIdx].time);
+
+    this.createArrowMark(startPos, this.path[startIdx].time);
 
     // 创建动画函数
     let go = (idx, dir) => {
@@ -285,6 +290,8 @@ export class Navigation {
             let monitorIocnDom = this.arrowMark.element.querySelector(".custom-content-marker");
             let rotateZ = -(angleDEG - this.map.amap.getRotation());
             rotateZ = parseFloat(rotateZ.toFixed(2));
+            let timeDom = this.arrowMark.element.querySelector(".custom-marker-text");
+            timeDom.innerHTML = `时间: ${dayjs(this.path[idx].time).format("HH:mm:ss")}`;
             monitorIocnDom.style.transform = `rotateZ(${rotateZ}deg)`;
             monitorIocnDom.setAttribute("data-rotatez", rotateZ);
           }

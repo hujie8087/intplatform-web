@@ -179,7 +179,8 @@ export default {
       noticeType: "类型",
       status: "状态",
       noticeContent: "内容",
-      noticeDept: "发布部门"
+      noticeDept: "发布部门",
+      name: "姓名"
     },
     app: {
       app: "APP版本",

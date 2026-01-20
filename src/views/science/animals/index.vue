@@ -136,7 +136,7 @@ const columns = computed((): ColumnProps[] => [
     search: { el: "select" }
   },
   { prop: "peacockType", label: "分类", width: 100 },
-  { prop: "origin", label: "产地" },
+  { prop: "origin", label: "分布" },
   { prop: "habit", label: "习性" },
   { prop: "food", label: "食物" },
   { prop: "reproduce", label: "繁殖" },
