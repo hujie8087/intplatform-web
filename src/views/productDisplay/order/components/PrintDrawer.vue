@@ -21,6 +21,9 @@
               <h3 v-if="order.pickupType == 1">取餐类型: <span>堂食</span></h3>
               <h3 v-if="order.pickupType == 2">取餐类型: <span>打包</span></h3>
               <h3 v-if="order.pickupType == 3">取餐类型: <span>配送</span></h3>
+              <h3 v-if="order.pickupType == 1 && order.tableNumber">
+                桌号: <span>{{ order.tableNumber }}</span>
+              </h3>
               <h3 v-if="order.pickupType == 3">
                 配送地址: <span>{{ order.address }}</span>
               </h3>
@@ -125,8 +128,8 @@ const print = async (id: string) => {
       <head>
         <title>打印</title>
         <style>
-          body { 
-            padding: 10px; 
+          body {
+            padding: 10px;
           }
           table {
             width: 100%;

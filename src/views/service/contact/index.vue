@@ -50,6 +50,8 @@ import { getContactList, deleteContact, getContactById, addContact, editContact 
 import { Contact } from "@/api/interface/service/contact";
 import { useI18n } from "vue-i18n";
 import ContactDrawer from "./components/ContactDrawer.vue";
+import { useDict } from "@/hooks/useDict";
+import { DictOptions } from "@/api/interface";
 
 const { t } = useI18n(); // 解构出t方法
 // ProTable 实例
@@ -62,9 +64,18 @@ const dataCallback = (data: any) => {
     size: data.size
   };
 };
+
+// 获取类型字典
+const souceTypeOptions = ref<DictOptions[]>([]);
+useDict("contact_type_options").then(res => {
+  souceTypeOptions.value = res.contact_type_options;
+});
+
 // 表格配置项
 const columns = reactive<ColumnProps<Contact.ResContact>[]>([
   { type: "selection", fixed: "left", width: 50 },
+  { prop: "souceType", label: "类型", tag: true, enum: souceTypeOptions, search: { el: "select" } },
+  { prop: "def1", label: "负责范围" },
   { prop: "name", label: "姓名", search: { el: "input" } },
   {
     prop: "tel",
@@ -75,6 +86,7 @@ const columns = reactive<ColumnProps<Contact.ResContact>[]>([
     prop: "email",
     label: "邮箱"
   },
+  { prop: "def2", label: "办公地点" },
   { prop: "workTime", label: "工作时间" },
   { prop: "details", label: "详情" },
   { prop: "remark", label: "备注" },
@@ -106,7 +118,8 @@ const openDrawer = async (title: string, row: Partial<Contact.ResContact> = {}) 
     isView: title === "查看",
     rowData: { ...row },
     api: title === "新增" ? addContact : title === "编辑" ? editContact : undefined,
-    getTableList: proTable.value?.getTableList
+    getTableList: proTable.value?.getTableList,
+    souceTypeOptions: souceTypeOptions.value
   };
   drawerRef.value?.acceptParams(params);
 };

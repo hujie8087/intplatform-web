@@ -32,6 +32,11 @@ export interface ReqPage {
   pageSize: number;
 }
 
+export interface ThirdReqPage {
+  current: number;
+  size: number;
+}
+
 // 文件上传模块
 export namespace Upload {
   export interface ResFileUrl {
@@ -226,6 +231,7 @@ export interface DictOptions {
   cssClass?: string;
   enLabel?: string;
   idLabel?: string;
+  listClass?: string;
 }
 
 // 取餐类型

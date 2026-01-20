@@ -179,7 +179,8 @@ export default {
       noticeType: "Jenis",
       status: "Status",
       noticeContent: "Konten",
-      noticeDept: "Departemen Penerbit"
+      noticeDept: "Departemen Penerbit",
+      name: "Nama"
     },
     app: {
       app: "Versi APP",

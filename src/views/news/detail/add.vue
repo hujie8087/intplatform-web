@@ -25,6 +25,15 @@
                 ></el-input>
               </el-form-item>
             </el-col>
+            <el-col :span="24" v-if="formData?.noticeType === '7'">
+              <el-form-item :label="`${$t('system.notice.name')}`" prop="name" style="width: 800px">
+                <el-input
+                  v-model="formData.name"
+                  :placeholder="`${$t('main.inputError', { msg: $t('system.notice.name') })}`"
+                  clearable
+                ></el-input>
+              </el-form-item>
+            </el-col>
             <el-col :span="24">
               <el-form-item :label="`${$t('system.notice.noticeDept')}`" prop="createDept" style="width: 800px">
                 <el-input
@@ -163,7 +172,8 @@ const formData = reactive<Notice.ReqCreateNoticeParams>({
   status: "0",
   img: "",
   file: "",
-  video: ""
+  video: "",
+  name: ""
 });
 
 // 提交数据（新增/编辑）

@@ -379,6 +379,7 @@ export namespace Notice {
     file?: string;
     video?: string;
     sort?: number;
+    name?: string;
     url?: string;
   }
   export interface ResNotice {
@@ -408,6 +409,7 @@ export namespace Notice {
     approvalDeptId?: number;
     approvalDeptMessage?: string;
     url?: string;
+    name?: string;
   }
   export interface pushMessage {
     title: string;

@@ -2,6 +2,19 @@
   <el-dialog v-model="drawerVisible" :destroy-on-close="true" :title="`${drawerProps.title}联系人`">
     <el-form ref="ruleFormRef" label-width="120px" label-suffix=" :" :rules="rules" :model="drawerProps.rowData">
       <el-row>
+        <!-- 类型 -->
+        <el-col :span="12">
+          <el-form-item label="类型" prop="souceType">
+            <el-select v-model="drawerProps.rowData.souceType" placeholder="请选择类型" clearable>
+              <el-option v-for="item in drawerProps.souceTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="负责范围" prop="def1">
+            <el-input v-model="drawerProps.rowData.def1" />
+          </el-form-item>
+        </el-col>
         <el-col :span="12">
           <el-form-item label="姓名" prop="name">
             <el-input v-model="drawerProps.rowData.name" />
@@ -18,7 +31,11 @@
             <el-input type="email" v-model="drawerProps.rowData.email" />
           </el-form-item>
         </el-col>
-        <!-- 工作时间 -->
+        <el-col :span="12">
+          <el-form-item label="办公地点" prop="def2">
+            <el-input v-model="drawerProps.rowData.def2" />
+          </el-form-item>
+        </el-col>
         <el-col :span="12">
           <el-form-item label="工作时间" prop="workTime">
             <el-input v-model="drawerProps.rowData.workTime" />
@@ -50,13 +67,12 @@ import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { Contact } from "@/api/interface/service/contact";
 import { useI18n } from "vue-i18n";
+import { DictOptions } from "@/api/interface";
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({
   name: [{ required: true, message: t("main.inputError", { msg: "请填写姓名" }) }],
-  tel: [{ required: true, message: t("main.inputError", { msg: "请填写联系电话" }) }],
-  email: [{ required: true, message: t("main.inputError", { msg: "请填写邮箱" }) }],
-  workTime: [{ required: true, message: t("main.inputError", { msg: "请填写工作时间" }) }]
+  tel: [{ required: true, message: t("main.inputError", { msg: "请填写联系电话" }) }]
 });
 
 interface DrawerProps {
@@ -64,12 +80,14 @@ interface DrawerProps {
   rowData: Partial<Contact.ResContact>;
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
+  souceTypeOptions?: DictOptions[];
 }
 // drawer框状态
 const drawerVisible = ref(false);
 const drawerProps = ref<DrawerProps>({
   title: "",
-  rowData: {}
+  rowData: {},
+  souceTypeOptions: []
 });
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps): void => {

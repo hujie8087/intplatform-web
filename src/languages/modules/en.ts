@@ -179,7 +179,8 @@ export default {
       noticeType: "Type",
       status: "Status",
       noticeContent: "Content",
-      noticeDept: "Release Department"
+      noticeDept: "Release Department",
+      name: "Name"
     },
     app: {
       app: "APP Version",

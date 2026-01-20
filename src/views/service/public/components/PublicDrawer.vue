@@ -39,9 +39,24 @@
             <el-input v-model="drawerProps.rowData.address" clearable />
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="图片" prop="coverPath">
+        <el-col :span="24">
+          <el-form-item label="图片" prop="image">
             <UploadImg v-model:image-url="drawerProps.rowData.image" width="100px" height="100px"> </UploadImg>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="轮播图片" prop="def1">
+            <UploadImgs
+              v-model:file-list="fileList1"
+              :file-size="20"
+              width="100px"
+              height="100px"
+              :api="uploadFlora"
+              file-label="file"
+              @update:file-list="updateImage"
+            >
+              <template #tip> 上传图片最大为 20M </template>
+            </UploadImgs>
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -69,10 +84,13 @@ import { ElMessage, FormInstance } from "element-plus";
 import { Other } from "@/api/interface/service/other";
 import WangEditor from "@/components/WangEditor/index.vue";
 import UploadImg from "@/components/Upload/Img.vue";
+import UploadImgs from "@/components/Upload/Imgs.vue";
 import { useI18n } from "vue-i18n";
 import { DictOptions } from "@/api/interface";
+import { uploadFlora } from "@/api/modules/upload";
 const { t } = useI18n(); // 解构出t方法
 
+const fileList1 = ref<any[]>([]);
 const rules = reactive({
   head: [{ required: true, message: t("main.inputError", { msg: "请填写负责人" }) }],
   souceType: [{ required: true, message: t("main.selectError", { msg: "请选择服务类型" }) }],
@@ -109,13 +127,23 @@ const acceptParams = (params: DrawerProps): void => {
   drawerProps.value = params;
   drawerVisible.value = true;
   details.value = params.rowData.details ?? "";
+  fileList1.value = params.rowData.def1 ? params.rowData.def1.split(",").map(item => ({ url: item })) : [];
 };
 
+const updateImage = (value: any[]) => {
+  fileList1.value = value.map(item => {
+    return {
+      ...item,
+      url: item.response?.url || item.url
+    };
+  });
+};
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
+    drawerProps.value.rowData.def1 = fileList1.value.map(item => item.url).join(",");
     const formData = { ...drawerProps.value.rowData, details: details.value };
     try {
       await drawerProps.value.api!(formData);

@@ -207,6 +207,7 @@ const loadMealTracks = async (track: {
     lat: number;
     lng: number;
     floorId: string;
+    time: number;
   }[];
 }) => {
   if (!track || !mapInstance) return;
@@ -488,5 +489,18 @@ defineExpose({
   color: #4c4e4e;
   white-space: nowrap;
   background-color: #f3f3f3;
+}
+:deep(.custom-marker-text) {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  width: 100px;
+  padding: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: rgb(0 0 0 / 60%);
+  border-radius: 5px;
+  transform: translateX(-50%);
 }
 </style>
