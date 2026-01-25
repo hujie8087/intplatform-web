@@ -12,40 +12,16 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" :icon="CirclePlus" v-auth="['food:ExchangeRate:add']" @click="openDrawer('新增')"
-            >新增汇率</el-button
-          >
-          <el-button
-            type="danger"
-            :disabled="!scope.isSelected"
-            v-auth="['food:ExchangeRate:remove']"
-            :icon="Delete"
-            @click="batchDelete(scope.selectedListIds)"
-          >
+          <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增汇率</el-button>
+          <el-button type="danger" :disabled="!scope.isSelected" :icon="Delete" @click="batchDelete(scope.selectedListIds)">
             批量删除汇率
           </el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button
-            type="warning"
-            link
-            v-if="scope.row.userId !== 1"
-            v-auth="['food:ExchangeRate:edit']"
-            :icon="EditPen"
-            @click="openDrawer('编辑', scope.row)"
-          >
-            编辑
-          </el-button>
-          <el-button
-            type="danger"
-            link
-            :icon="Delete"
-            v-auth="['food:ExchangeRate:remove']"
-            @click="deleteExchangeRateHandle(scope.row)"
-            >删除</el-button
-          >
+          <el-button type="warning" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"> 编辑 </el-button>
+          <el-button type="danger" link :icon="Delete" @click="deleteExchangeRateHandle(scope.row)">删除</el-button>
         </template>
       </ProTable>
       <ExchangeRateDrawer ref="drawerRef" />
@@ -54,7 +30,6 @@
 </template>
 <script setup lang="tsx" name="ExchangeRate">
 import { ref, reactive } from "vue";
-import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import ExchangeRateDrawer from "./components/ExchangeRateDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
@@ -67,9 +42,7 @@ import {
   getExchangeRateById
 } from "@/api/modules/onlineTopUp";
 import { ExchangeRate } from "@/api/interface/onlineTopUp";
-import { useI18n } from "vue-i18n";
-
-const { t } = useI18n(); // 解构出t方法
+import { ElMessage, ElMessageBox } from "element-plus";
 
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
@@ -101,15 +74,47 @@ const columns = reactive<ColumnProps<ExchangeRate.ResExchangeRate>[]>([
 
 // 删除汇率
 const deleteExchangeRateHandle = async (params: ExchangeRate.ResExchangeRate) => {
-  await useHandleData(deleteExchangeRate, params.id, `删除汇率`);
-  proTable.value?.getTableList();
+  ElMessageBox.confirm(`是否删除${params.yearMonth}的汇率?`, "温馨提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+    draggable: true
+  })
+    .then(async () => {
+      const res = await deleteExchangeRate([params.id]);
+      proTable.value?.getTableList();
+      if (!res) return;
+      ElMessage({
+        type: "success",
+        message: `删除${params.yearMonth}的汇率成功!`
+      });
+    })
+    .catch(() => {
+      // cancel operation
+    });
 };
 
 // 批量删除
 const batchDelete = async (ids: number[]) => {
-  await useHandleData(deleteExchangeRate, ids, t("main.deleteBatchMsg", { title: "汇率" }));
-  proTable.value?.clearSelection();
-  proTable.value?.getTableList();
+  ElMessageBox.confirm(`是否删除选中的${ids.length}条数据?`, "温馨提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+    draggable: true
+  })
+    .then(async () => {
+      const res = await deleteExchangeRate(ids);
+      proTable.value?.clearSelection();
+      proTable.value?.getTableList();
+      if (!res) return;
+      ElMessage({
+        type: "success",
+        message: `删除选中的${ids.length}条数据成功!`
+      });
+    })
+    .catch(() => {
+      // cancel operation
+    });
 };
 
 // 打开 drawer(新增、查看、编辑)

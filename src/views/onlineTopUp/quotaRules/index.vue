@@ -12,40 +12,16 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button type="primary" :icon="CirclePlus" v-auth="['food:QuotaRules:add']" @click="openDrawer('新增')"
-            >新增额度规则</el-button
-          >
-          <el-button
-            type="danger"
-            :disabled="!scope.isSelected"
-            v-auth="['food:QuotaRules:remove']"
-            :icon="Delete"
-            @click="batchDelete(scope.selectedListIds)"
-          >
+          <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增额度规则</el-button>
+          <el-button type="danger" :disabled="!scope.isSelected" :icon="Delete" @click="batchDelete(scope.selectedListIds)">
             批量删除额度规则
           </el-button>
         </template>
         <!-- 表格操作 -->
         <template #operation="scope">
           <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-          <el-button
-            type="warning"
-            link
-            v-if="scope.row.userId !== 1"
-            v-auth="['food:QuotaRules:edit']"
-            :icon="EditPen"
-            @click="openDrawer('编辑', scope.row)"
-          >
-            编辑
-          </el-button>
-          <el-button
-            type="danger"
-            link
-            :icon="Delete"
-            v-auth="['food:QuotaRules:remove']"
-            @click="deleteQuotaRulesHandle(scope.row)"
-            >删除</el-button
-          >
+          <el-button type="warning" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"> 编辑 </el-button>
+          <el-button type="danger" link :icon="Delete" @click="deleteQuotaRulesHandle(scope.row)">删除</el-button>
         </template>
       </ProTable>
       <QuotaRulesDrawer ref="drawerRef" />
@@ -54,18 +30,15 @@
 </template>
 <script setup lang="tsx" name="QuotaRules">
 import { ref, reactive } from "vue";
-import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import QuotaRulesDrawer from "./components/QuotaRulesDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, EditPen, View } from "@element-plus/icons-vue";
 import { getQuotaRulesList, deleteQuotaRules, editQuotaRules, addQuotaRules, getQuotaRulesById } from "@/api/modules/onlineTopUp";
 import { QuotaRules } from "@/api/interface/onlineTopUp";
-import { useI18n } from "vue-i18n";
 import { getOrganizeTree } from "@/api/modules/organize";
 import { handleTree } from "@/utils/index";
-
-const { t } = useI18n(); // 解构出t方法
+import { ElMessage, ElMessageBox } from "element-plus";
 
 // 获取组织主节点
 const organizeTreeList = ref<{ label: string; value: number; pid: number; isLeaf: boolean; children?: any[] }[]>([]);
@@ -118,15 +91,47 @@ const columns = reactive<ColumnProps<QuotaRules.ResQuotaRules>[]>([
 
 // 删除额度规则
 const deleteQuotaRulesHandle = async (params: QuotaRules.ResQuotaRules) => {
-  await useHandleData(deleteQuotaRules, params.id, `删除额度规则`);
-  proTable.value?.getTableList();
+  ElMessageBox.confirm(`是否删除${params.formatOrganizeName}的额度规则?`, "温馨提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+    draggable: true
+  })
+    .then(async () => {
+      const res = await deleteQuotaRules([params.id]);
+      proTable.value?.getTableList();
+      if (!res) return;
+      ElMessage({
+        type: "success",
+        message: `删除${params.formatOrganizeName}的额度规则成功!`
+      });
+    })
+    .catch(() => {
+      // cancel operation
+    });
 };
 
 // 批量删除
 const batchDelete = async (ids: number[]) => {
-  await useHandleData(deleteQuotaRules, ids, t("main.deleteBatchMsg", { title: "额度规则" }));
-  proTable.value?.clearSelection();
-  proTable.value?.getTableList();
+  ElMessageBox.confirm(`是否删除选中的${ids.length}条数据?`, "温馨提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+    draggable: true
+  })
+    .then(async () => {
+      const res = await deleteQuotaRules(ids);
+      proTable.value?.clearSelection();
+      proTable.value?.getTableList();
+      if (!res) return;
+      ElMessage({
+        type: "success",
+        message: `删除选中的${ids.length}条数据成功!`
+      });
+    })
+    .catch(() => {
+      // cancel operation
+    });
 };
 
 // 打开 drawer(新增、查看、编辑)

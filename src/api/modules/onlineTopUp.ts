@@ -18,7 +18,7 @@ export const editQuotaRules = (params: FormData) => {
 
 // * 删除额度规则信息
 export const deleteQuotaRules = (ids: number[]) => {
-  return http.delete(`/mis/lms/mis/rule/delIds`, { params: { ids }, baseURL: baseURL });
+  return http.put(`/mis/lms/mis/rule/delIds`, ids, { baseURL: baseURL });
 };
 // * 获取额度规则信息详情
 export const getQuotaRulesById = (id: number) => {
