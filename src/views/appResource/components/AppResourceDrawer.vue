@@ -48,6 +48,11 @@
             <el-input :rows="5" v-model="drawerProps.rowData.content" type="textarea" />
           </el-form-item>
         </el-col>
+        <el-col :span="24" v-if="drawerProps.rowData.contentType === 'RICH_TEXT'">
+          <el-form-item label="内容" prop="content">
+            <WangEditor v-model:value="richContent" />
+          </el-form-item>
+        </el-col>
         <el-col :span="24" v-if="drawerProps.rowData.contentType === 'LINK'">
           <el-form-item label="链接" prop="content">
             <el-input v-model="drawerProps.rowData.content" />
@@ -106,6 +111,7 @@ import { useI18n } from "vue-i18n";
 import { AppResource } from "@/api/interface/system";
 import { DictOptions } from "@/api/interface";
 import UploadImg from "@/components/Upload/Img.vue";
+import WangEditor from "@/components/WangEditor/index.vue";
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({});
@@ -120,6 +126,7 @@ interface DrawerProps {
   contentTypeOptions?: DictOptions[];
 }
 
+const richContent = ref<string>("");
 // drawer框状态
 const drawerVisible = ref(false);
 const drawerProps = ref<DrawerProps>({
@@ -136,6 +143,9 @@ const acceptParams = (params: DrawerProps): void => {
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
+    if (drawerProps.value.rowData.contentType === "RICH_TEXT") {
+      drawerProps.value.rowData.content = richContent.value;
+    }
     if (!valid) return;
     const formData = {
       ...drawerProps.value.rowData
