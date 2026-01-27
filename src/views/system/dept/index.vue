@@ -11,16 +11,15 @@
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       >
         <el-table-column prop="name" label="部门名称" />
-        <el-table-column prop="code" label="组织编码" align="center" />
-        <el-table-column prop="dimensionCode" label="维度编码" align="center" />
-        <el-table-column prop="formatName" label="格式化名称" align="center" />
-        <el-table-column prop="sort" label="排序" align="center" />
-        <el-table-column prop="status" label="状态" align="center">
+        <el-table-column prop="code" label="组织编码" align="center" width="200" />
+        <el-table-column prop="formatName" label="格式化名称" align="center" width="400" />
+        <el-table-column prop="sort" label="排序" align="center" width="150" />
+        <el-table-column prop="status" label="状态" align="center" width="150">
           <template #default="scope">
             <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'">{{ scope.row.status === 1 ? "启用" : "禁用" }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="operation" label="操作" width="250" fixed="right" align="center">
+        <el-table-column prop="operation" label="操作" width="150" fixed="right" align="center">
           <template #default="scope">
             <el-button type="warning" link :icon="EditPen" @click="openDrawer(scope.row)">编辑</el-button>
           </template>
