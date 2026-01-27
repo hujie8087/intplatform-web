@@ -39,6 +39,11 @@
             <el-input v-model="drawerProps.rowData.monthQuota" :min="0" :max="1000000" :step="1" :precision="0" />
           </el-form-item>
         </el-col>
+        <el-col :span="24">
+          <el-form-item label="是否计算新员工" prop="enableNewUser">
+            <el-switch v-model="drawerProps.rowData.enableNewUser" />
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
     <template #footer>
@@ -58,7 +63,8 @@ const { t } = useI18n(); // 解构出t方法
 const rules = reactive({
   formatOrganizeName: [{ required: true, message: t("main.inputError", { msg: "组织名称" }) }],
   dayQuota: [{ required: true, message: t("main.inputError", { msg: "天额度" }) }],
-  monthQuota: [{ required: true, message: t("main.inputError", { msg: "月额度" }) }]
+  monthQuota: [{ required: true, message: t("main.inputError", { msg: "月额度" }) }],
+  enableNewUser: [{ required: true, message: t("main.inputError", { msg: "是否计算新员工" }) }]
 });
 
 interface DrawerProps {

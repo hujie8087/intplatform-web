@@ -15,33 +15,56 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-row>
-        <el-col :span="24" v-if="drawerProps.rowData!.deptId !== 100">
-          <el-form-item :label="`${$t('system.dept.pid')}`" prop="parentId">
+        <el-col :span="24">
+          <el-form-item label="上级部门" prop="pid">
             <el-tree-select
-              v-model="drawerProps.rowData!.parentId"
-              :data="drawerProps.deptOptions"
-              :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
-              value-key="deptId"
-              :placeholder="`${$t('main.selectError', { msg: $t('system.dept.pid') })}`"
-              :render-after-expand="false"
-              :check-strictly="true"
+              v-model="drawerProps.rowData!.pid"
+              ref="treeSelectRef"
+              lazy
+              :load="loadNode"
+              node-key="value"
+              check-strictly
+              :props="{
+                value: 'value',
+                label: 'label',
+                children: 'children',
+                isLeaf: 'isLeaf'
+              }"
               style="width: 100%"
             />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="`${$t('system.dept.dept')}`" prop="deptName">
+          <el-form-item :label="`${$t('system.dept.dept')}`" prop="name">
             <el-input
-              v-model="drawerProps.rowData!.deptName"
+              v-model="drawerProps.rowData!.name"
               :placeholder="`${$t('main.inputError', { msg: $t('system.dept.dept') })}`"
               clearable
             ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="`${$t('system.dept.sort')}`" prop="orderNum">
+          <el-form-item :label="`${$t('system.dept.code')}`" prop="code">
+            <el-input
+              v-model="drawerProps.rowData!.code"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.dept.code') })}`"
+              clearable
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="维度编码" prop="dimensionCode">
+            <el-input
+              v-model="drawerProps.rowData!.dimensionCode"
+              :placeholder="`${$t('main.inputError', { msg: $t('system.dept.dimensionCode') })}`"
+              clearable
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item :label="`${$t('system.dept.sort')}`" prop="sort">
             <el-input-number
-              v-model="drawerProps.rowData!.orderNum"
+              v-model="drawerProps.rowData!.sort"
               :placeholder="`${$t('main.inputError', { msg: $t('system.dept.sort') })}`"
               :min="0"
               clearable
@@ -50,41 +73,13 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="`${$t('system.dept.leader')}`" prop="leader">
-            <el-input
-              v-model="drawerProps.rowData!.leader"
-              :placeholder="`${$t('main.inputError', { msg: $t('system.dept.leader') })}`"
-              clearable
-            >
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item :label="`${$t('system.dept.phone')}`" prop="phone">
-            <el-input
-              v-model="drawerProps.rowData!.phone"
-              :placeholder="`${$t('main.inputError', { msg: $t('system.dept.phone') })}`"
-              clearable
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item :label="`${$t('system.dept.email')}`" prop="email">
-            <el-input
-              v-model="drawerProps.rowData!.email"
-              :placeholder="`${$t('main.inputError', { msg: $t('system.dept.auth') })}`"
-              clearable
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item :label="`${$t('system.dept.status')}`" prop="status">
             <el-radio-group
               v-model="drawerProps.rowData!.status"
               :placeholder="`${$t('main.inputError', { msg: $t('system.dept.status') })}`"
             >
-              <el-radio label="0">{{ $t("dict.enable") }}</el-radio>
-              <el-radio label="1">{{ $t("dict.disable") }}</el-radio>
+              <el-radio :label="1">{{ $t("dict.enable") }}</el-radio>
+              <el-radio :label="0">{{ $t("dict.disable") }}</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -101,7 +96,8 @@
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { useI18n } from "vue-i18n";
-import { Dept } from "@/api/interface/system";
+import { Organize } from "@/api/interface/organize";
+import { getOrganizeChildren } from "@/api/modules/organize";
 const { t } = useI18n(); // 解构出t方法
 
 const rules = reactive({
@@ -113,10 +109,10 @@ const rules = reactive({
 interface DrawerProps {
   title: string;
   isView: boolean;
-  rowData?: Partial<Dept.ResDept>;
+  rowData?: Partial<Organize.ResOrganize>;
   api?: (params: any) => Promise<any>;
-  getTableList?: () => Promise<any>;
-  deptOptions?: Dept.ResDept[];
+  getTableList?: () => any;
+  organizeTreeList?: { label: string; value: number; isLeaf: boolean; children?: any[] }[];
 }
 
 // drawer框状态
@@ -132,7 +128,30 @@ const acceptParams = (params: DrawerProps): void => {
   drawerVisible.value = true;
   console.log(drawerProps.value);
 };
-
+const treeSelectRef = ref<any>(null);
+// 懒加载
+const loadNode = (node: any, resolve: any) => {
+  // 1. 处理根节点 (第一次加载)
+  if (node.level === 0) {
+    // 这里必须 resolve 你的第一层数据，否则树是空的
+    // 如果你原本传给 :data 的数据就是根节点，可以在这里 resolve 它
+    return resolve(drawerProps.value.organizeTreeList);
+  } else {
+    getOrganizeChildren(node.data.value).then((res: any) => {
+      resolve(
+        res.data.map(item => {
+          return {
+            label: item.name,
+            value: item.id,
+            formatName: item.formatName,
+            pid: item.pid,
+            isLeaf: item.formatName.indexOf("/") === -1
+          };
+        })
+      );
+    });
+  }
+};
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
