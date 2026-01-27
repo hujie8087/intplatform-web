@@ -80,6 +80,7 @@ useDict("sys_normal_disable", "app_resource_type").then(res => {
 // 内容类型IMAGE-图片，TEXT-文本，LINK-链接，JSON-复杂结构
 const contentTypeOptions = ref<DictOptions[]>([
   { label: "文本", value: "TEXT", tagType: "primary" },
+  { label: "富文本", value: "RICH_TEXT", tagType: "success" },
   { label: "图片", value: "IMAGE", tagType: "success" },
   { label: "链接", value: "LINK", tagType: "warning" },
   { label: "复杂结构", value: "JSON", tagType: "danger" }

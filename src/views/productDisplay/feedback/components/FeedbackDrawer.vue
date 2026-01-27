@@ -53,6 +53,21 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
+          <el-form-item label="图片" prop="def4" disabled>
+            <div v-if="drawerProps.rowData.def4">
+              <el-image
+                style="width: 100px; height: 100px"
+                v-for="item in drawerProps.rowData.def4.split(',')"
+                :key="item"
+                :src="imageUrl + item"
+                :preview-src-list="
+                  drawerProps.rowData.def4 ? drawerProps.rowData.def4.split(',').map(item => imageUrl + item) : []
+                "
+              ></el-image>
+            </div>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
           <el-form-item label="联系电话" prop="phone">
             <el-input
               v-model="drawerProps.rowData.phone"
@@ -108,6 +123,7 @@ import { useUserStore } from "@/stores/modules/user";
 const rules = reactive({
   processingResults: [{ required: true, message: t("main.inputError", { msg: "回复内容" }) }]
 });
+const imageUrl = import.meta.env.VITE_APP_BASE_FILE;
 const userStore = useUserStore();
 
 interface DrawerProps {
