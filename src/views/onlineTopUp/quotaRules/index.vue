@@ -86,6 +86,13 @@ const columns = reactive<ColumnProps<QuotaRules.ResQuotaRules>[]>([
   { prop: "formatOrganizeName", label: "组织", search: { el: "input" } },
   { prop: "dayQuota", label: "天额度" },
   { prop: "monthQuota", label: "月额度" },
+  {
+    prop: "enableNewUser",
+    label: "是否计算新员工",
+    render(scope) {
+      return scope.row.enableNewUser ? <el-tag type="success">是</el-tag> : <el-tag type="danger">否</el-tag>;
+    }
+  },
   { prop: "operation", label: "操作", width: 230, fixed: "right" }
 ]);
 

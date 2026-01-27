@@ -52,7 +52,7 @@ export const editExchangeRate = (params: FormData) => {
 
 // * 删除汇率信息
 export const deleteExchangeRate = (ids: number[]) => {
-  return http.delete(`/mis/lms/mis/month/delIds`, { params: { ids }, baseURL: baseURL });
+  return http.put(`/mis/lms/mis/month/delIds`, ids, { baseURL: baseURL });
 };
 // * 获取汇率信息详情
 export const getExchangeRateById = (id: number) => {

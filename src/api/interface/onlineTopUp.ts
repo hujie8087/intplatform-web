@@ -8,6 +8,7 @@ export namespace QuotaRules {
     formatOrganizeName: string;
     monthQuota: string;
     dayQuota: string;
+    enableNewUser: boolean;
   }
 }
 

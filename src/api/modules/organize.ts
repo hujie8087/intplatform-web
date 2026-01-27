@@ -18,10 +18,15 @@ export const editOrganize = (params: FormData) => {
 
 // * 获取组织信息详情
 export const getOrganizeById = (id: number) => {
-  return http.get<Organize.ResOrganize>(`/mis/upms/mis/organize/find/${id}`, { baseURL: baseURL });
+  return http.get<Organize.ResOrganize>(`/mis/upms/mis/organize/find/${id}`, {}, { baseURL: baseURL });
 };
 
 // * 懒加载子节点
 export const getOrganizeChildren = (pid: number) => {
   return http.get<Organize.ResOrganize[]>(`/mis/upms/mis/organize/tree/children/${pid}`, {}, { baseURL: baseURL });
+};
+
+// * 修改组织信息
+export const updateOrganize = (params: FormData) => {
+  return http.put(`/mis/upms/mis/organize/put`, params, { baseURL: baseURL });
 };

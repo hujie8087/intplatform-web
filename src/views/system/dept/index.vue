@@ -1,108 +1,105 @@
 <template>
   <div class="main-box">
-    <div class="table-box">
-      <ProTable
-        ref="proTable"
-        :columns="columns"
-        :request-api="getDeptList"
-        :pagination="false"
-        :data-callback="dataCallback"
-        :search-col="{ xs: 1, sm: 1, md: 3, lg: 4, xl: 4 }"
-        row-key="deptId"
+    <div class="table-box card">
+      <el-table
+        :data="deptData"
+        style="width: 100%"
+        row-key="id"
+        border
+        lazy
+        :load="load"
+        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       >
-        <!-- 表格 header 按钮 -->
-        <template #tableHeader>
-          <el-button type="primary" v-auth="['system:dept:add']" :icon="CirclePlus" @click="openDrawer('新增')"
-            >新增部门</el-button
-          >
-        </template>
-        <!-- 表格操作 -->
-        <template #operation="scope">
-          <el-button type="primary" v-auth="['system:dept:add']" link :icon="Plus" @click="openDrawer('新增', scope.row)"
-            >新增</el-button
-          >
-          <el-button type="warning" v-auth="['system:dept:edit']" link :icon="EditPen" @click="openDrawer('编辑', scope.row)"
-            >编辑</el-button
-          >
-          <el-button
-            type="danger"
-            v-auth="['system:dept:remove']"
-            v-if="scope.row.deptId !== 100"
-            link
-            :icon="Delete"
-            @click="deleteDeptHandle(scope.row)"
-          >
-            删除
-          </el-button>
-        </template>
-      </ProTable>
+        <el-table-column prop="name" label="部门名称" />
+        <el-table-column prop="code" label="组织编码" align="center" />
+        <el-table-column prop="dimensionCode" label="维度编码" align="center" />
+        <el-table-column prop="formatName" label="格式化名称" align="center" />
+        <el-table-column prop="sort" label="排序" align="center" />
+        <el-table-column prop="status" label="状态" align="center">
+          <template #default="scope">
+            <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'">{{ scope.row.status === 1 ? "启用" : "禁用" }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="operation" label="操作" width="250" fixed="right" align="center">
+          <template #default="scope">
+            <el-button type="warning" link :icon="EditPen" @click="openDrawer(scope.row)">编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
     <DeptDrawer ref="drawerRef" />
   </div>
 </template>
 <script setup lang="ts" name="departmentManage">
-import { ref, reactive } from "vue";
-import { useHandleData } from "@/hooks/useHandleData";
+import { ref } from "vue";
 import DeptDrawer from "./components/DeptDrawer.vue";
-import ProTable from "@/components/ProTable/index.vue";
-import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, EditPen, Plus } from "@element-plus/icons-vue";
-import { getDeptList, deleteDept, editDept, addDept, getDeptById, listDeptExcludeChild } from "@/api/modules/system/dept";
-import { Dept } from "@/api/interface/system";
+import { getOrganizeTree, getOrganizeChildren, getOrganizeById, updateOrganize } from "@/api/modules/organize";
+import { Organize } from "@/api/interface/organize";
+import { EditPen } from "@element-plus/icons-vue";
 import { handleTree } from "@/utils";
-import { userStatus } from "@/utils/serviceDict";
 
-// ProTable 实例
-const proTable = ref<ProTableInstance>();
-
-const dataCallback = (data: any) => {
-  return handleTree(data.data, "deptId");
+const organizeTreeList = ref<{ label: string; value: number; pid: number; isLeaf: boolean; children?: any[] }[]>([]);
+const deptData = ref<Organize.ResOrganize[]>([]);
+const getDeptList = () => {
+  getOrganizeTree({
+    dimensionCode: "iwip"
+  }).then(res => {
+    deptData.value = res.data.map(item => {
+      return {
+        ...item,
+        children: [],
+        hasChildren: true
+      };
+    });
+    const flatList = res.data.map(item => {
+      return {
+        label: item.name,
+        value: item.id,
+        formatName: item.formatName,
+        pid: item.pid,
+        isLeaf: item.formatName.indexOf("/") === -1
+      };
+    });
+    organizeTreeList.value = [
+      {
+        label: "根节点",
+        value: 0,
+        pid: 0,
+        isLeaf: false,
+        children: handleTree(flatList, "value", "pid")
+      }
+    ];
+  });
 };
-// 表格配置项
-const columns = reactive<ColumnProps<Dept.ResDept>[]>([
-  { prop: "deptName", label: "部门名称", search: { el: "input" }, align: "left" },
-  { prop: "orderNum", label: "排序", width: 120 },
-  {
-    prop: "status",
-    label: "状态",
-    width: 120,
-    sortable: true,
-    tag: true,
-    enum: userStatus,
-    search: { el: "select" }
-  },
-  { prop: "createTime", label: "创建时间", width: 180 },
-  { prop: "operation", label: "操作", width: 330, fixed: "right" }
-]);
-const deptOptions = ref<Dept.ResDept[]>([]);
-// 删除用户信息
-const deleteDeptHandle = async (params: Dept.ResDept) => {
-  await useHandleData(deleteDept, params.deptId, `删除【${params.deptName}】部门`);
-  proTable.value?.getTableList();
+getDeptList();
+const load = (row: any, treeNode: any, resolve: any) => {
+  getOrganizeChildren(row.id).then(res => {
+    resolve(
+      res.data.map(item => {
+        return {
+          ...item,
+          children: [],
+          hasChildren: true
+        };
+      })
+    );
+  });
 };
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof DeptDrawer> | null>(null);
-const openDrawer = async (title: string, row: Partial<Dept.ResDept> = {}) => {
-  if (row.deptId) {
-    const res = await getDeptById(row.deptId);
+const openDrawer = async (row: Partial<Organize.ResOrganize> = {}) => {
+  if (row.id) {
+    const res = await getOrganizeById(row.id);
     row = res.data;
   }
-  if (title === "编辑" && row.deptId) {
-    const res = await listDeptExcludeChild(row.deptId);
-    deptOptions.value = handleTree(res.data, "deptId");
-  }
-  if (title === "新增") {
-    const res = await getDeptList({ pageNum: 1, pageSize: 1000 });
-    deptOptions.value = handleTree(res.data, "deptId");
-  }
   const params = {
-    title,
-    isView: title === "查看",
-    rowData: title === "新增" ? { parentId: row.parentId } : row,
-    api: title === "新增" ? addDept : title === "编辑" ? editDept : undefined,
-    getTableList: proTable.value?.getTableList,
-    deptOptions: deptOptions.value
+    title: "编辑",
+    isView: false,
+    rowData: row,
+    api: updateOrganize,
+    getTableList: getDeptList,
+    organizeTreeList: organizeTreeList.value
   };
   drawerRef.value?.acceptParams(params);
 };
