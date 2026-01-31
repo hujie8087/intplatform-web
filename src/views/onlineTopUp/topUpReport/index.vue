@@ -3,13 +3,14 @@
     <div class="table-box">
       <div>
         <el-form :inline="true" :model="formData" class="demo-form-inline">
-          <el-form-item label="查询月份">
+          <el-form-item label="查询时间">
             <el-date-picker
-              v-model="formData.yearMonth"
-              format="YYYY-MM"
-              value-format="YYYY-MM"
-              type="month"
-              placeholder="选择查询月份"
+              v-model="formData.date"
+              format="YYYY-MM-DD HH:mm:ss"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              type="datetimerange"
+              :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)]"
+              placeholder="选择查询时间"
               clearable
             />
           </el-form-item>
@@ -19,14 +20,14 @@
         </el-form>
       </div>
       <iframe
-        :src="`http://192.168.93.190/decision/view/report?viewlet=intplatform%252Frain.cpt&ref_t=design&ref_c=bc80c906-6866-43c2-85ab-6645cdd6ca0c&yearMonth=${searchData.yearMonth}`"
+        :src="`http://192.168.93.190/decision/view/report?viewlet=intplatform%252Frain.cpt&ref_t=design&ref_c=bc80c906-6866-43c2-85ab-6645cdd6ca0c&beginTime=${searchData.date[0]}&endTime=${searchData.date[1]}`"
         frameborder="0"
         width="100%"
         height="100%"
         v-if="isShow"
       ></iframe>
       <div v-else>
-        <el-empty description="请选择查询月份" />
+        <el-empty description="请选择查询时间" />
       </div>
     </div>
   </div>
@@ -36,22 +37,22 @@
 import { ElMessage } from "element-plus";
 import { ref } from "vue";
 const formData = ref({
-  yearMonth: ""
+  date: []
 });
 
 const isShow = ref(false);
 
 const searchData = ref({
-  yearMonth: ""
+  date: []
 });
 
 const onSubmit = () => {
-  if (!formData.value.yearMonth) {
+  if (!formData.value.date.length) {
     ElMessage.warning("请选择查询月份");
     return;
   }
   searchData.value = {
-    yearMonth: formData.value.yearMonth
+    date: formData.value.date
   };
   isShow.value = true;
 };
