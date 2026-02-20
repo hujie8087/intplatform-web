@@ -17,6 +17,11 @@ export const getChamberById = (id: number) => {
   return http.get<CoupleRoom.ResRoom>(PORT1 + `/coupleRoom/room/chamber/${id}`);
 };
 
+// * 批量新增房间维护信息
+export const batchAddChamber = (params: { roomRange: string }) => {
+  return http.post(PORT1 + `/coupleRoom/room/chamber/batchAdd`, params);
+};
+
 // * 新增房间
 export const addChamber = (params: CoupleRoom.ReqRoomParams) => {
   return http.post(PORT1 + `/coupleRoom/room/chamber`, params);
@@ -71,6 +76,11 @@ export const getCoupleRoomOrderDetail = (id: number) => {
 // * 修改订单
 export const editCoupleRoomOrder = (params: CoupleRoom.ReqOrderParams) => {
   return http.put(PORT1 + `/coupleRoom/room/order`, params);
+};
+
+// * 取消订单
+export const adminCancelCoupleRoomOrder = (params: { id: number; cancelReason: string }) => {
+  return http.put(PORT1 + `/coupleRoom/room/order/adminCancel`, params);
 };
 
 // * 导出订单
