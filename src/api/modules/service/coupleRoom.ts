@@ -17,6 +17,11 @@ export const getChamberById = (id: number) => {
   return http.get<CoupleRoom.ResRoom>(PORT1 + `/coupleRoom/room/chamber/${id}`);
 };
 
+// * 批量新增房间维护信息
+export const batchAddChamber = (params: { roomRange: string }) => {
+  return http.post(PORT1 + `/coupleRoom/room/chamber/batchAdd`, params);
+};
+
 // * 新增房间
 export const addChamber = (params: CoupleRoom.ReqRoomParams) => {
   return http.post(PORT1 + `/coupleRoom/room/chamber`, params);

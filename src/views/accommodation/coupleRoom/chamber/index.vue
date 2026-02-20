@@ -11,13 +11,20 @@
         row-key="id"
       >
         <!-- 表格 header 按钮 -->
-        <template #tableHeader>
+        <template #tableHeader="{ selectedListIds }">
           <el-button type="primary" @click="handleAdd">新增</el-button>
-          <el-button type="danger" v-auth="['room:chamber:remove']" @click="handleBatchDelete">删除</el-button>
+          <!-- 导入 -->
+          <el-button type="success" @click="handleBatchAdd">批量新增</el-button>
+          <el-button
+            type="danger"
+            v-auth="['room:chamber:remove']"
+            :disabled="!selectedListIds || selectedListIds.length === 0"
+            @click="handleBatchDelete"
+          >
+            批量删除
+          </el-button>
           <!-- 导出 -->
           <el-button type="warning" v-auth="['room:chamber:export']" @click="handleExport">导出</el-button>
-          <!-- 导入 -->
-          <el-button type="success" v-auth="['room:chamber:import']" @click="handleImport">导入</el-button>
         </template>
         <template #operation="scope">
           <el-button type="primary" link v-auth="['room:chamber:edit']" @click="handleEdit(scope.row)">编辑</el-button>
@@ -32,7 +39,7 @@
 import { ref, computed } from "vue";
 import ChamberDrawer from "./components/ChamberDrawer.vue";
 import dayjs from "dayjs";
-import { addChamber, deleteChamber, deleteMoreChamber, editChamber, getChamberList } from "@/api/modules/service/coupleRoom";
+import { addChamber, batchAddChamber, deleteChamber, editChamber, getChamberList } from "@/api/modules/service/coupleRoom";
 import { CoupleRoom } from "@/api/interface/service/coupleRoom";
 import { DictOptions } from "@/api/interface";
 import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
@@ -98,6 +105,10 @@ const statusOptions = ref<DictOptions[]>([
 ]);
 
 const columns = ref<ColumnProps[]>([
+  {
+    type: "selection",
+    width: 55
+  },
   {
     prop: "name",
     label: "房号",
@@ -237,11 +248,14 @@ const handleDelete = async (row: CoupleRoom.ResRoom) => {
 // 批量删除
 const handleBatchDelete = async () => {
   const selectedList = proTable.value?.selectedListIds;
+
+  console.log("selectedList---", selectedList);
+
   if (!selectedList) {
     ElMessage.warning("请选择要删除的客房");
     return;
   }
-  await useHandleData(deleteMoreChamber, selectedList, `删除客房`);
+  await useHandleData(deleteChamber, selectedList.join(","), `删除客房`);
   proTable.value?.getTableList();
 };
 // 新增
@@ -255,15 +269,21 @@ const handleAdd = () => {
   });
 };
 
+// 批量新增
+const handleBatchAdd = () => {
+  drawerRef.value?.acceptParams({
+    title: "批量新增",
+    rowData: { roomRange: "" },
+    api: batchAddChamber,
+    getTableList: proTable.value?.getTableList,
+    coupleRoomArea: coupleRoomArea.value,
+    isBatchAdd: true
+  });
+};
+
 // 导出
 const handleExport = () => {
   useDownload(`${baseUrl}/coupleRoom/room/chamber/export`, "客房租赁房间", true, ".xlsx", "post", {});
-};
-
-// 导入
-const handleImport = () => {
-  ElMessage.info("导入功能");
-  console.log("导入");
 };
 </script>
 <style lang="scss" scoped>

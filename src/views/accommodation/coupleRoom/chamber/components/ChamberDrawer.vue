@@ -9,9 +9,14 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="12" v-if="!drawerProps.isBatchAdd">
           <el-form-item label="房间名称" prop="name">
             <el-input v-model="drawerProps.rowData.name" clearable />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12" v-else>
+          <el-form-item label="房号范围" prop="roomRange" title="格式：101-110、eg101-110、CN26-103-105">
+            <el-input v-model="drawerProps.rowData.roomRange" placeholder="格式：101-110、eg101-110、CN26-103-105" clearable />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -48,18 +53,20 @@ import { DictOptions } from "@/api/interface";
 import { CoupleRoom } from "@/api/interface/service/coupleRoom";
 const { t } = useI18n(); // 解构出t方法
 const rules = reactive({
-  areaType: [{ required: true, message: t("main.inputError", { msg: "请填写所属区域" }) }],
-  name: [{ required: true, message: t("main.inputError", { msg: "请填写房间名称" }) }],
-  lastTime: [{ required: true, message: t("main.inputError", { msg: "请填写日期" }) }],
+  areaType: [{ required: true, message: t("main.inputError", { msg: "所属区域" }) }],
+  name: [{ required: true, message: t("main.inputError", { msg: "房间名称" }) }],
+  roomRange: [{ required: true, message: t("main.inputError", { msg: "格式：101-110、eg101-110、CN26-103-10" }) }],
+  lastTime: [{ required: true, message: t("main.inputError", { msg: "日期" }) }],
   status: [{ required: true, message: t("main.inputError", { msg: "请选择状态" }) }]
 });
 
 interface DrawerProps {
   title: string;
-  rowData: Partial<CoupleRoom.ResRoom>;
+  rowData: Partial<CoupleRoom.ResRoom> & { roomRange?: string };
   api?: (params: any) => Promise<any>;
   getTableList?: () => Promise<any>;
   coupleRoomArea?: DictOptions[];
+  isBatchAdd?: boolean;
 }
 
 // drawer框状态
