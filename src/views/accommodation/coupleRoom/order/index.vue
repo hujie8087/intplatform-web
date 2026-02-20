@@ -53,6 +53,16 @@
             @click="auditDialogHandler(scope.row)"
             >审核</el-button
           >
+          <!-- 取消 -->
+          <el-button
+            type="danger"
+            link
+            v-auth="['room:order:audit']"
+            :disabled="![0, 1].includes(scope.row.status)"
+            @click="cancelDialogHandler(scope.row)"
+            >取消</el-button
+          >
+
           <!-- 退款 -->
           <el-button type="danger" link v-auth="['room:order:refund']" @click="refundHandler(scope.row)">退款</el-button>
           <!-- 查看 -->
@@ -106,6 +116,19 @@
         <el-button type="primary" @click="handleAuditSubmit">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 取消弹窗 -->
+    <el-dialog v-model="cancelDialogVisible" title="取消订单" width="30%">
+      <el-form :model="cancelForm" label-width="80px">
+        <el-form-item label="原因" prop="cancelReason">
+          <el-input v-model="cancelForm.cancelReason" type="textarea" placeholder="请输入取消原因" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="danger" @click="cancelDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleCancelSubmit">确定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="tsx" name="CoupleRoomOrder">
@@ -120,6 +143,7 @@ import {
   freezeCoupleRoomOrder,
   getChamberAvailableList,
   auditCoupleRoomOrder,
+  adminCancelCoupleRoomOrder,
   refundCoupleRoomOrder,
   getCoupleRoomOrderDetail
 } from "@/api/modules/service/coupleRoom";
@@ -255,7 +279,7 @@ const columns = reactive<ColumnProps<CoupleRoom.ResRoomOrder>[]>([
   { prop: "freeze", label: "冻结", enum: freezeOptions, tag: true, search: { el: "select", props: { filterable: true } } },
   { prop: "keychain", label: "钥匙", enum: keyOptions, tag: true },
   { prop: "createTime", label: "创建时间", width: 160 },
-  { prop: "operation", label: "操作", width: 230, fixed: "right" }
+  { prop: "operation", label: "操作", width: 260, fixed: "right" }
 ]);
 
 const changeKey = async (row: CoupleRoom.ResRoomOrder) => {
@@ -350,6 +374,33 @@ const handleAuditSubmit = async () => {
   } else {
     ElMessage.error("请填写理由");
   }
+};
+
+// 取消
+const cancelDialogVisible = ref(false);
+const cancelForm = ref({
+  id: 0,
+  cancelReason: ""
+});
+
+const cancelDialogHandler = (row: CoupleRoom.ResRoomOrder) => {
+  cancelDialogVisible.value = true;
+  cancelForm.value.id = row.id;
+  cancelForm.value.cancelReason = "";
+};
+
+const handleCancelSubmit = async () => {
+  if (!cancelForm.value.cancelReason.trim()) {
+    ElMessage.warning("请输入取消原因");
+    return;
+  }
+  await adminCancelCoupleRoomOrder({
+    id: cancelForm.value.id,
+    cancelReason: cancelForm.value.cancelReason.trim()
+  });
+  ElMessage.success("取消成功");
+  cancelDialogVisible.value = false;
+  proTable.value?.getTableList();
 };
 
 const exportHandler = async () => {

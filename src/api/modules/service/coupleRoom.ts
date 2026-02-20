@@ -78,6 +78,11 @@ export const editCoupleRoomOrder = (params: CoupleRoom.ReqOrderParams) => {
   return http.put(PORT1 + `/coupleRoom/room/order`, params);
 };
 
+// * 取消订单
+export const adminCancelCoupleRoomOrder = (params: { id: number; cancelReason: string }) => {
+  return http.put(PORT1 + `/coupleRoom/room/order/adminCancel`, params);
+};
+
 // * 导出订单
 export const exportCoupleRoomOrder = (params: CoupleRoom.ReqOrderParams) => {
   return http.get(PORT1 + `/coupleRoom/room/order/export`, params);
