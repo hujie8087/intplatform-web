@@ -58,7 +58,7 @@
             type="danger"
             link
             v-auth="['room:order:audit']"
-            :disabled="![0, 1].includes(scope.row.status)"
+            :disabled="![0].includes(scope.row.status)"
             @click="cancelDialogHandler(scope.row)"
             >取消</el-button
           >
