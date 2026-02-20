@@ -267,6 +267,7 @@ const columns = reactive<ColumnProps<CoupleRoom.ResRoomOrder>[]>([
   { prop: "nick", label: "账号", width: 120, search: { el: "input" } },
   { prop: "name", label: "申请人", search: { el: "input" } },
   { prop: "day", label: "入住天数", width: 80 },
+  { prop: "cancelReason", label: "取消原因", width: 150 },
   { prop: "remark", label: "备注", width: 150 },
   {
     prop: "status",
