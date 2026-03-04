@@ -40,6 +40,21 @@ export const getTransactionDetailsById = (id: number) => {
   return http.get<TransactionDetails.ResTransactionDetails>(`/mis/lms/mis/record/find/${id}`, {}, { baseURL: baseURL });
 };
 
+// * 退款
+export const refundById = (id: number) => {
+  return http.put(`/mis/lms/mis/record/refund`, { id: id }, { baseURL: baseURL });
+};
+
+// * 修改月份
+export const updateMonthById = (id: number, month: string) => {
+  return http.put(`/mis/lms/mis/record/putDeduction`, { id: id, month: month }, { baseURL: baseURL });
+};
+
+// * 离职退款
+export const leaveRefundById = (id: number) => {
+  return http.put(`/mis/lms/mis/record/leaveRefund`, { id: id }, { baseURL: baseURL });
+};
+
 // * 新增汇率
 export const addExchangeRate = (params: FormData) => {
   return http.post(`/mis/lms/mis/month/save`, params, { baseURL: baseURL });
@@ -62,4 +77,9 @@ export const getExchangeRateById = (id: number) => {
 // * 获取汇率列表
 export const getExchangeRateList = (params: ExchangeRate.ReqExchangeRateParams) => {
   return http.get<ExchangeRate.ResExchangeRate>(`/mis/lms/mis/month/page`, params, { baseURL: baseURL });
+};
+
+// * 批量修改工资扣款月份
+export const batchUpdateMonth = (params: any) => {
+  return http.put(`/mis/lms/mis/record/putDeduction`, params, { baseURL: baseURL });
 };

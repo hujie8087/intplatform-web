@@ -44,12 +44,6 @@
             <el-switch v-model="drawerProps.rowData.isLogin" active-value="1" inactive-value="0" />
           </el-form-item>
         </el-col>
-        <!-- 状态 -->
-        <el-col :span="24">
-          <el-form-item label="状态" prop="status">
-            <el-switch v-model="drawerProps.rowData.status" active-value="0" inactive-value="1" />
-          </el-form-item>
-        </el-col>
         <!-- 排序 -->
         <el-col :span="24">
           <el-form-item label="排序" prop="sort">
@@ -83,7 +77,6 @@ const { t } = useI18n(); // 解构出t方法
 const rules = reactive({
   title: [{ required: true, message: t("main.inputError", { msg: "请填写标题" }) }],
   isLogin: [{ required: true, message: t("main.inputError", { msg: "请选择是否登录" }) }],
-  status: [{ required: true, message: t("main.inputError", { msg: "请选择状态" }) }],
   sort: [{ required: true, message: t("main.inputError", { msg: "请填写排序" }) }]
 });
 const iconValue = ref("");
