@@ -23,6 +23,10 @@ export namespace TransactionDetails {
     name: string;
     amount: string;
     createTime: string;
+    status: string;
+    sign: string;
+    no: string;
+    deductedMonths: string;
   }
 }
 

@@ -12,7 +12,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="所属区域" prop="regionId">
-            <el-select v-model="drawerProps.rowData.regionId" placeholder="请选择所属区域" clearable @change="handleChange">
+            <el-select v-model="drawerProps.rowData.regionId" placeholder="请选择所属区域" clearable>
               <el-option v-for="item in drawerProps.treeData" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
@@ -111,10 +111,6 @@ interface DrawerProps {
   }[];
 }
 
-const handleChange = value => {
-  console.log(value);
-  drawerProps.value.rowData.region = drawerProps.value.treeData?.find(item => item.id === value)?.title;
-};
 // drawer框状态
 const drawerVisible = ref(false);
 const drawerProps = ref<DrawerProps>({
@@ -144,6 +140,12 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     drawerProps.value.rowData.def1 = fileList1.value.map(item => item.url).join(",");
+    drawerProps.value.rowData.region = drawerProps.value.treeData?.find(
+      item => item.value === drawerProps.value.rowData.regionId
+    )?.label;
+    drawerProps.value.rowData.showTitle = drawerProps.value.otherTypeOptions?.find(
+      item => item.value === drawerProps.value.rowData.souceType
+    )?.label;
     const formData = { ...drawerProps.value.rowData, details: details.value };
     try {
       await drawerProps.value.api!(formData);
