@@ -37,7 +37,7 @@ export const getCheckHiddenDanger = (params: { dateType?: string; ancestors?: st
   return http.get<DataVisualize.CheckHiddenDanger>(PORT1 + `maintenance/statistics/hiddendanger`, params, { loading: false });
 };
 // 报餐送餐-汇总信息
-export const getMealService = (params: { dateType?: string; ancestors?: string }) => {
+export const getMealService = (params: { date?: string; foodName?: string; fcName?: string }) => {
   return http.get<DataVisualize.MealService>(PORT1 + `order/statistics/count`, params, { loading: false });
 };
 // 报餐送餐-站点信息

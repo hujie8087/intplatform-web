@@ -7,7 +7,8 @@
           <div class="person-info-top-item-top">报修总数</div>
           <div class="person-info-top-item-bottom">
             <img src="../images/big1.png" alt="" style="width: 21px; height: 19px" />
-            <dv-digital-flop :config="config.totalCount" style="width: 75%; height: 25px" />
+            <!-- <dv-digital-flop :config="config.totalCount" style="width: 75%; height: 25px" /> -->
+            <count-up :start-val="0" class="count-number" :end-val="repairData.totalCount" :duration="2"></count-up>
             <!-- <span>3034</span> -->
           </div>
         </li>
@@ -15,21 +16,34 @@
           <div class="person-info-top-item-top">进行中</div>
           <div class="person-info-top-item-bottom">
             <img src="../images/big2.png" alt="" style="width: 19px; height: 22px" />
-            <dv-digital-flop :config="config.underWay" style="width: 75%; height: 25px; text-align: left" />
+            <!-- <dv-digital-flop :config="config.underWay" style="width: 75%; height: 25px; text-align: left" /> -->
+            <count-up
+              :start-val="0"
+              class="count-number"
+              :end-val="repairData.waitReWorkCount + repairData.waitingCount"
+              :duration="2"
+            ></count-up>
           </div>
         </li>
         <li class="person-info-top-item">
           <div class="person-info-top-item-top">已完成</div>
           <div class="person-info-top-item-bottom">
             <img src="../images/big3.png" alt="" style="width: 18px; height: 19px" />
-            <dv-digital-flop :config="config.processedCount" style="width: 75%; height: 25px; text-align: left" />
+            <!-- <dv-digital-flop :config="config.processedCount" style="width: 75%; height: 25px; text-align: left" /> -->
+            <count-up
+              :start-val="0"
+              class="count-number"
+              :end-val="repairData.finishCount + repairData.endCount"
+              :duration="2"
+            ></count-up>
           </div>
         </li>
         <li class="person-info-top-item">
           <div class="person-info-top-item-top">已返修</div>
           <div class="person-info-top-item-bottom">
             <img src="../images/big3.png" alt="" style="width: 18px; height: 19px" />
-            <dv-digital-flop :config="config.reWorkCount" style="width: 75%; height: 25px; text-align: left" />
+            <!-- <dv-digital-flop :config="config.reWorkCount" style="width: 75%; height: 25px; text-align: left" /> -->
+            <count-up :start-val="0" class="count-number" :end-val="repairData.reWorkCount" :duration="2"></count-up>
           </div>
         </li>
       </ul>
@@ -68,58 +82,18 @@ import { ref, reactive, onMounted } from "vue";
 import ECharts from "@/components/ECharts/index.vue";
 import { ECOption } from "@/components/ECharts/config";
 import { getRepairStatistics } from "@/api/modules/dashboard";
+import { DataVisualize } from "@/api/interface/dashboard";
+import CountUp from "vue-countup-v3";
 
-const config = reactive({
-  totalCount: {
-    number: [0],
-    formatter,
-    style: {
-      //这里可以修改默认样式
-      fontSize: 26, //字体大小
-      fontWeight: "bold",
-      textAlign: "left",
-      fill: "#fff" //字体颜色
-    }
-  },
-  underWay: {
-    // 进行中
-    number: [0],
-    prefixText: "",
-    formatter,
-    style: {
-      //这里可以修改默认样式
-      fontSize: 26, //字体大小
-      fontWeight: "bold",
-      textAlign: "left",
-      fill: "#fff" //字体颜色
-    }
-  },
-  processedCount: {
-    // 已完成
-    number: [0],
-    prefixText: "",
-    formatter,
-    style: {
-      //这里可以修改默认样式
-      fontSize: 26, //字体大小
-      fontWeight: "bold",
-      textAlign: "left",
-      fill: "#fff" //字体颜色
-    }
-  },
-  reWorkCount: {
-    // 已完成
-    number: [0],
-    prefixText: "",
-    formatter,
-    style: {
-      //这里可以修改默认样式
-      fontSize: 26, //字体大小
-      fontWeight: "bold",
-      textAlign: "left",
-      fill: "#fff" //字体颜色
-    }
-  }
+const repairData = ref<DataVisualize.RepairStatistics>({
+  totalCount: 0,
+  waitReWorkCount: 0,
+  waitingCount: 0,
+  finishCount: 0,
+  reWorkCount: 0,
+  endCount: 0,
+  finishCountIn24H: 0,
+  finishRateIn24H: 0
 });
 const activeType = ref("day");
 const dateType = [
@@ -146,16 +120,7 @@ const barOption = reactive<ECOption>({});
 const gaugeChart = reactive<ECOption>({});
 const initPage = async () => {
   const res = await getRepairStatistics({});
-  const data = res.data;
-  config.totalCount.number = [data.totalCount]; // 报修总数
-  // 进行中：待维修+带返修
-  let underWay = data.waitReWorkCount + data.waitingCount;
-  config.underWay.number = [underWay];
-  // 已完成： 已完成+已完结
-  let end = data?.finishCount + data?.endCount;
-  config.processedCount.number = [end];
-  // 已返修
-  config.reWorkCount.number = [data.reWorkCount];
+  repairData.value = res.data;
 };
 const initChartData = async dateType => {
   const res = await getRepairStatistics({ dateType });
@@ -388,13 +353,6 @@ onMounted(() => {
   initPage();
   changeData(activeType.value);
 });
-function formatter(number) {
-  if (number === null || number === undefined) return "--";
-  const numbers = number.toString().split("").reverse();
-  const segs: string[] = [];
-  while (numbers.length) segs.push(numbers.splice(0, 3).join(""));
-  return segs.join(",").split("").reverse().join("");
-}
 defineExpose({ zoomResize });
 </script>
 
@@ -429,8 +387,7 @@ defineExpose({ zoomResize });
   box-sizing: border-box;
   width: 14.5%;
   height: 100%;
-  padding: 0;
-  padding-left: 2%;
+  padding: 0 15px;
   list-style: none;
   pointer-events: auto;
   background: linear-gradient(180deg, #01023c 0%, #0e3047 100%);
@@ -447,6 +404,16 @@ defineExpose({ zoomResize });
 }
 .person-info-top-item-bottom {
   display: flex;
+  align-items: center;
+}
+.person-info-top-item-bottom .count-number {
+  display: inline-block;
+  margin-left: 5px;
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 25px;
+  color: #ffffff;
+  vertical-align: middle;
 }
 .person-info-top-item-bottom span {
   padding-left: 10px;
