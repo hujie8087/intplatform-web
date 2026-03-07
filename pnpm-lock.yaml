@@ -98,6 +98,9 @@ importers:
       vue:
         specifier: 3.4.21
         version: 3.4.21(typescript@5.3.3)
+      vue-countup-v3:
+        specifier: ^1.4.2
+        version: 1.4.2(vue@3.4.21(typescript@5.3.3))
       vue-i18n:
         specifier: 9.10.1
         version: 9.10.1(vue@3.4.21(typescript@5.3.3))
@@ -2463,6 +2466,9 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  countup.js@2.10.0:
+    resolution: {integrity: sha512-QQpZx7oYxsR+OeITlZe46fY/OQjV11oBqjY8wgIXzLU2jIz8GzOrbMhqKLysGY8bWI3T1ZNrYkwGzKb4JNgyzg==}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -5373,6 +5379,11 @@ packages:
         optional: true
       terser:
         optional: true
+
+  vue-countup-v3@1.4.2:
+    resolution: {integrity: sha512-nRC65jBcdgwybxqztgd/WaK8ZN5T9ECPyiCFGYFMewCsvqdRVo1CtpT7JREcPNF837Fgu/izTSFiuzrIGD6w0A==}
+    peerDependencies:
+      vue: ^3.0.0
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -8305,6 +8316,8 @@ snapshots:
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 5.3.3
+
+  countup.js@2.10.0: {}
 
   cross-spawn@7.0.6:
     dependencies:
@@ -11451,6 +11464,11 @@ snapshots:
       fsevents: 2.3.3
       sass: 1.71.1
       terser: 5.37.0
+
+  vue-countup-v3@1.4.2(vue@3.4.21(typescript@5.3.3)):
+    dependencies:
+      countup.js: 2.10.0
+      vue: 3.4.21(typescript@5.3.3)
 
   vue-demi@0.14.10(vue@3.4.21(typescript@5.3.3)):
     dependencies:

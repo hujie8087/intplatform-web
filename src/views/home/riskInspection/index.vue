@@ -7,21 +7,29 @@
           <div class="person-info-top-item-top">排查总数量</div>
           <div class="person-info-top-item-bottom">
             <img src="../images/big1.png" alt="" style="width: 21px; height: 19px" />
-            <dv-digital-flop :config="config.totalCount" style="width: 75%; height: 25px" />
+            <!-- <dv-digital-flop :config="config.totalCount" style="width: 75%; height: 25px" /> -->
+            <count-up :start-val="0" class="count-number" :end-val="hiddenDangerData.totalCount" :duration="2"></count-up>
           </div>
         </li>
         <li class="person-info-top-item">
           <div class="person-info-top-item-top">已处理隐患</div>
           <div class="person-info-top-item-bottom">
             <img src="../images/big2.png" alt="" style="width: 19px; height: 22px" />
-            <dv-digital-flop :config="config.processedCount" style="width: 75%; height: 25px; text-align: left" />
+            <!-- <dv-digital-flop :config="config.processedCount" style="width: 75%; height: 25px; text-align: left" /> -->
+            <count-up :start-val="0" class="count-number" :end-val="hiddenDangerData.processedCount" :duration="2"></count-up>
           </div>
         </li>
         <li class="person-info-top-item">
           <div class="person-info-top-item-top">正在处理隐患</div>
           <div class="person-info-top-item-bottom">
             <img src="../images/big3.png" alt="" style="width: 18px; height: 19px" />
-            <dv-digital-flop :config="config.processingCount" style="width: 75%; height: 25px; text-align: left" />
+            <!-- <dv-digital-flop :config="config.processingCount" style="width: 75%; height: 25px; text-align: left" /> -->
+            <count-up
+              :start-val="0"
+              class="count-number"
+              :end-val="hiddenDangerData.processingCount + hiddenDangerData.waitCount"
+              :duration="2"
+            ></count-up>
           </div>
         </li>
       </ul>
@@ -57,45 +65,14 @@ import { ref, reactive, onMounted } from "vue";
 import ECharts from "@/components/ECharts/index.vue";
 import { ECOption } from "@/components/ECharts/config";
 import { getCheckHiddenDanger } from "@/api/modules/dashboard";
+import CountUp from "vue-countup-v3";
+import { DataVisualize } from "@/api/interface/dashboard";
 
-const config = reactive({
-  totalCount: {
-    number: [0],
-    formatter,
-    style: {
-      //这里可以修改默认样式
-      fontSize: 26, //字体大小
-      fontWeight: "bold",
-      textAlign: "left",
-      fill: "#fff" //字体颜色
-    }
-  },
-  processedCount: {
-    // 已处理隐患
-    number: [0],
-    prefixText: "",
-    formatter,
-    style: {
-      //这里可以修改默认样式
-      fontSize: 26, //字体大小
-      fontWeight: "bold",
-      textAlign: "left",
-      fill: "#fff" //字体颜色
-    }
-  },
-  processingCount: {
-    // 正在处理隐患
-    number: [0],
-    prefixText: "",
-    formatter,
-    style: {
-      //这里可以修改默认样式
-      fontSize: 26, //字体大小
-      fontWeight: "bold",
-      textAlign: "left",
-      fill: "#fff" //字体颜色
-    }
-  }
+const hiddenDangerData = ref<DataVisualize.CheckHiddenDanger>({
+  totalCount: 0,
+  waitCount: 0,
+  processingCount: 0,
+  processedCount: 0
 });
 const activeType = ref("day");
 const dateType = [
@@ -121,18 +98,14 @@ const barOption = reactive<ECOption>({});
 const initPage = async () => {
   const res = await getCheckHiddenDanger({});
   const data = res.data;
-  config.totalCount.number = [data.totalCount]; // 隐患总数量
-  config.processedCount.number = [data.processedCount]; // 已处理隐患
-  config.processingCount.number = [data.processingCount + data.waitCount]; // 已处理隐患
-
-  // 进行中：待维修+带返修
+  hiddenDangerData.value = data;
 };
 const initChartData = async dateType => {
   const res = await getCheckHiddenDanger({ dateType });
   const data = res.data;
   initPieChart(data);
 };
-const initPieChart = data => {
+const initPieChart = (data: DataVisualize.CheckHiddenDanger) => {
   // 进行中 = 处理中数量+待处理数量
   let underWay = data.processingCount + data.waitCount;
   let text = "";
@@ -152,7 +125,7 @@ const initPieChart = data => {
   }
   let option = {
     title: {
-      text: `${text}排查总量\n${formatter(data.totalCount)}`,
+      text: `${text}排查总量\n${data.totalCount.toLocaleString("en-US")}`,
       left: "center",
       top: "30%",
       textStyle: {
@@ -271,13 +244,6 @@ onMounted(() => {
   initPage();
   changeData(activeType.value);
 });
-function formatter(number) {
-  if (number === null || number === undefined) return "--";
-  const numbers = number.toString().split("").reverse();
-  const segs = [];
-  while (numbers.length) segs.push(numbers.splice(0, 3).join(""));
-  return segs.join(",").split("").reverse().join("");
-}
 defineExpose({ zoomResize });
 </script>
 
@@ -310,10 +276,9 @@ defineExpose({ zoomResize });
 }
 .person-info-top-item {
   box-sizing: border-box;
-  width: 19.5%;
+  min-width: 150px;
   height: 100%;
-  padding: 0;
-  padding-left: 2%;
+  padding: 0 15px;
   list-style: none;
   pointer-events: auto;
   background: linear-gradient(180deg, #01023c 0%, #0e3047 100%);
@@ -330,6 +295,16 @@ defineExpose({ zoomResize });
 }
 .person-info-top-item-bottom {
   display: flex;
+  align-items: center;
+}
+.person-info-top-item-bottom .count-number {
+  display: inline-block;
+  margin-left: 5px;
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 25px;
+  color: #ffffff;
+  vertical-align: top;
 }
 .person-info-top-item-bottom span {
   padding-left: 10px;

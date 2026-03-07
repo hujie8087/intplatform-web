@@ -23,12 +23,12 @@
           </el-select>
         </div>
         <div class="meal-type" v-show="isShow" :style="selectStyle">
-          <el-select v-model="seachParams.fcId" placeholder="请选择" filterable>
+          <el-select v-model="seachParams.fcName" placeholder="请选择" filterable>
             <el-option v-for="item in carList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </div>
         <div class="meal-search-btn" v-show="isShow" :style="buttonStyle">
-          <el-button type="primary" :icon="Search" @click="searchAllData">查询</el-button>
+          <el-button type="primary" :icon="Search" @click="searchAllData(false)">查询</el-button>
         </div>
         <div class="meal-search-btn" v-show="isShow" :style="buttonStyle">
           <el-button type="primary" :icon="Refresh" @click="resetSearch">重置</el-button>
@@ -40,27 +40,27 @@
             <div class="person-info-top-item-top">报餐总数</div>
             <div class="person-info-top-item-bottom">
               <img src="../images/big1.png" alt="" style="width: 21px; height: 19px" />
-              <dv-digital-flop :config="mealMapData.foodCount" style="width: 75%; height: 25px" />
+              <count-up :start-val="0" class="count-number" :end-val="mealMapData?.foodCount" :duration="2"></count-up>
             </div>
           </li>
           <li class="person-info-top-item">
             <div class="person-info-top-item-top">正在配送餐食</div>
             <div class="person-info-top-item-bottom">
               <img src="../images/big2.png" alt="" style="width: 19px; height: 22px" />
-              <dv-digital-flop :config="mealMapData.deliveryCount" style="width: 75%; height: 25px; text-align: left" />
+              <count-up :start-val="0" class="count-number" :end-val="mealMapData?.deliveryCount" :duration="2"></count-up>
             </div>
           </li>
           <li class="person-info-top-item">
             <div class="person-info-top-item-top">已完成配送</div>
             <div class="person-info-top-item-bottom">
               <img src="../images/big3.png" alt="" style="width: 18px; height: 19px" />
-              <dv-digital-flop :config="mealMapData.deliveredCount" style="width: 75%; height: 25px; text-align: left" />
+              <count-up :start-val="0" class="count-number" :end-val="mealMapData?.deliveredCount" :duration="2"></count-up>
             </div>
           </li>
         </ul>
       </div>
       <div class="maintenance-report-bottom" v-if="isShow">
-        <InfiniteScrollList v-model="seachParams.fcId" :car-list="carList" :item-height="40" @change="handleChange" />
+        <InfiniteScrollList v-model="seachParams.fcName" :car-list="carList" :item-height="40" @change="handleChange" />
       </div>
     </div>
     <el-dialog
@@ -153,10 +153,11 @@ import "leaflet-draw/dist/leaflet.draw.css";
 import "leaflet-draw";
 import dayjs from "dayjs";
 import truckImg from "../images/truckImg.png";
-import { CarListItem, SiteInformationList } from "@/api/interface/dashboard";
+import { CarListItem, DataVisualize, SiteInformationList } from "@/api/interface/dashboard";
 import { ColumnProps } from "@/components/ProTable/interface";
 import { MdcOrder } from "@/api/interface/mealDelivery/order";
 import { DictOptions } from "@/api/interface";
+import CountUp from "vue-countup-v3";
 import ProTable from "@/components/ProTable/index.vue";
 
 const emit = defineEmits(["getSiteData", "getTrackData"]);
@@ -171,51 +172,11 @@ const formatter = number => {
   return segs.join(",").split("").reverse().join("");
 };
 // 报餐送餐统计
-let mealMapData = reactive({
-  orderCount: {
-    number: [0],
-    formatter,
-    style: {
-      //这里可以修改默认样式
-      fontSize: 26, //字体大小
-      fontWeight: "bold",
-      textAlign: "left",
-      fill: "#fff" //字体颜色
-    }
-  },
-  foodCount: {
-    number: [0],
-    formatter,
-    style: {
-      //这里可以修改默认样式
-      fontSize: 26, //字体大小
-      fontWeight: "bold",
-      textAlign: "left",
-      fill: "#fff" //字体颜色
-    }
-  },
-  deliveryCount: {
-    number: [0],
-    formatter,
-    style: {
-      //这里可以修改默认样式
-      fontSize: 26, //字体大小
-      fontWeight: "bold",
-      textAlign: "left",
-      fill: "#fff" //字体颜色
-    }
-  },
-  deliveredCount: {
-    number: [0],
-    formatter,
-    style: {
-      //这里可以修改默认样式
-      fontSize: 26, //字体大小
-      fontWeight: "bold",
-      textAlign: "left",
-      fill: "#fff" //字体颜色
-    }
-  }
+let mealMapData = ref<DataVisualize.MealService>({
+  orderCount: 0,
+  foodCount: 0,
+  deliveryCount: 0,
+  deliveredCount: 0
 });
 // 获取食堂列表
 const messHallListOptions = ref<DictOptions[]>([]);
@@ -383,7 +344,7 @@ const isShow = ref(true);
 const seachParams = reactive({
   date: dayjs().format("YYYY-MM-DD"),
   foodName: "0",
-  fcId: ""
+  fcName: ""
 });
 interface carListType {
   label: string;
@@ -458,7 +419,7 @@ const measureWidth = (text, chosenIcon) => {
 // 查询站点信息
 const siteInformationData = ref<SiteInformationList[]>([]);
 const siteInformation = async () => {
-  const res = await getSiteInformation({ date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcId });
+  const res = await getSiteInformation({ date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcName });
   siteInformationData.value = res.data.filter(item => item.latitude && item.longitude);
   emit("getSiteData", siteInformationData.value);
 };
@@ -499,16 +460,30 @@ const setMarker = (data: SiteInformationList[] = []) => {
 const carLineArr = ref<CarListItem[]>([]);
 // 车辆路线
 const carLine = async () => {
-  const res = await getCarLine({ date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcId });
-  const truck = res.data.find(item => item.fcName === seachParams.fcId);
+  const res = await getCarLine({ date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcName });
+  const truck = res.data.find(item => item.fcName === seachParams.fcName);
   if (!truck) return;
   emit("getTrackData", truck);
 };
 
+// 查询数据统计
+const searchDataStatistics = async (isInit = true) => {
+  const res = await getMealService(
+    isInit
+      ? {}
+      : {
+          ...seachParams,
+          date: seachParams.foodName == "0" ? dayjs(seachParams.date).subtract(1, "day").format("YYYY-MM-DD") : seachParams.date
+        }
+  );
+  mealMapData.value = res.data;
+};
+
 // 查询所有数据
-const searchAllData = async () => {
+const searchAllData = async (isInit = false) => {
   await siteInformation();
   await carLine();
+  await searchDataStatistics(isInit);
   nextTick(() => {
     setMarker(siteInformationData.value);
   });
@@ -516,7 +491,7 @@ const searchAllData = async () => {
 // 左边车牌滚动组件change 事件
 const handleChange = () => {
   // 切换单辆车，要把那个车的行驶轨迹给标红
-  setTrucks(carLineArr.value, { date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcId }, layers);
+  setTrucks(carLineArr.value, { date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcName }, layers);
 };
 
 /** 行驶轨迹 + 卡车 */
@@ -641,9 +616,9 @@ const resetSearch = () => {
   Object.assign(seachParams, {
     date: dayjs().format("YYYY-MM-DD"),
     foodName: "0",
-    fcId: ""
+    fcName: ""
   });
-  searchAllData();
+  searchAllData(true);
 };
 // 改为基于缩放状态的管理
 const isZoomed = ref(false); // 缩放状态：true=放大/全屏，false=正常
@@ -651,12 +626,7 @@ onBeforeMount(async () => {
   await siteInformation();
   await getCarList();
   await carLine();
-  const res = await getMealService({});
-  mealMapData.deliveredCount.number[0] = res.data.deliveredCount;
-  mealMapData.deliveryCount.number[0] = res.data.deliveryCount;
-  mealMapData.foodCount.number[0] = res.data.foodCount;
-  mealMapData.orderCount.number[0] = res.data.orderCount;
-
+  await searchDataStatistics(true);
   nextTick(() => {
     initMap();
   });
@@ -791,10 +761,9 @@ defineExpose({ zoomResize, showSiteInfo });
 }
 .person-info-top-item {
   box-sizing: border-box;
-  width: 19.5%;
+  min-width: 150px;
   height: 100%;
-  padding: 0;
-  padding-left: 2%;
+  padding: 0 15px;
   list-style: none;
   pointer-events: auto;
   background: linear-gradient(180deg, #01023c 0%, #0e3047 100%);
@@ -811,13 +780,16 @@ defineExpose({ zoomResize, showSiteInfo });
 }
 .person-info-top-item-bottom {
   display: flex;
+  align-items: center;
 }
-.person-info-top-item-bottom span {
-  padding-left: 10px;
+.person-info-top-item-bottom .count-number {
+  display: inline-block;
+  margin-left: 5px;
   font-size: 26px;
   font-weight: bold;
-  line-height: 34px;
+  line-height: 25px;
   color: #ffffff;
+  vertical-align: top;
 }
 .maintenance-report-bottom {
   position: absolute;
