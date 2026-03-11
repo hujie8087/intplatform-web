@@ -611,7 +611,11 @@ const setTrucks = (data: CarListItem[], obj: any, layers: any) => {
 const showSiteInfo = async (item: SiteInformationList) => {
   dialogSiteInformation.value = item;
   dialogShow.value = true;
-  const res = await getSiteInformationOfGoods({ fsIds: item.fsIds, date: seachParams.date, foodName: seachParams.foodName });
+  const res = await getSiteInformationOfGoods({
+    fsIds: item.fsIds,
+    date: seachParams.foodName === "0" ? dayjs(seachParams.date).subtract(1, "day").format("YYYY-MM-DD") : seachParams.date,
+    foodName: seachParams.foodName
+  });
   siteInformationOfGoods.value = res.data;
   console.log(siteInformationOfGoods.value, "siteInformationOfGoods");
 };
