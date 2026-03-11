@@ -419,7 +419,11 @@ const measureWidth = (text, chosenIcon) => {
 // 查询站点信息
 const siteInformationData = ref<SiteInformationList[]>([]);
 const siteInformation = async () => {
-  const res = await getSiteInformation({ date: seachParams.date, foodName: seachParams.foodName, fcName: seachParams.fcName });
+  const res = await getSiteInformation({
+    date: seachParams.foodName === "0" ? dayjs(seachParams.date).subtract(1, "day").format("YYYY-MM-DD") : seachParams.date,
+    foodName: seachParams.foodName,
+    fcName: seachParams.fcName
+  });
   siteInformationData.value = res.data.filter(item => item.latitude && item.longitude);
   emit("getSiteData", siteInformationData.value);
 };
