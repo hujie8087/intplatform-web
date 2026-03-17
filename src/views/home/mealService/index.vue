@@ -420,7 +420,10 @@ const measureWidth = (text, chosenIcon) => {
 const siteInformationData = ref<SiteInformationList[]>([]);
 const siteInformation = async () => {
   const res = await getSiteInformation({
-    date: seachParams.foodName === "0" ? dayjs(seachParams.date).subtract(1, "day").format("YYYY-MM-DD") : seachParams.date,
+    date:
+      seachParams.foodName === "0" || seachParams.foodName === "6"
+        ? dayjs(seachParams.date).subtract(1, "day").format("YYYY-MM-DD")
+        : seachParams.date,
     foodName: seachParams.foodName,
     fcName: seachParams.fcName
   });
@@ -477,7 +480,10 @@ const searchDataStatistics = async (isInit = true) => {
       ? {}
       : {
           ...seachParams,
-          date: seachParams.foodName == "0" ? dayjs(seachParams.date).subtract(1, "day").format("YYYY-MM-DD") : seachParams.date
+          date:
+            seachParams.foodName == "0" || seachParams.foodName == "6"
+              ? dayjs(seachParams.date).subtract(1, "day").format("YYYY-MM-DD")
+              : seachParams.date
         }
   );
   mealMapData.value = res.data;
@@ -613,7 +619,10 @@ const showSiteInfo = async (item: SiteInformationList) => {
   dialogShow.value = true;
   const res = await getSiteInformationOfGoods({
     fsIds: item.fsIds,
-    date: seachParams.foodName === "0" ? dayjs(seachParams.date).subtract(1, "day").format("YYYY-MM-DD") : seachParams.date,
+    date:
+      seachParams.foodName === "0" || seachParams.foodName === "6"
+        ? dayjs(seachParams.date).subtract(1, "day").format("YYYY-MM-DD")
+        : seachParams.date,
     foodName: seachParams.foodName
   });
   siteInformationOfGoods.value = res.data;
