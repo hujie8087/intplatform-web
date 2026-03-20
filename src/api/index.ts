@@ -48,18 +48,14 @@ class RequestHttp {
    * @param error 如果提供错误，则所有请求都会 reject
    * @param newToken 新的 token，用于更新队列中请求的 headers
    */
-  private processQueue(error: any = null, newToken?: string, newRefreshToken?: string) {
+  private processQueue(error: any = null, newToken?: string) {
     this.pendingQueue.forEach(({ resolve, reject, config }) => {
       if (error) {
         reject(error);
       } else {
         // 更新请求头中的 token（如果提供了新 token）
         if (newToken && config.headers && typeof config.headers.set === "function") {
-          config.headers.set("Authorization", "Bearer " + newToken);
           config.headers.set("access_token", newToken);
-          if (newRefreshToken) {
-            config.headers.set("refresh_token", newRefreshToken);
-          }
         }
         // 重新执行请求（请求拦截器会自动从 userStore 获取最新 token）
         this.service.request(config).then(resolve).catch(reject);
@@ -81,7 +77,6 @@ class RequestHttp {
       (config: CustomAxiosRequestConfig) => {
         const userStore = useUserStore();
         const token = userStore.token || localStorage.getItem("access_token");
-        const refreshToken = userStore.token || localStorage.getItem("refresh_token");
         // 重复请求不需要取消，在 api 服务中通过指定的第三个参数: { cancel: false } 来控制
         config.cancel ??= true;
         config.cancel && axiosCanceler.addPending(config);
@@ -89,11 +84,9 @@ class RequestHttp {
         config.loading ??= true;
         config.loading && showFullScreenLoading();
         if (config.headers && typeof config.headers.set === "function") {
-          config.headers.set("Authorization", "Bearer " + token);
           config.headers.set("access_token", token);
-          config.headers.set("refresh_token", refreshToken);
           config.headers.set("product_code", "intplatform");
-          config.headers.set("platform", "pc");
+          config.headers.set("platform", "ADMIN");
           config.headers.set("version_name", "1.0.0");
           config.headers.set("version_code", "1");
           config.headers.set("os", "web");
@@ -138,13 +131,11 @@ class RequestHttp {
               await putLoginUser();
               // 更新请求头中的 token
               if (config.headers && typeof config.headers.set === "function") {
-                config.headers.set("Authorization", "Bearer " + res.data.accessToken);
                 config.headers.set("access_token", res.data.accessToken);
-                config.headers.set("refresh_token", res.data.refreshToken);
               }
 
               // 处理队列中的请求（传入新 token）
-              this.processQueue(null, res.data.accessToken, res.data.refreshToken);
+              this.processQueue(null, res.data.accessToken);
               this.isRefreshing = false;
 
               // 重新执行当前请求
