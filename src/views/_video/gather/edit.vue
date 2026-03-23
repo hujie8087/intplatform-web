@@ -45,7 +45,7 @@
               :action="baseUrl + '/file/uploadVideo'"
               accept=".mp4,.mkv,.rmvb,.mov,.m4v,avi,.dat,.flv,.vob,.AVI,.WMV,.webm,.f4v,.rm,.asf,.mpg,.mpeg,.mpe"
               :headers="{
-                Authorization: 'Bearer ' + userStore.token
+                Access_token: userStore.token
               }"
               :limit="1"
               :show-file-list="false"
@@ -208,7 +208,7 @@ const getVideoTypeOptions = async () => {
     return {
       value: item.id,
       label: item.typeName,
-      tagType: ""
+      tagType: "primary"
     } as DictOptions;
   });
 };

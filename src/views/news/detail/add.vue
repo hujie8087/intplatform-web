@@ -59,7 +59,7 @@
                   class="upload-demo"
                   :action="baseUrl + 'file/uploadVideo'"
                   :headers="{
-                    Authorization: 'Bearer ' + userStore.token
+                    Access_token: userStore.token
                   }"
                   accept=".mp4,.avi,.mov,.wmv,.flv,.mkv"
                   :limit="1"
@@ -86,7 +86,7 @@
                   class="upload-demo"
                   :action="baseUrl + 'file/uploadVideo'"
                   :headers="{
-                    Authorization: 'Bearer ' + userStore.token
+                    Access_token: userStore.token
                   }"
                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
                   :limit="1"

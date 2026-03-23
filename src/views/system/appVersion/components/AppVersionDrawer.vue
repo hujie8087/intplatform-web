@@ -68,7 +68,7 @@
                   class="upload-demo"
                   :action="baseUrl + '/file/uploadAPK'"
                   :headers="{
-                    Authorization: 'Bearer ' + userStore.token
+                    Access_token: userStore.token
                   }"
                   name="files"
                   :limit="1"

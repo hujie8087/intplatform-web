@@ -30,14 +30,13 @@ export const useDownload = async (
     let res: any;
     if (method === "get") {
       res = await axios.get(api, {
-        headers: { Authorization: "Bearer " + globalStore.token },
+        headers: { Access_token: globalStore.token },
         responseType: "blob",
         params
       });
-      console.log(res, params);
     } else if (method === "post") {
       res = await axios.post(api, params, {
-        headers: { Authorization: "Bearer " + globalStore.token, "Content-Type": "application/x-www-form-urlencoded" },
+        headers: { Access_token: globalStore.token, "Content-Type": "application/x-www-form-urlencoded" },
         responseType: "blob"
       });
     }
