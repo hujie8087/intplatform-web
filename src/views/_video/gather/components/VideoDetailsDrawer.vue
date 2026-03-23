@@ -8,7 +8,7 @@
           class="upload-demo"
           :action="baseUrl + '/file/uploadVideo'"
           :headers="{
-            Authorization: 'Bearer ' + userStore.token
+            Access_token: userStore.token
           }"
           :limit="1"
           :show-file-list="false"

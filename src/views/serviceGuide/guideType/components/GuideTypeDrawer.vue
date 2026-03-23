@@ -37,7 +37,7 @@
               class="upload-demo"
               :action="baseUrl + 'file/upload'"
               :headers="{
-                Authorization: 'Bearer ' + userStore.token
+                Access_token: userStore.token
               }"
               accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
               :limit="10"
