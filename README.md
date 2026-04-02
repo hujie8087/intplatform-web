@@ -6,7 +6,7 @@
 
 ### 代码仓库 ⭐
 
-- GitLab: http://192.168.91.200/iwip-intplatform/intplatform-web.git
+- https://github.com/hujie8087/intplatform-web.git
 
 ### 项目文档 📚
 
@@ -16,9 +16,6 @@
 
 - **Clone：**
 
-```text
-# Gitlab
-git clone https://github.com/HalseySpicy/Geeker-Admin.git
 ```
 
 - **Install：**
